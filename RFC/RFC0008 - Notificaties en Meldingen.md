@@ -26,7 +26,7 @@ Deze uitwerking is ook gebaseerd op de RFC008 in het afsprakenstelsel. Deze onde
 
 # 1. Notificatie of melding wat is het verschil
 
-![notificatie_melding](./plantUML/rfc008-01-notificatie_melding.svg "notificatie_melding")
+![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")
 
 ```plantuml
 @startuml
