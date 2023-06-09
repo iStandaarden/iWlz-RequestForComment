@@ -59,9 +59,10 @@ Group Melden
 end
 ```
 
-![system overview](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.github.com/iStandaarden/iWlz-RFC/main/plantUMLsrc/rfc008-01-notificatie_melding.puml)
+![system overview](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/iStandaarden/iWlz-RFC/main/plantUMLsrc/rfc008-01-notificatie_melding.puml?token=GHSAT0AAAAAACBTNOD6D3PPY2LOIHNTEAEIZEDB4DQ)
 ![system overview](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.github.com/anoff/plantbuddy/master/assets/overview.iuml)
 
+plantUMLsrc/rfc008-01-notificatie_melding.puml
 
 
 <table>
