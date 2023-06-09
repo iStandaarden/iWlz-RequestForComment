@@ -28,7 +28,6 @@ Deze uitwerking is ook gebaseerd op de RFC008 in het afsprakenstelsel. Deze onde
 ![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")
 
 ```plantuml
-@startuml
 skinparam handwritten false
 skinparam participantpadding 20
 skinparam boxpadding 40
@@ -58,7 +57,6 @@ Group Melden
     return response
     deactivate dbs
 end
-@enduml
 ```
 
 
