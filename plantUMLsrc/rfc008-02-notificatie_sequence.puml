@@ -1,0 +1,43 @@
+@startuml rfc008-02-notificatie_sequence
+title notificatie sequencie-diagram
+skinparam handwritten false
+skinparam participantpadding 20
+skinparam boxpadding 40
+autonumber 001
+box bronhouder #lightblue
+participant "Backoffice" as bs
+participant "Register" as rg
+participant "Netwerkpunt" as bnp 
+end box
+
+box deelnemer #lightyellow
+participant "Netwerkpunt" as dnp
+participant "Backoffice" as dbs
+end box
+group notificeren
+
+  bs -> rg : registratie data
+  activate rg
+  activate bs
+  rg -> rg: event trigger
+
+
+  rg -> bs : lookup Abonnee
+  deactivate rg
+  bs -> bnp: genereer notificatie
+ 
+  activate bnp
+  
+  bnp -> dnp: notificeer
+  activate dnp
+  dnp -> dbs: verwerk notificatie
+  activate dbs
+  dbs --> dnp: http-response 
+  deactivate dbs
+  dnp --> bnp: http-response
+  deactivate dnp
+  bnp --> bs: verwerk response
+  deactivate bnp
+  deactivate bs
+end
+@enduml

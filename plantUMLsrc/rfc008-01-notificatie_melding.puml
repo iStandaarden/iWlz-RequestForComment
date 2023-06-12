@@ -1,8 +1,9 @@
-@startuml notificatie
+@startuml rfc008-01-notificatie_melding
+title notificatie of melding
 skinparam handwritten false
 skinparam participantpadding 20
 skinparam boxpadding 40
-autonumber 1
+autonumber 001
 box  #lightblue
 participant "bronhouder" as bs
 end box

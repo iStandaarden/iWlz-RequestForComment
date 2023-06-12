@@ -20,18 +20,22 @@ Deze uitwerking is ook gebaseerd op de RFC008 in het afsprakenstelsel. Deze onde
 
 
 
-# 
-
 
 # 1. Notificatie of melding wat is het verschil
 
 ![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")
 
+
+<details>
+<summary>plantUML-source</summary>
+
 ```plantuml
+@startuml rfc008-01-notificatie_melding
+title notificatie of melding
 skinparam handwritten false
 skinparam participantpadding 20
 skinparam boxpadding 40
-autonumber 1
+autonumber 001
 box  #lightblue
 participant "bronhouder" as bs
 end box
@@ -57,50 +61,15 @@ Group Melden
     return response
     deactivate dbs
 end
+@enduml
 ```
 
-![system overview](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/iStandaarden/iWlz-RFC/main/plantUMLsrc/rfc008-01-notificatie_melding.puml?token=GHSAT0AAAAAACBTNOD6D3PPY2LOIHNTEAEIZEDB4DQ)
-![system overview](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.github.com/anoff/plantbuddy/master/assets/overview.iuml)
+</details>
 
-plantUMLsrc/rfc008-01-notificatie_melding.puml
-
-
-<table>
-  <tr>
-   <td>
-   </td>
-   <td><strong>Van</strong>
-   </td>
-   <td><strong>Naar</strong>
-   </td>
-   <td><strong>Omschrijving</strong>
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Notificatie</strong>
-   </td>
-   <td>Bronhouder
-   </td>
-   <td>Deelnemer
-   </td>
-   <td>op de hoogte stellen van een deelnemer over dat er nieuwe (of gewijzigde) informatie in een bron beschikbaar is die directe of afgeleide betrekking heeft op die deelnemer.
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Melding</strong>
-   </td>
-   <td>Deelnemer
-   </td>
-   <td>Bronhouder
-   </td>
-   <td>verzoek tot muteren of het beschikbaar stellen van nieuwe informatie naar aanleiding van een gebeurtenis van een deelnemer aan een bron
-   </td>
-  </tr>
-</table>
-
-
-
-# 
+||Van|Naar|Omschrijving|
+|:--- |:--- |:--- |:--- |
+|Notificatie|Bronhouder|Deelnemer|op de hoogte stellen van een deelnemer over dat er nieuwe (of gewijzigde) informatie in een bron beschikbaar is die directe of afgeleide betrekking heeft op die deelnemer.|
+|Melding|Deelnemer|Bronhouder|verzoek tot muteren of het beschikbaar stellen van nieuwe informatie naar aanleiding van een gebeurtenis van een deelnemer aan een bron|
 
 
 # 2. Notificatie
@@ -108,142 +77,108 @@ plantUMLsrc/rfc008-01-notificatie_melding.puml
 
 ## 2.1 Doel
 
-Het doel van een notificatie is het op de hoogte stellen van een deelnemer door een bron over nieuwe (of gewijzigde) informatie die directe of afgeleide betrekking heeft op die deelnemer en de deelnemer in staat stellen op basis van die notificatie de nieuwe informatie te raadplegen.
+Het doel van een notificatie is het op de hoogte stellen van een deelnemer door een bron over nieuwe (of gewijzigde) informatie die directe of afgeleide betrekking heeft op die deelnemer en daarmee de deelnemer in staat stellen op basis van die notificatie de nieuwe informatie te raadplegen.
 
-Voor het kunnen versturen van een notificatie aan de juiste deelnemer is er een **abonnement** nodig. Dit abonnement koppelt een specifieke gebeurtenis (trigger) aan een deelnemer. Wanneer er een trigger is voor die deelnemer, dan ontvangt die deelnemer een notificatie.  
+De reden voor notificatie is altijd de registratie of wijziging van gegevens in een bronregister. Dit is de *notificatie-trigger* en beschrijft welk CRUD-event in het register leidt tot een notificatie. 
 
 Een notificatie verloopt altijd van bronhouder naar deelnemer
 
-
-
-<p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image2.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image2.png "image_tooltip")
-
-
-
-<table>
-  <tr>
-   <td>#
-   </td>
-   <td>Beschrijving
-   </td>
-   <td>Toelichting
-   </td>
-  </tr>
-  <tr>
-   <td>1
-   </td>
-   <td>registratie data
-   </td>
-   <td>data vanuit backoffice in register plaatsen
-   </td>
-  </tr>
-  <tr>
-   <td>2
-   </td>
-   <td>event trigger
-   </td>
-   <td>registratie laat een abonnements trigger afgaan 
-   </td>
-  </tr>
-  <tr>
-   <td>3
-   </td>
-   <td>lookup abonnee
-   </td>
-   <td>zoek de abonnees op voor betreffende abonnement
-   </td>
-  </tr>
-  <tr>
-   <td>4
-   </td>
-   <td>genereer notificatie
-   </td>
-   <td>genereer voor elk van de abonnees de notificatie
-   </td>
-  </tr>
-  <tr>
-   <td>5
-   </td>
-   <td>notificeer
-   </td>
-   <td>stuur de notificatie door naar de deelnemer
-   </td>
-  </tr>
-  <tr>
-   <td>6
-   </td>
-   <td>verwerk notificatie
-   </td>
-   <td>verwerk de notificatie in backoffice deelnemer
-   </td>
-  </tr>
-  <tr>
-   <td>7
-   </td>
-   <td>(204?) response
-   </td>
-   <td>genereer ontvangstbevestiging
-   </td>
-  </tr>
-  <tr>
-   <td>8
-   </td>
-   <td>(204?) response
-   </td>
-   <td>stuur ontvangstbevestiging naar verzender
-   </td>
-  </tr>
-  <tr>
-   <td>9
-   </td>
-   <td>verwerk response
-   </td>
-   <td>bevestig ontvangst notificatie
-   </td>
-  </tr>
-</table>
-
-
-
 ## 2.2 Typen notificatie
 
-Er zijn twee typen notificatie gedefinieerd, waarbij het onderscheid zit in de vrijwilligheid van het ontvangen van de notificatie door een deelnemer of het noodzakelijk ontvangen van de notificatie door de deelnemer. Die vrijwilligheid komt verder tot uiting door het wel of niet plaatsen van een abonnement op een notificatie. 
+Er zijn twee typen notificatie gedefinieerd, waarbij het onderscheid zit in de vrijwilligheid van het ontvangen van de notificatie door een deelnemer of het noodzakelijk ontvangen van de notificatie door de deelnemer. Wanneer er voor de afgesproken werking van de iWlz **moet** een deelnemer van een CRUD-event in een register op de hoogte gebracht worden is er sprake van een **verplichte** notificatie. Denk bijvoorbeeld aan de registratie van een nieuw indicatiebesluit. Het zorgkantoor dat verantwoordelijk is voor de regio waarin de client van het indicatiebesluit volgens het BRP woont, moet op de hoogte gesteld worden. Het CIZ **moet** daarom een dergelijke notificatie verzenden aan het zorgkantoor en het zorgkantoor **moet** de notificatie volgens iWlz-afspraken afhandelen. 
+
+Wanneer in deelnemer 
+
+
+
 
 De twee typen notificaties zijn daarom: 
 
-
-<table>
-  <tr>
-   <td><strong>Type notificatie</strong>
-   </td>
-   <td><strong>Deelnemer ontvangt notificatie</strong>
-   </td>
-   <td><strong>Abonneren door</strong>
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Noodzakelijk</strong>
-   </td>
-   <td>Altijd
-   </td>
-   <td>Bronhouder
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Vrijwillig</strong>
-   </td>
-   <td>Wanneer geabonneerd
-   </td>
-   <td>Deelnemer
-   </td>
-  </tr>
-</table>
+|Type notificatie|Deelnemer ontvangt notificatie|Abonneren door|
+|:--- |:--- |:--- |
+|Verplicht|Altijd|niet van toepassing|
+|Vrijwillig|Wanneer geabonneerd|Deelnemer|
 
 
-Denk bij een **noodzakelijke **notificatie bijvoorbeeld aan het op de hoogte gebracht worden van een zorgkantoor dat er een nieuwe indicatie is geregistreerd voor een cliënt in de regio van dat zorgkantoor. Het CIZ stuurt een notificatie ‘Nieuw indicatiebesluit’ naar het betreffende zorgkantoor. 
+
+Denk bij een **verplichte** notificatie bijvoorbeeld aan het op de hoogte brengen van een zorgkantoor dat er een nieuwe indicatie is geregistreerd voor een cliënt in de regio van dat zorgkantoor. De *notificatie-trigger* is in dit geval de registratie van de nieuwe indicatie. Het CIZ stuurt dan een notificatie ‘Nieuw indicatiebesluit’ naar het betreffende zorgkantoor.
+
+
+
+
+---
+---
+---
+
+![notificatie_melding](../plantUMLsrc/rfc008-02-notificatie_sequence.svg "notificatie_sequence")
+<details>
+<summary>plantUML-source</summary>
+
+```plantuml
+@startuml rfc008-02-notificatie_sequence
+title notificatie sequencie-diagram
+skinparam handwritten false
+skinparam participantpadding 20
+skinparam boxpadding 40
+autonumber 001
+box bronhouder #lightblue
+participant "Backoffice" as bs
+participant "Register" as rg
+participant "Netwerkpunt" as bnp 
+end box
+
+box deelnemer #lightyellow
+participant "Netwerkpunt" as dnp
+participant "Backoffice" as dbs
+end box
+group notificeren
+
+  bs -> rg : registratie data
+  activate rg
+  activate bs
+  rg -> rg: event trigger
+
+
+  rg -> bs : lookup Abonnee
+  deactivate rg
+  bs -> bnp: genereer notificatie
+ 
+  activate bnp
+  
+  bnp -> dnp: notificeer
+  activate dnp
+  dnp -> dbs: verwerk notificatie
+  activate dbs
+  dbs --> dnp: http-response 
+  deactivate dbs
+  dnp --> bnp: http-response
+  deactivate dnp
+  bnp --> bs: verwerk response
+  deactivate bnp
+  deactivate bs
+end
+@enduml
+```
+
+</details>
+
+
+||||
+|--- |--- |--- |
+|#|Beschrijving|Toelichting|
+|1|registratie data|data vanuit backoffice in register plaatsen|
+|2|event trigger|registratie laat een abonnements trigger afgaan|
+|3|lookup abonnee|zoek de abonnees op voor betreffende abonnement|
+|4|genereer notificatie|genereer voor elk van de abonnees de notificatie|
+|5|notificeer|stuur de notificatie door naar de deelnemer|
+|6|verwerk notificatie|verwerk de notificatie in backoffice deelnemer|
+|7|(204?) response|genereer ontvangstbevestiging|
+|8|(204?) response|stuur ontvangstbevestiging naar verzender|
+|9|verwerk response|bevestig ontvangst notificatie|
+
+
+
+ 
 
 
 ## 2.3 Inhoud notificatie
@@ -257,54 +192,20 @@ Zie ook RFC008 - Hoofdstuk 4
 De notificatie bevat de volgende gegevens:
 
 
-<table>
-  <tr>
-   <td><strong>Gegeven</strong>
-   </td>
-   <td><strong>Beschrijving</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>organisatieID
-   </td>
-   <td>Identificatie van de abonnee in het netwerk
-   </td>
-  </tr>
-  <tr>
-   <td>timestamp
-   </td>
-   <td>Tijdstip waarop de notificatie is aangemaakt
-   </td>
-  </tr>
-  <tr>
-   <td>abonnementID
-   </td>
-   <td>Identificatie van het abonnement. 
-<p>
-<em>(Zie hoofdstuk 3 <span style="text-decoration:underline;">Abonnementen</span> verderop)</em>
-   </td>
-  </tr>
-  <tr>
-   <td>abonnementTypeID
-   </td>
-   <td>Identificatie van het abonnement waaruit de notificatie voortvloeit. 
-<p>
-<em>(Zie hoofdstuk 3 <span style="text-decoration:underline;">Abonnementen</span> verderop)</em>
-   </td>
-  </tr>
-  <tr>
-   <td>parentID
-   </td>
-   <td>Identificatie van het parent-object waarover de autorisatie loopt.
-   </td>
-  </tr>
-  <tr>
-   <td>objectID
-   </td>
-   <td>Identificatie van het object waar de notificatie betrekking op heeft en eventueel input voor de raadpleging.
-   </td>
-  </tr>
-</table>
+|||
+|--- |--- |
+|Gegeven|Beschrijving|
+|organisatieID|Identificatie van de abonnee in het netwerk|
+|timestamp|Tijdstip waarop de notificatie is aangemaakt|
+|abonnementID|Identificatie van het abonnement. 
+
+(Zie hoofdstuk 3 Abonnementen verderop)|
+|abonnementTypeID|Identificatie van het abonnement waaruit de notificatie voortvloeit. 
+
+(Zie hoofdstuk 3 Abonnementen verderop)|
+|parentID|Identificatie van het parent-object waarover de autorisatie loopt.|
+|objectID|Identificatie van het object waar de notificatie betrekking op heeft en eventueel input voor de raadpleging.|
+
 
 
 
@@ -356,38 +257,12 @@ _Het staat een bronhouder en deelnemer vrij om buiten de afgesproken iWlz abonne
 Er zijn twee iWlz-abonnementsvormen, voor elk type notificatie één. Het onderscheid zit in de noodzaak dat een deelnemer een bepaalde notificatie ontvangt. Voor de iWlz-verplichte abonnementen krijgt de deelnemer altijd een notificatie, voor de iWlz-vrijwillige abonnementen  geldt dat als de deelnemer een bepaalde notificatie wenst te ontvangen, het aan de deelnemer is om een abonnement te nemen.
 
 
-<table>
-  <tr>
-   <td><strong>Abonnementsvorm</strong>
-   </td>
-   <td><strong>Deelnemer abonnement</strong>
-   </td>
-   <td><strong>Abonneren door</strong>
-   </td>
-   <td><strong>Voor type notificatie</strong>
-   </td>
-  </tr>
-  <tr>
-   <td><strong>iWlz-verplicht</strong>
-   </td>
-   <td>Verplicht
-   </td>
-   <td>Bronhouder voor deelnemer
-   </td>
-   <td>Noodzakelijke
-   </td>
-  </tr>
-  <tr>
-   <td><strong>iWlz-vrijwillig</strong>
-   </td>
-   <td>Vrijwillig
-   </td>
-   <td>Deelnemer zelf
-   </td>
-   <td>Vrijwillige 
-   </td>
-  </tr>
-</table>
+|||||
+|--- |--- |--- |--- |
+|Abonnementsvorm|Deelnemer abonnement|Abonneren door|Voor type notificatie|
+|iWlz-verplicht|Verplicht|Bronhouder voor deelnemer|Noodzakelijke|
+|iWlz-vrijwillig|Vrijwillig|Deelnemer zelf|Vrijwillige|
+
 
 
 Wanneer een deelnemer van een gebeurtenis op de hoogte gesteld moet worden, bijvoorbeeld in het geval dat er een nieuwe indicatie is, dan plaatst de bronhouder voor de deelnemer het abonnement zodat gegarandeerd kan worden dat de deelnemer genotificeerd zal worden. De bronhouder is verantwoordelijk voor het plaatsen van het abonnement.
