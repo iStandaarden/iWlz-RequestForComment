@@ -22,7 +22,7 @@ group notificeren
   rg -> rg: event trigger
 
 
-  rg -> bs : lookup Abonnee
+  rg -> bs : lookup deelnemer
   deactivate rg
   bs -> bnp: genereer notificatie
  
