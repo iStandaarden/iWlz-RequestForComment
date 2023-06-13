@@ -1,9 +1,9 @@
 @startuml rfc008-02-notificatie_sequence
-title notificatie sequencie-diagram
+title notificatie sequence-diagram
 skinparam handwritten false
 skinparam participantpadding 20
 skinparam boxpadding 40
-autonumber 001
+autonumber "<b>[00]"
 box bronhouder #lightblue
 participant "Backoffice" as bs
 participant "Register" as rg

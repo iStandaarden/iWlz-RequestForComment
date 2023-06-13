@@ -3,7 +3,7 @@ title notificatie of melding
 skinparam handwritten false
 skinparam participantpadding 20
 skinparam boxpadding 40
-autonumber 001
+autonumber "<b>[00]"
 box  #lightblue
 participant "bronhouder" as bs
 end box

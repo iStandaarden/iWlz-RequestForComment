@@ -15,16 +15,17 @@ Deze uitwerking is ook gebaseerd op de RFC008 in het afsprakenstelsel. Deze onde
 
 
 **Inhoudsopgave**
-
 [TOC]
+||
+|:--|
+|[1. Melding of notificatie](#1)|
+|[2. Notificatie](#2)|
+|&nbsp; [2.1 Doel](#2.1)|
 
-
-
-
-# 1. Notificatie of melding wat is het verschil
+# <a id="1"></a>1. Inleiding
+# <a id="2"></a>2. Notificatie of melding wat is het verschil
 
 ![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")
-
 
 <details>
 <summary>plantUML-source</summary>
@@ -35,7 +36,7 @@ title notificatie of melding
 skinparam handwritten false
 skinparam participantpadding 20
 skinparam boxpadding 40
-autonumber 001
+autonumber "<b>[00]"
 box  #lightblue
 participant "bronhouder" as bs
 end box
@@ -63,7 +64,6 @@ Group Melden
 end
 @enduml
 ```
-
 </details>
 
 ||Van|Naar|Omschrijving|
@@ -71,25 +71,19 @@ end
 |Notificatie|Bronhouder|Deelnemer|op de hoogte stellen van een deelnemer over dat er nieuwe (of gewijzigde) informatie in een bron beschikbaar is die directe of afgeleide betrekking heeft op die deelnemer.|
 |Melding|Deelnemer|Bronhouder|verzoek tot muteren of het beschikbaar stellen van nieuwe informatie naar aanleiding van een gebeurtenis van een deelnemer aan een bron|
 
+# <a id="3"></a>3. Notificatie
 
-# 2. Notificatie
-
-
-## 2.1 Doel
-
+## <a id=3.1></a>3.1 Doel
 Het doel van een notificatie is het op de hoogte stellen van een deelnemer door een bron over nieuwe (of gewijzigde) informatie die directe of afgeleide betrekking heeft op die deelnemer en daarmee de deelnemer in staat stellen op basis van die notificatie de nieuwe informatie te raadplegen.
 
 De reden voor notificatie is altijd de registratie of wijziging van gegevens in een bronregister. Dit is de *notificatie-trigger* en beschrijft welk CRUD-event in het register leidt tot een notificatie. 
 
 Een notificatie verloopt altijd van bronhouder naar deelnemer
 
-## 2.2 Typen notificatie
-
+## <a id=3.2></a>3.2 Typen notificatie
 Er zijn twee typen notificatie gedefinieerd, waarbij het onderscheid zit in de vrijwilligheid van het ontvangen van de notificatie door een deelnemer of het noodzakelijk ontvangen van de notificatie door de deelnemer. Wanneer er voor de afgesproken werking van de iWlz **moet** een deelnemer van een CRUD-event in een register op de hoogte gebracht worden is er sprake van een **verplichte** notificatie. Denk bijvoorbeeld aan de registratie van een nieuw indicatiebesluit. Het zorgkantoor dat verantwoordelijk is voor de regio waarin de client van het indicatiebesluit volgens het BRP woont, moet op de hoogte gesteld worden. Het CIZ **moet** daarom een dergelijke notificatie verzenden aan het zorgkantoor en het zorgkantoor **moet** de notificatie volgens iWlz-afspraken afhandelen. 
 
 Wanneer in deelnemer 
-
-
 
 
 De twee typen notificaties zijn daarom: 
@@ -103,12 +97,47 @@ De twee typen notificaties zijn daarom:
 
 Denk bij een **verplichte** notificatie bijvoorbeeld aan het op de hoogte brengen van een zorgkantoor dat er een nieuwe indicatie is geregistreerd voor een cliënt in de regio van dat zorgkantoor. De *notificatie-trigger* is in dit geval de registratie van de nieuwe indicatie. Het CIZ stuurt dan een notificatie ‘Nieuw indicatiebesluit’ naar het betreffende zorgkantoor.
 
+## <a id=3.3></a>3.3 Inhoud notificatie
+Op basis van de inhoud van een notificatie moet de ontvanger van de notificatie onder andere kunnen bepalen:
+  - wat is de trigger, wat is de reden van de notificatie
+  - van welke bronhouder is de notificatie afkomstig
+  - wanneer is de notifictie verzonden
+  - op welke informatie de notificatie betrekking heeft
+  - informatie om een  gerichte raadpleging te doen
+  - (autorisatie?)
+
+De notificatie bevat de volgende gegevens:
+|Gegeven|Beschrijving|
+|--- |--- |
+|organisatieID|Identificatie van de abonnee in het netwerk|
+|timestamp|Tijdstip waarop de notificatie is aangemaakt|
+|abonnementID|Identificatie van het abonnement. (Zie verderop)|
+|abonnementTypeID|Identificatie van het abonnement waaruit de notificatie voortvloeit. (Zie hoofdstuk 3 Abonnementen verderop)|
+|parentID|Identificatie van het parent-object waarover de autorisatie loopt.|
+|objectID|Identificatie van het object waar de notificatie betrekking op heeft en eventueel input voor de raadpleging.|
+
+### <a id=3.3.1></a>3.3.1 Voorbeeld notificatie: 
+Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkantoor. Op basis van het objectId kan het zorgkantoor een raadpleging doen van de nieuwe indicatie. 
+
+
+```
+{
+  "organisatieId": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
+  "timestamp": "2022-09-27T12:07:07.492Z",
+  "abonnementId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "abonnement": "NIEUWE_INDICATIE_VOOR_ZORGKANTOOR",
+  "parentId": "wlzIndicatie/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
+  "objectId": "https://api.ciz.nl/wlzindicatieregister/wlzindicaties/
+              da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+}
+```
 
 
 
 ---
 ---
 ---
+## <a id=3.4></a>3.4 Notificatie flow
 
 ![notificatie_melding](../plantUMLsrc/rfc008-02-notificatie_sequence.svg "notificatie_sequence")
 <details>
@@ -116,11 +145,11 @@ Denk bij een **verplichte** notificatie bijvoorbeeld aan het op de hoogte brenge
 
 ```plantuml
 @startuml rfc008-02-notificatie_sequence
-title notificatie sequencie-diagram
+title notificatie sequence-diagram
 skinparam handwritten false
 skinparam participantpadding 20
 skinparam boxpadding 40
-autonumber 001
+autonumber "<b>[00]"
 box bronhouder #lightblue
 participant "Backoffice" as bs
 participant "Register" as rg
@@ -166,79 +195,17 @@ end
 ||||
 |--- |--- |--- |
 |#|Beschrijving|Toelichting|
-|1|registratie data|data vanuit backoffice in register plaatsen|
-|2|event trigger|registratie laat een abonnements trigger afgaan|
-|3|lookup abonnee|zoek de abonnees op voor betreffende abonnement|
-|4|genereer notificatie|genereer voor elk van de abonnees de notificatie|
-|5|notificeer|stuur de notificatie door naar de deelnemer|
-|6|verwerk notificatie|verwerk de notificatie in backoffice deelnemer|
-|7|(204?) response|genereer ontvangstbevestiging|
-|8|(204?) response|stuur ontvangstbevestiging naar verzender|
-|9|verwerk response|bevestig ontvangst notificatie|
+|01|registratie data|data vanuit backoffice in register plaatsen|
+|02|event trigger|registratie laat een abonnements trigger afgaan|
+|03|lookup abonnee|zoek de abonnees op voor betreffende abonnement|
+|04|genereer notificatie|genereer voor elk van de abonnees de notificatie|
+|05|notificeer|stuur de notificatie door naar de deelnemer|
+|06|verwerk notificatie|verwerk de notificatie in backoffice deelnemer|
+|07|(204?) response|genereer ontvangstbevestiging|
+|08|(204?) response|stuur ontvangstbevestiging naar verzender|
+|09|verwerk response|bevestig ontvangst notificatie|
 
-
-
- 
-
-
-## 2.3 Inhoud notificatie
-
-
-```
-Zie ook RFC008 - Hoofdstuk 4
-```
-
-
-De notificatie bevat de volgende gegevens:
-
-
-|||
-|--- |--- |
-|Gegeven|Beschrijving|
-|organisatieID|Identificatie van de abonnee in het netwerk|
-|timestamp|Tijdstip waarop de notificatie is aangemaakt|
-|abonnementID|Identificatie van het abonnement. 
-
-(Zie hoofdstuk 3 Abonnementen verderop)|
-|abonnementTypeID|Identificatie van het abonnement waaruit de notificatie voortvloeit. 
-
-(Zie hoofdstuk 3 Abonnementen verderop)|
-|parentID|Identificatie van het parent-object waarover de autorisatie loopt.|
-|objectID|Identificatie van het object waar de notificatie betrekking op heeft en eventueel input voor de raadpleging.|
-
-
-
-
-### 2.3.1 Voorbeeld notificatie: 
-
-Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkantoor. Op basis van het objectId kan het zorgkantoor een raadpleging doen van de nieuwe indicatie. 
-
-
-```
-{
-  "organisatieId": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
-  "timestamp": "2022-09-27T12:07:07.492Z",
-  "abonnementId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "abonnement": "NIEUWE_INDICATIE_VOOR_ZORGKANTOOR",
-  "parentId": "wlzIndicatie/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
-  "objectId": "https://api.ciz.nl/wlzindicatieregister/wlzindicaties/
-              da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
-}
-```
-
-
-
-## 2.4 Moment van notificeren
-
-_<&lt;Hierover moeten afspraken gemaakt worden, direct, batch, vastmoment>>_
-
-Een notificatie kan pas verstuurd worden nadat er een trigger is afgegaan, die op haar beurt pas kan worden gedetecteerd bij opslag of wijziging in het register. Op dat moment zal de notificatie direct worden verstuurd. 
-
-De functionele reden(en) van een notificatie (trigger) staat(n) beschreven onder**_<span style="text-decoration:underline;"> iWlz-abonnementen</span>_**.
-
-
-# 
-
+Zodra een event zich voordoet waarvoor een notificatie-trigger is gedefinieerd verstuurd de bronhouder de bijbehorende notificatie. 
 
 # 3. Abonnementen
 
@@ -1040,7 +1007,7 @@ In de toekomst kan het zijn dat er van iWlz-verplichte abonnementen een iWlz-vri
 Er zullen er nieuwe iWlz-abonnementen worden toegevoegd bij het ontwerp en ontwikkeling van nieuwe registers. 
 
 
-# 
+
 
 
 # 4. Meldingen
