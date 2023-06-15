@@ -1,5 +1,7 @@
 # iWlz-RFC
-Repostistory voor de RFC's van het Netwerkmodel iWlz 
+Repostistory voor de RFC's van het Netwerkmodel iWlz.
+
+De RFC worden geprioriteerd in het project [RFC-netwerkmodel](https://github.com/orgs/iStandaarden/projects/5)
 
 ## Inhoud
 |RFC | onderwerp | status |
