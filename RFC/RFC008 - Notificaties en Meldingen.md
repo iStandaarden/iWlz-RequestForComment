@@ -215,7 +215,8 @@ Er zijn momenteel twee registers in ontwikkeling, het Indicatieregister van het 
 
 Er zullen er nieuwe iWlz-notificaties worden bedacht bij het ontwerp en ontwikkeling van nieuwe registers. 
 
-## <a id=3.6></a>3.6 Vastleggen en raadplegen notificatie-typen
+# 4. Publiceren en raadplegen beschikbare Notificatietype
+## 4.1 publiceren en raadplegen notificatie-typen
 De verschillende typen notificaties die een organisatie aanbiedt worden gepubliceerd in de Service Directory. De overige netwerkdeelnemers kunnen vervolgens de Service Directory raadplegen om te ontdekken welke notificaties een organisatie aanbiedt en welk type notificatie worden aangeboden. Minimaal de hierboven beschreven iWlz-notificaties worden in de Service Directory gepubliceerd omdat dit de afgesproken notificaties zijn.  
 
 ![publiceer_raadpleeg](../plantUMLsrc/rfc008-03-publiceren_raadplegen_notificatietype.svg "publiceer_raadpleeg_nt")
@@ -265,52 +266,35 @@ De verschillende typen notificaties die een organisatie aanbiedt worden gepublic
 
 |#|Beschrijving|Toelichting|
 |--- |--- |--- |
-|1|publiceer abonnementtype|registreer de gegevens van het abonnementtype in de servicedirectory|
+|1|publiceer notificatietype|registreer de gegevens van het notificatietype in de servicedirectory|
 |2|response|verwerk response|
-|3|raadpleeg abonnementtypen|raadpleeg de servicedirectory op de beschikbare abonnementtypen|
+|3|raadpleeg notificatietype|raadpleeg de servicedirectory op de beschikbare notificaties|
 |4|informatie|beoordeel de informatie over het abonnementtype|
 
-# <a id=4></a>4. Abonnementen
-
-## 4.1 Abonnementen binnen de iWlz
-Voor het kunnen versturen van een vrijwillige notificatie aan een deelnemer is het nodig om abonnementen te faciliteren. Een abonnement koppelt een deelnemer aan een iWlz-vrijwillige notificatie zodat de bronhouder weet aan wie de notificatie verstuurd moet worden. 
-
-
-_Het staat een bronhouder en deelnemer vrij om buiten de afgesproken iWlz abonnementen een willekeurig abonnement af te spreken en te faciliteren. Deze ‘ongereguleerde’ abonnementen worden verder niet besproken, maar passen in hetzelfde principe van het iWlz-vrijwillige abonnement._
-
-
-
-
-
-## 3.4 Inhoud abonnementtype
-
+## 4.2 Inhoud notificatietype
 Bij het vastleggen van een abonnementtype in de service directory worden de volgende gegevens geregistreerd:
-
 
 |Gegeven|Beschrijving|
 |--- |--- |
 |organisatieID|Identificatie van de partij die het abonnement verstrekt in het netwerk|
-|abonnementTypeID|Identificatie van het abonnement type|
-|abonnementVorm|Aanduiding van de abonnementsvorm|
-|abonnementOmschrijving|Beschrijving van het abonnement|
+|notificatieTypeID|Identificatie van het abonnement type|
+|notificatieType|Aanduiding van de abonnementsvorm|
+|notificatieOmschrijving|Beschrijving van het abonnement|
 |idTypeAbonnee|Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement. Een abonnement kan werken op basis van meerdere idTypeAbonnee’s|
 |eventType|Aanduiding welke register event de notificatie veroorzaakt|
 |eventTriggerOmschrijving|Beschrijving van de trigger die de notificatie veroorzaakt|
 |objectIDType|Beschrijving welke ObjectID wordt teruggeven in de notificatie, voor gebruik als juiste ID in de GraphQL query|
 
-
-
-### 3.4.1 Voorbeeld abonnementtype-specificatie
+### 3.4.1 Voorbeeld notificatietype-specificatie
 
 Het voorbeeld beschrijft de json-string voor het verplichte abonnement  van een zorgkantoor, dat een zorgaanbieder notificeert op een nieuwe bemiddeling wanneer de betreffende zorgaanbieder de of een van de bemiddelde aanbieders is. 
-
 
 ```
 {
  "organisatieId": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
- "abonnementTypeID": "NIEUWE_BEMIDDELING_VOOR_ZORGAANBIEDER",
- "abonnementVorm": "IWLZ_VERPLICHT",
- "abonnementOmschrijving": "Elke nieuw betrokken bemiddelde aanbieder ontvangt hiervan een notificatie",
+ "notificatieTypeID": "NIEUWE_BEMIDDELING_VOOR_ZORGAANBIEDER",
+ "notificatieType": "IWLZ_VERPLICHT",
+ "notificatieOmschrijving": "Elke nieuw betrokken bemiddelde aanbieder ontvangt hiervan een notificatie",
  "idTypeAbonnee": "AgbCode",
  "eventType": "CREATE",
  "eventTriggerOmschrijving": "Bij elke registratie in BemiddeldeInstelling van een zorgaanbieder ontvangt die aanbieder met die AgbCode een notificatie",
@@ -319,90 +303,89 @@ Het voorbeeld beschrijft de json-string voor het verplichte abonnement  van een 
 ```
 
 
+# 5. Abonneren
+Alleen voor het kunnen ontvangen van een iWlz-vrijwillige notificatie is het noodzakelijk dat een deelnemer zich abonneert. Elke iWlz-verplicht notificatie ontvangt een deelnemer afhankelijk van zijn of haar rol.
 
-## 3.5 Afhandelen abonnemensttypen
-
-
-```
-Zie ook RFC008 - Hoofdstuk 3.1
-```
-
-
-De twee abonnementstypen worden verschillend afgehandeld. Voor het abonnementstype iWlz-vrijwillig moet de deelnemer het abonnement voor zichzelf plaatsen bij de bronhouder, de aanbieder van het abonnement. Voor het abonnementstype iWlz-verplicht zijn er twee mogelijkheden. Een waarbij de bronhouder vergelijkbaar aan de wijze waarop de deelnemer bij het iWlz-vrijwillige abonnement een abonnement plaatst, maar dan namens de deelnemer of een variant waarbij er geen sprake is van een abonnement. Uiteindelijk zal er één variant worden geïmplementeerd. 
+In dit hoofdstuk het proces hoe een deelnemer zich kan abonneren op een vrijwillige notificatie. 
+## 5.1 Abonnementen binnen de iWlz
+Voor het kunnen versturen van een vrijwillige notificatie aan een deelnemer is het nodig om abonnementen te faciliteren. Een abonnement koppelt een deelnemer aan een iWlz-vrijwillige notificatie zodat de bronhouder weet aan wie de notificatie verstuurd moet worden. 
 
 
-### 3.5.1 Afhandelen iWlz-Vrijwillig abonnementstype
+_Het staat een bronhouder en deelnemer vrij om buiten de afgesproken iWlz notificatie een willekeurige notificatie af te spreken en te faciliteren met een deelnemer. Deze ‘ongereguleerde’ notificaties worden verder niet besproken, maar passen in hetzelfde principe van het iWlz-vrijwillige abonnement._
+
+
+### 5.1.1 Afhandelen iWlz-Vrijwillig abonnementstype
 
 Het abonneren van een deelnemer voor een <span style="text-decoration:underline;">iWlz-vrijwillig</span> abonnement is een handeling van de deelnemer zelf. De deelnemer mag zelf bepalen of een abonnement wenselijk is en om een notificatie te ontvangen. De deelnemer mag zich abonneren op een iWlz-Vrijwillig abonnement mits is voldaan aan de eisen van het abonnement en bijvoorbeeld het bezit van een geldige AgbCode. het identificatie kenmerk past binnen de toegestane van de deelnemer voldoet aan de set aan idTypeAbonnee’s voor dat abonnement. 
 
 
+![abonneren](../plantUMLsrc/rfc008-04-abonneren_iwlz-vrijwillig.svg "abonneren")
 
-<p id="gdcalert4" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image4.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert5">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
+<details>
+  <summary> plant_uml_source</summary>
 
+  ```plantuml
+    @startuml rfc008-04-abonneren_iwlz-vrijwillig
+    title Abonneren notificatie
 
+    skinparam handwritten false
+    skinparam participantpadding 20
+    skinparam boxpadding 40
+    autonumber "<b>[00]"
+    box bronhouder #lightblue
+    participant "Backoffice" as bs
+    participant "Netwerkpunt" as bnp 
+    end box
 
-![notificatie_melding](../plantUMLsrc/rfc008-02-notificatie_sequence.svg "notificatie_sequence")
+    box deelnemer #lightyellow
+    participant "Netwerkpunt" as dnp
+    participant "Backoffice" as dbs
+    end box
+
+    group abonneren op iWlz-vrijwiliig
+        dbs -> dnp: abonnement verzoek
+        activate dbs
+        activate dnp
+        dnp -> bnp: verstuur verzoek
+        activate bnp
+        bnp <- bnp: valideer verzoek
+        bnp -> bs: verstuur verzoek
+        activate bs
+        bs -> bs: registeer abonnement
+        bs --> bnp: response {abonnementID}
+        deactivate bs
+        bnp --> dnp: response {abonnementID}
+        dnp --> dbs: response {abonnementID}
+        dbs -> dbs: registreer \n{abonnementID}
+            alt #Pink
+            bnp --> dnp: response: ongeldig verzoek
+            deactivate bnp
+            dnp --> dbs: response: ongeldig verzoek
+            deactivate dnp
+            end alt
+        deactivate dbs
+    end
+    @enduml
+  ```
+</details>
 
 |#|Beschrijving|Toelichting|
 |--- |--- |--- |
-|1|abonnement verzoek|Stel een abonnementsverzoek op|
-|2|verstuur verzoek|Dien een abonnementsverzoek in|
-|3|valideer verzoek|Bepaal of de deelnemer abonnee mag worden op het betreffende abonnement|
-|4|verstuur verzoek|verstuur het verzoek verder|
-|5|registreer abonnement|registreer het abonnement en genereer {abonnementID} voor abonnee|
-|6|response {abonnementID}|retourneer het {abonnementID}|
-|7|response {abonnementID}|retourneer het {abonnementID}|
-|8|response {abonnementID}|retourneer het {abonnementID}|
-|9|register {abonnementID}|registreer het {abonnementID}|
+|01|abonnement verzoek|Stel een abonnementsverzoek op|
+|02|verstuur verzoek|Dien een abonnementsverzoek in|
+|03|valideer verzoek|Bepaal of de deelnemer abonnee mag worden op het betreffende abonnement|
+|04|verstuur verzoek|verstuur het verzoek verder|
+|05|registreer abonnement|registreer het abonnement en genereer {abonnementID} voor abonnee|
+|06|response {abonnementID}|retourneer het {abonnementID}|
+|07|response {abonnementID}|retourneer het {abonnementID}|
+|08|response {abonnementID}|retourneer het {abonnementID}|
+|09|register {abonnementID}|registreer het {abonnementID}|
 |ALT|ongeldig verzoek|Deelnemer is niet gerechtigd voor een abonnement|
 |10|response ongeldig verzoek|retourneer ongeldig verzoek|
 |11|response ongeldig verzoek|ontvang ongeldig verzoek terug|
 
 
-
 Alleen bij het abonneren van een deelnemer zelf ontvangt de deelnemer daar een abonnementID voor terug. Met dit ID kan de deelnemer zelf het abonnement opzeggen. 
-
-
-### 3.5.2. Afhandelen iWlz-Verplicht abonnementstype
-
-Voor het afhandelen van de iWlz-verplichte abonnementen zijn er twee mogelijkheden. Een met abonnementsregistratie en een zonder. 
-
-
-#### Afhandelen iWlz-verplicht abonnement met abonnementsregistratie. 
-
-Het abonneren van een deelnemer voor een <span style="text-decoration:underline;">iWlz-verplicht</span> abonnement is een handeling van de bronhouder, omdat de verantwoordelijkheid van het notificeren bij de bronhouder ligt. De bronhouder doet dit volgens een vaste afspraak. 
-
-
-|Bronhouder|Deelnemer|BasisAfspraak voor abonneren|
-|--- |--- |--- |
-|CIZ|Zorgkantoor|Postcode regio tabel|
-|Zorgkantoor|Zorgaanbieder|Actieve AgbCode volgens de iWlz AGBcode tabel|
-|Zorgkantoor|Zorgkantoor|Zorgkantoorcode,|
-
-
-
-<p id="gdcalert5" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image5.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert6">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image5.png "image_tooltip")
-
-
-
-
-<p id="gdcalert6" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image6.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert7">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image6.png "image_tooltip")
-
-
-|#|Beschrijving|Toelichting|
-|--- |--- |--- |
-|1|nieuwe deelnemer|nieuwe deelnemer treedt toe aan iWlz-netwerk|
-|2|plaats verplicht abonnement voor deelnemer|Voor elke (nieuwe) deelnemer maakt de bronhouder een abonnement aan voor de iWlz-verplichte abonnementen die bij de rol van die deelnemer horen.|
-
-
-
-[Bijvoorbeeld wanneer er een nieuw gecontracteerde iWlz zorgaanbieder is, abonneert het zorgkantoor met wie het contract is afgesloten die zorgaanbieder op de iWlz-Verplichte abonnementen voor zorgaaanbieders. ](https://www.plantuml.com/plantuml/img/LOr1QWCn34NtFeL8ru4qT1LAwKMwa6nDHiGZ6LkUwV7hAJHCDqBy__JqsHohzoM7zX0jM7616JLjLTnPOSBS-D2DwHAbe7h1b4JlSBqSUhBll_pj4h2xQL-8Axo6KG5Lqzbw6i5Bbllib3k7WnHEXF5XqoIHJu0Dg0NMj7l3RlZF9kQil73zHPDj-eIflP-_Rg32VMDuWW6ZouhEkvWQd3_6SeEI4Rt1ohLaYRC3akb-CBwiPlKW-040)
 
 
 #### Afhandelen iWlz-verplicht abonnementstype ZONDER abonnementsregistratie

@@ -1,0 +1,41 @@
+@startuml rfc008-04-abonneren_iwlz-vrijwillig
+  title Abonneren notificatie
+
+  skinparam handwritten false
+  skinparam participantpadding 20
+  skinparam boxpadding 40
+  autonumber "<b>[00]"
+  box bronhouder #lightblue
+  participant "Backoffice" as bs
+  participant "Netwerkpunt" as bnp 
+  end box
+
+  box deelnemer #lightyellow
+  participant "Netwerkpunt" as dnp
+  participant "Backoffice" as dbs
+  end box
+
+  group abonneren op iWlz-vrijwiliig
+      dbs -> dnp: abonnement verzoek
+      activate dbs
+      activate dnp
+      dnp -> bnp: verstuur verzoek
+      activate bnp
+      bnp <- bnp: valideer verzoek
+      bnp -> bs: verstuur verzoek
+      activate bs
+      bs -> bs: registeer abonnement
+      bs --> bnp: response {abonnementID}
+      deactivate bs
+      bnp --> dnp: response {abonnementID}
+      dnp --> dbs: response {abonnementID}
+      dbs -> dbs: registreer \n{abonnementID}
+          alt #Pink
+          bnp --> dnp: response: ongeldig verzoek
+          deactivate bnp
+          dnp --> dbs: response: ongeldig verzoek
+          deactivate dnp
+          end alt
+      deactivate dbs
+  end
+  @enduml
