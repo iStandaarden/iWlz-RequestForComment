@@ -16,11 +16,6 @@ Deze uitwerking is ook gebaseerd op de RFC008 in het afsprakenstelsel. Deze onde
 ---
 **Inhoudsopgave**
 [TOC]
-||
-|:--|
-|[1. Melding of notificatie](#1)|
-|[2. Notificatie](#2)|
-|&nbsp; [2.1 Doel](#2.1)|
 ---
 
 
