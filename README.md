@@ -5,9 +5,9 @@ De RFC worden geprioriteerd in het project [RFC-netwerkmodel](https://github.com
 
 
 ## Inhoud
-|RFC | onderwerp | status |
-|:--|:--|:--| 
-|[008](RFC/RFC008%20-%20Notificaties%20en%20Meldingen.md) | Notificaties en abonnement | draft | 
+|RFC | onderwerp | status | issue |
+|:--|:--|:--| :--|
+|[008](RFC/RFC008%20-%20Notificaties%20en%20Meldingen.md) | Notificaties en abonnement | draft | #2 |
 
 ## Directory
 |dir|toelichting|
