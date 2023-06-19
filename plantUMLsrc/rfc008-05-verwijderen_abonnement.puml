@@ -1,0 +1,41 @@
+  @startuml rfc008-05-verwijderen_abonnement
+  title "Verwijderen abonnement" 
+  skinparam handwritten false
+  skinparam participantpadding 20
+  skinparam boxpadding 40
+  autonumber "<b>[00]"
+  box bronhouder #lightblue
+  participant "Backoffice" as bs
+  participant "Netwerkpunt" as bnp 
+  end box
+
+  box deelnemer #lightyellow
+  participant "Netwerkpunt" as dnp
+  participant "Backoffice" as dbs
+  end box
+
+  group verwijderen abonnement door deelnemer
+      dbs -> dnp: abonnement verwijder \nverzoek {abonnementID}
+      activate dbs
+      activate dnp
+      dnp -> bnp: verstuur verzoek {abonnementID}
+      activate bnp
+      bnp -> bs: verstuur verzoek
+      activate bs
+      bs -> bs: valideer verzoek
+      bs --> bnp: response {204}
+      bnp --> dnp: response {204}
+
+      dnp --> dbs: response {204}
+          alt #Pink
+          bs --> bnp: ongeldig verzoek
+          deactivate bs
+          bnp --> dnp: ongeldig verzoek
+          deactivate bnp
+          dnp --> dbs: ongeldig verzoek
+          deactivate dnp
+          deactivate dbs
+          end alt
+
+  end
+  @enduml

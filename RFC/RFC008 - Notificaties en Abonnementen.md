@@ -5,22 +5,16 @@
 
 Dit document beschrijft functioneel de generieke werking van notificaties en meldingen in het Netwerkmodel iWlz. Met notificaties of meldingen worden respectievelijke afnemer of bronhouder geattendeerd op nieuwe informatie die relevant is voor die afnemer of bronhouder. 
 
-De technische uitwerking is beschreven in RFC008 Abonneren en notificeren.
-
-
-```
-N.B. RFC008 Abonneren en notificeren - iWlz-netwerkmodel
-Deze uitwerking is ook gebaseerd op de RFC008 in het afsprakenstelsel. Deze onderdelen zijn gemarkeerd. 
-```
-
 ---
 **Inhoudsopgave**
 [TOC]
 ---
 
 
-# <a id="1"></a>1. Inleiding
-# <a id="2"></a>2. Notificatie of melding wat is het verschil
+# 1. Inleiding
+
+
+# 2. Notificatie of melding wat is het verschil
 
 ![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")
 
@@ -309,9 +303,9 @@ Voor het kunnen versturen van een vrijwillige notificatie aan een deelnemer is h
 _Het staat een bronhouder en deelnemer vrij om buiten de afgesproken iWlz notificatie een willekeurige notificatie af te spreken en te faciliteren met een deelnemer. Deze ‘ongereguleerde’ notificaties worden verder niet besproken, maar passen in hetzelfde principe van het iWlz-vrijwillige abonnement._
 
 
-### 5.1.1 Afhandelen iWlz-Vrijwillig abonnementstype
+## 5.2 Abonneren op iWlz-Vrijwillige notificatie
 
-Het abonneren van een deelnemer voor een <span style="text-decoration:underline;">iWlz-vrijwillig</span> abonnement is een handeling van de deelnemer zelf. De deelnemer mag zelf bepalen of een abonnement wenselijk is en om een notificatie te ontvangen. De deelnemer mag zich abonneren op een iWlz-Vrijwillig abonnement mits is voldaan aan de eisen van het abonnement en bijvoorbeeld het bezit van een geldige AgbCode. het identificatie kenmerk past binnen de toegestane van de deelnemer voldoet aan de set aan idTypeAbonnee’s voor dat abonnement. 
+Het abonneren van een deelnemer voor een <span style="text-decoration:underline;">iWlz-vrijwillige</span> notificatie is een actie van de deelnemer zelf. De deelnemer mag zelf bepalen of een notificatie wenselijk is en om dan een abonnement te plaatsen. De deelnemer mag zich abonneren op een iWlz-Vrijwillig abonnement mits is voldaan aan de eisen van het abonnement en bijvoorbeeld het bezit van een geldige AgbCode, het identificatie kenmerk past binnen de toegestane van de deelnemer voldoet aan de set aan idTypeAbonnee’s voor dat abonnement. 
 
 
 ![abonneren](../plantUMLsrc/rfc008-04-abonneren_iwlz-vrijwillig.svg "abonneren")
@@ -382,6 +376,109 @@ Het abonneren van een deelnemer voor een <span style="text-decoration:underline;
 
 Alleen bij het abonneren van een deelnemer zelf ontvangt de deelnemer daar een abonnementID voor terug. Met dit ID kan de deelnemer zelf het abonnement opzeggen. 
 
+## 5.3 Inhoud plaatsen abonnement
+Bij het abonneren van een deelnemer moeten de volgende gegevens worden aangeboden: 
+
+
+|Gegeven|Beschrijving|
+|:--- |:--- |
+|organisatieId|NetwerkiIdentificatie van de abonnerende partij, identificerend voor het kunnen afleveren van de notificatie.|
+|abonnementTypeIdabonnementType|IdentificatieAanduiding van het abonnement waarop deelnemer wil abonneren of geabonneerd moet worden.type|
+|idTypeAbonnee|Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement|
+|idAbonnee|Daadwerkelijk identificatie conform bij idType geselecteerd id type|
+
+### 5.3.1 Voorbeeld abonneren
+Voor het abonneren van een zorgaanbieder op de iWlz-vrijwillige notificatie ‘Gewijzigde Dossierhouder of CZT’ moet het volgende worden aangeboden:
+
+```
+{
+ "organisatieId": "c40b3669-1b06-4c99-8c84-f4fac1264b39",
+ "abonnementTypeId": "GEWIJZIGDE_DOSSIERHOUDER_OF_CZT",
+ "idTypeAbonnee": "AgbCode",
+ "idAbonnee": "12341234"
+}
+```
+
+response: 
+
+```
+{
+  "abonnementId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
+## 5.4 Verwijderen iWlz-vrijwillig abonnement
+
+Wanneer een deelnemer bij een iWlz-vrijwillig abonnement ervoor kiest geen notificaties meer te ontvangen naar aanleiding van dat abonnement, kan de deelnemer zelf het abonnement opzeggen door het te verwijderen bij de bronhouder. 
+
+![verwijderen abonnement](../plantUMLsrc/rfc008-05-verwijderen_abonnement.svg "verwijderen abonnement")
+
+<details>
+  <summary> plant_uml_source</summary>
+
+```plantuml
+  @startuml rfc008-05-verwijderen_abonnement
+  title "Verwijderen abonnement" 
+  skinparam handwritten false
+  skinparam participantpadding 20
+  skinparam boxpadding 40
+  autonumber "<b>[00]"
+  box bronhouder #lightblue
+  participant "Backoffice" as bs
+  participant "Netwerkpunt" as bnp 
+  end box
+
+  box deelnemer #lightyellow
+  participant "Netwerkpunt" as dnp
+  participant "Backoffice" as dbs
+  end box
+
+  group verwijderen abonnement door deelnemer
+      dbs -> dnp: abonnement verwijder \nverzoek {abonnementID}
+      activate dbs
+      activate dnp
+      dnp -> bnp: verstuur verzoek {abonnementID}
+      activate bnp
+      bnp -> bs: verstuur verzoek
+      activate bs
+      bs -> bs: valideer verzoek
+      bs --> bnp: response {204}
+      bnp --> dnp: response {204}
+
+      dnp --> dbs: response {204}
+          alt #Pink
+          bs --> bnp: ongeldig verzoek
+          deactivate bs
+          bnp --> dnp: ongeldig verzoek
+          deactivate bnp
+          dnp --> dbs: ongeldig verzoek
+          deactivate dnp
+          deactivate dbs
+          end alt
+
+  end
+  @enduml
+```
+</details>
+
+|#|Beschrijving|Toelichting|
+|--- |--- |--- |
+|01|abonnement verwijder verzoek {abonnementID}| Deelnemer stuurt verzoek om te verwijderen naar bronhouder voor het stoppen van de betreffende iWlz-vrijwillige notificatie |
+|02|verstuur verzoek {abonnementID}||
+|03|verstuur verzoek||
+|04|valideer verzoek| controleer of het abonnementID bekend is en hoort bij de afzender van het verwijder verzoek|
+|05|response {204}| verificatie klopt, abonnement is verwijderd, opdracht uitgevoerd |
+|06|response {204}||
+|07|response {204}||
+|ALT|Ongeldig abonnements verzoek| als de verificatie faalt |
+|08|ongeldig verzoek||
+|09|ongeldig verzoek||
+|10|ongeldig verzoek||
+
+
+---
+---
+---
 
 #### Afhandelen iWlz-verplicht abonnementstype ZONDER abonnementsregistratie
 
@@ -389,9 +486,6 @@ De bronhouder is verantwoordelijk voor het verzenden van de notificatie bij een 
 
 Door het ontbreken van een abonnementsregistratie moet de bronhouder voor elke deelnemer die nog niet eerder is genotificeerd het organisatieID van die deelnemer opzoeken in het Adresboek. 
 
-
-
-<p id="gdcalert7" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image7.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert8">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
 
 
 ![alt_text](images/image7.png "image_tooltip")
@@ -405,71 +499,11 @@ Door het ontbreken van een abonnementsregistratie moet de bronhouder voor elke d
 
 
 
-
-```
-Zie ook RFC008 - Hoofdstuk 3.12
-```
-
-
-
-### 3.5.3 Inhoud plaatsen abonnement
-
-De inhoud voor het plaatsen van een abonnement, abonneren, is gelijk voor het iWlz-verplicht abonnement door de bronhouder en het iWlz-vrijwillig abonnement door de deelnemer. 
-
-Bij het abonneren van een deelnemer moeten de volgende gegevens worden aangeboden: 
-
-
-|Gegeven|Beschrijving|
-|--- |--- |
-|organisatieId|NetwerkiIdentificatie van de abonnerende partij, identificerend voor het kunnen afleveren van de notificatie.|
-|abonnementTypeIdabonnementType|IdentificatieAanduiding van het abonnement waarop deelnemer wil abonneren of geabonneerd moet worden.type|
-|idTypeAbonnee|Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement|
-|idAbonnee|Daadwerkelijk identificatie conform bij idType geselecteerd id type|
-
-
-
-#### 3.5.3.1 Voorbeeld abonneren
-
-Voor het abonneren van een zorgaanbieder op het  iWlz-verplicht abonnement ‘Nieuwe bemiddeling voor zorgaanbieder’ moet het volgende worden aangeboden:
-
-
-```
-{
- "organisatieId": "c40b3669-1b06-4c99-8c84-f4fac1264b39",
- "abonnementTypeId": "NIEUWE_BEMIDDELING_VOOR_ZORGAANBIEDER",
- "idTypeAbonnee": "AgbCode",
- "idAbonnee": "12341234"
-}
-```
-
-
-response: 
-
-
-```
-{
-  "abonnementId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-}
-```
-
-
-
-## 3.6 Verwijderen abonnement
-
-
-```
-Zie ook RFC008 - Hoofdstuk 3.2
-```
-
-
-
 ### 3.6.1 Verwijderen abonnement iWlz-verplicht abonnement
 
 De bronhouder verwijdert het abonnement van een deelnemer wanneer de partij geen deelnemer  meer is van de iWlz of een andere rol heeft. 
 
 
-
-<p id="gdcalert8" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image8.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert9">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
 
 
 ![alt_text](images/image8.png "image_tooltip")
@@ -480,34 +514,3 @@ De bronhouder verwijdert het abonnement van een deelnemer wanneer de partij geen
 |--- |--- |--- |
 |1|deelnemer verliest toegang|Een deelnemer kan de grondslag voor een iWlz verplicht abonnement verliezen. Bijvoorbeeld als de deelnemer geen iWlz zorgaanbieder meer is.|
 |2|verwijder abonnement van deelnemer|De bronhouder verwijderd alle abonnementen op notificaties voor de deelnemer uit d abonnementenregistratie|
-
-
-### 3.6.2 Verwijderen abonnement iWlz-vrijwillig abonnement
-
-Wanneer een deelnemer bij een iWlz-vrijwillig abonnement ervoor kiest geen notificaties meer te ontvangen naar aanleiding van dat abonnement, kan de deelnemer zelf het abonnement opzeggen door het te verwijderen bij de bronhouder. 
-
-
-
-<p id="gdcalert9" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image9.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert10">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image9.png "image_tooltip")
-
-
-
-|#|Beschrijving|Toelichting|
-|--- |--- |--- |
-|1|abonnement verwijder verzoek {abonnementID}||
-|2|verstuur verzoek {abonnementID}||
-|3|verstuur verzoek||
-|4|valideer verzoek||
-|5|response {204}||
-|6|response {204}||
-|7|response {204}||
-|ALT|Ongeldig abonnements verzoek||
-|8|ongeldig verzoek||
-|9|ongeldig verzoek||
-|10|ongeldig verzoek||
-
-
-
