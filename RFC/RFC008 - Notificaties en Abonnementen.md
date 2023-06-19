@@ -122,7 +122,7 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
   "organisatieId": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
   "timestamp": "2022-09-27T12:07:07.492Z",
   "abonnementId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "abonnement": "NIEUWE_INDICATIE_VOOR_ZORGKANTOOR",
+  "notificatieTypeID": "NIEUWE_INDICATIE_VOOR_ZORGKANTOOR",
   "parentId": "wlzIndicatie/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
   "objectId": "https://api.ciz.nl/wlzindicatieregister/wlzindicaties/
               da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
@@ -213,16 +213,15 @@ Er zijn momenteel twee registers in ontwikkeling, het Indicatieregister van het 
 
 ||Trigger|Bronhouder|Deelnemer|notificatie-type|
 |--- |--- |--- |--- |--- |
-|1|De registratie van een nieuwe indicatie|CIZ|zorgkantoor|iWlz-verplicht|
-|2|Een wijziging van een bestaande indicatie[^1]|CIZ|zorgkantoor|iWlz-verplicht|
-|3|De registratie van een nieuwe ZorgInNatura|zorgkantoor|zorgaanbieder|iWlz-verplicht|
-|4|Een wijziging van een bestaande ZorgInNatura|zorgkantoor|zorgaanbieder|iWlz-verplicht|
-|5|Gewijzigde bemiddeling t.g.v nieuwe of gewijzigde ZorgInNatura ander betrokken zorgaanbieder|zorgkantoor|Overig betrokken zorgaanbieder|iWlz-vrijwillig|
-|6|Gewijzigde Dossierhouder of CZT|zorgkantoor|alle betrokken zorgaanbieders|*iWlz-vrijwillig*|
-|7|Dossieroverdracht cliënt|zorgkantoor|zorgkantoor|*iWlz-verplicht*|
+|1|De registratie van een nieuwe indicatie | CIZ | zorgkantoor|iWlz-verplicht|
+|2|Een wijziging van een bestaande indicatie | CIZ | zorgkantoor|iWlz-verplicht|
+|3|De registratie van een nieuwe ZorgInNatura | zorgkantoor|zorgaanbieder|iWlz-verplicht|
+|4|Een wijziging van een bestaande ZorgInNatura | zorgkantoor|zorgaanbieder|iWlz-verplicht|
+|5|Gewijzigde bemiddeling t.g.v nieuwe of gewijzigde ZorgInNatura ander betrokken zorgaanbieder | zorgkantoor | Overig betrokken zorgaanbieder | iWlz-vrijwillig |
+|6|Gewijzigde Dossierhouder of CZT | zorgkantoor|alle betrokken zorgaanbieders|*iWlz-vrijwillig*|
+|7|Dossieroverdracht cliënt | zorgkantoor | zorgkantoor | *iWlz-verplicht |
 
-
-Er zullen er nieuwe iWlz-notificaties worden bedacht bij het ontwerp en ontwikkeling van nieuwe registers. 
+Bekijk voor een uitgebreide lijst van notificatietypen per register het informatiemodel en/of het afsprakenstel iWlz.
 
 # 4. Publiceren en raadplegen beschikbare Notificatietype
 ## 4.1 publiceren en raadplegen notificatie-typen
@@ -243,7 +242,6 @@ De verschillende typen notificaties die een organisatie aanbiedt worden gepublic
   autonumber "<b>[00]"
   box bronhouder #lightblue
   participant "Backoffice" as bs
-  participant "Netwerkpunt" as bnp 
   end box
 
   box 
@@ -251,7 +249,6 @@ De verschillende typen notificaties die een organisatie aanbiedt worden gepublic
   end box
 
   box deelnemer #lightyellow
-  participant "Netwerkpunt" as dnp
   participant "Backoffice" as dbs
   end box
   group vastleggen notificatietype
@@ -275,24 +272,24 @@ De verschillende typen notificaties die een organisatie aanbiedt worden gepublic
 
 |#|Beschrijving|Toelichting|
 |--- |--- |--- |
-|1|publiceer notificatietype|registreer de gegevens van het notificatietype in de servicedirectory|
-|2|response|verwerk response|
-|3|raadpleeg notificatietype|raadpleeg de servicedirectory op de beschikbare notificaties|
+|01|publiceer notificatietype|registreer de gegevens van het notificatietype in de servicedirectory|
+|02|response|verwerk response|
+|03|raadpleeg notificatietype|raadpleeg de servicedirectory op de beschikbare notificaties|
 |4|informatie|beoordeel de informatie over het abonnementtype|
 
 ## 4.2 Inhoud notificatietype
 Bij het vastleggen van een abonnementtype in de service directory worden de volgende gegevens geregistreerd:
 
 |Gegeven|Beschrijving|
-|--- |--- |
-|organisatieID|Identificatie van de partij die het abonnement verstrekt in het netwerk|
-|notificatieTypeID|Identificatie van het abonnement type|
-|notificatieType|Aanduiding van de abonnementsvorm|
-|notificatieOmschrijving|Beschrijving van het abonnement|
-|idTypeAbonnee|Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement. Een abonnement kan werken op basis van meerdere idTypeAbonnee’s|
-|eventType|Aanduiding welke register event de notificatie veroorzaakt|
-|eventTriggerOmschrijving|Beschrijving van de trigger die de notificatie veroorzaakt|
-|objectIDType|Beschrijving welke ObjectID wordt teruggeven in de notificatie, voor gebruik als juiste ID in de GraphQL query|
+|:--- |:--- |
+|organisatieID | Identificatie van de partij die het abonnement verstrekt in het netwerk|
+|notificatieTypeID | Identificatie van het abonnement type|
+|notificatieType | Aanduiding van de abonnementsvorm|
+|notificatieOmschrijving | Beschrijving van het abonnement|
+|idTypeAbonnee | Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement. Een abonnement kan werken op basis van meerdere idTypeAbonnee’s|
+|eventType | Aanduiding welke register event de notificatie veroorzaakt|
+|eventTriggerOmschrijving | Beschrijving van de trigger die de notificatie veroorzaakt|
+|objectIDType | Beschrijving welke ObjectID wordt teruggeven in de notificatie, voor gebruik als juiste ID in de GraphQL query|
 
 ### 3.4.1 Voorbeeld notificatietype-specificatie
 
@@ -303,11 +300,10 @@ Het voorbeeld beschrijft de json-string voor het verplichte abonnement  van een 
  "organisatieId": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
  "notificatieTypeID": "NIEUWE_BEMIDDELING_VOOR_ZORGAANBIEDER",
  "notificatieType": "IWLZ_VERPLICHT",
- "notificatieOmschrijving": "Elke nieuw betrokken bemiddelde aanbieder ontvangt hiervan een notificatie",
+ "notificatieOmschrijving": "Bij elke registratie van een nieuwe ZorgInNatura voor een instelling, ontvangt die instelling daarvan een notificatie",
  "idTypeAbonnee": "AgbCode",
  "eventType": "CREATE",
- "eventTriggerOmschrijving": "Bij elke registratie in BemiddeldeInstelling van een zorgaanbieder ontvangt die aanbieder met die AgbCode een notificatie",
- "objectIDType": "bemiddeldeInstellingId"
+ "objectIDType": "zorgInNaturaID"
 }
 ```
 
