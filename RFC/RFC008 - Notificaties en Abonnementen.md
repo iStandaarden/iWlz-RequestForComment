@@ -212,14 +212,14 @@ Alleen de notificaties die afgesproken zijn tussen een of meerdere ketenpartijen
 Er zijn momenteel twee registers in ontwikkeling, het Indicatieregister van het CIZ en het Bemiddelingsregister van de zorgkantoren. Hiervoor zijn er nu de volgende iWlz notificaties gespecificeerd die gerealiseerd zullen worden. 
 
 ||Trigger|Bronhouder|Deelnemer|notificatie-type|
-|--- |--- |--- |--- |--- |
-|1|De registratie van een nieuwe indicatie | CIZ | zorgkantoor|iWlz-verplicht|
-|2|Een wijziging van een bestaande indicatie | CIZ | zorgkantoor|iWlz-verplicht|
-|3|De registratie van een nieuwe ZorgInNatura | zorgkantoor|zorgaanbieder|iWlz-verplicht|
-|4|Een wijziging van een bestaande ZorgInNatura | zorgkantoor|zorgaanbieder|iWlz-verplicht|
-|5|Gewijzigde bemiddeling t.g.v nieuwe of gewijzigde ZorgInNatura ander betrokken zorgaanbieder | zorgkantoor | Overig betrokken zorgaanbieder | iWlz-vrijwillig |
-|6|Gewijzigde Dossierhouder of CZT | zorgkantoor|alle betrokken zorgaanbieders|*iWlz-vrijwillig*|
-|7|Dossieroverdracht cliënt | zorgkantoor | zorgkantoor | *iWlz-verplicht |
+|:--- |:--- |:--- |:--- |:--- |
+|1| De registratie van een nieuwe indicatie | CIZ | zorgkantoor|iWlz-verplicht|
+|2| Een wijziging van een bestaande indicatie | CIZ | zorgkantoor|iWlz-verplicht|
+|3| De registratie van een nieuwe ZorgInNatura | zorgkantoor|zorgaanbieder|iWlz-verplicht|
+|4| Een wijziging van een bestaande ZorgInNatura | zorgkantoor|zorgaanbieder|iWlz-verplicht|
+|5| Gewijzigde bemiddeling t.g.v nieuwe of gewijzigde ZorgInNatura ander betrokken zorgaanbieder | zorgkantoor | Overig betrokken zorgaanbieder | *iWlz-vrijwillig* |
+|6| Gewijzigde Dossierhouder of CZT | zorgkantoor|alle betrokken zorgaanbieders| *iWlz-vrijwillig* |
+|7| Dossieroverdracht cliënt | zorgkantoor | zorgkantoor | iWlz-verplicht |
 
 Bekijk voor een uitgebreide lijst van notificatietypen per register het informatiemodel en/of het afsprakenstel iWlz.
 
