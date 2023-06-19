@@ -494,6 +494,7 @@ Wanneer een deelnemer bij een iWlz-vrijwillig abonnement ervoor kiest geen notif
 
 
 # Bijlage: iWlz-Notificatie typen
+<scroll naar links -->
 
 || Organisatie | notificatieTypeID | notificatieType| notificatieOmschrijving | idTypeAbonnee | eventType | objectIDType |
 |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |
@@ -506,16 +507,12 @@ Wanneer een deelnemer bij een iWlz-vrijwillig abonnement ervoor kiest geen notif
 | 7 | ZorgkantoorID | DOSSIEROVERDRACHT_ZORGKANTOOR | iWlz-verplicht | Bij de registratie van een nieuwe Overdracht, ontvangt het nieuwe verantwoordelijke zorgkantoor een notificatie | Uzovicode zorgkantoor | create | OverdrachtID |
 
 
-|2| Een wijziging van een bestaande indicatie | CIZ | zorgkantoor|iWlz-verplicht|
-|3| De registratie van een nieuwe ZorgInNatura | zorgkantoor|zorgaanbieder|iWlz-verplicht|
-|4| Een wijziging van een bestaande ZorgInNatura | zorgkantoor|zorgaanbieder|iWlz-verplicht|
-|5| Gewijzigde bemiddeling t.g.v nieuwe of gewijzigde ZorgInNatura ander betrokken zorgaanbieder | zorgkantoor | Overig betrokken zorgaanbieder | *iWlz-vrijwillig* |
-|6| Gewijzigde Dossierhouder of CZT | zorgkantoor|alle betrokken zorgaanbieders| *iWlz-vrijwillig* |
-|7| Dossieroverdracht cliënt | zorgkantoor | zorgkantoor | iWlz-verplicht |
 ---
 ---
 ---
 
+```
+Nog te verwerken
 #### Afhandelen iWlz-verplicht abonnementstype ZONDER abonnementsregistratie
 
 De bronhouder is verantwoordelijk voor het verzenden van de notificatie bij een iWlz-verplicht abonnementstype. Bij elk abonnementstype is beschreven welke registratie de grondslag voor notificatie is en aan welke deelnemer. Een bronhouder kan op basis daarvan bepalen wanneer en aan wie de notificatie gestuurd moet worden zonder dat die deelnemer een abonnement heeft. 
@@ -551,4 +548,5 @@ De bronhouder verwijdert het abonnement van een deelnemer wanneer de partij geen
 |1|deelnemer verliest toegang|Een deelnemer kan de grondslag voor een iWlz verplicht abonnement verliezen. Bijvoorbeeld als de deelnemer geen iWlz zorgaanbieder meer is.|
 |2|verwijder abonnement van deelnemer|De bronhouder verwijderd alle abonnementen op notificaties voor de deelnemer uit d abonnementenregistratie|
 
+```
 
