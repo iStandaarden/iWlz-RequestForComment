@@ -12,7 +12,19 @@ Dit document beschrijft functioneel de generieke werking van notificaties en mel
 
 
 # 1. Inleiding
+Binnen het iWlz netwerkmodel werken we met generieke technische oplossingen en contracten om minimaal afhankelijk te zijn van gezamenlijke releases. Daarom werken we bijvoorbeeld met GraphQL, zodat het uitleveren van extra gegevens via een register geen impact heeft op de overige deelnemers aan het netwerk. 
+Het mechanisme voor het aanbieden en afsluiten van abonnementen blijkt in de huidige opzet nog niet voldoende generiek te zijn. Het is namelijk nog niet mogelijk om nieuwe abonnementen op (iWlz-)notificaties toe te voegen zonder dat dit impact heeft voor alle netwerkdeelnemers. De reden hiervoor is dat de notificaties nu in de koppelvlak specificaties zijn vastgelegd. 
+Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één generiek mechanisme voor het beheren van abonnementen te specificeren in de koppelvlak specificaties en notificatietypen inhoudelijk vast te leggen in de Service Directory. Hierdoor kan een nieuwe notificatie worden geintroduceerd in het netwerk, zonder dat er een aanpassing van de koppelvlakspecificaties hoeft plaats te vinden.
 
+## 1.1 Uitgangspunten
+- Er is een **Service Directory** waarin notificatietypen gepubliceerd kunnen worden.
+- Er is een **Adresboek** waarin per deelnemer de (notificatie-)endpoints beschikbaar zijn. 
+- Netwerkdeelnemers raadplegen de **Service Directory** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten.
+- Een abonnement wordt geplaatst door een deelnemer aan het netwerk (abonnee). 
+- Notificaties die randvoorwaardelijk zijn om een wettelijke taak uit te kunnen voeren worden door de bronhouder verzorgd zonder een apart abonnement per deelnemer.
+- Om een abonnement te kunnen plaatsen heeft een deelnemer een attest van deelname nodig.
+- Een notificatie is dun, en bevat enkel het abonnementId en het objectId waar de notificatie betrekking op heeft. De abonnee weet op basis van het abonnementId om welk abonnement type het gaat en kan dus ook op basis van dit gegeven bepalen welke informatie relevant is om te raadplegen.
+- Een abonnement is in de basis permanent. De abonnee is zelf verantwoordelijk voor het intrekken van het abonnement. Bij uittreding uit het netwerk, bijvoorbeeld vanwege fusie of faillissement, kunnen abonnementen in bulk worden opgeruimd of gemuteerd. Dit zal in de praktijk altijd maatwerk zijn.
 
 # 2. Notificatie of melding wat is het verschil
 
@@ -62,15 +74,15 @@ end
 |Notificatie|Bronhouder|Deelnemer|op de hoogte stellen van een deelnemer over dat er nieuwe (of gewijzigde) informatie in een bron beschikbaar is die directe of afgeleide betrekking heeft op die deelnemer.|
 |Melding|Deelnemer|Bronhouder|verzoek tot muteren of het beschikbaar stellen van nieuwe informatie naar aanleiding van een gebeurtenis van een deelnemer aan een bron|
 
-# <a id="3"></a>3. Notificatie
+# 3. Notificaties
 
-## <a id=3.1></a>3.1 Doel
+## 3.1 Doel
 Het doel van een notificatie is het op de hoogte stellen van een deelnemer door een bron over nieuwe (of gewijzigde) informatie die directe of afgeleide betrekking heeft op die deelnemer en daarmee de deelnemer in staat stellen op basis van die notificatie de nieuwe informatie te raadplegen. Een notificatie verloopt altijd van bronhouder naar deelnemer.
 
 De reden voor notificatie is altijd de registratie of wijziging van gegevens in een bronregister. Dit is de *notificatie-trigger* en beschrijft welk CRUD-event in het register leidt tot een notificatie. 
 
 
-## <a id=3.2></a>3.2 Typen notificatie
+## 3.2 Typen notificatie
 Er zijn twee typen notificatie gedefinieerd, waarbij het onderscheid zit in de vrijwilligheid van het ontvangen van de notificatie door een deelnemer of het noodzakelijk ontvangen van de notificatie door de deelnemer. Wanneer het voor de afgesproken werking van de iWlz noodzakelijk is een deelnemer van een CRUD-event in een register op de hoogte te stellen is er sprake van een **iWlz-verplichte** notificatie. Een bronhouder moet deze notificatie versturen en een deelnemer hoeft zich voor de deze notificatie niet te abonneren. Is voor een goede werking van de iWlz gewenst dat een deelnemer op de hoogte te stellen van een CRUD-event, maar niet noodzakelijk, dan hoeft een bronhouder een notificatie alleen te versturen wanneer de deelnemer zich heeft geabonneerd op deze notificatie.  
 
 Denk bijvoorbeeld aan de registratie van een nieuw indicatiebesluit. Het zorgkantoor dat verantwoordelijk is voor de regio waarin de client van het indicatiebesluit volgens het BRP woont, moet op de hoogte gesteld worden. Het CIZ **moet** daarom een dergelijke notificatie verzenden aan het zorgkantoor en het zorgkantoor **moet** de notificatie volgens iWlz-afspraken afhandelen. Het zorgkantoor hoeft zich niet op deze notificatie *"nieuwe indicatie voor zorgkantoor"* te abonneren.  
@@ -83,7 +95,7 @@ De twee typen notificaties zijn daarom:
 |iWlz-Vrijwillig|Wanneer geabonneerd|Deelnemer|
 
 
-## <a id=3.3></a>3.3 Inhoud notificatie
+## 3.3 Inhoud notificatie
 Op basis van de inhoud van een notificatie moet de ontvanger van de notificatie onder andere kunnen bepalen:
   - wat is de trigger, wat is de reden van de notificatie
   - van welke bronhouder is de notificatie afkomstig
@@ -98,11 +110,11 @@ De notificatie bevat de volgende gegevens:
 |organisatieID|Identificatie van de abonnee in het netwerk|
 |timestamp|Tijdstip waarop de notificatie is aangemaakt|
 |abonnementID|Identificatie van het abonnement. (Zie verderop)|
-|abonnementTypeID|Identificatie van het abonnement waaruit de notificatie voortvloeit. (Zie hoofdstuk 3 Abonnementen verderop)|
+|notificatieTypeID|Identificatie van het abonnement waaruit de notificatie voortvloeit.|
 |parentID|Identificatie van het parent-object waarover de autorisatie loopt.|
 |objectID|Identificatie van het object waar de notificatie betrekking op heeft en eventueel input voor de raadpleging.|
 
-### <a id=3.3.1></a>3.3.1 Voorbeeld notificatie: 
+### 3.3.1 Voorbeeld notificatie: 
 Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkantoor. Op basis van het objectId kan het zorgkantoor een raadpleging doen van de nieuwe indicatie. 
 
 ```
@@ -117,7 +129,7 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
 }
 ```
 
-## <a id=3.4></a>3.4 Notificatie flow
+## 3.4 Notificatie flow
 
 ![notificatie_melding](../plantUMLsrc/rfc008-02-notificatie_sequence.svg "notificatie_sequence")
 
@@ -133,39 +145,43 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
   autonumber "<b>[00]"
   box bronhouder #lightblue
   participant "Backoffice" as bs
-  participant "Register" as rg
-  participant "Netwerkpunt" as bnp 
+  participant "Register \n(data)" as rg
+  end box
+
+  box adresboek
+  participant "Adresboek" as ab
   end box
 
   box deelnemer #lightyellow
-  participant "Netwerkpunt" as dnp
-  participant "Backoffice" as dbs
+  participant "Resource" as dnp
   end box
 
-  group notificeren
     bs -> rg : registratie data
     activate rg
     activate bs
     rg -> rg: event trigger
-
-    rg -> bs : lookup deelnemer
+    rg -> bs : bepaal notificatietype
     deactivate rg
-    bs -> bnp: genereer notificatie
-  
-    activate bnp
-    
-    bnp -> dnp: notificeer
+
+      alt iWlz-vrijwillige notificatie
+      bs -> bs: raadpleeg abonnementenregistratie
+      activate bs #grey
+      bs -> bs: geef geabonneerde deelnemer
+      deactivate bs
+      end 
+
+    bs -> ab: zoek endpoint deelnemer op
+
+    activate ab
+    ab -> bs: return {endpoint deelnemer}
+    deactivate ab
+    bs -> bs: genereer notificatie
+    bs -> dnp: zend notificatie
     activate dnp
-    dnp -> dbs: verwerk notificatie
-    activate dbs
-    dbs --> dnp: http-response 
-    deactivate dbs
-    dnp --> bnp: http-response
+    dnp -> dnp: verwerk notificatie
+    dnp --> bs: http-response
     deactivate dnp  
-    bnp --> bs: verwerk response
-    deactivate bnp
-    deactivate bs
-  end
+    bs --> bs: verwerk response
 
   @enduml
   ```
@@ -174,19 +190,23 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
 
 |#|Beschrijving|Toelichting|
 |:--- |:--- |:--- |
-|01|registratie data|data vanuit backoffice in register plaatsen|
-|02|event trigger|registratie laat een abonnements trigger afgaan|
-|03|lookup deelnemer|zoek de abonnees op voor betreffende abonnement|
-|04|genereer notificatie|genereer voor elk van de abonnees de notificatie|
-|05|notificeer|stuur de notificatie door naar de deelnemer|
-|06|verwerk notificatie|verwerk de notificatie in backoffice deelnemer|
-|07|(204?) response|genereer ontvangstbevestiging|
-|08|(204?) response|stuur ontvangstbevestiging naar verzender|
-|09|verwerk response|bevestig ontvangst notificatie|
+|01| registratie data | data vanuit backoffice in register plaatsen |
+|02| event trigger | registratie of wijziging data laat een notificatie trigger afgaan |
+|03| bepaal notificatietype | bepaal notificatietype en bepaal of het een verplichte of vrijwillige notificatie is |
+|ALT| iWlz-vrijwillig | bij een iWlz-vrijwillige notificatie moet de abonnementenregistrate worden geraadpleegd op abonnee's |
+|04| raadpleeg abonnementenregistratie | bepaal of er abonnee's zijn voor het vrijwillige notificatietype |
+|05| geef geabonneerde deelnemer | geef informatie over geabonneerde deelnemer om de notificatie te versturen |
+|06| zoek endpoint deelnemer op | bepaal waar de notificatie moet worden afgeleverd |
+|07| return {endpoint deelnemer} | ontvang het afleveradres voor de notificatie |
+|08| genereer notificatie | maak de gewenste notificatie aan |
+|09| zend notificatie | verstuur de notificatie naar het endpoint van de deelnemer |
+|10| verwerk notificatie | verwerk de ontvangen notificatie |
+|11| http-response {200} | stuur ontvangst bevestiging |
+|12| verwerk response | bevestig ontvangst notificatie |
 
 Zodra een event zich voordoet waarvoor een notificatie-trigger is gedefinieerd verstuurd de bronhouder de bijbehorende notificatie. 
 
-## <a id=3.5></a> 3.5 iWlz-notificaties
+## 3.5 iWlz-notificaties
 Alleen de notificaties die afgesproken zijn tussen een of meerdere ketenpartijen van de iWlz worden hier beschreven. Deze notificaties **moet** een bronhouder kunnen vesturen. Of een deelnemer de notificatie ontvangt is afhankelijk van het type. Een iWlz-verplichte notificatie ontvangt een deelnemer **altijd** wanneer die van toepassing is op die deelnemer. Een iWlz-vrijwillige notificatie ontvangt een deelnemer wanneer de notificatie van toepassing is op die deelnemer **EN** als die deelnemer is geabonneerd op die notificatie bij de bronhouder.
 
 Er zijn momenteel twee registers in ontwikkeling, het Indicatieregister van het CIZ en het Bemiddelingsregister van de zorgkantoren. Hiervoor zijn er nu de volgende iWlz notificaties gespecificeerd die gerealiseerd zullen worden. 
@@ -412,6 +432,7 @@ response:
 Wanneer een deelnemer bij een iWlz-vrijwillig abonnement ervoor kiest geen notificaties meer te ontvangen naar aanleiding van dat abonnement, kan de deelnemer zelf het abonnement opzeggen door het te verwijderen bij de bronhouder. 
 
 ![verwijderen abonnement](../plantUMLsrc/rfc008-05-verwijderen_abonnement.svg "verwijderen abonnement")
+
 
 <details>
   <summary> plant_uml_source</summary>

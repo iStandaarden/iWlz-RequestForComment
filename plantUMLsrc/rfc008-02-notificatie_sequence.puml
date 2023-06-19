@@ -1,43 +1,47 @@
 @startuml rfc008-02-notificatie_sequence
-title notificatie sequence-diagram
-skinparam handwritten false
-skinparam participantpadding 20
-skinparam boxpadding 40
-autonumber "<b>[00]"
-box bronhouder #lightblue
-participant "Backoffice" as bs
-participant "Register" as rg
-participant "Netwerkpunt" as bnp 
-end box
+  title notificatie sequence-diagram
+  skinparam handwritten false
+  skinparam participantpadding 20
+  skinparam boxpadding 40
+  autonumber "<b>[00]"
+  box bronhouder #lightblue
+  participant "Backoffice" as bs
+  participant "Register \n(data)" as rg
+  end box
 
-box deelnemer #lightyellow
-participant "Netwerkpunt" as dnp
-participant "Backoffice" as dbs
-end box
-group notificeren
+  box adresboek
+  participant "Adresboek" as ab
+  end box
 
-  bs -> rg : registratie data
-  activate rg
-  activate bs
-  rg -> rg: event trigger
+  box deelnemer #lightyellow
+  participant "Resource" as dnp
+  end box
 
+    bs -> rg : registratie data
+    activate rg
+    activate bs
+    rg -> rg: event trigger
+    rg -> bs : bepaal notificatietype
+    deactivate rg
 
-  rg -> bs : lookup deelnemer
-  deactivate rg
-  bs -> bnp: genereer notificatie
- 
-  activate bnp
-  
-  bnp -> dnp: notificeer
-  activate dnp
-  dnp -> dbs: verwerk notificatie
-  activate dbs
-  dbs --> dnp: http-response 
-  deactivate dbs
-  dnp --> bnp: http-response
-  deactivate dnp
-  bnp --> bs: verwerk response
-  deactivate bnp
-  deactivate bs
-end
-@enduml
+      alt iWlz-vrijwillige notificatie
+      bs -> bs: raadpleeg abonnementenregistratie
+      activate bs #grey
+      bs -> bs: geef geabonneerde deelnemer
+      deactivate bs
+      end 
+
+    bs -> ab: zoek endpoint deelnemer op
+
+    activate ab
+    ab -> bs: return {endpoint deelnemer}
+    deactivate ab
+    bs -> bs: genereer notificatie
+    bs -> dnp: zend notificatie
+    activate dnp
+    dnp -> dnp: verwerk notificatie
+    dnp --> bs: http-response
+    deactivate dnp  
+    bs --> bs: verwerk response
+
+  @enduml
