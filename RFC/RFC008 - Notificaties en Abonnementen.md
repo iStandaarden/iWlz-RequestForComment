@@ -26,6 +26,15 @@ Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één 
 - Een notificatie is dun, en bevat enkel het abonnementId en het objectId waar de notificatie betrekking op heeft. De abonnee weet op basis van het abonnementId om welk abonnement type het gaat en kan dus ook op basis van dit gegeven bepalen welke informatie relevant is om te raadplegen.
 - Een abonnement is in de basis permanent. De abonnee is zelf verantwoordelijk voor het intrekken van het abonnement. Bij uittreding uit het netwerk, bijvoorbeeld vanwege fusie of faillissement, kunnen abonnementen in bulk worden opgeruimd of gemuteerd. Dit zal in de praktijk altijd maatwerk zijn.
 
+# 2. Terminologie
+|Terminologie|Omschrijving|
+|:--- |:--- |
+| Backoffice | Omgeving rondom het register voor de afhandeling van netwerk-diensten |
+| Bronhouder | Aanbieder van de data, houder van het register |
+| Deelnemer | De raadpleger van de bron, het register |
+| Register | De feitelijke databron/database |
+
+
 # 2. Notificatie of melding wat is het verschil
 
 ![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")

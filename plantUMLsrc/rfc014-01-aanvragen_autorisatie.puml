@@ -1,0 +1,61 @@
+@startuml rfc014-01-aanvragen_autorisatie
+' !pragma teoz true
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+box "Deelnemer"
+    participant "Client" as Client
+end box
+
+box "Autorisatie-server"
+    
+end box
+
+box "nID"
+    participant "Autorisatie-server" as AuthEP
+    participant "nID Filter" as Filter
+    participant "Resource-server" as ProxyR
+end box
+
+box "Register"
+    participant "Resource" as BEMRegister
+end box
+
+autonumber "<b>[000]"
+activate Client
+Client -> AuthEP: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel
+activate AuthEP
+AuthEP -> AuthEP: Validate Authenticatiemiddel
+AuthEP -> AuthEP: Run Rule-engine o.b.v. scope(s)
+activate AuthEP #LightGray
+AuthEP -> AuthEP: Valideer autorisatie
+AuthEP -> AuthEP: Genereer Access-Token
+activate AuthEP #LightGray
+deactivate AuthEP
+deactivate AuthEP
+AuthEP --> Client --: 200 Response (Access-Token)
+deactivate AuthEP
+deactivate Client
+
+Client -> ProxyR: **GraphQL Query**\nAuthenticatiemiddel + Access-Token
+activate ProxyR
+activate Filter
+note right of Filter: Inline filtering requests
+activate Client
+
+Filter -> Filter: Valideer Access-Token
+Filter -> Filter: Valideer GraphQL request met scope(s)
+
+ProxyR -> BEMRegister: GraphQL Request
+deactivate Filter
+activate BEMRegister
+
+BEMRegister --> ProxyR: 200 Response (GraphQL)
+deactivate BEMRegister
+
+ProxyR --> Client: 200 Response (GraphQL)
+deactivate ProxyR
+
+deactivate Client
+@enduml
