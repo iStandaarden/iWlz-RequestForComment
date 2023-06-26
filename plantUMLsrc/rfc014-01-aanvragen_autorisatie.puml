@@ -8,12 +8,12 @@ box "Deelnemer"
     participant "Client" as Client
 end box
 
-box "Autorisatie-server"
+box "autorisatieserver"
     
 end box
 
 box "nID"
-    participant "Autorisatie-server" as AuthEP
+    participant "autorisatieserver" as AuthEP
     participant "nID Filter" as Filter
     participant "Resource-server" as ProxyR
 end box
@@ -58,4 +58,3 @@ ProxyR --> Client: 200 Response (GraphQL)
 deactivate ProxyR
 
 deactivate Client
-@enduml
