@@ -7,7 +7,32 @@ Dit document beschrijft functioneel de generieke werking van notificaties en mel
 
 ---
 **Inhoudsopgave**
-[TOC]
+- [Functionele uitwerking notificaties abonnementen en meldingen](#functionele-uitwerking-notificaties-abonnementen-en-meldingen)
+- [1. Inleiding](#1-inleiding)
+  - [1.1 Uitgangspunten](#11-uitgangspunten)
+- [2. Terminologie](#2-terminologie)
+- [2. Notificatie of melding wat is het verschil](#2-notificatie-of-melding-wat-is-het-verschil)
+- [3. Notificaties](#3-notificaties)
+  - [3.1 Doel](#31-doel)
+  - [3.2 Typen notificatie](#32-typen-notificatie)
+  - [3.3 Inhoud notificatie](#33-inhoud-notificatie)
+    - [3.3.1 Voorbeeld notificatie:](#331-voorbeeld-notificatie)
+  - [3.4 Notificatie flow](#34-notificatie-flow)
+  - [3.5 iWlz-notificaties](#35-iwlz-notificaties)
+- [4. Publiceren en raadplegen beschikbare Notificatietype](#4-publiceren-en-raadplegen-beschikbare-notificatietype)
+  - [4.1 publiceren en raadplegen notificatie-typen](#41-publiceren-en-raadplegen-notificatie-typen)
+  - [4.2 Inhoud notificatietype](#42-inhoud-notificatietype)
+    - [3.4.1 Voorbeeld notificatietype-specificatie](#341-voorbeeld-notificatietype-specificatie)
+- [5. Abonneren](#5-abonneren)
+  - [5.1 Abonnementen binnen de iWlz](#51-abonnementen-binnen-de-iwlz)
+  - [5.2 Abonneren op iWlz-Vrijwillige notificatie](#52-abonneren-op-iwlz-vrijwillige-notificatie)
+  - [5.3 Inhoud plaatsen abonnement](#53-inhoud-plaatsen-abonnement)
+    - [5.3.1 Voorbeeld abonneren](#531-voorbeeld-abonneren)
+  - [5.4 Verwijderen iWlz-vrijwillig abonnement](#54-verwijderen-iwlz-vrijwillig-abonnement)
+- [Bijlage: iWlz-Notificatie typen](#bijlage-iwlz-notificatie-typen)
+
+
+
 ---
 
 
@@ -37,7 +62,7 @@ Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één 
 
 # 2. Notificatie of melding wat is het verschil
 
-![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")
+![notificatie_melding](../plantUMLsrc/rfc0008-01-notificatie_melding.svg "notificatie_melding")
 
 <details>
 <summary>plantUML-source</summary>
@@ -140,7 +165,7 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
 
 ## 3.4 Notificatie flow
 
-![notificatie_melding](../plantUMLsrc/rfc008-02-notificatie_sequence.svg "notificatie_sequence")
+![notificatie_melding](../plantUMLsrc/rfc0008-02-notificatie_sequence.svg "notificatie_sequence")
 
 <details>
   <summary>plantUML-source</summary>
@@ -236,7 +261,7 @@ Bekijk voor een uitgebreide lijst van notificatietypen per register het informat
 ## 4.1 publiceren en raadplegen notificatie-typen
 De verschillende typen notificaties die een organisatie aanbiedt worden gepubliceerd in de Service Directory. De overige netwerkdeelnemers kunnen vervolgens de Service Directory raadplegen om te ontdekken welke notificaties een organisatie aanbiedt en welk type notificatie worden aangeboden. Minimaal de hierboven beschreven iWlz-notificaties worden in de Service Directory gepubliceerd omdat dit de afgesproken notificaties zijn.  
 
-![publiceer_raadpleeg](../plantUMLsrc/rfc008-03-publiceren_raadplegen_notificatietype.svg "publiceer_raadpleeg_nt")
+![publiceer_raadpleeg](../plantUMLsrc/rfc0008-03-publiceren_raadplegen_notificatietype.svg "publiceer_raadpleeg_nt")
 
 <details>
   <summary>plantUML-source</summary>
@@ -333,7 +358,7 @@ _Het staat een bronhouder en deelnemer vrij om buiten de afgesproken iWlz notifi
 Het abonneren van een deelnemer voor een <span style="text-decoration:underline;">iWlz-vrijwillige</span> notificatie is een actie van de deelnemer zelf. De deelnemer mag zelf bepalen of een notificatie wenselijk is en om dan een abonnement te plaatsen. De deelnemer mag zich abonneren op een iWlz-Vrijwillig abonnement mits is voldaan aan de eisen van het abonnement en bijvoorbeeld het bezit van een geldige AgbCode, het identificatie kenmerk past binnen de toegestane van de deelnemer voldoet aan de set aan idTypeAbonnee’s voor dat abonnement. 
 
 
-![abonneren](../plantUMLsrc/rfc008-04-abonneren_iwlz-vrijwillig.svg "abonneren")
+![abonneren](../plantUMLsrc/rfc0008-04-abonneren_iwlz-vrijwillig.svg "abonneren")
 
 <details>
   <summary> plant_uml_source</summary>
@@ -436,7 +461,7 @@ response:
 
 Wanneer een deelnemer bij een iWlz-vrijwillig abonnement ervoor kiest geen notificaties meer te ontvangen naar aanleiding van dat abonnement, kan de deelnemer zelf het abonnement opzeggen door het te verwijderen bij de bronhouder. 
 
-![verwijderen abonnement](../plantUMLsrc/rfc008-05-verwijderen_abonnement.svg "verwijderen abonnement")
+![verwijderen abonnement](../plantUMLsrc/rfc0008-05-verwijderen_abonnement.svg "verwijderen abonnement")
 
 
 <details>

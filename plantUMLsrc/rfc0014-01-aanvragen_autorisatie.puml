@@ -1,4 +1,4 @@
-@startuml rfc014-01-aanvragen_autorisatie
+@startuml rfc0014-01-aanvragen_autorisatie
 ' !pragma teoz true
 
 skinparam ParticipantPadding 20
@@ -58,3 +58,4 @@ ProxyR --> Client: 200 Response (GraphQL)
 deactivate ProxyR
 
 deactivate Client
+@enduml
