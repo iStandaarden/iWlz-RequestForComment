@@ -11,12 +11,12 @@ Dit document beschrijft functioneel de generieke wijze van autoriseren in het Ne
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
 - [2. Terminologie](#2-terminologie)
-- [2. Schematische weergave](#2-schematische-weergave)
-- [3. Autorisatieserver](#3-autorisatieserver)
-  - [3.1 Rule engine](#31-rule-engine)
-  - [3.2 Scopes](#32-scopes)
-- [4 Resource-server](#4-resource-server)
-- [5 Foutmeldingen](#5-foutmeldingen)
+- [3. Schematische weergave](#3-schematische-weergave)
+- [4. Autorisatieserver](#4-autorisatieserver)
+  - [4.1 Rule engine](#41-rule-engine)
+  - [4.2 Scopes](#42-scopes)
+- [5 Resource-server](#5-resource-server)
+- [6 Foutmeldingen](#6-foutmeldingen)
   - [Invalid Client ID](#invalid-client-id)
   - [No Client ID](#no-client-id)
   - [Invalid Scope](#invalid-scope)
@@ -40,16 +40,16 @@ Deze notitie beschrijft een oplossingsrichting om deze verwevenheid te corrigere
 # 2. Terminologie
 Opsomming van de in dit document gebruikte termen.
 
-|Terminologie|Omschrijving|
-|:--- |:--- 
-|Claims|Een claim is een kwalificatie, een behaalde prestatie of een stukje informatie over de achtergrond van een entiteit, zoals een naam, id, huisadres of afgeronde opleiding. Een claim zegt iets over de entiteit (deelnemer)  |
-|Scopes|Een scope geeft de limieten van autorisatie tot een resource aan. Een scope kan een deelnemer bij de autorisatieserver aanvragen. 
-|autorisatieserver|Een autorisatieserver deelt Access-Tokens uit om te kunnen communiceren met een Resouce Server.
-|Access-Token|Een access-token wordt uitgegeven aan een deelnemer door de autorisatieserver. Een Access-Token heeft een korte levensduur en bevat informatie over de deelnemer, de scopes(permissies) en diverse tijdsaspecten.|
-|Resource Server|Een resource server beschermd de resource, valideerd het Access-Token en geeft op basis van de beschreven scopes toegang tot de resource.| 
-|nID-Filter|Het nID-Filter is onderdeel van de Resource Server en heeft als taak het verzoek tot de resource te valideren tegen de uitgedeelde scope(s).
+| Terminologie      | Omschrijving                                                                                                                                                                                                                |
+|:------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Claims            | Een claim is een kwalificatie, een behaalde prestatie of een stukje informatie over de achtergrond van een entiteit, zoals een naam, id, huisadres of afgeronde opleiding. Een claim zegt iets over de entiteit (deelnemer) |
+| Scopes            | Een scope geeft de limieten van autorisatie tot een resource aan. Een scope kan een deelnemer bij de autorisatieserver aanvragen.                                                                                           |
+| autorisatieserver | Een autorisatieserver deelt Access-Tokens uit om te kunnen communiceren met een Resouce Server.                                                                                                                             |
+| Access-Token      | Een access-token wordt uitgegeven aan een deelnemer door de autorisatieserver. Een Access-Token heeft een korte levensduur en bevat informatie over de deelnemer, de scopes(permissies) en diverse tijdsaspecten.           |
+| Resource Server   | Een resource server beschermd de resource, valideerd het Access-Token en geeft op basis van de beschreven scopes toegang tot de resource.                                                                                   |
+| nID-Filter        | Het nID-Filter is onderdeel van de Resource Server en heeft als taak het verzoek tot de resource te valideren tegen de uitgedeelde scope(s).                                                                                |
 
-# 2. Schematische weergave 
+# 3. Schematische weergave 
  
  Voor alle activiteiten in het Netwerkstelstel is autorisatie noodzakelijk, deze autorasaties kunnen worden aangevraagd bij de autorisatieserver. Voorbeelden van activiteiten zijn: lezen, schrijven, aanpassen en verwijderen van data uit registers, maar ook het versturen van notificaties en meldingen. 
 
@@ -127,25 +127,23 @@ deactivate Client
 </details>
 
 
+| #  | Beschrijving                          | Toelichting                                                                                                                       |
+|:---|:--------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------|
+| 01 | Aanvraag van autorisatie              | client wil een actie uitvoeren op een register en vraagt hiervoor autorisatie aan bij het token endpoint van de autorisatieserver |
+| 02 | Valideren Authenticatiemiddel         | autorisatieserver valideerd de client o.b.v. het aangeboden authenticatiemiddel                                                   |
+| 03 | Run rule-engine o.b.v. scope(s)       | de autorisatieserver doorloopt voor elke vraag (scope) de rule-engine                                                             |
+| 04 | Valideer autorisatie                  | in de rule-engine wordt de scope gevalideerd tegen het access-model                                                               |
+| 05 | Genereer Access-Token                 | een access-token wordt gegenereerd, hierin zijn de scopes en de resources verwerkt.                                               |
+| 06 | Response (Access-Token)               | indien succesvol doorlopen wordt een access-token uitgedeeld aan de client                                                        |
+| 07 | GraphQL Query                         | een client kan met het access-token een verzoek uitzetten bij de resource-server                                                  |
+| 08 | Valideer Access-Token                 | de resource-server valideerd de access-token o.a. op eigenaar en geldigheid                                                       |
+| 09 | Valideer GraphQL request met scope(s) | De resource-server valideerd ook of het verzoek overeenkomt met de autorisaties in het access-token                               |
+| 10 | GraphQL Query                         | De resource-server routeert het graphQL verzoek aan de juiste resource                                                            |
+| 11 | Response (GraphQL)                    | De resource stuurt het GraphQL resultaat terug                                                                                    |
+| 12 | Response (GraphQL)                    | De resource-server routeert het resultaat terug aan de client                                                                     |
 
 
-|#|Beschrijving|Toelichting|
-|:--- |:--- |:--- |
-|01| Aanvraag van autorisatie       | client wil een actie uitvoeren op een register en vraagt hiervoor autorisatie aan bij het token endpoint van de autorisatieserver  |
-|02| Valideren Authenticatiemiddel  | autorisatieserver valideerd de client o.b.v. het aangeboden authenticatiemiddel |
-|03| Run rule-engine o.b.v. scope(s)| de autorisatieserver doorloopt voor elke vraag (scope) de rule-engine |
-|04| Valideer autorisatie           | in de rule-engine wordt de scope gevalideerd tegen het access-model |
-|05| Genereer Access-Token          | een access-token wordt gegenereerd, hierin zijn de scopes en de resources verwerkt.|
-|06| Response (Access-Token)        | indien succesvol doorlopen wordt een access-token uitgedeeld aan de client |
-|07| GraphQL Query | een client kan met het access-token een verzoek uitzetten bij de resource-server |
-|08| Valideer Access-Token          | de resource-server valideerd de access-token o.a. op eigenaar en geldigheid |
-|09| Valideer GraphQL request met scope(s) | De resource-server valideerd ook of het verzoek overeenkomt met de autorisaties in het access-token |
-|10| GraphQL Query | De resource-server routeert het graphQL verzoek aan de juiste resource |
-|11| Response (GraphQL) | De resource stuurt het GraphQL resultaat terug |
-|12| Response (GraphQL) | De resource-server routeert het resultaat terug aan de client |
-
-
-# 3. Autorisatieserver
+# 4. Autorisatieserver
 
 In de kern is de autorisatieserver een engine om OAuth2 tokens uit te geven, een autorisatieserver past Access-policies toe. Een Access-Policy definieerd permissies en de duur van toegang tot een entiteit.
 
@@ -203,40 +201,40 @@ Response is een JWT
     "client_metadata": {}
 }
 ```
-## 3.1 Rule engine
+## 4.1 Rule engine
 Onderdeel van de autorisatieserver is een rule-engine (Voorheen LUARunner genoemd). Op basis van gevraagde scope(s) en beschikbare variabelen worden policy-regels toegepast welke resulteren in rechten(scopes) of een afwijzing. 
 
-## 3.2 Scopes
+## 4.2 Scopes
 Scopes worden toegepast op verschillende entiteiten binnen het netwerkmodel. Een client kan een of meerdere Scopes (autorisaties) aanvragen bij de autorisatieserver.
 
 Hieronder zijn alle scope(s) gedocumenteerd die mogelijk zijn in het iWlz Netwerkmodel. Afhankelijk van gedefinieerde access-policies kan een deelnemer deze aanvragen.
 
-|Resource|Scope|Omschrijving|
-|:--- |:--- |:--- 
-| |(no scope)| Geeft read toegang tot het eigen organisatieprofiel info. | 
-| Service directory |servicedirectory\organisaties:profiel.create| Geeft de rechten tot het maken van een nieuw organisatieprofiel.  |
-| Service directory |servicedirectory\organisaties:profiel.read| Geeft read toegang tot de informatie van alle organisatieprofielen.  |
-| Service directory |servicedirectory\organisaties:profiel.update| Geeft update toegang tot alle organisatieprofielen.  |
-| servicedirectory |servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*:profiel.read| Geeft read toegang tot specifiek organisatieprofiel.(eigen profiel)|
-| Service directory |servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*:profiel.update| Geeft  update rechten op een specifiek organisatieprofiel.(eigen profiel)|
-| Service directory |servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*:profiel.delete| Geeft delete rechten, verwijderen van een specifiek organisatieprofiel.|
-| Service directory |servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*\notificaties\notificatie:Create.create| Geeft het recht om een notificatie te sturen aan organisatie [organisatie-id] naar aanleiding van een CREATE event.|
-| Service directory |servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*\meldingen\melding:create| Geeft het recht om een melding te sturen aan organisatie [organisatie-id] |
-| servicedirectory |Service directory\organisaties\organisatierol:create| Geeft create rechten om een niewe organisatierol  toe te voegen. |
-| Service directory |servicedirectory\organisaties\organisatierol:read| Geeft read toegang tot de lijst van organisatierollen |
-| | | |
-| Verwijsindex | registers\verwijsindex\[bsn]:profiel.read | Geeft read rechten tot het volledige profiel van deze BSN.|
-| | | |
-| Cliëntregister | registers\wlzcliëntregister\cliënten\\*[bsn]*:profiel.create| Geeft create rechten tot een specifiek cliënt profiel|
-| Cliëntregister | registers\wlzcliëntregister\cliënten\\*[bsn]*:profiel.read| Geeft read rechten tot een specifiek cliënt profiel|
-| Cliëntregister | registers\wlzcliëntregister\cliënten\\*[bsn]*:profiel.update| Geeft update rechten tot een specifiek cliënt profiel|
-| | | |
-| wlz Bemiddelingsregister |registers\wlzbemiddelingsregister\bemiddelingen:read|Geeft read rechten tot bemiddelingen uit het wlzbemiddelingsregister.|
-| wlz Bemiddelingsregister |registers\wlzbemiddelingsregister\bemiddelingen\\*[bemiddeling-id]*:read|Geeft read rechten tot een specifieke bemiddelingen uit het wlzbemiddelingsregister.|
-| wlz Bemiddelingsregister |registers\wlzbemiddelingsregister\bemiddelingen\bemiddeling:create|Geeft create rechten om nieuwe bemiddelingen aan te maken in het bemiddelingsregister. |
-| | | | 
-| wlz Indicatieregister |registers\wlzindicatieregister\indicaties:read|Geeft read rechten tot indicaties uit het wlzindicatieregister.|
-| wlz Indicatieregister |registers\wlzindicatieregister\indicaties\\*[indicatie-id]*:read|Geeft read rechten tot een specifieke indicatie uit het wlzindicatieregister.|
+| Resource                 | Scope                                                                                               | Omschrijving                                                                                                        |
+|:-------------------------|:----------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------|
+|                          | (no scope)                                                                                          | Geeft read toegang tot het eigen organisatieprofiel info.                                                           |
+| Service directory        | servicedirectory\organisaties:profiel.create                                                        | Geeft de rechten tot het maken van een nieuw organisatieprofiel.                                                    |
+| Service directory        | servicedirectory\organisaties:profiel.read                                                          | Geeft read toegang tot de informatie van alle organisatieprofielen.                                                 |
+| Service directory        | servicedirectory\organisaties:profiel.update                                                        | Geeft update toegang tot alle organisatieprofielen.                                                                 |
+| Service directory        | servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*:profiel.read                           | Geeft read toegang tot specifiek organisatieprofiel.(eigen profiel)                                                 |
+| Service directory        | servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*:profiel.update                         | Geeft  update rechten op een specifiek organisatieprofiel.(eigen profiel)                                           |
+| Service directory        | servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*:profiel.delete                         | Geeft delete rechten, verwijderen van een specifiek organisatieprofiel.                                             |
+| Service directory        | servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*\notificaties\notificatie:Create.create | Geeft het recht om een notificatie te sturen aan organisatie [organisatie-id] naar aanleiding van een CREATE event. |
+| Service directory        | servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*\meldingen\melding:create               | Geeft het recht om een melding te sturen aan organisatie [organisatie-id]                                           |
+| Service directory        | servicedirectory\organisaties\organisatierol:create                                                 | Geeft create rechten om een niewe organisatierol  toe te voegen.                                                    |
+| Service directory        | servicedirectory\organisaties\organisatierol:read                                                   | Geeft read toegang tot de lijst van organisatierollen                                                               |
+|                          |                                                                                                     |                                                                                                                     |
+| Verwijsindex             | registers\verwijsindex\[bsn]:profiel.read                                                           | Geeft read rechten tot het volledige profiel van deze BSN.                                                          |
+|                          |                                                                                                     |                                                                                                                     |
+| Cliëntregister           | registers\wlzcliëntregister\cliënten\\*[bsn]*:profiel.create                                        | Geeft create rechten tot een specifiek cliënt profiel                                                               |
+| Cliëntregister           | registers\wlzcliëntregister\cliënten\\*[bsn]*:profiel.read                                          | Geeft read rechten tot een specifiek cliënt profiel                                                                 |
+| Cliëntregister           | registers\wlzcliëntregister\cliënten\\*[bsn]*:profiel.update                                        | Geeft update rechten tot een specifiek cliënt profiel                                                               |
+|                          |                                                                                                     |                                                                                                                     |
+| wlz Bemiddelingsregister | registers\wlzbemiddelingsregister\bemiddelingen:read                                                | Geeft read rechten tot bemiddelingen uit het wlzbemiddelingsregister.                                               |
+| wlz Bemiddelingsregister | registers\wlzbemiddelingsregister\bemiddelingen\\*[bemiddeling-id]*:read                            | Geeft read rechten tot een specifieke bemiddelingen uit het wlzbemiddelingsregister.                                |
+| wlz Bemiddelingsregister | registers\wlzbemiddelingsregister\bemiddelingen\bemiddeling:create                                  | Geeft create rechten om nieuwe bemiddelingen aan te maken in het bemiddelingsregister.                              |
+|                          |                                                                                                     |                                                                                                                     |
+| wlz Indicatieregister    | registers\wlzindicatieregister\indicaties:read                                                      | Geeft read rechten tot indicaties uit het wlzindicatieregister.                                                     |
+| wlz Indicatieregister    | registers\wlzindicatieregister\indicaties\\*[indicatie-id]*:read                                    | Geeft read rechten tot een specifieke indicatie uit het wlzindicatieregister.                                       |
 
 - ## registers\wlzbemiddelingsregister\bemiddelingen:read
 
@@ -290,7 +288,7 @@ Query{
 }
 ```
 
-# 4 Resource-server
+# 5 Resource-server
 Een resource-server beschermd achterliggende resources tegen ongeautoriseerder toegang.  
 - De resource-server is voor netwerkdeelnemers alleen toegangkelijk op het GraphQL-endpoint. 
 - De resource-server vereist een vertrouwd authenticatiemiddel en een geldig Access-Token. 
@@ -299,15 +297,15 @@ Een resource-server beschermd achterliggende resources tegen ongeautoriseerder t
 - De registratie van de resource maakt ook onderdeel uit van organisatieprofielen binnen de servicesdirectory. De access-policy past deze toe tijdens de autorisatie door de autorisatieserver.
 
 
-|Omgeving|URL|
-|:--- |:--- 
-|TST|https://tst-api.vecozo.nl/tst/netwerkmodel/v2/GraphQL|
-|PRD|https://api.vecozo.nl/netwerkmodel/v2/oauth2/GraphQL|
+| Omgeving | URL                                                   |
+|:---------|:------------------------------------------------------|
+| TST      | https://tst-api.vecozo.nl/tst/netwerkmodel/v2/GraphQL |
+| PRD      | https://api.vecozo.nl/netwerkmodel/v2/oauth2/GraphQL  |
 
 Na de autorisatievalidatie routeet de resource-server het verzoek naar de resource.
 
 
-# 5 Foutmeldingen
+# 6 Foutmeldingen
 OAuth HTTP error responses
 
 ## Invalid Client ID
