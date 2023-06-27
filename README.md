@@ -7,7 +7,8 @@ De RFC's worden geprioriteerd in het project [RFC-netwerkmodel](https://github.c
 ## Inhoud
 |RFC | onderwerp | status | issue |
 |:--|:--|:--| :--|
-|[008](RFC/RFC008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | draft | [#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
+|[0008](RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | draft-intern | [#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
+|[0014](RFC//RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) | Notificaties en abonnement | draft-intern | [#9](https://github.com/iStandaarden/iWlz-RFC/issues/9) |
 
 
 ## Directory-structuur
