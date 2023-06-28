@@ -1,4 +1,4 @@
-@startuml rfc008-02-notificatie_sequence
+  @startuml rfc008-02-notificatie_sequence
   title notificatie sequence-diagram
   skinparam handwritten false
   skinparam participantpadding 20
@@ -40,7 +40,7 @@
     bs -> dnp: zend notificatie
     activate dnp
     dnp -> dnp: verwerk notificatie
-    dnp --> bs: http-response
+    dnp --> bs: 200 response
     deactivate dnp  
     bs --> bs: verwerk response
 
