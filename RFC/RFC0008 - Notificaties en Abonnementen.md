@@ -17,8 +17,8 @@ Dit document beschrijft functioneel de generieke werking van notificaties en mel
   - [4.2 Typen notificatie](#42-typen-notificatie)
   - [4.3 Inhoud notificatie](#43-inhoud-notificatie)
     - [4.3.1 Voorbeeld notificatie:](#431-voorbeeld-notificatie)
-  - [4.4 Notificatie flow](#44-notificatie-flow)
-  - [4.5 iWlz-notificaties](#45-iwlz-notificaties)
+  - [4.4 Notificeren](#44-notificeren)
+  - [4.5 iWlz-notificatie-typen](#45-iwlz-notificatie-typen)
 - [5. Publiceren en raadplegen beschikbare Notificatietype](#5-publiceren-en-raadplegen-beschikbare-notificatietype)
   - [5.1 Publiceren en raadplegen notificatie-typen in Service Directory](#51-publiceren-en-raadplegen-notificatie-typen-in-service-directory)
   - [5.2 Inhoud notificatietype](#52-inhoud-notificatietype)
@@ -35,7 +35,6 @@ Dit document beschrijft functioneel de generieke werking van notificaties en mel
     - [6.4.2 Validatie](#642-validatie)
     - [6.4.2 Voorbeeld verwijderen abonnement](#642-voorbeeld-verwijderen-abonnement)
 - [Bijlage: iWlz-Notificatie typen](#bijlage-iwlz-notificatie-typen)
-      - [Afhandelen iWlz-verplicht abonnementstype ZONDER abonnementsregistratie](#afhandelen-iwlz-verplicht-abonnementstype-zonder-abonnementsregistratie)
 
 ---
 
@@ -170,7 +169,7 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
 }
 ```
 
-## 4.4 Notificatie flow
+## 4.4 Notificeren
 
 ![notificatie_melding](../plantUMLsrc/rfc0008-02-notificatie_sequence.svg "notificatie_sequence")
 
@@ -247,7 +246,7 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
 
 Zodra een event zich voordoet waarvoor een notificatie-trigger is gedefinieerd verstuurd de bronhouder de bijbehorende notificatie. 
 
-## 4.5 iWlz-notificaties
+## 4.5 iWlz-notificatie-typen
 Alleen de notificaties die afgesproken zijn tussen een of meerdere ketenpartijen van de iWlz worden hier beschreven. Deze notificaties **moet** een bronhouder kunnen vesturen. Of een deelnemer de notificatie ontvangt is afhankelijk van het type. Een iWlz-verplichte notificatie ontvangt een deelnemer **altijd** wanneer die van toepassing is op die deelnemer. Een iWlz-vrijwillige notificatie ontvangt een deelnemer wanneer de notificatie van toepassing is op die deelnemer **EN** als die deelnemer is geabonneerd op die notificatie bij de bronhouder.
 
 *Het staat een bronhouder en deelnemer vrij om buiten de afgesproken iWlz notificatie een willekeurige notificatie af te spreken en te faciliteren met een deelnemer. Deze ‘ongereguleerde’ notificaties worden verder niet besproken, maar passen in hetzelfde principe van het iWlz-vrijwillige abonnement.*
@@ -609,29 +608,17 @@ HTTP/1.1 400 Bad Request
 # Bijlage: iWlz-Notificatie typen
 <-- scroll naar links voor de volledige inhoud-->
 
-|   | Organisatie   | notificatieTypeID                                | notificatieType | notificatieOmschrijving                                                                                                                                                                                                                                                                                                                                                                                                          | idTypeAbonnee         | eventType | objectIDType   |
+|   | Zender   | notificatieTypeID                                | notificatieType | notificatieOmschrijving                                                                                                                                                                                                                                                                                                                                                                                                          | idTypeAbonnee         | eventType | objectIDType   |
 |:--|:--------------|:-------------------------------------------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------------|:----------|:---------------|
-| 1 | CIZID         | NIEUWE_INDICATIE_ZORGKANTOOR                     | IWLZ-VERPLICHT  | De registratie van een nieuwe indicatie, waarbij de postcode van het BRP-adres van de client valt in de regio van het zorgkantoor dat de notificatie dient te ontvangen                                                                                                                                                                                                                                                          | *null*                | create    | wlzIndicatieID |
-| 2 | CIZID         | VERVALLEN_INDICATIE                              | IWLZ-VRIJWILLIG | Bij de update (vullen of verwijderen of aanpassen) van de vervaldatum van een indicatie, ontvangt het zorgkantoor dat @@@@@ een notificatie                                                                                                                                                                                                                                                                                      | Uzovicode zorgkantoor | update    | wlzIndicatieID |
-| 3 | ZorgkantoorID | NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER           | IWLZ-VERPLICHT  | Bij de registratie van een nieuwe ZorgInNatura, ontvangt de zorgaanbieder dat in die registratie is geregisteerd onder instelling een notificatie                                                                                                                                                                                                                                                                                | Agbcode zorgaanbieder | create    | zorgInNaturaID |
-| 4 | ZorgkantoorID | GEWIJZIGDE_ZORGINNATURA_VOOR_ZORGAANBIEDER       | IWLZ-VERPLICHT  | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt de zorgaanbieder die in de bijgewerkte registratie is geregisteerd onder instelling een notificatie                                                                                                           | Agbcode zorgaanbieder | update    | zorgInNaturaID |
-| 5 | ZorgkantoorID | GEWIJZIGDE_ZORGINNATURA_BIJ_ANDERE_ZORGAANBIEDER | IWLZ-VRIJWILLIG | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt de zorgaanbieder die bij dezelfde bemiddeling betrokken zijn in de zorglevering (hebben een actuele ZorgInNatura) aan de client als in de bijgewerkte ZorgInNatura een notificatie wanneer die is geabonneerd | Agbcode zorgaanbieder | update    | zorgInNaturaID |
-| 6 | ZorgkantoorID | GEWIJZIGDE_DOSSIERHOUDER_CZT_VOOR_ZORGAANBIEDER  | IWLZ-VRIJWILLIG | Bij de registratie van een nieuwe Dossierhouder of Coordinator Zorg Thuis, ontvangt de zorgaanbieder die actief betrokken is bij de zorg aan die client een notificatie wanneer die is geabonneerd                                                                                                                                                                                                                               | Agbcode zorgaanbieder | create    |                |
-| 7 | ZorgkantoorID | DOSSIEROVERDRACHT_ZORGKANTOOR                    | IWLZ-VERPLICHT  | Bij de registratie van een nieuwe Overdracht, ontvangt het nieuwe verantwoordelijke zorgkantoor een notificatie                                                                                                                                                                                                                                                                                                                  | Uzovicode zorgkantoor | create    | OverdrachtID   |
-| 8 | ZorgkantoorID | BOVENREGIONALE_BEMIDDELING_VOOR_ZORGKANTOOR      | IWLZ-VERPLICHT  | Bij de registratie van een nieuwe ZorgInNatura voor een zorgaanbieder die een contract heeft met een ander uitvoerend zorgkantoor (bovenregionale zorgkantoor) dan het registrerende verantwoordelijke zorgkantoor, ontvangt dat uitvoerende zorgkantoor daar een notificatie van                                                                                                                                                | *null*                | create    | zorgInNaturaID |
+| 1 | CIZ         | NIEUWE_INDICATIE_ZORGKANTOOR                     | IWLZ-VERPLICHT  | De registratie van een nieuwe indicatie, waarbij de postcode van het BRP-adres van de client valt in de regio van het zorgkantoor dat de notificatie dient te ontvangen                                                                                                                                                                                                                                                          | *null*                | create    | wlzIndicatieID |
+| 2 | CIZ         | VERVALLEN_INDICATIE                              | IWLZ-VRIJWILLIG | Bij de update (vullen of verwijderen of aanpassen) van de vervaldatum van een indicatie, ontvangt het zorgkantoor dat een abonnement heeft en dat volgens een registratie heeft in [Bemiddeling] het Bemiddelingsregister bij de indicatie van toepassing een notificatie                                                                                                                                                        | Uzovicode zorgkantoor | update    | wlzIndicatieID |
+| 3 | Zorgkantoor | NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER           | IWLZ-VERPLICHT  | Bij de registratie van een nieuwe ZorgInNatura, ontvangt de zorgaanbieder dat in die registratie is geregisteerd onder instelling een notificatie                                                                                                                                                                                                                                                                                | Agbcode zorgaanbieder | create    | zorgInNaturaID |
+| 4 | Zorgkantoor | GEWIJZIGDE_ZORGINNATURA_VOOR_ZORGAANBIEDER       | IWLZ-VERPLICHT  | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt de zorgaanbieder die in de bijgewerkte registratie is geregisteerd onder instelling een notificatie                                                                                                           | Agbcode zorgaanbieder | update    | zorgInNaturaID |
+| 5 | Zorgkantoor | GEWIJZIGDE_ZORGINNATURA_BIJ_ANDERE_ZORGAANBIEDER | IWLZ-VRIJWILLIG | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt de zorgaanbieder die bij dezelfde bemiddeling betrokken zijn in de zorglevering (hebben een actuele ZorgInNatura) aan de client als in de bijgewerkte ZorgInNatura een notificatie wanneer die is geabonneerd | Agbcode zorgaanbieder | update    | zorgInNaturaID |
+| 6 | Zorgkantoor | GEWIJZIGDE_DOSSIERHOUDER_CZT_VOOR_ZORGAANBIEDER  | IWLZ-VRIJWILLIG | Bij de registratie van een nieuwe Dossierhouder of Coordinator Zorg Thuis, ontvangt de zorgaanbieder die actief betrokken is bij de zorg aan die client een notificatie wanneer die is geabonneerd                                                                                                                                                                                                                               | Agbcode zorgaanbieder | create    |                |
+| 7 | Zorgkantoor | DOSSIEROVERDRACHT_ZORGKANTOOR                    | IWLZ-VERPLICHT  | Bij de registratie van een nieuwe Overdracht, ontvangt het nieuwe verantwoordelijke zorgkantoor een notificatie                                                                                                                                                                                                                                                                                                                  | Uzovicode zorgkantoor | create    | OverdrachtID   |
+| 8 | Zorgkantoor | BOVENREGIONALE_BEMIDDELING_VOOR_ZORGKANTOOR      | IWLZ-VERPLICHT  | Bij de registratie van een nieuwe ZorgInNatura voor een zorgaanbieder die een contract heeft met een ander uitvoerend zorgkantoor (bovenregionale zorgkantoor) dan het registrerende verantwoordelijke zorgkantoor, ontvangt dat uitvoerende zorgkantoor daar een notificatie van                                                                                                                                                | *null*                | create    | zorgInNaturaID |
 
-
----
----
----
-
-```
-Nog te verwerken
-#### Afhandelen iWlz-verplicht abonnementstype ZONDER abonnementsregistratie
-
-De bronhouder is verantwoordelijk voor het verzenden van de notificatie bij een iWlz-verplicht abonnementstype. Bij elk abonnementstype is beschreven welke registratie de grondslag voor notificatie is en aan welke deelnemer. Een bronhouder kan op basis daarvan bepalen wanneer en aan wie de notificatie gestuurd moet worden zonder dat die deelnemer een abonnement heeft. 
-
-Door het ontbreken van een abonnementsregistratie moet de bronhouder voor elke deelnemer die nog niet eerder is genotificeerd het organisatieID van die deelnemer opzoeken in het Adresboek. 
 
 
 
