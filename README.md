@@ -1,6 +1,7 @@
 # iWlz-RFC
 Repostistory voor de RFC's van het Netwerkmodel iWlz.
 
+## Prioritering en project
 De RFC's worden geprioriteerd in het project [RFC-netwerkmodel](https://github.com/orgs/iStandaarden/projects/5). Ga naar dit project om de status en prioriteit te bekijken. De eerst volgende milestone zal de POC Bemiddeingsregister zijn. RFC's die hiervoor van belang zijn, zijn hier aan gelabeld. 
 
 
