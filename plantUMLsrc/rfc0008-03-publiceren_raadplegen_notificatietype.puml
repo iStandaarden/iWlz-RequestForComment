@@ -7,6 +7,7 @@
   autonumber "<b>[00]"
   box bronhouder #lightblue
   participant "Backoffice" as bs
+  participant "Netwerkpunt" as npb
   end box
 
   box 
@@ -14,16 +15,20 @@
   end box
 
   box deelnemer #lightyellow
+  participant "Netwerkpunt" as nps
   participant "Backoffice" as dbs
   end box
+  
   group vastleggen notificatietype
-
     bs -> sd : publiceren notificatietype
     activate bs
     activate sd
     return response
     deactivate bs
   end
+
+  ||25|||
+  
   group raadplegen notificatietype
     dbs -> sd: raadpleeg notificatietype
     activate dbs
