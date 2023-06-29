@@ -42,12 +42,14 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie      | Omschrijving                                                                                                                                                                                                                |
 |:------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Claims            | Een claim is een kwalificatie, een behaalde prestatie of een stukje informatie over de achtergrond van een entiteit, zoals een naam, id, huisadres of afgeronde opleiding. Een claim zegt iets over de entiteit (deelnemer) |
-| Scopes            | Een scope geeft de limieten van autorisatie tot een resource aan. Een scope kan een deelnemer bij de autorisatieserver aanvragen.                                                                                           |
-| autorisatieserver | Een autorisatieserver deelt Access-Tokens uit om te kunnen communiceren met een Resouce Server.                                                                                                                             |
 | Access-Token      | Een access-token wordt uitgegeven aan een deelnemer door de autorisatieserver. Een Access-Token heeft een korte levensduur en bevat informatie over de deelnemer, de scopes(permissies) en diverse tijdsaspecten.           |
-| Resource Server   | Een resource server beschermd de resource, valideerd het Access-Token en geeft op basis van de beschreven scopes toegang tot de resource.                                                                                   |
+| Autorisatieserver | Een autorisatieserver deelt Access-Tokens uit om te kunnen communiceren met een Resouce Server.                                                                                                                             |
+| Claims            | Een claim is een kwalificatie, een behaalde prestatie of een stukje informatie over de achtergrond van een entiteit, zoals een naam, id, huisadres of afgeronde opleiding. Een claim zegt iets over de entiteit (deelnemer) |
 | nID-Filter        | Het nID-Filter is onderdeel van de Resource Server en heeft als taak het verzoek tot de resource te valideren tegen de uitgedeelde scope(s).                                                                                |
+| Resource Server   | Een resource server beschermd de resource, valideerd het Access-Token en geeft op basis van de beschreven scopes toegang tot de resource.                                                                                   |
+| Scopes            | Een scope geeft de limieten van autorisatie tot een resource aan. Een scope kan een deelnemer bij de autorisatieserver aanvragen.                                                                                           |
+
+
 
 # 3. Schematische weergave 
  
