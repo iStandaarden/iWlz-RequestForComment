@@ -18,15 +18,11 @@ Dit document beschrijft de wijze waarop de adresseringsvoorziening binnen het iW
 
 ---
 # 1. Inleiding
-<span style="color:red">Inleiding</span>
+>```Inleiding```
 <br>
 
 # 2. Uitgangspunten
-<span style="color:red">
-- uitgangspunt1<br>
-- uitgangspunt2
-</span>
-<br><br>
+>```uitgangspunten```
 
 # 3. Terminologie
 Opsomming van de in dit document gebruikte termen.
@@ -39,11 +35,11 @@ Opsomming van de in dit document gebruikte termen.
 | Service   | Iedere deelnemer biedt één of meerdere diensten  aan andere deelnemers in het iWlz-netwerkmodel aan. Voorbeelden van diensten zijn: abonneren, notificeren, autoriseren, raadplegen. Een service is de technische implementatie van een dienst en bestaat uit één of meerdere endpoints   | 
 
 # 4. Services
-<code><span style="background-color: yellow;">Peter van Toorn: Bij het adresbook is het de bedoeling dat je kunt zoeken op een bepaalde deelnemer en dat het zodoende mogelijk is om een dienst te lokaliseren. Nu gaat deze RfC over het toevoegen van de benodigde informatie aan het DID document. Voordat het uiteindelijk gaat leiden tot een adresboek is toch nog wel iets meer nodig?  Hangt ook af van de gebruikte DID methode en de functionaliteit van de VDR.</span></code>
+>```Peter van Toorn: Bij het adresbook is het de bedoeling dat je kunt zoeken op een bepaalde deelnemer en dat het zodoende mogelijk is om een dienst te lokaliseren. Nu gaat deze RfC over het toevoegen van de benodigde informatie aan het DID document. Voordat het uiteindelijk gaat leiden tot een adresboek is toch nog wel iets meer nodig?  Hangt ook af van de gebruikte DID methode en de functionaliteit van de VDR.```
 
 In het iWlz-netwerkmodel worden services geregistreerd in het DID-document van de deelnemer. Dit gebeurt door de service toe te voegen aan het document. Dit zorgt voor een overzichtelijke en toegankelijke manier om de services van de deelnemer te raadplegen. De services die worden gepubliceerd worden gespecificeerd in de verschillende uitwisselprofielen. Dit kan een absoluut endpoint-URI zijn, een samengestelde service of een verwijzing naar een andere service.
 
-<code><span style="background-color: yellow;">Jorrit Spee: m.b.t. ondstaand stukje tekst wellicht een opsomming maken? Tekst is nu niet echt makkelijk leesbaar. Iets als: de kenmerken van de verschillende soorten services zijn:…</span></code>
+>```Jorrit Spee: m.b.t. ondstaand stukje tekst wellicht een opsomming maken? Tekst is nu niet echt makkelijk leesbaar. Iets als: de kenmerken van de verschillende soorten services zijn:…```
 
 Voor een absoluut endpoint-URI MOET het `serviceEndpoint` een tekenreeks zijn die een URL bevat. Voor een samengestelde service MOET het `serviceEndpoint` een JSON object literal bevatten met absolute endpoint-URL's en/of verwijzingen naar andere services. Zie §3.2 van did-core voor DID URL-syntaxis en RFC3986 voor generieke URL-standaarden.
 
@@ -168,9 +164,7 @@ Het resolven van `did:<<iwlz>>:123/serviceEndpoint?type=<<iwlz>>CompoundServiceR
 
 ## 4.2 Contactgegevens
 
->DID-documenten kunnen een node-contact-info service bevatten die contactinformatie voor de operator van het netwerkpunt bevat zonder persoonlijke identificeerbare informatie, zoals bedrijfs-/eenheidsnaam, e-mailadres en telefoonnummer. De serviceEndpoint moet een JSON object literal zijn met een verplichte key email en optionele keys voor telephone, name, website.
-
-<span style="color:red">DID-documenten kunnen een node-contact-info service bevatten die contactinformatie voor de operator van het netwerkpunt bevat zonder persoonlijke identificeerbare informatie, zoals bedrijfs-/eenheidsnaam, e-mailadres en telefoonnummer. De serviceEndpoint moet een JSON object literal zijn met een verplichte key email en optionele keys voor telephone, name, website.</span>
+>```DID-documenten kunnen een node-contact-info service bevatten die contactinformatie voor de operator van het netwerkpunt bevat zonder persoonlijke identificeerbare informatie, zoals bedrijfs-/eenheidsnaam, e-mailadres en telefoonnummer. De serviceEndpoint moet een JSON object literal zijn met een verplichte key email en optionele keys voor telephone, name, website.```
 
 Een DID-document KAN een service van het type `node-contact-info` bevatten die informatie bevat die gebruikt kan worden om contact op te nemen met de operator van het netwerkpunt dat het DID-document beheert. De informatie MAG GEEN persoonlijk identificeerbare informatie (PII) bevatten, zoals persoonlijke namen, e-mailadressen of telefoonnummers. Het MOET in plaats daarvan een bedrijfs-/eenheidsnaam, e-mailadres en/of telefoonnummer bevatten. Het serviceEndpoint MOET een JSON object literal zijn en MOET de key `email` bevatten. Daarnaast KAN het de volgende eigenschappen bevatten: `telephone`, `name` (bedrijfs-/unitnaam), `website` (website-URL). Alle eigenschappen MOETEN worden opgemaakt als tekenreeks. Bijvoorbeeld:
 
@@ -197,12 +191,12 @@ De service KAN ook verwijzen naar de contactinformatieservice van een andere DID
 De referentie MOET verwijzen naar een contactinformatiedienst zoals hierboven beschreven.
 Aangezien de informatie zelfverklaard is en op geen enkele manier geauthentiseerd of geverifieerd, MOETEN toepassingen deze met de grootste zorg als niet-vertrouwd behandelen. Als u dit niet doet, kan de operator van het knooppunt kwetsbaar worden voor spoofing en andere aanvallen.
 
-<span style="color:red"> #ALTERNATIEVE TEKST:
-DID-documenten bevatten contactinformatie voor de operator van een netwerkpunt, zoals bedrijfsnaam, e-mailadres, telefoonnummer en website. Deze informatie moet worden behandeld als niet-vertrouwd om spoofing en andere aanvallen te voorkomen. </span>
+
+>```DID-documenten bevatten contactinformatie voor de operator van een netwerkpunt, zoals bedrijfsnaam, e-mailadres, telefoonnummer en website. Deze informatie moet worden behandeld als niet-vertrouwd om spoofing en andere aanvallen te voorkomen.```
+
 
 
 
 
 # 5 Foutmeldingen
-
-<span style="color:red">Foutmeldingen.</span>
+>```Foutmeldingen.```
