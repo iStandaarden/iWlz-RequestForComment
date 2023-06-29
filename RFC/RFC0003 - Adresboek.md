@@ -167,6 +167,9 @@ Het resolven van `did:<<iwlz>>:123/serviceEndpoint?type=<<iwlz>>CompoundServiceR
 ```
 
 ## 4.2 Contactgegevens
+
+>DID-documenten kunnen een node-contact-info service bevatten die contactinformatie voor de operator van het netwerkpunt bevat zonder persoonlijke identificeerbare informatie, zoals bedrijfs-/eenheidsnaam, e-mailadres en telefoonnummer. De serviceEndpoint moet een JSON object literal zijn met een verplichte key email en optionele keys voor telephone, name, website.
+
 <span style="color:red">DID-documenten kunnen een node-contact-info service bevatten die contactinformatie voor de operator van het netwerkpunt bevat zonder persoonlijke identificeerbare informatie, zoals bedrijfs-/eenheidsnaam, e-mailadres en telefoonnummer. De serviceEndpoint moet een JSON object literal zijn met een verplichte key email en optionele keys voor telephone, name, website.</span>
 
 Een DID-document KAN een service van het type `node-contact-info` bevatten die informatie bevat die gebruikt kan worden om contact op te nemen met de operator van het netwerkpunt dat het DID-document beheert. De informatie MAG GEEN persoonlijk identificeerbare informatie (PII) bevatten, zoals persoonlijke namen, e-mailadressen of telefoonnummers. Het MOET in plaats daarvan een bedrijfs-/eenheidsnaam, e-mailadres en/of telefoonnummer bevatten. Het serviceEndpoint MOET een JSON object literal zijn en MOET de key `email` bevatten. Daarnaast KAN het de volgende eigenschappen bevatten: `telephone`, `name` (bedrijfs-/unitnaam), `website` (website-URL). Alle eigenschappen MOETEN worden opgemaakt als tekenreeks. Bijvoorbeeld:
