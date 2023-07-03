@@ -30,14 +30,16 @@ In de RFC's worden diverse nieuwe termen geintroduceerd. Hieronder alfabetisch e
 
 - [terug naar index](#index)
 ## D
-|Term | Toelichting |
-|:--|:--|
-| Deelnemer    | De raadpleger van de bron, het register                               |
+|Term | Toelichting | RFC |
+|:--|:--|:--|
+| Deelnemer | De raadpleger van de bron, het register |
+| DID-document | Onderdeel van de DID-standaard die wordt gebruikt voor het publiceren van eigenschappen van een deelnemer of dienstverlener, in dit geval informatie over services en endpoints | RFC0003 |
 
 - [terug naar index](#index)
 ## E
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
+| Endpoint   | Een URI of URL die wordt gepubliceerd door een deelnemer en die door andere deelnemers kan worden gebruikt om gebruik te maken van een service   | RFC0003 |
 
 - [terug naar index](#index)
 ## F
@@ -87,8 +89,9 @@ In de RFC's worden diverse nieuwe termen geintroduceerd. Hieronder alfabetisch e
 
 - [terug naar index](#index)
 ## O
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
+| Organisatie   | Een deelnemer in het iWlz-netwerkmodel die gegevens uitwisselt met andere deelnemers. Een organisatie kan een andere partij controle geven over haar DID-document wanneer zij gegevensuitwisseling wil delegeren aan die andere partij (bijv. een softwareleverancier of een SaaS-aanbieder)   | RFC0003 |
 
 - [terug naar index](#index)
 ## P
@@ -109,11 +112,13 @@ In de RFC's worden diverse nieuwe termen geintroduceerd. Hieronder alfabetisch e
 
 - [terug naar index](#index)
 ## S
-|Term | Toelichting |
-|:--|:--|
-| Scopes            | Een scope geeft de limieten van autorisatie tot een resource aan. Een scope kan een deelnemer bij de autorisatieserver aanvragen.                                                                                           |
+|Term | Toelichting | RFC |
+|:--|:--|:-- |
+| Scopes | Een scope geeft de limieten van autorisatie tot een resource aan. Een scope kan een deelnemer bij de autorisatieserver aanvragen. | RFC0014 |
+| Service | Iedere deelnemer biedt één of meerdere diensten  aan andere deelnemers in het iWlz-netwerkmodel aan. Voorbeelden van diensten zijn: abonneren, notificeren, autoriseren, raadplegen. Een service is de technische implementatie van een dienst en bestaat uit één of meerdere endpoints   | RFC0003 |
 
 - [terug naar index](#index)
+  
 ## T
 |Term | Toelichting |
 |:--|:--|
