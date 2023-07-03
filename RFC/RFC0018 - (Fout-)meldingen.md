@@ -2,7 +2,7 @@
 
 **SAMENVATTING**
 
-Dit document beschrijft de wijze ....
+Dit document beschrijft functioneel de generieke werking meldingen in het Netwerkmodel iWlz. Met notificaties of meldingen worden respectievelijke afnemer of bronhouder geattendeerd op nieuwe informatie die relevant is voor die afnemer of bronhouder.
 
 **Inhoudsopgave**
 - [RFC0018 - (Fout-)meldingen](#rfc0018---fout-meldingen)
@@ -13,18 +13,22 @@ Dit document beschrijft de wijze ....
   - [3.1 Melding of notificatie](#31-melding-of-notificatie)
   - [3.2 Meldingsvormen](#32-meldingsvormen)
   - [3.3 Foutmelden](#33-foutmelden)
-    - [3.3.1 Inhoud iWlz Foutmelding](#331-inhoud-iwlz-foutmelding)
-      - [4.2.1.1 Voorbeeld iWlz Foutmelditng](#4211-voorbeeld-iwlz-foutmelditng)
-  - [Notes](#notes)
+  - [3.4 Inhoud iWlz Foutmelding](#34-inhoud-iwlz-foutmelding)
+    - [3.4.1 Voorbeeld iWlz Foutmelding](#341-voorbeeld-iwlz-foutmelding)
 
 
 ---
 # 1. Inleiding
->```Inleiding```
+Binnen het iWlz netwerkmodel werken we met generieke technische oplossingen en contracten om minimaal afhankelijk te zijn van gezamenlijke releases. Daarom werken we bijvoorbeeld met GraphQL, zodat het uitleveren van extra gegevens via een register geen impact heeft op de overige deelnemers aan het netwerk. Daarnaast spelen register een centrale rol in het beschikbaarstellen van informatie aan ketenpartijen. Een bronhouder is verantwoordelijk voor de integriteit van de data in haar register. De afspraken met betrekking tot deze integriteit zijn beschreven in het Informatiemodel iWlz, te vinden op [iStandaarden](https://istandaarden.nl).
+
+Binnen het estafettemodel wordt gewerkt met heenberichten en retourberichten. Het heenbericht is vergelijkbaar met het raadplegen van gegevens in een register. Hierop volgt het retourbericht waarin het mogelijk is om door middel van retourcodes te melden waar de inhoud van het bericht niet volstaat  volgens de regels van het informatiemodel. 
+
+In het netwerkmodel zal deze functionaliteit vervangen worden door **foutmeldingen**. Deze RFC beschrijft de gewenste functionaliteit
 
 
 ## 1.1. Uitgangspunten
->```uitgangspunten```
+  - Er zijn meerdere vormen voor meldingen. De eerste vorm die geimplementeerd zal worden is de 'foutmelding'. 
+  - 
 
 # 2. Terminologie
 Opsomming van de in dit document gebruikte termen.
@@ -156,7 +160,7 @@ end
 | 07 | http-response {204} | routeren ontvangstbevestiging |
 | 08 | http-response {204} | ontvangen ontvangstbevestiging |
 
-### 3.4 Inhoud iWlz Foutmelding
+## 3.4 Inhoud iWlz Foutmelding
 
 De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare gegevens:
 
@@ -170,7 +174,7 @@ De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare geg
 
 <sup>*</sup> V = verplicht / O = Optioneel
 
-#### 3.4.1 Voorbeeld iWlz Foutmelditng
+### 3.4.1 Voorbeeld iWlz Foutmelding
 
 Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element DiagnoseSubcodelijst niet aan de gestelde regel IRG0012: DiagnoseSubcodelijst vullen conform opgegeven DiagnoseCodelijst. 
 
