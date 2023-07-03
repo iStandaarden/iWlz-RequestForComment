@@ -1,244 +1,181 @@
-# 4. Meldingen
+# RFC0018 - (Fout-)meldingen
+
+**SAMENVATTING**
+
+Dit document beschrijft de wijze ....
+
+**Inhoudsopgave**
+- [RFC0018 - (Fout-)meldingen](#rfc0018---fout-meldingen)
+- [1. Inleiding](#1-inleiding)
+  - [1.1. Uitgangspunten](#11-uitgangspunten)
+- [2. Terminologie](#2-terminologie)
+- [3. Meldingen](#3-meldingen)
+  - [3.1 Melding of notificatie](#31-melding-of-notificatie)
+  - [3.2 Meldingsvormen](#32-meldingsvormen)
+  - [3.3 Foutmelden](#33-foutmelden)
+    - [3.3.1 Inhoud iWlz Foutmelding](#331-inhoud-iwlz-foutmelding)
+      - [4.2.1.1 Voorbeeld iWlz Foutmelditng](#4211-voorbeeld-iwlz-foutmelditng)
+  - [Notes](#notes)
 
 
-## 4.1 Doel
-
-Wanneer een deelnemer andere of nieuwe informatie heeft over gegevens in een register waar de deelnemer zelf geen bronhouder van is, kan die deelnemer dit melden aan de bronhouder via een melding. 
-
- 
-
-**Melding**: verzoek tot muteren of het beschikbaar stellen van nieuwe informatie naar aanleiding van een gebeurtenis van een afnemer aan een bron.
+---
+# 1. Inleiding
+>```Inleiding```
 
 
+## 1.1. Uitgangspunten
+>```uitgangspunten```
 
-<p id="gdcalert10" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image10.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert11">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
+# 2. Terminologie
+Opsomming van de in dit document gebruikte termen.
 
-
-![alt_text](images/image10.png "image_tooltip")
-
-
-<p id="gdcalert11" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image11.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert12">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image11.png "image_tooltip")
+| Terminologie | Omschrijving |
+| :-------- | :-------- | 
+| *term* | *beschrijving/uitleg* | 
 
 
 
-<table>
-  <tr>
-   <td>#
-   </td>
-   <td>Beschrijving
-   </td>
-   <td>Toelichting
-   </td>
-  </tr>
-  <tr>
-   <td>1
-   </td>
-   <td>melding aanmaken
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>2
-   </td>
-   <td>melding verzenden
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>3
-   </td>
-   <td>melding naar bronhouder
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>4
-   </td>
-   <td>doorzetten melding
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>5
-   </td>
-   <td>response {204}
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>6
-   </td>
-   <td>response {204}
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>7
-   </td>
-   <td>response {204}
-   </td>
-   <td>
-   </td>
-  </tr>
-</table>
+# 3. Meldingen
 
+## 3.1 Melding of notificatie
+Wanneer een deelnemer andere of nieuwe informatie heeft over gegevens in een register waar de deelnemer zelf geen bronhouder van is, kan die deelnemer dit kenbaar maken bij de bronhouder via een melding.
 
-Voor meldingen zijn verschillende toepassingen te bedenken. De eerste toepassing is het melden van fouten op een bronregister wanneer de gegevens niet voldoen aan de regels van het informatiemodel iWlz. 
+![melding_notificatie](../plantUMLsrc/rfc0018-01-melding_notificatie.svg "melding_notificatie")
+<details>
+<summary>plantUML-source</summary>
 
+```plantuml
+@startuml rfc0018-01-melding_notificatie
+title melding of notificatie
+skinparam handwritten false
+skinparam participantpadding 20
+skinparam boxpadding 40
+autonumber "<b>[00]"
+box  #lightblue
+participant "bronhouder" as bs
+end box
 
-## 4.2 iWlz foutmeldingen
+box  #lightyellow
+participant "deelnemer" as dbs
+end box
+
+Group Melden
+    dbs -> bs: sturen melding
+    hnote over dbs #GreenYellow :melding
+    activate bs
+    activate dbs
+    return response
+    deactivate dbs
+end
+
+Group Notificeren
+    bs -> dbs : sturen notificatie
+    hnote over bs #GreenYellow :notificatie 
+    activate bs
+    activate dbs
+    return response
+    deactivate bs
+end
+@enduml
+```
+</details>
+
+|             | Van        | Naar       | Omschrijving                                                                                                                                                                |
+|:------------|:-----------|:-----------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Melding     | Deelnemer  | Bronhouder | verzoek tot muteren of het beschikbaar stellen van nieuwe informatie naar aanleiding van een gebeurtenis van een deelnemer aan een bron                                     |
+| Notificatie | Bronhouder | Deelnemer  | op de hoogte stellen van een deelnemer over dat er nieuwe (of gewijzigde) informatie in een bron beschikbaar is die directe of afgeleide betrekking heeft op die deelnemer. |
+
+Het onderdeel Notificatie is verder uitgewerkt in **RFC0008 - Functionele uitwerking notificaties en abonnementen**.
+
+## 3.2 Meldingsvormen
+Er zijn drie vormen van meldingen gedefinieerd aan de hand van de gestructueerdheid van de informatie in de melding en of die informatie direct betrekking heeft op gegevens in het register. 
+
+|#| vorm | omschrijving | gestructureerdheid/relateerbaarheid |
+|:--:| :-- | :-- | :-- |
+| 1 | Foutmelding | Voor het melden van afwijking/overtreding van regels beschreven in de iWlz iStandaard | Zeer, direct te relateren aan een gegeven en afgesproken inhoud dmv (fout-)code |
+| 2 | Terugmelding | Voor het aandragen van een voorstel voor verbetering aandragen aan de bron;  bijvoorbeeld wijziging coördinator zorg thuis | minder, wel te relateren, maar vrije (tekstuele) inhoud |
+| 3 | Aanvraagmelding | Voor het indienen van nieuwe gegevens, ongerelateerd aan bestaande informatie |
+
+Deze RFC gaat vooral over de **Foutmelding**, waarbij er zoveel mogelijk rekeninggehouden wordt met het mogelijk maken van de overige twee vormen. 
+
+## 3.3 Foutmelden
 
 iWlz foutmeldingen zijn nodig om een bronhouder te attenderen op overtredingen van een regel in het informatiemodel iWlz. Wanneer een deelnemer een dergelijke situatie detecteert stuurt deze een (fout-)melding aan de bronhouder. 
 
+![foutmelden](../plantUMLsrc/rfc0018-02-foutmelden.svg "foutmelden")
 
+<details>
+<summary>plantUML-source</summary>
 
-<p id="gdcalert12" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image12.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert13">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
+```plantuml
+@startuml rfc0018-02-foutmelden
+skinparam handwritten false
+skinparam participantpadding 20
+skinparam boxpadding 40
+autonumber "<b>[00]"
+box bronhouder #lightblue
+participant "Backoffice" as bs
+participant "Register" as rg
+participant "Netwerkpunt" as bnp 
+end box
 
+box deelnemer #lightyellow
+participant "Netwerkpunt" as dnp
+participant "Backoffice" as dbs
+end box
 
-![alt_text](images/image12.png "image_tooltip")
+rg o-> dbs: raadpleging
+    activate dbs
 
+group fout melden
+    dbs -> dbs: Fout \ngeconstateerd
+    dbs -> dnp: Foutmelding verzenden
+    activate dnp
+    dnp -> bnp: Foutmelding naar bronhouder
+    activate bnp
+    bnp -> bs: doorzetten foutmelding
+    activate bs
+    return response {204}
+    return response {204}
+    return response {204}
+    deactivate dbs
+end
 
+@enduml
+```
+</details>
 
-<table>
-  <tr>
-   <td><strong>#</strong>
-   </td>
-   <td><strong>Beschrijving</strong>
-   </td>
-   <td><strong>Toelichting</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>0
-   </td>
-   <td>raadpleging
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>1
-   </td>
-   <td>fout geconstateerd
-   </td>
-   <td>Na raadpleging van gegevens in een bronregister constateert de raadpleger een fout volgens de regels in het informatiemodel iWlz. De deelnemer maakt hiervoor een foutmelding aan met daarin het corresponderende foutcode van de regel die is overtreden
-   </td>
-  </tr>
-  <tr>
-   <td>2
-   </td>
-   <td>foutmelding verzenden
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>3
-   </td>
-   <td>foutmelding naar bronhouder
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>4
-   </td>
-   <td>doorzetten foutmelding
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>5
-   </td>
-   <td>response {204}
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>6
-   </td>
-   <td>response {204}
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>7
-   </td>
-   <td>response {204}
-   </td>
-   <td>
-   </td>
-  </tr>
-</table>
+| # | Beschrijving | Toelichting |
+|:---:|---|---|
+| 01 | raadpleging | Raadplegen van gegevens door de deelnemer |
+| 02 | fout geconstateerd | Na raadpleging van gegevens in het register constateert de deelnemer een fout volgens de regels in het informatiemodel iWlz. De deelnemer maakt hiervoor een foutmelding aan met daarin het corresponderende foutcode van de regel die is overtreden |
+| 03 | foutmelding verzenden | foutmelding aanmaken en verzenden |
+| 04 | foutmelding naar bronhouder | routeren naar juiste bronhouder |
+| 05 | doorzetten foutmelding | doorzetten foutmelding |
+| 06 | http-response {204} | ontvangstbevestiging verzenden aan deelnemer |
+| 07 | http-response {204} | routeren ontvangstbevestiging |
+| 08 | http-response {204} | ontvangen ontvangstbevestiging |
 
-
-
-### 4.2.1 Inhoud iWlz Foutmelding
+### 3.4 Inhoud iWlz Foutmelding
 
 De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare gegevens:
 
+| Gegeven     | Beschrijving     |  V/O<sup>*</sup> | Datatype
+| --- | --- | :--: | :-- |
+| afzenderID     | Identificatie van de afzender in het netwerk | V | String |
+| timestamp     | Tijdstip waarop de melding is aangemaakt | V | Datetime |
+| meldingType     | Identificatie van het type melding. (nu alleen iWlzFoutmelding) | V | Enum[Foutmelding] |
+| melding     | inhoud van de melding (nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn) | V | String |
+| objectID     | Identificatie van het object waar de melding betrekking op heeft en eventueel input voor de raadpleging. | V | String |
 
-<table>
-  <tr>
-   <td><strong>Gegeven</strong>
-   </td>
-   <td><strong>Beschrijving</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>afzenderID
-   </td>
-   <td>Identificatie van de afzender in het netwerk
-   </td>
-  </tr>
-  <tr>
-   <td>timestamp
-   </td>
-   <td>Tijdstip waarop de melding is aangemaakt
-   </td>
-  </tr>
-  <tr>
-   <td>meldingType
-   </td>
-   <td>Identificatie van het type melding. 
-<p>
-<em>(nu alleen iWlzFoutmelding)</em>
-   </td>
-  </tr>
-  <tr>
-   <td>melding
-   </td>
-   <td>inhoud van de melding (<em>nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn</em>)
-   </td>
-  </tr>
-  <tr>
-   <td>objectID
-   </td>
-   <td>Identificatie van het object waar de melding betrekking op heeft en eventueel input voor de raadpleging.
-   </td>
-  </tr>
-</table>
+<sup>*</sup> V = verplicht / O = Optioneel
+
+#### 3.4.1 Voorbeeld iWlz Foutmelditng
+
+Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element DiagnoseSubcodelijst niet aan de gestelde regel IRG0012: DiagnoseSubcodelijst vullen conform opgegeven DiagnoseCodelijst. 
 
 
-
-#### 4.2.1.1 Voorbeeld iWlz Foutmelditng
-
-Bij een indicatie voldoet in de klasse Stoornis de waarde van element DiagnoseSubcodelijst niet aan de gestelde regel IRG0012: DiagnoseSubcodelijst vullen conform opgegeven DiagnoseCodelijst. 
-
-
-```
+```json
 {
   "afzenderID": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
   "timestamp": "2022-09-27T12:07:07.492Z",
@@ -249,13 +186,5 @@ Bij een indicatie voldoet in de klasse Stoornis de waarde van element DiagnoseSu
 }
 ```
 
-
 n.b. omdat het element niet afzonderlijk is te duiden, bevat het objectId de verwijzing naar het record in de klasse Stoornis.
 
-
-<!-- Footnotes themselves at the bottom. -->
-## Notes
-
-[^1]:
-<p>
-     Dit abonnement is afhankelijk van de wijziging in het Indicatieregister zoals beschreven in <<nummer RFC referentiegroep>>
