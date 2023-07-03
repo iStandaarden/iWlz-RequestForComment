@@ -456,7 +456,7 @@ Bij het abonneren van een deelnemer moeten de volgende gegevens worden aangebode
 
 | Gegeven                        | Beschrijving                                                                                                  |
 |:-------------------------------|:--------------------------------------------------------------------------------------------------------------|
-| organisatieId                  | NetwerkiIdentificatie van de abonnerende partij, identificerend voor het kunnen afleveren van de notificatie. |
+| organisatieId                  | NetwerkIdentificatie van de abonnerende partij, identificerend voor het kunnen afleveren van de notificatie. |
 | abonnementTypeIdabonnementType | IdentificatieAanduiding van het abonnement waarop deelnemer wil abonneren of geabonneerd moet worden.type     |
 | idTypeAbonnee                  | Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement                    |
 | idAbonnee                      | Daadwerkelijk identificatie conform bij idType geselecteerd id type                                           |
