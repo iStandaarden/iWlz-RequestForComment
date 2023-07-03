@@ -1,0 +1,34 @@
+@startuml rfc0018-02-foutmelden
+skinparam handwritten false
+skinparam participantpadding 20
+skinparam boxpadding 40
+autonumber "<b>[00]"
+box bronhouder #lightblue
+participant "Backoffice" as bs
+participant "Register" as rg
+participant "Netwerkpunt" as bnp 
+end box
+
+box deelnemer #lightyellow
+participant "Netwerkpunt" as dnp
+participant "Backoffice" as dbs
+end box
+
+rg o-> dbs: raadpleging
+    activate dbs
+
+group fout melden
+    dbs -> dbs: Fout \ngeconstateerd
+    dbs -> dnp: Foutmelding verzenden
+    activate dnp
+    dnp -> bnp: Foutmelding naar bronhouder
+    activate bnp
+    bnp -> bs: doorzetten foutmelding
+    activate bs
+    return response {204}
+    return response {204}
+    return response {204}
+    deactivate dbs
+end
+
+@enduml

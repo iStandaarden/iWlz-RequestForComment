@@ -1,5 +1,5 @@
 
-# RFC0008 -  Functionele uitwerking notificaties abonnementen en meldingen
+# RFC0008 -  Functionele uitwerking notificaties en abonnementen
 
 **SAMENVATTING**
 
@@ -7,7 +7,7 @@ Dit document beschrijft functioneel de generieke werking van notificaties en mel
 
 ---
 **Inhoudsopgave**
-- [RFC0008 -  Functionele uitwerking notificaties abonnementen en meldingen](#rfc0008----functionele-uitwerking-notificaties-abonnementen-en-meldingen)
+- [RFC0008 -  Functionele uitwerking notificaties en abonnementen](#rfc0008----functionele-uitwerking-notificaties-en-abonnementen)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
 - [2. Terminologie](#2-terminologie)

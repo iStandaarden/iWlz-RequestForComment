@@ -1,0 +1,32 @@
+@startuml rfc0018-01-melding_notificatie
+title melding of notificatie
+skinparam handwritten false
+skinparam participantpadding 20
+skinparam boxpadding 40
+autonumber "<b>[00]"
+box  #lightblue
+participant "bronhouder" as bs
+end box
+
+box  #lightyellow
+participant "deelnemer" as dbs
+end box
+
+Group Melden
+    dbs -> bs: sturen melding
+    hnote over dbs #GreenYellow :melding
+    activate bs
+    activate dbs
+    return response
+    deactivate dbs
+end
+
+Group Notificeren
+    bs -> dbs : sturen notificatie
+    hnote over bs #GreenYellow :notificatie 
+    activate bs
+    activate dbs
+    return response
+    deactivate bs
+end
+@enduml
