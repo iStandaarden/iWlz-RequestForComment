@@ -1,4 +1,5 @@
 # RFC0018 - (Fout-)meldingen
+- [ ]  Verwijzing opnemen naar generiek GraphQL KV
 
 **SAMENVATTING**
 
@@ -191,4 +192,5 @@ Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element 
 ```
 
 n.b. omdat het element niet afzonderlijk is te duiden, bevat het objectId de verwijzing naar het record in de klasse Stoornis.
+
 
