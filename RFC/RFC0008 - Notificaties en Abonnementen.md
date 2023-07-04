@@ -1,4 +1,3 @@
-
 # RFC0008 -  Functionele uitwerking notificaties en abonnementen
 
 **SAMENVATTING**
