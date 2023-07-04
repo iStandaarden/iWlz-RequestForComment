@@ -7,7 +7,7 @@ Repostistory voor de RFC's van het Netwerkmodel iWlz.
   - [Terminologie](#terminologie)
   - [Directory-structuur](#directory-structuur)
   - [Werkwijze](#werkwijze)
-    - [Template](#template)
+    - [Template RFC](#template-rfc)
     - [PlantUML-diagrammen](#plantuml-diagrammen)
   - [Contact](#contact)
 
@@ -37,7 +37,7 @@ De verklaring van de in de RFC's gebruikte termen zijn te vinden in het Afsprake
 ## Werkwijze
 Maak een RFC aan in [markdown-format](https://www.markdownguide.org) en plaats deze in de map /RFC. Neem contact op bij vragen. 
 
-### Template
+### Template RFC
 Om de leesbaarheid tussen de verschillende RFC's te bevorderen moet gebruik gemaakt worden van het template [RFC-template.md](/RFC-template.md). Het RFC bevat een aantal 'verplichte' onderdelen.  
 
 ### PlantUML-diagrammen
