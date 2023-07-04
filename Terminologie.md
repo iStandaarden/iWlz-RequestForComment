@@ -13,15 +13,15 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 ## A
 |Term | Toelichting | RFC |
 |:--|:--|:--|
-| Access-Token      | Een access-token wordt uitgegeven aan een deelnemer door de autorisatieserver. Een Access-Token heeft een korte levensduur en bevat informatie over de deelnemer, de scopes(permissies) en diverse tijdsaspecten. | [RFC-0014](/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) |
+| Access-Token | Een access-token wordt uitgegeven aan een deelnemer door de autorisatieserver. Een Access-Token heeft een korte levensduur en bevat informatie over de deelnemer, de scopes(permissies) en diverse tijdsaspecten. | [RFC-0014](/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) |
 | Autorisatieserver | Een autorisatieserver deelt Access-Tokens uit om te kunnen communiceren met een Resouce Server.| [RFC-0014](/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) |
 
 - [terug naar index](#index)
 ## B
 |Term | Toelichting | RFC |
 |:--|:--|:--|
-| Backoffice   | Omgeving rondom het register voor de afhandeling van netwerk-diensten | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) |
-| Bronhouder   | Aanbieder van de data, houder van het register | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) |
+| Backoffice | Omgeving rondom het register voor de afhandeling van netwerk-diensten | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) |
+| Bronhouder | Aanbieder van de data, houder van het register | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) |
 
 - [terug naar index](#index)
 ## C
@@ -43,7 +43,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 ## E
 |Term | Toelichting | RFC |
 |:--|:--|:--|
-| Endpoint   | Een URI of URL die wordt gepubliceerd door een deelnemer en die door andere deelnemers kan worden gebruikt om gebruik te maken van een service   | [RFC0003](/RFC/RFC0003%20-%20Adresboek.md) |
+| Endpoint | Een URI of URL die wordt gepubliceerd door een deelnemer en die door andere deelnemers kan worden gebruikt om gebruik te maken van een service   | [RFC0003](/RFC/RFC0003%20-%20Adresboek.md) |
 
 - [terug naar index](#index)
 ## F
