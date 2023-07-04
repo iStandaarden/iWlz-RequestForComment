@@ -1,4 +1,4 @@
-# <TITEL - RFC>
+# Certificaatstructuur veilige verbinging
 
 **SAMENVATTING**
 
@@ -10,7 +10,7 @@ Naast het gebruik van certificaten voor een veilige verbinding maakt het iWlz-ne
 
 ---
 **Inhoudsopgave**
-- [\<TITEL - RFC\>](#titel---rfc)
+- [Certificaatstructuur veilige verbinging](#certificaatstructuur-veilige-verbinging)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
 - [2. Terminologie](#2-terminologie)
