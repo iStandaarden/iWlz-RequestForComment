@@ -9,6 +9,7 @@ Dit document beschrijft functioneel de generieke werking meldingen in het Netwer
 - [RFC0018 - (Fout-)meldingen](#rfc0018---fout-meldingen)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
+  - [1.2 Code](#12-code)
 - [2. Terminologie](#2-terminologie)
 - [3. Meldingen](#3-meldingen)
   - [3.1 Melding of notificatie](#31-melding-of-notificatie)
@@ -29,7 +30,9 @@ In het netwerkmodel zal deze functionaliteit vervangen worden door **foutmelding
 
 ## 1.1. Uitgangspunten
   - Er zijn meerdere vormen voor meldingen. De eerste vorm die geimplementeerd zal worden is de 'foutmelding'. 
-  - 
+
+## 1.2 Code
+De bijbehorende koppelvlakspecificaties zijn te vinden in [https://github.com/iStandaarden/iWlz-generiek/tree/RFC0008-RFC0018](https://github.com/iStandaarden/iWlz-generiek/tree/RFC0008-RFC0018).
 
 # 2. Terminologie
 Opsomming van de in dit document gebruikte termen.

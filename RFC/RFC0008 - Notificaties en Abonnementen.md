@@ -10,6 +10,7 @@ Dit document beschrijft functioneel de generieke werking van notificaties en mel
 - [RFC0008 -  Functionele uitwerking notificaties en abonnementen](#rfc0008----functionele-uitwerking-notificaties-en-abonnementen)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
+  - [1.2 Code-repository](#12-code-repository)
 - [2. Terminologie](#2-terminologie)
 - [3. Notificatie of melding wat is het verschil](#3-notificatie-of-melding-wat-is-het-verschil)
 - [4. Notificaties](#4-notificaties)
@@ -53,6 +54,9 @@ Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één 
 - Om een abonnement te kunnen plaatsen heeft een deelnemer een attest van deelname nodig.
 - Een notificatie is dun. Dat wil zeggen dat de ontvanger op basis van de notificatie in staat is te bepalen welke informatie relevant is om te raadplegen. 
 - Een abonnement is in de basis permanent. De abonnee is zelf verantwoordelijk voor het intrekken van het abonnement. Bij uittreding uit het netwerk, bijvoorbeeld vanwege fusie of faillissement, kunnen abonnementen in bulk worden opgeruimd of gemuteerd. Dit zal in de praktijk altijd maatwerk zijn.
+
+## 1.2 Code-repository
+De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/RFC0008-RFC0018](https://github.com/iStandaarden/iWlz-generiek/tree/RFC0008-RFC0018)
 
 
 # 2. Terminologie
@@ -444,7 +448,7 @@ Het abonneren van een deelnemer voor een <span style="text-decoration:underline;
 
 
 ## 6.3 Plaatsen abonnement
-Het plaatsen van een abonnement op een iWlz-vrijwillige notificatie of elke andere niet iWlz-verplichte notificatie verloopt via GraphQl met een mutation.  De specificatie hiervan staan in @@@github iWlz-generiek repo@@@
+Het plaatsen van een abonnement op een iWlz-vrijwillige notificatie of elke andere niet iWlz-verplichte notificatie verloopt via GraphQl met een mutation.  De specificatie hiervan staan in [https://github.com/iStandaarden/iWlz-generiek/tree/RFC0008-RFC0018](https://github.com/iStandaarden/iWlz-generiek/tree/RFC0008-RFC0018)]
 
 ### 6.3.1 Request CreateAbonnement en inhoud plaatsen abonnement
 
