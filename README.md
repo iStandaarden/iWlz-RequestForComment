@@ -7,6 +7,7 @@ Repostistory voor de RFC's van het Netwerkmodel iWlz.
   - [Terminologie](#terminologie)
   - [Directory-structuur](#directory-structuur)
   - [Werkwijze](#werkwijze)
+    - [Template](#template)
     - [PlantUML-diagrammen](#plantuml-diagrammen)
   - [Contact](#contact)
 
@@ -14,14 +15,14 @@ Repostistory voor de RFC's van het Netwerkmodel iWlz.
 ## Prioritering en project
 De RFC's worden geprioriteerd in het project [RFC-netwerkmodel](https://github.com/orgs/iStandaarden/projects/5). Ga naar dit project om de status en prioriteit te bekijken. De eerst volgende milestone zal de POC Bemiddeingsregister zijn. RFC's die hiervoor van belang zijn, zijn hier aan gelabeld. 
 
-
 ## Inhoud
 |RFC | onderwerp | status | issue |
 |:--|:--|:--| :--|
 |[0001](RFC/RFC0001%20-%20Certificaatstructuur%20veilige%20verbinging.md) | Certificaatstructuur veilige verbinging | draft-intern | [#3](https://github.com/iStandaarden/iWlz-RFC/issues/3) |
 |[0003](RFC/RFC0003%20-%20Adresboek.md) | Adresboek | draft-intern | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4) |
 |[0008](RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | draft-intern | [#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
-|[0014](RFC//RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) | Notificaties en abonnement | draft-intern | [#9](https://github.com/iStandaarden/iWlz-RFC/issues/9) |
+|[0014](RFC//RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) | Functionele uitwerking van aanvragen autorisatie | draft-intern | [#9](https://github.com/iStandaarden/iWlz-RFC/issues/9) |
+|[0018](/RFC/RFC0018%20-%20(Fout-)meldingen.md) | (Fout-)meldingen | draft-intern | [#16](https://github.com/iStandaarden/iWlz-RFC/issues/16) |
 
 ## Terminologie
 De verklaring van de in de RFC's gebruikte termen zijn te vinden in het Afsprakenstelsel en [hier](/Terminologie.md).
@@ -36,6 +37,9 @@ De verklaring van de in de RFC's gebruikte termen zijn te vinden in het Afsprake
 ## Werkwijze
 Maak een RFC aan in [markdown-format](https://www.markdownguide.org) en plaats deze in de map /RFC. Neem contact op bij vragen. 
 
+### Template
+Om de leesbaarheid tussen de verschillende RFC's te bevorderen moet gebruik gemaakt worden van het template [RFC-template.md](/RFC-template.md). Het RFC bevat een aantal 'verplichte' onderdelen.  
+
 ### PlantUML-diagrammen
 Gebruik je in de RFC PlanUML-diagrammen dan is het voor github eerst noodzakelijk van de plantUML-file (.puml) eerst een svg te laten genereren. Github ondersteund het opnemen van plantuml in Markdown files niet. 
 
@@ -47,6 +51,7 @@ Werkwijze:
     ![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")
     ```
 - Daarna is het gegeneerde diagram zichtbaar in de RFC
+
 ## Contact
 * Dennis de Gouw - [@dennisdegouw](https://github.com/dennisdegouw)
 * Remo van Rest - [@rvanrest](https://github.com/rvanrest)
