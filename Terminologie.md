@@ -26,7 +26,10 @@ In de RFC's worden diverse nieuwe termen geintroduceerd. Hieronder alfabetisch e
 ## C
 |Term | Toelichting |
 |:--|:--|
-| Claims            | Een claim is een kwalificatie, een behaalde prestatie of een stukje informatie over de achtergrond van een entiteit, zoals een naam, id, huisadres of afgeronde opleiding. Een claim zegt iets over de entiteit (deelnemer) |
+| CA | Certificaatautoriteit zoals gedefinieerd door [RFC2459](https://tools.ietf.org/html/rfc2459) | 
+| Claims | Een claim is een kwalificatie, een behaalde prestatie of een stukje informatie over de achtergrond van een entiteit, zoals een naam, id, huisadres of afgeronde opleiding. Een claim zegt iets over de entiteit (deelnemer) |
+| CPS | [Certification Practise Statement](https://en.wikipedia.org/wiki/Certification_Practice_Statement) |
+| CRL | [Certificatie Revocation List](https://en.wikipedia.org/wiki/Certificate_revocation_list) |  
 
 - [terug naar index](#index)
 ## D
@@ -85,18 +88,21 @@ In de RFC's worden diverse nieuwe termen geintroduceerd. Hieronder alfabetisch e
 ## N
 |Term | Toelichting |
 |:--|:--|
-| nID-Filter        | Het nID-Filter is onderdeel van de Resource Server en heeft als taak het verzoek tot de resource te valideren tegen de uitgedeelde scope(s).|
+| Netwerkpunt-operator | een organisatie die een netwerkpunt beheert. In het iWlz-netwerkmodel een leverancier die software levert aan een deelnemer | 
+| nID-Filter | Het nID-Filter is onderdeel van de Resource Server en heeft als taak het verzoek tot de resource te valideren tegen de uitgedeelde scope(s) |
 
 - [terug naar index](#index)
 ## O
 |Term | Toelichting | RFC |
 |:--|:--|:--|
-| Organisatie   | Een deelnemer in het iWlz-netwerkmodel die gegevens uitwisselt met andere deelnemers. Een organisatie kan een andere partij controle geven over haar DID-document wanneer zij gegevensuitwisseling wil delegeren aan die andere partij (bijv. een softwareleverancier of een SaaS-aanbieder)   | RFC0003 |
+| Organisatie | Een deelnemer in het iWlz-netwerkmodel die gegevens uitwisselt met andere deelnemers. Een organisatie kan een andere partij controle geven over haar DID-document wanneer zij gegevensuitwisseling wil delegeren aan die andere partij (bijv. een softwareleverancier of een SaaS-aanbieder)   | RFC0003 |
 
 - [terug naar index](#index)
 ## P
 |Term | Toelichting |
 |:--|:--|
+| PKI | Public Key Infrastructure.  | 
+| PKIoverheid | De door de Nederlandse overheid beheerde PKI-structuur | 
 
 - [terug naar index](#index)
 ## Q
@@ -108,7 +114,7 @@ In de RFC's worden diverse nieuwe termen geintroduceerd. Hieronder alfabetisch e
 |Term | Toelichting |
 |:--|:--|
 | Register     | De feitelijke databron/database|
-| Resource Server   | Een resource server beschermd de resource, valideerd het Access-Token en geeft op basis van de beschreven scopes toegang tot de resource.|
+| Resource Server   | Een resource server beschermd de resource, valideerd het Access-Token en geeft op basis van de beschreven scopes toegang tot de resource |
 
 - [terug naar index](#index)
 ## S
@@ -122,6 +128,7 @@ In de RFC's worden diverse nieuwe termen geintroduceerd. Hieronder alfabetisch e
 ## T
 |Term | Toelichting |
 |:--|:--|
+| TSP | Trusted Service Provider. Partij die PKIo-certificaten kan uitgeven | 
 
 - [terug naar index](#index)
 ## U

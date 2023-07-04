@@ -9,8 +9,8 @@ Dit document beschrijft de wijze waarop de adresseringsvoorziening binnen het iW
 **Inhoudsopgave**
 - [Adresboek](#adresboek)
 - [1. Inleiding](#1-inleiding)
-- [2. Uitgangspunten](#2-uitgangspunten)
-- [3. Terminologie](#3-terminologie)
+  - [1.1 Uitgangspunten](#11-uitgangspunten)
+- [2. Terminologie](#2-terminologie)
 - [4. Services](#4-services)
   - [4.1 Service referenties](#41-service-referenties)
   - [4.2 Contactgegevens](#42-contactgegevens)
@@ -21,10 +21,10 @@ Dit document beschrijft de wijze waarop de adresseringsvoorziening binnen het iW
 >```Inleiding```
 <br>
 
-# 2. Uitgangspunten
+## 1.1 Uitgangspunten
 >```uitgangspunten```
 
-# 3. Terminologie
+# 2. Terminologie
 Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
