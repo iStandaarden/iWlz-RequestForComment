@@ -18,7 +18,7 @@ De RFC's worden geprioriteerd in het project [RFC-netwerkmodel](https://github.c
 ## Inhoud
 |RFC | onderwerp | status | issue |
 |:--|:--|:--| :--|
-|[0001](RFC/RFC0001%20-%20Certificaatstructuur%20veilige%20verbinging.md) | Certificaatstructuur veilige verbinging | draft-intern | [#3](https://github.com/iStandaarden/iWlz-RFC/issues/3) |
+|[0001](RFC/RFC0001%20-%20Certificaatstructuur%20veilige%20verbinging.md) | Certificaatstructuur veilige verbinding | draft-intern | [#3](https://github.com/iStandaarden/iWlz-RFC/issues/3) |
 |[0003](RFC/RFC0003%20-%20Adresboek.md) | Adresboek | draft-intern | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4) |
 |[0004](/RFC/RFC0004%20-%20Verifiable%20Credentials.md) | Verifiable Credentials | draft-intern | [#5](https://github.com/iStandaarden/iWlz-RFC/issues/5) |
 |[0008](RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | draft-intern | [#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
