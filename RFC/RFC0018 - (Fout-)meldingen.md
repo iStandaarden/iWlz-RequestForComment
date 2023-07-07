@@ -9,7 +9,8 @@ Dit document beschrijft functioneel de generieke werking meldingen in het Netwer
 - [RFC0018 - (Fout-)meldingen](#rfc0018---fout-meldingen)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
-  - [1.2 Code](#12-code)
+  - [1.2 Relatie andere RFC's](#12-relatie-andere-rfcs)
+  - [1.3 Code](#13-code)
 - [2. Terminologie](#2-terminologie)
 - [3. Meldingen](#3-meldingen)
   - [3.1 Melding of notificatie](#31-melding-of-notificatie)
@@ -31,7 +32,15 @@ In het netwerkmodel zal deze functionaliteit vervangen worden door **foutmelding
 ## 1.1. Uitgangspunten
   - Er zijn meerdere vormen voor meldingen. De eerste vorm die geimplementeerd zal worden is de 'foutmelding'. 
 
-## 1.2 Code
+## 1.2 Relatie andere RFC's
+Deze RFC heeft de volgende relatie met andere RFCs:
+| RFC | onderwerp | relatie<sup>*</sup> | toelichting | issue |
+|:----|:----------|:--------------------|:------------|:------|
+|     |           |                     |             |       |
+
+<sup>*</sup>voorwaardelijk,*voor andere RFC* / afhankelijk, *van andere RFC*
+
+## 1.3 Code
 De bijbehorende koppelvlakspecificaties zijn te vinden in [https://github.com/iStandaarden/iWlz-generiek/tree/RFC0008-RFC0018](https://github.com/iStandaarden/iWlz-generiek/tree/RFC0008-RFC0018).
 
 # 2. Terminologie
@@ -39,7 +48,8 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
 | :-------- | :-------- | 
-| *term* | *beschrijving/uitleg* | 
+| Bronhouder | Aanbieder van de data, houder van het register |
+| Deelnemer | De raadpleger van de bron, het register | 
 
 
 
@@ -100,9 +110,9 @@ Er zijn drie vormen van meldingen gedefinieerd aan de hand van de gestructueerdh
 
 |#| vorm | omschrijving | gestructureerdheid/relateerbaarheid |
 |:--:| :-- | :-- | :-- |
-| 1 | Foutmelding | Voor het melden van afwijking/overtreding van regels beschreven in de iWlz iStandaard | Zeer, direct te relateren aan een gegeven en afgesproken inhoud dmv (fout-)code |
+| 1 | **Foutmelding** | Voor het melden van afwijking/overtreding van regels beschreven in de iWlz iStandaard | Zeer, direct te relateren aan een gegeven en afgesproken inhoud dmv (fout-)code |
 | 2 | Terugmelding | Voor het aandragen van een voorstel voor verbetering aandragen aan de bron;  bijvoorbeeld wijziging coördinator zorg thuis | minder, wel te relateren, maar vrije (tekstuele) inhoud |
-| 3 | Aanvraagmelding | Voor het indienen van nieuwe gegevens, ongerelateerd aan bestaande informatie |
+| 3 | Aanvraagmelding | Voor het indienen van nieuwe gegevens, ongerelateerd aan bestaande informatie | ongestructureerd |
 
 Deze RFC gaat vooral over de **Foutmelding**, waarbij er zoveel mogelijk rekeninggehouden wordt met het mogelijk maken van de overige twee vormen. 
 
@@ -136,17 +146,27 @@ rg o-> dbs: raadpleging
     activate dbs
 
 group fout melden
-    dbs -> dbs: Fout \ngeconstateerd
-    dbs -> dnp: Foutmelding verzenden
+    dbs -> dbs: iWlz-Fout \ngeconstateerd
+    dbs -> dnp: iWlz-Foutmelding verzenden
     activate dnp
-    dnp -> bnp: Foutmelding naar bronhouder
+    dnp -> bnp: iWlz-Foutmelding naar \nbronhouder
     activate bnp
-    bnp -> bs: doorzetten foutmelding
+    bnp -> bnp: valideer inzending
+    bnp -> bs: doorzetten iWlz-foutmelding
     activate bs
-    return response {204}
-    return response {204}
-    return response {204}
-    deactivate dbs
+    bs -> bnp: return response {204}
+    deactivate bs
+    bnp -> dnp: return response {204}
+    dnp -> dbs: return response {204}
+
+    alt #Pink
+      bnp --> dnp: response: {400} ongeldig verzoek
+      deactivate bnp
+      dnp --> dbs: response: {400} ongeldig verzoek
+      deactivate dnp
+      deactivate dbs
+    end alt
+
 end
 
 @enduml
@@ -156,13 +176,17 @@ end
 | # | Beschrijving | Toelichting |
 |:---:|---|---|
 | 01 | raadpleging | Raadplegen van gegevens door de deelnemer |
-| 02 | fout geconstateerd | Na raadpleging van gegevens in het register constateert de deelnemer een fout volgens de regels in het informatiemodel iWlz. De deelnemer maakt hiervoor een foutmelding aan met daarin het corresponderende foutcode van de regel die is overtreden |
-| 03 | foutmelding verzenden | foutmelding aanmaken en verzenden |
-| 04 | foutmelding naar bronhouder | routeren naar juiste bronhouder |
-| 05 | doorzetten foutmelding | doorzetten foutmelding |
-| 06 | http-response {204} | ontvangstbevestiging verzenden aan deelnemer |
-| 07 | http-response {204} | routeren ontvangstbevestiging |
-| 08 | http-response {204} | ontvangen ontvangstbevestiging |
+| 02 | iWlz-fout geconstateerd | Na raadpleging van gegevens in het register constateert de deelnemer een fout volgens de regels in het informatiemodel iWlz. De deelnemer maakt hiervoor een foutmelding aan met daarin het corresponderende foutcode van de regel die is overtreden |
+| 03 | iWlz-foutmelding verzenden | foutmelding aanmaken en verzenden |
+| 04 | iWlz-foutmelding naar bronhouder | routeren naar juiste bronhouder |
+| 05 | valideer iWlz-foutmelding | bepaal of afzender melding mag insturen |
+| 06 | doorzetten foutmelding | doorzetten foutmelding |
+| 07 | http-response {204} | ontvangstbevestiging verzenden aan deelnemer |
+| 08 | http-response {204} | routeren ontvangstbevestiging |
+| 09 | http-response {204} | ontvangen ontvangstbevestiging |
+| ALT | ongeldige inzending          | Deelnemer is niet gerechtigd om de iWlz-foutmelding te doen.                         |
+| 10  | response ongeldig verzoek {400} | retourneer ongeldig verzoek                                             |
+| 11  | response ongeldig verzoek {400} | ontvang ongeldig verzoek terug                                          |
 
 ## 3.4 Inhoud iWlz Foutmelding
 

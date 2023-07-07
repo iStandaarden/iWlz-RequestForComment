@@ -9,7 +9,8 @@ Dit document beschrijft functioneel de generieke werking van notificaties en mel
 - [RFC0008 -  Functionele uitwerking notificaties en abonnementen](#rfc0008----functionele-uitwerking-notificaties-en-abonnementen)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
-  - [1.2 Code-repository](#12-code-repository)
+  - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
+  - [1.3 Code-repository](#13-code-repository)
 - [2. Terminologie](#2-terminologie)
 - [3. Notificatie of melding wat is het verschil](#3-notificatie-of-melding-wat-is-het-verschil)
 - [4. Notificaties](#4-notificaties)
@@ -54,7 +55,16 @@ Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één 
 - Een notificatie is dun. Dat wil zeggen dat de ontvanger op basis van de notificatie in staat is te bepalen welke informatie relevant is om te raadplegen. 
 - Een abonnement is in de basis permanent. De abonnee is zelf verantwoordelijk voor het intrekken van het abonnement. Bij uittreding uit het netwerk, bijvoorbeeld vanwege fusie of faillissement, kunnen abonnementen in bulk worden opgeruimd of gemuteerd. Dit zal in de praktijk altijd maatwerk zijn.
 
-## 1.2 Code-repository
+## 1.2 Relatie andere RFC
+Deze RFC heeft de volgende relatie met andere RFCs:
+| RFC                                               | onderwerp         | relatie<sup>*</sup> | toelichting                             | issue                                                     |
+|:--------------------------------------------------|:------------------|:--------------------|:----------------------------------------|:----------------------------------------------------------|
+| [0003](/RFC/RFC0003%20-%20Adresboek.md)           | Adresboek         | afhankelijk         | beschrijft realisatie Adresboek         | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4)   |
+| [0020](/RFC/RFC0020%20-%20Service%20directory.md) | Service Directory | afhankelijk         | beschrijft realisatie Service Directory | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/20) |
+
+<sup>*</sup>voorwaardelijk,*voor andere RFC* / afhankelijk, *van andere RFC*
+
+## 1.3 Code-repository
 De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/RFC0008-RFC0018](https://github.com/iStandaarden/iWlz-generiek/tree/RFC0008-RFC0018)
 
 
