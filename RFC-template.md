@@ -20,6 +20,11 @@ Dit document beschrijft de wijze ....
 ## 1.1. Uitgangspunten
 >```uitgangspunten```
 
+## 1.2 Relatie andere RFC
+Deze RFC heeft een relatie met de volgende RFC(s)
+
+
+
 # 2. Terminologie
 Opsomming van de in dit document gebruikte termen.
 
