@@ -108,11 +108,11 @@ Het onderdeel Notificatie is verder uitgewerkt in **RFC0008 - Functionele uitwer
 ## 3.2 Meldingsvormen
 Er zijn drie vormen van meldingen gedefinieerd aan de hand van de gestructueerdheid van de informatie in de melding en of die informatie direct betrekking heeft op gegevens in het register. 
 
-|#| vorm | omschrijving | gestructureerdheid/relateerbaarheid |
-|:--:| :-- | :-- | :-- |
-| 1 | **Foutmelding** | Voor het melden van afwijking/overtreding van regels beschreven in de iWlz iStandaard | Zeer, direct te relateren aan een gegeven en afgesproken inhoud dmv (fout-)code |
-| 2 | Terugmelding | Voor het aandragen van een voorstel voor verbetering aandragen aan de bron;  bijvoorbeeld wijziging coördinator zorg thuis | minder, wel te relateren, maar vrije (tekstuele) inhoud |
-| 3 | Aanvraagmelding | Voor het indienen van nieuwe gegevens, ongerelateerd aan bestaande informatie | ongestructureerd |
+| # | vorm            | omschrijving                                                                                                               | gestructureerdheid/relateerbaarheid                                             |
+|:-:|:----------------|:---------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------|
+| 1 | **Foutmelding** | Voor het melden van afwijking/overtreding van regels beschreven in de iWlz iStandaard                                      | Zeer, direct te relateren aan een gegeven en afgesproken inhoud dmv (fout-)code |
+| 2 | Terugmelding    | Voor het aandragen van een voorstel voor verbetering aandragen aan de bron;  bijvoorbeeld wijziging coördinator zorg thuis | minder, wel te relateren, maar vrije (tekstuele) inhoud                         |
+| 3 | Aanvraagmelding | Voor het indienen van nieuwe gegevens, ongerelateerd aan bestaande informatie                                              | ongestructureerd                                                                |
 
 Deze RFC gaat vooral over de **Foutmelding**, waarbij er zoveel mogelijk rekeninggehouden wordt met het mogelijk maken van de overige twee vormen. 
 
@@ -184,9 +184,9 @@ end
 | 07 | http-response {204} | ontvangstbevestiging verzenden aan deelnemer |
 | 08 | http-response {204} | routeren ontvangstbevestiging |
 | 09 | http-response {204} | ontvangen ontvangstbevestiging |
-| ALT | ongeldige inzending          | Deelnemer is niet gerechtigd om de iWlz-foutmelding te doen.                         |
-| 10  | response ongeldig verzoek {400} | retourneer ongeldig verzoek                                             |
-| 11  | response ongeldig verzoek {400} | ontvang ongeldig verzoek terug                                          |
+| ALT | ongeldige inzending | Deelnemer is niet gerechtigd om de iWlz-foutmelding te doen. |
+| 10  | response ongeldig verzoek {400} | retourneer ongeldig verzoek |
+| 11  | response ongeldig verzoek {400} | ontvang ongeldig verzoek terug |
 
 ## 3.4 Inhoud iWlz Foutmelding
 
@@ -204,8 +204,7 @@ De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare geg
 
 ### 3.4.1 Voorbeeld iWlz Foutmelding
 
-Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element DiagnoseSubcodelijst niet aan de gestelde regel IRG0012: DiagnoseSubcodelijst vullen conform opgegeven DiagnoseCodelijst. 
-
+Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element DiagnoseSubcodelijst niet aan de bijbehorende regel IRG0012: DiagnoseSubcodelijst vullen conform opgegeven DiagnoseCodelijst. Deze fout wordt op de volgende manier worden teruggegeven. Omdat het element niet afzonderlijk is te duiden, bevat het objectId de verwijzing naar het record in de klasse Stoornis, waar het element DiagnoseSubcodelijst onderdeel van is.
 
 ```json
 {
@@ -213,11 +212,16 @@ Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element 
   "timestamp": "2022-09-27T12:07:07.492Z",
   "meldingType": "IWLZ_FOUTMELDING",
   "melding": "IRG0012",
-  "objectId": "https://api.ciz.nl/wlzindicatieregister/wlzindicaties/Stoornis/
-              da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+  "objectId": "https://api.ciz.nl/wlzindicatieregister/wlzindicaties/Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
 }
 ```
 
-n.b. omdat het element niet afzonderlijk is te duiden, bevat het objectId de verwijzing naar het record in de klasse Stoornis.
-
-
+Succesvol response: 
+```http
+HTTP/1.1 204 (No content)
+```
+Validatie fout response:
+```http
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Validation failed"}
+```
