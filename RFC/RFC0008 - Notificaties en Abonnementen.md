@@ -486,7 +486,7 @@ Als het abonnementsverzoek wordt afgekeurd ontvangt de abonnee een http code 400
 ### 6.3.3 Voorbeeld abonneren
 Voor het abonneren van een zorgaanbieder op de iWlz-vrijwillige notificatie ‘Gewijzigde Dossierhouder of CZT’ moet het volgende worden aangeboden:
 
-```json
+```graphql
 query createAbonnement{
  "organisatieId": "c40b3669-1b06-4c99-8c84-f4fac1264b39",
  "abonnementTypeId": "GEWIJZIGDE_DOSSIERHOUDER_OF_CZT",
@@ -502,7 +502,7 @@ succesvol response:
 }
 ```
 validatie fout response:
-```json
+```http
 HTTP/1.1 400 Bad Request
 {"ErrorCode" : "invalid_request", "Error" :"Validation failed"}
 ```
@@ -598,7 +598,7 @@ Als het abonnementsverzoek wordt afgekeurd ontvangt de abonnee een http code 400
 ### 6.4.2 Voorbeeld verwijderen abonnement
 Voor het beeindigen van het abonnement met id: *"3fa85f64-5717-4562-b3fc-2c963f66afa6"*
 
-```json
+```graphql
 query deleteAbonnement{
   "abonnementId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
