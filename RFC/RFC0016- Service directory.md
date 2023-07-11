@@ -9,10 +9,11 @@ Deze RFC beschrijft de werking van de Service Directory binnen het iWLZ netwerk.
 
 ---
 **Inhoudsopgave**
-- [RFC0020 - Service Directory](#rfc0020---service-directory)
+- [RFC0016 - Service Directory](#rfc0016---service-directory)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC's](#12-relatie-andere-rfcs)
+  - [1.3 Code-repository](#13-code-repository)
 - [2. Terminologie](#2-terminologie)
 - [3 Service Directory voor Notificatie-typen](#3-service-directory-voor-notificatie-typen)
   - [3.1 Inleiding](#31-inleiding)
@@ -39,6 +40,8 @@ Deze RFC is noodzakelijk voor de volgende RFC's en daar een relatie mee.
 
 <sup>*</sup>voorwaardelijk, *voor andere RFC* / afhankelijk, *van andere RFC*
 
+## 1.3 Code-repository
+De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/POC-bemiddeling](https://github.com/iStandaarden/iWlz-generiek/tree/POC-bemiddeling)
 
 # 2. Terminologie
 Opsomming van de in dit document gebruikte termen.
@@ -192,10 +195,12 @@ Het voorbeeld beschrijft de json-string voor het verplichte abonnement  van een 
 ```
 ### 3.2.x Voorbeeld publiceren notificatie-type
 
-Voor het publiceren van een notificatie
+Voor het publiceren van een notificatie:
+ 
+  - gql-specificatie/netwerkpunt.graphql → Mutation: PublishNotificatieType
 
 ```graphql
-query publishNotificatietype
+query PublishNotificatieType
   {
   "organisatieId": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
   "notificatieTypeID": "NIEUWE_BEMIDDELING_VOOR_ZORGAANBIEDER",
@@ -221,6 +226,7 @@ validatie fout response:
 ## 3.3 Raadplegen beschikbare notificatietypen
 Een deelnemer van het iWlz netwerk kan in de **Service Directory** raadplegen welke notificatietypen er beschikbaar zijn, welke voor zijn rol/type en welke notificatietypen optioneel op te abonneren zijn. 
 
+  - gql-specificatie/netwerkpunt.graphql → Query: PublishNotificatieType
 
 ```graphql
 query getNotificatieTypen()
@@ -245,7 +251,7 @@ succesvol response:
 ```
 validatie fout response:
 ```http
-  HTTP/1.1 400 Bad Request
+HTTP/1.1 400 Bad Request
     {"ErrorCode" : "invalid_request", "Error" :"Invalid notificatieTypeID"}
 ```
 
