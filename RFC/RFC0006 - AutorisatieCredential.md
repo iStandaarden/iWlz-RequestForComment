@@ -1,4 +1,4 @@
-# <AutorisatieCredential>
+# RFC0006 - AutorisatieCredential
 
 **SAMENVATTING**
 
@@ -8,7 +8,7 @@ De AutorisatieCredential is gebaseerd op de internationale standaard Verifiable 
 
 ---
 **Inhoudsopgave**
-- [](#)
+- [RFC0006 - AutorisatieCredential](#rfc0006---autorisatiecredential)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)

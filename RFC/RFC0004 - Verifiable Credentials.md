@@ -1,4 +1,4 @@
-# Verifiable Credentials
+# RFC0004 - Verifiable Credentials
 
 **SAMENVATTING**
 
@@ -14,7 +14,7 @@ Een valideerbare en interpreteerbare verklaring met daarin 1 of meerdere claims 
 
 ---
 **Inhoudsopgave**
-- [Verifiable Credentials](#verifiable-credentials)
+- [RFC0004 - Verifiable Credentials](#rfc0004---verifiable-credentials)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
 - [2. Terminologie](#2-terminologie)

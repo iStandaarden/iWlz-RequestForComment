@@ -1,5 +1,5 @@
 
-# Functionele uitwerking aanvragen van autorisatie
+# RFC0014 - Functionele uitwerking aanvragen van autorisatie
 
 **SAMENVATTING**
 
@@ -7,7 +7,7 @@ Dit document beschrijft functioneel de generieke wijze van autoriseren in het Ne
 
 ---
 **Inhoudsopgave**
-- [Functionele uitwerking aanvragen van autorisatie](#functionele-uitwerking-aanvragen-van-autorisatie)
+- [RFC0014 - Functionele uitwerking aanvragen van autorisatie](#rfc0014---functionele-uitwerking-aanvragen-van-autorisatie)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
 - [2. Terminologie](#2-terminologie)

@@ -1,4 +1,4 @@
-# Adresboek
+# RFC0003 - Adresboek
 
 **SAMENVATTING**
 
@@ -6,7 +6,7 @@ Dit document beschrijft de wijze waarop de adresseringsvoorziening binnen het iW
 
 ---
 **Inhoudsopgave**
-- [Adresboek](#adresboek)
+- [RFC0003 - Adresboek](#rfc0003---adresboek)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
 - [2. Terminologie](#2-terminologie)
