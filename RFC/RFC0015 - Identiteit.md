@@ -2,17 +2,13 @@
 
 **SAMENVATTING**
 
-Dit document beschrijft hoe entiteiten in het iWlz-netwerkmodel van een verifieerbare identiteit worden voorzien. De entiteiten die hieronder vallen zijn deelnemers en dienstverleners die namens deze deelnemers optreden. De identiteit wordt verifieerbaar door gebruik te maken van sleutelmateriaal.
+Deze RFC beschrijft hoe entiteiten in het iWlz-netwerkmodel van een verifieerbare identiteit worden voorzien. De entiteiten die hieronder vallen zijn deelnemers en dienstverleners die namens deze deelnemers optreden. De identiteit wordt verifieerbaar door gebruik te maken van sleutelmateriaal.
 
-Identiteiten kunnen centraal (PKI) of decentraal (DPKI) worden beheerd. Het is ook mogelijk om beide vormen te combineren. Op dit moment heeft decentraal identiteitsbeheer nog niet voor alle deelnemers aan het iWlz-netwerkmodel de voorkeur. In het iWlz-netwerkmodel worden voorlopig  centraal en decentraal identiteitsbeheer gecombineerd en wordt een groeipad naar decentraal identiteitsbeheer ingezet.
+In het iWlz-netwerkmodel worden identiteiten decentraal (DPKI) beheerd door het toepassen van de standaard Decentralized Identifers (DID). Deze RFC beschrijft de eisen aan DID-methodes, conflictoplossing en cryptografische beveiliging.
 
-Centraal identiteitsbeheer wordt ingevuld door het toepassen van een door VECOZO beheerde public key infrastructuur (PKI).
+Op basis van de identiteiten van deelnemers en hun dienstverleners kunnen vervolgens ook diensten voor gegevensuitwisseling (zie [RFC003](/RFC/RFC0003%20-%20Adresboek.md)) en Verifiable Credentials (zie [RFC004](/RFC/RFC0004%20-%20Verifiable%20Credentials.md)) van verifieerbare identifiers worden voorzien.
 
-Decentraal identiteitsbeheer wordt ingevuld door het toepassen van de standaard [Decentralized Identifers](https://www.w3.org/TR/did-core/) (DID).
-
-Op basis van de centrale en/of decentrale identiteiten van deelnemers en hun dienstverleners kunnen vervolgens ook diensten voor gegevensuitwisseling (zie [RFC003](/RFC/RFC0003%20-%20Adresboek.md)) en Verifiable Credentials (zie [RFC004](/RFC/RFC0004%20-%20Verifiable%20Credentials.md)) van verifieerbare identifiers worden voorzien.
-
-![Alt text](../imagesrc/rfc0013-01-Identiteit.png)
+![Alt text](../imagesrc/rfc0015-01-Identiteit.png)
 Schematische weergave van RFC002 Identiteit (blauw gemarkeerd) in relatie tot de applicatiecomponenten
 
 
