@@ -51,7 +51,7 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
 | :-------- | :-------- | 
-| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. Zie ook RFC0015 | 
+| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. | 
 | Houder | Holder, de partij die een VC ontvangt van een uitgever. In de meeste gevallen is de houder ook het onderwerp (het 'subject') van de VC | 
 | Uitgever | Issuer, de partij die een VC uitgeeft | 
 | Bewijs | Proof, bewijs dat een VC geldig is met behulp van cryptografie | 
