@@ -37,6 +37,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 |Term | Toelichting | RFC |
 |:--|:--|:--|
 | Deelnemer | De raadpleger van de bron, het register | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md), [RFC-0018](/RFC/RFC0018%20-%20(Fout-)meldingen.md) |
+| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. | [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md)
 | DID-document | Onderdeel van de DID-standaard die wordt gebruikt voor het publiceren van eigenschappen van een deelnemer of dienstverlener, in dit geval informatie over services en endpoints | [RFC0003](/RFC/RFC0003%20-%20Adresboek.md) |
 
 - [terug naar index](#index)
@@ -125,7 +126,6 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 | Service | Iedere deelnemer biedt één of meerdere diensten  aan andere deelnemers in het iWlz-netwerkmodel aan. Voorbeelden van diensten zijn: abonneren, notificeren, autoriseren, raadplegen. Een service is de technische implementatie van een dienst en bestaat uit één of meerdere endpoints   | [RFC0003](/RFC/RFC0003%20-%20Adresboek.md) |
 
 - [terug naar index](#index)
-  
 ## T
 |Term | Toelichting | RFC |
 |:--|:--|:--|
@@ -138,8 +138,9 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 
 - [terug naar index](#index)
 ## V
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
+| VC | Attest volgens de standaard Verifiable Credentials. Een attest is een valideerbare en  interpreteerbare verklaring met daarin één of meerdere claims. In de context van het iWlz-netwerkmodel worden attesten gebruikt om bepaalde claims te maken over een onderwerp, zoals een organisatie.   | [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md)
 
 - [terug naar index](#index)
 ## W
