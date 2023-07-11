@@ -5,7 +5,7 @@
 | 1 | RFC014 OAuth-autorisatie | ja | Doorgeven/verzoek autorisatie + nieuwe |   flow/functionaliteiten | Igor/Remo/Hilko |
 | 2 | RFC008 Abonneren en notificeren | ja  | Impact bij alle partijen (ook |   beheer) | Remo/Hilko |
 | 3 | RFC003 Adresboek | ja | Interoperabiliteit. Komt niet voor in DIZRA. |   Bepalen ZAB of meerdere. Verder hernoemen naar Service directory? | Igor/|   Hilko/Peter |
-| 4 | RFC016 luascripts t.b.v. PoC Bemiddeling | ja  | Randvoorwaardelijk voor |   technisch functioneren | Igor |
+| 4 | RFC020 luascripts t.b.v. PoC Bemiddeling | ja  | Randvoorwaardelijk voor |   technisch functioneren | Igor |
 | 5 | RFC017 Diensten (abonneren, raadplegen, melden, notificeren, ..)  | ja  | |   Randvoorwaardelijk voor technisch functioneren. T.b.v. PoC Bemiddeling |   technisch specificeren en inrichten | Remo/Dennis |
 | 6 | RFC018 Foutmeldingen | ja  | Foutmeldingen - CRUD | Remo/Dennis |
 | 7 | RFC006 ~~AutorisatieCredential~~ | ja | Geen VC, Interoperabiliteit - relatie |   met RFC0014 OAuth | Igor/Remo |
@@ -17,6 +17,6 @@
 | 13 | RFC013 Identiteit | Nee | VERVALT (zie RFC0015) |   |
 | 14 |  | ? | Contactgegevens cliënt (opvragen)| (Remo/Dennis) |
 | 15 | |?|Verwijsindex / Cooperative Search | (Peter) |
-| 16 | |? | Service directory | (Igor/Hilko/Peter)|
+| 16 | |RFC0016| Service directory | (Igor/Hilko/Peter)|
 | 17 | |~~~~ ja | Overdracht verantwoordelijkheid = onderdeel RFC0014? |(Remo/Dennis)|
 | 18 | | ja |Beheer voorzieningen (Igor/Hilko) - volgende keer bespreken | | 

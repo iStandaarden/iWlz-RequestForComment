@@ -24,7 +24,7 @@ De RFC's worden geprioriteerd in het project [RFC-netwerkmodel](https://github.c
 |[0008](RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | draft-intern | [#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
 |[0014](RFC//RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) | Functionele uitwerking van aanvragen autorisatie | draft-intern | [#9](https://github.com/iStandaarden/iWlz-RFC/issues/9) |
 |[0018](/RFC/RFC0018%20-%20(Fout-)meldingen.md) | (Fout-)meldingen | draft-intern | [#16](https://github.com/iStandaarden/iWlz-RFC/issues/16) |
-|[0020](/RFC/RFC0020%20-%20Service%20directory.md) | Service Directory | draft-intern | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/20) |
+|[0016](/RFC/RFC0016-%20Service%20directory.md) | Service Directory | draft-intern | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/20) |
 
 ## Terminologie
 De verklaring van de in de RFC's gebruikte termen zijn te vinden in het Afsprakenstelsel en [hier](/Terminologie.md).

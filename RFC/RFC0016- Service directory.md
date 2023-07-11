@@ -1,7 +1,7 @@
-# RFC0020 - Service Directory
+# RFC0016 - Service Directory
 
 @@todo
-  [ ] De interface van de Service Directory moet nog worden gespecificeerd evenals de concrete invulling van dit generieke component.
+ - [ ] De interface van de Service Directory moet nog worden gespecificeerd evenals de concrete invulling van dit generieke component.
 
 **SAMENVATTING**
 
@@ -120,7 +120,7 @@ De verschillende notificatie-typen die een organisatie aanbiedt worden gepublice
   <summary>plantUML-source</summary>
 
   ```plantuml
-  @startuml rfc0020-02-publiceren_notificatietype
+  @startuml rfc0016-02-publiceren_notificatietype
   title Publiceren & raadplegen notificatietype
 
   skinparam handwritten false
