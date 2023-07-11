@@ -18,17 +18,27 @@ rg o-> dbs: raadpleging
     activate dbs
 
 group fout melden
-    dbs -> dbs: Fout \ngeconstateerd
-    dbs -> dnp: Foutmelding verzenden
+    dbs -> dbs: iWlz-Fout \ngeconstateerd
+    dbs -> dnp: iWlz-Foutmelding verzenden
     activate dnp
-    dnp -> bnp: Foutmelding naar bronhouder
+    dnp -> bnp: iWlz-Foutmelding naar \nbronhouder
     activate bnp
-    bnp -> bs: doorzetten foutmelding
+    bnp -> bnp: valideer inzending
+    bnp -> bs: doorzetten iWlz-foutmelding
     activate bs
-    return response {204}
-    return response {204}
-    return response {204}
-    deactivate dbs
+    bs -> bnp: return response {204}
+    deactivate bs
+    bnp -> dnp: return response {204}
+    dnp -> dbs: return response {204}
+
+    alt #Pink
+      bnp --> dnp: response: {400} ongeldig verzoek
+      deactivate bnp
+      dnp --> dbs: response: {400} ongeldig verzoek
+      deactivate dnp
+      deactivate dbs
+    end alt
+
 end
 
 @enduml

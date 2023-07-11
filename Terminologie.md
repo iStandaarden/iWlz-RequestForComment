@@ -21,7 +21,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 |Term | Toelichting | RFC |
 |:--|:--|:--|
 | Backoffice | Omgeving rondom het register voor de afhandeling van netwerk-diensten | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) |
-| Bronhouder | Aanbieder van de data, houder van het register | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) |
+| Bronhouder | Aanbieder van de data, houder van het register | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md), [RFC-0018](/RFC/RFC0018%20-%20(Fout-)meldingen.md) |
 
 - [terug naar index](#index)
 ## C
@@ -36,7 +36,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 ## D
 |Term | Toelichting | RFC |
 |:--|:--|:--|
-| Deelnemer | De raadpleger van de bron, het register | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) |
+| Deelnemer | De raadpleger van de bron, het register | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md), [RFC-0018](/RFC/RFC0018%20-%20(Fout-)meldingen.md) |
 | DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. | [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md)
 | DID-document | Onderdeel van de DID-standaard die wordt gebruikt voor het publiceren van eigenschappen van een deelnemer of dienstverlener, in dit geval informatie over services en endpoints | [RFC0003](/RFC/RFC0003%20-%20Adresboek.md) |
 
