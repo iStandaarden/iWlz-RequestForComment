@@ -1,4 +1,4 @@
-# RFC0019 - Logging
+# RFC0022 - Lua-scripts Bemiddelingsregister
 
 **SAMENVATTING**
 
@@ -6,7 +6,7 @@ Dit document beschrijft de wijze ....
 
 ---
 **Inhoudsopgave**
-- [RFC0019 - Logging](#rfc0019---logging)
+- [RFC0022 - Lua-scripts Bemiddelingsregister](#rfc0022---lua-scripts-bemiddelingsregister)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
