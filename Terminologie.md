@@ -15,6 +15,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 |:--|:--|:--|
 | Access-Token | Een access-token wordt uitgegeven aan een deelnemer door de autorisatieserver. Een Access-Token heeft een korte levensduur en bevat informatie over de deelnemer, de scopes(permissies) en diverse tijdsaspecten. | [RFC-0014](/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) |
 | Autorisatieserver | Een autorisatieserver deelt Access-Tokens uit om te kunnen communiceren met een Resouce Server.| [RFC-0014](/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) |
+| Access policy | Access policy is een set van regels die bepalen wie toegang heeft tot welke gegevens en onder welke omstandigheden. Deze regels beschrijven onder andere wie verantwoordelijk is voor de gegevens, welke gegevens er gedeeld mogen worden en onder welke voorwaarden. Access policy's zijn vaak onderdeel van een beveiligingsstrategie van een bronhouder en zijn bedoeld om de privacy en veiligheid van gegevens te waarborgen. In het iWlz-netwerkmodel wordt gebruikgemaakt van een access policy om te bepalen wie toegang heeft tot welke resources en gegevens in het netwerk. | [RFC-0006](/RFC/RFC0006%20-%20AutorisatieCredential.md) |
 
 - [terug naar index](#index)
 ## B
@@ -37,7 +38,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 |Term | Toelichting | RFC |
 |:--|:--|:--|
 | Deelnemer | De raadpleger van de bron, het register | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md), [RFC-0018](/RFC/RFC0018%20-%20(Fout-)meldingen.md) |
-| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. | [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md)
+| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. | [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md), [RFC-0006](/RFC/RFC0006%20-%20AutorisatieCredential.md) |
 | DID-document | Onderdeel van de DID-standaard die wordt gebruikt voor het publiceren van eigenschappen van een deelnemer of dienstverlener, in dit geval informatie over services en endpoints | [RFC0003](/RFC/RFC0003%20-%20Adresboek.md) |
 
 - [terug naar index](#index)
@@ -140,7 +141,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 ## V
 |Term | Toelichting | RFC |
 |:--|:--|:--|
-| VC | Attest volgens de standaard Verifiable Credentials. Een attest is een valideerbare en  interpreteerbare verklaring met daarin één of meerdere claims. In de context van het iWlz-netwerkmodel worden attesten gebruikt om bepaalde claims te maken over een onderwerp, zoals een organisatie.   | [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md)
+| VC | Attest volgens de standaard Verifiable Credentials. Een attest is een valideerbare en  interpreteerbare verklaring met daarin één of meerdere claims. In de context van het iWlz-netwerkmodel worden attesten gebruikt om bepaalde claims te maken over een onderwerp, zoals een organisatie.   | [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md), [RFC-0006](/RFC/RFC0006%20-%20AutorisatieCredential.md) |
 
 - [terug naar index](#index)
 ## W
