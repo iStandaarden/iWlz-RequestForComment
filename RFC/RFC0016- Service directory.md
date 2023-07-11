@@ -1,7 +1,7 @@
 # RFC0016 - Service Directory
 
 @@todo
-  [ ] De interface van de Service Directory moet nog worden gespecificeerd evenals de concrete invulling van dit generieke component.
+ - [ ] De interface van de Service Directory moet nog worden gespecificeerd evenals de concrete invulling van dit generieke component.
 
 **SAMENVATTING**
 
