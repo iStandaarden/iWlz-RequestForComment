@@ -20,6 +20,7 @@ De RFC's worden geprioriteerd in het project [RFC-netwerkmodel](https://github.c
 |:--|:--|:--| :--|
 |[0001](RFC/RFC0001%20-%20Certificaatstructuur%20veilige%20verbinging.md) | Certificaatstructuur veilige verbinding | draft-intern | [#3](https://github.com/iStandaarden/iWlz-RFC/issues/3) |
 |[0003](RFC/RFC0003%20-%20Adresboek.md) | Adresboek | draft-intern | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4) |
+|[0003a](RFC/RFC000a3%20-%20Adresboek.md) | Adresboek | draft-intern | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4) |
 |[0004](/RFC/RFC0004%20-%20Verifiable%20Credentials.md) | Verifiable Credentials | draft-intern | [#5](https://github.com/iStandaarden/iWlz-RFC/issues/5) |
 |[0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md) | Ledenadministratie Credential | draft-intern | [#6](https://github.com/iStandaarden/iWlz-RFC/issues/6) |
 |[0006](/RFC/RFC0006%20-%20AutorisatieCredential.md) | Autorisatie Credential | draft-intern | [#7](https://github.com/iStandaarden/iWlz-RFC/issues/7)|
