@@ -21,7 +21,7 @@ Dit document beschrijft de wijze waarop het adresboekbinnen het iWlz-netwerkmode
 >```Inleiding```
 Binnen het iWLZ-netwerk worden gegevens uitgewisseld via REST-services (GraphQL), hierbij speelt het Adresboek een cruciale rol bij het faciliteren van het ontdekken en communiceren met beschikbare gegevensdiensten binnen het netwerk. Het fungeert als een register dat informatie bijhoudt over verschillende gegevensdiensten die worden aangeboden door verschillende netwerkdeelnemers. Het primaire doel van het adresboek is om gebruikers van gegevensbronnen in staat te stellen de juiste services te vinden, begrijpen en verbinden om aan hun behoeften te voldoen.
 <br>
-Informatie rodnom de diverse abonnementen en notificatietypen die per register beschikbaar zijn wordt vastgelegd in de [Dienstencatalogus](RFC0020%20-%20Service%20directory.md).
+Informatie rodnom de diverse abonnementen en notificatietypen die per register beschikbaar zijn wordt vastgelegd in de [Dienstencatalogus](RFC/RFC0016 - Service directory.md).
 
 ## 1.1 Uitgangspunten
 - Het adresboek is uitsluitend toegankelijk voor netwerkdeelnemers.
