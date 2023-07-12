@@ -1,4 +1,4 @@
-# RFC0001 - Certificaatstructuur veilige verbinging
+# RFC0001 - Certificaatstructuur veilige verbinding
 
 **SAMENVATTING**
 
@@ -14,7 +14,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/3) om de actuel
 
 ---
 **Inhoudsopgave**
-- [RFC0001 - Certificaatstructuur veilige verbinging](#rfc0001---certificaatstructuur-veilige-verbinging)
+- [RFC0001 - Certificaatstructuur veilige verbinding](#rfc0001---certificaatstructuur-veilige-verbinding)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
 - [2. Terminologie](#2-terminologie)
