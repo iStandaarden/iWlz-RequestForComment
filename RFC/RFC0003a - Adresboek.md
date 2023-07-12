@@ -2,7 +2,7 @@
 
 **SAMENVATTING**
 
-Dit document beschrijft de wijze waarop de adresseringsvoorziening binnen het iWlz-netwerkmodel wordt geïmplementeerd. Deze implementatie maakt gebruikt van RFC0002 Decentralized Identifiers iWlz-netwerkmodel.
+Dit document beschrijft de wijze waarop de adresseringsvoorziening binnen het iWlz-netwerkmodel wordt geïmplementeerd.
 
 ---
 **Inhoudsopgave**
