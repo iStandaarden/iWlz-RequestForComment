@@ -110,12 +110,11 @@ POST https://{baseURL}/zab/organizations/1/electronicServices
 Voorbeeld body:
 ```json
 {
-  "type": "sample type",
+  "type": "iWLZ Indicatieregister",
   "active": true,
-  "value": "sample value",
-  "address": false,
-  "description": "sample description",
-
+  "value": "00001",
+  "address": "https://netwerkpunt.ciz.nl/indicatie",
+  "description": "Endpoint voor het afhandelen van graphQL requests"
 }
 ```
 succesvol response: 
