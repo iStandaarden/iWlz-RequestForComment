@@ -103,7 +103,25 @@ deactivate dnp
 </details>
 
 ## 4.1 Publiceren
->```Beschrijving van de service voor het publiceren van adresboekgegevens.`
+REST request voor het publiceren van een service in het Zorg-AB
+```http
+POST https://{baseURL}/zab/organizations/1/electronicServices
+```
+Voorbeeld body:
+```json
+{
+  "type": "sample type",
+  "active": true,
+  "value": "sample value",
+  "address": false,
+  "description": "sample description",
+
+}
+```
+succesvol response: 
+```http
+HTTP/1.1 201
+```
 
 ## 4.2 Raadplegen
 REST request voor het zoeken van een organisatie, bijvoorbeeld op AGB code:
