@@ -49,8 +49,10 @@ Over het algemeen fungeert het adresboek als een centrale hub die netwerkdeelnem
 Het adresboek bevat services voor het publiceren en ophalen van informatie over de diverse deelnemers binnen het iWLZ-netwerk.
 
 ## 4.1 Publiceren
+>```Beschrijving van de service voor het publiceren van adresboekgegevens.`
 
 ## 4.2 Raadplegen
+>```Beschrijving van de service voor het raadplegen van adresboekgegevens.`
 
 # 5 Foutmeldingen
 >```Foutmeldingen.`
