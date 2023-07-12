@@ -1,5 +1,5 @@
-  @startuml rfc008-02-notificatie_sequence
-  title notificatie sequence-diagram
+  @startuml rfc003-01-adresboek_sequence
+  title adresboek sequence-diagram
   skinparam handwritten false
   skinparam participantpadding 20
   skinparam boxpadding 40
