@@ -54,8 +54,8 @@ Het adresboek bevat services voor het publiceren en ophalen van informatie over 
   <summary>plantUML-source</summary>
 
   ```plantuml
-    @startuml rfc008-02-notificatie_sequence
-  title notificatie sequence-diagram
+      @startuml rfc003-01-adresboek_sequence
+  title adresboek sequence-diagram
   skinparam handwritten false
   skinparam participantpadding 20
   skinparam boxpadding 40
