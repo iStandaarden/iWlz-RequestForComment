@@ -106,9 +106,38 @@ deactivate dnp
 >```Beschrijving van de service voor het publiceren van adresboekgegevens.`
 
 ## 4.2 Raadplegen
-validatie fout response:
+REST request voor het zoeken van een organisatie, bijvoorbeeld op AGB code:
 ```http
 GET https://{baseURL}/zab/organizations?search={agbCode}
+```
+
+```json
+[
+  {
+    "_self": "sample _self",
+    "_className": "sample _className",
+    "_id": "sample _id",
+    "addresses": [],
+    "telecoms": [],
+    "identifications": [],
+    "credentials": [],
+    "electronicServices": [],
+    "attachments": [],
+    "speciality": "sample speciality",
+    "comment": "sample comment",
+    "types": [],
+    "timestamp": "sample timestamp",
+    "names": [],
+    "type": [
+      "sample type"
+    ],
+    "applicationIds": [
+      "sample applicationIds"
+    ],
+    "ura": "sample ura",
+    "displayName": "sample displayName"
+  }
+]
 ```
 
 # 5 Foutmeldingen
