@@ -12,8 +12,6 @@ Dit document beschrijft de wijze waarop de adresseringsvoorziening binnen het iW
 - [2. Terminologie](#2-terminologie)
 - [3. Functionaliteiten](#3-functionaliteiten)
 - [4. Services](#4-services)
-  - [4.1 Service referenties](#41-service-referenties)
-  - [4.2 Contactgegevens](#42-contactgegevens)
 - [5 Foutmeldingen](#5-foutmeldingen)
 
 ---
