@@ -106,7 +106,10 @@ deactivate dnp
 >```Beschrijving van de service voor het publiceren van adresboekgegevens.`
 
 ## 4.2 Raadplegen
->```Beschrijving van de service voor het raadplegen van adresboekgegevens.`
+validatie fout response:
+```http
+GET https://{baseURL}/zab/organizations?search={agbCode}
+```
 
 # 5 Foutmeldingen
 >```Foutmeldingen.`
