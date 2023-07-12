@@ -2,9 +2,7 @@
 Repostistory voor de RFC's van het Netwerkmodel iWlz.
 
 - [iWlz-RFC](#iwlz-rfc)
-  - [Prioritering en project](#prioritering-en-project)
-  - [Inhoud](#inhoud)
-    - [Vervallen RFC](#vervallen-rfc)
+  - [Overzicht STATUS en IMPLEMENTATIE](#overzicht-status-en-implementatie)
   - [Terminologie](#terminologie)
   - [Directory-structuur](#directory-structuur)
   - [Werkwijze](#werkwijze)
