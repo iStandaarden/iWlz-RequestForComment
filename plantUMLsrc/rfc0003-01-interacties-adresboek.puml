@@ -1,5 +1,5 @@
   @startuml rfc003-01-adresboek_sequence
-  title adresboek sequence-diagram
+  title Adresboek sequence-diagram
   skinparam handwritten false
   skinparam participantpadding 20
   skinparam boxpadding 40
