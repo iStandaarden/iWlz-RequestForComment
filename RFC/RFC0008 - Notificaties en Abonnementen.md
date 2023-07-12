@@ -6,7 +6,7 @@ Dit document beschrijft functioneel de generieke werking van notificaties en mel
 
 **Status RFC**
 
-Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**

@@ -17,7 +17,7 @@ Schematische weergave van RFC002 Identiteit (blauw gemarkeerd) in relatie tot de
 
 **Status RFC**
 
-Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/8) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**

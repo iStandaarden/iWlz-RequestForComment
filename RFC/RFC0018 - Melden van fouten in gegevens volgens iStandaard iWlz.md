@@ -7,7 +7,7 @@ Dit document beschrijft functioneel de generieke werking van regelfout meldingen
 
 **Status RFC**
 
-Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/16) om de actuele status van deze RFC te bekijken.
 
 **Inhoudsopgave**
 - [RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz](#rfc0018---melden-van-fouten-in-gegevens-volgens-istandaard-iwlz)

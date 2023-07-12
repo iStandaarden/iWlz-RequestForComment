@@ -14,7 +14,7 @@ Een valideerbare en interpreteerbare verklaring met daarin 1 of meerdere claims 
 
 **Status RFC**
 
-Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/5) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**

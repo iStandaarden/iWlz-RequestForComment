@@ -10,7 +10,7 @@ Naast het gebruik van certificaten voor een veilige verbinding maakt het iWlz-ne
 
 **Status RFC**
 
-Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/3) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**

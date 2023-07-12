@@ -6,7 +6,7 @@ Dit document beschrijft de wijze waarop het adresboekbinnen het iWlz-netwerkmode
 
 **Status RFC**
 
-Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/4) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**
