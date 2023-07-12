@@ -1,4 +1,4 @@
-# RFC0003 - Adresboek
+# RFC0023 - VDR
 
 **SAMENVATTING**
 
@@ -6,7 +6,7 @@ Dit document beschrijft de wijze waarop de VDR binnen het iWlz-netwerkmodel word
 
 ---
 **Inhoudsopgave**
-- [RFC0003 - Adresboek](#rfc0003---adresboek)
+- [RFC0023 - VDR](#rfc0023---vdr)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
 - [2. Terminologie](#2-terminologie)
