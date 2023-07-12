@@ -54,13 +54,14 @@ Het adresboek bevat services voor het publiceren en ophalen van informatie over 
   <summary>plantUML-source</summary>
 
   ```plantuml
-      @startuml rfc003-01-adresboek_sequence
-  title adresboek sequence-diagram
+      @startuml
+title adresboek sequence-diagram
   skinparam handwritten false
   skinparam participantpadding 20
   skinparam boxpadding 40
   autonumber "<b>[00]"
-  box bronhouder #lightblue
+  
+box bronhouder #lightblue
   participant "Backoffice" as bs
   end box
 
@@ -78,6 +79,18 @@ Het adresboek bevat services voor het publiceren en ophalen van informatie over 
 ab -> bs : response
     deactivate bs
 deactivate ab
+    
+    
+
+
+    dnp -> ab: zoek endpoint deelnemer op
+
+    activate ab
+activate dnp
+    ab -> dnp: return {endpoint deelnemer}
+    deactivate ab
+deactivate dnp
+@enduml
   ```
 </details>
 
