@@ -12,15 +12,16 @@ Dit document beschrijft de wijze waarop de adresseringsvoorziening binnen het iW
 - [2. Terminologie](#2-terminologie)
 - [3. Functionaliteiten](#3-functionaliteiten)
 - [4. Services](#4-services)
-  - [4.1 Registers](#41-registers)
-  - [4.2 Notificaties](#42-notificaties)
+  - [4.1 Publiceren](#41-publiceren)
+  - [4.2 Raadplegen](#42-raadplegen)
 - [5 Foutmeldingen](#5-foutmeldingen)
 
 ---
 # 1. Inleiding
 >```Inleiding```
-Binnen het iWLZ-netwerk worden gegevens uitgewisseld via REST-services (GraphQL), hierbij speelt het Adresboek een cruciale rol bij het faciliteren van het ontdekken en communiceren met beschikbare gegevensdiensten binnen het netwerk. Het fungeert als een register dat informatie bijhoudt over verschillende gegevensdiensten en notificaties die worden aangeboden door verschillende netwerkdeelnemers. Het primaire doel van het adresboek is om gebruikers van gegevensbronnen in staat te stellen de juiste services te vinden, begrijpen en verbinden om aan hun behoeften te voldoen.
+Binnen het iWLZ-netwerk worden gegevens uitgewisseld via REST-services (GraphQL), hierbij speelt het Adresboek een cruciale rol bij het faciliteren van het ontdekken en communiceren met beschikbare gegevensdiensten binnen het netwerk. Het fungeert als een register dat informatie bijhoudt over verschillende gegevensdiensten die worden aangeboden door verschillende netwerkdeelnemers. Het primaire doel van het adresboek is om gebruikers van gegevensbronnen in staat te stellen de juiste services te vinden, begrijpen en verbinden om aan hun behoeften te voldoen.
 <br>
+Informatie rodnom de diverse abonnementen en notificatietypen die per register beschikbaar zijn wordt vastgelegd in de Service Directory (RFC0016).
 
 ## 1.1 Uitgangspunten
 - Het adresboek is uitsluitend toegankelijk voor netwerkdeelnemers.
@@ -40,18 +41,18 @@ De belangrijkste functionaliteiten van het Adresboek zijn:
 
 3. Service Metadata en Documentatie: het adresboek biedt aanvullende details en documentatie over elke geregistreerde service, zodat netwerkdeelnemers de mogelijkheden, gebruiksrichtlijnen, invoer/uitvoerformaten en eventuele specifieke vereisten of beperkingen kunnen begrijpen.
 
-4. Service Eindpuntresolutie: Bij het ontdekken van een gewenste service helpt het adresboek consumenten om de juiste eindpunt-URL of toegangsdetails te verkrijgen die nodig zijn om effectief met de service te communiceren.
+4. Service Eindpuntresolutie: Bij het ontdekken van een gewenste service helpt het adresboek consumenten om de juiste eindpunt-URL te verkrijgen die nodig zijn om effectief met de service te communiceren.
 
-5. Service Versiebeheer: In gevallen waarin meerdere versies van een service bestaan, kan het adresboek consumenten helpen de juiste versie te identificeren door versie-informatie te verstrekken. Dit maakt backward compatibility mogelijk en zorgt voor soepele overgangen tussen verschillende serviceversies.
-
-Over het algemeen fungeert het adresboek als een centrale hub die serviceproviders in staat stelt hun REST-services te publiceren en serviceconsumenten in staat stelt om naadloos de juiste services te ontdekken, evalueren en verbinden. Het vereenvoudigt het proces van integratie en orchestratie van REST-services binnen een genetwerkte omgeving, en bevordert interoperabiliteit en efficiënte gegevensuitwisseling.
+Over het algemeen fungeert het adresboek als een centrale hub die netwerkdeelnemers in staat stelt hun services te publiceren EN afnemers van gegevens in staat stelt om de juiste services te ontdekken. Het vereenvoudigt het proces van integratie en orchestratie binnen het iWLZ-netwerk, en bevordert interoperabiliteit en efficiënte gegevensuitwisseling.
 
 # 4. Services
-Het adresboek bevat services voor het ophalen van informatie over de diverse gegevens registers die beschikbaar zijn binnen het iWLZ-netwerk. Ook is een service beschikbaar voor het raadplegen van de diverse type notificaties die per register beschikbaar zijn.
+Het adresboek bevat services voor het publiceren en ophalen van informatie over de diverse deelnemers binnen het iWLZ-netwerk.
 
-## 4.1 Registers
+## 4.1 Publiceren
+>```Beschrijving van de service voor het publiceren van adresboekgegevens.`
 
-## 4.2 Notificaties
+## 4.2 Raadplegen
+>```Beschrijving van de service voor het raadplegen van adresboekgegevens.`
 
 # 5 Foutmeldingen
 >```Foutmeldingen.`
