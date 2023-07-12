@@ -48,6 +48,39 @@ Over het algemeen fungeert het adresboek als een centrale hub die netwerkdeelnem
 # 4. Services
 Het adresboek bevat services voor het publiceren en ophalen van informatie over de diverse deelnemers binnen het iWLZ-netwerk.
 
+![notificatie_melding](../plantUMLsrc/rfc0003-01-interacties-adresboek.svg "interacties adresboek")
+
+<details>
+  <summary>plantUML-source</summary>
+
+  ```plantuml
+    @startuml rfc008-02-notificatie_sequence
+  title notificatie sequence-diagram
+  skinparam handwritten false
+  skinparam participantpadding 20
+  skinparam boxpadding 40
+  autonumber "<b>[00]"
+  box bronhouder #lightblue
+  participant "Backoffice" as bs
+  end box
+
+  box adresboek
+  participant "Adresboek" as ab
+  end box
+
+  box deelnemer #lightyellow
+  participant "Backoffice" as dnp
+  end box
+
+    bs -> ab : publiceer adresgegevens
+    activate ab
+    activate bs
+ab -> bs : response
+    deactivate bs
+deactivate ab
+  ```
+</details>
+
 ## 4.1 Publiceren
 >```Beschrijving van de service voor het publiceren van adresboekgegevens.`
 
