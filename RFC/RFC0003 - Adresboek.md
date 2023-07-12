@@ -159,4 +159,6 @@ Voorbeeld response:
 ```
 
 # 5 Foutmeldingen
->```Foutmeldingen.`
+400
+401
+404
