@@ -28,12 +28,9 @@ De RFC's worden geprioriteerd in het [project RFC-netwerkmodel](https://github.c
 | [0008](RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md)                          | Notificaties en abonnement                       | [klik hier](https://github.com/orgs/iStandaarden/projects/5) | [#2](https://github.com/iStandaarden/iWlz-RFC/issues/2)   |
 | [0014](RFC//RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) | Functionele uitwerking van aanvragen autorisatie | [klik hier](https://github.com/orgs/iStandaarden/projects/5)| [#9](https://github.com/iStandaarden/iWlz-RFC/issues/9)   |
 | [0016](/RFC/RFC0016%20-%20Service%20directory.md)                                      | Service Directory                                | [klik hier](https://github.com/orgs/iStandaarden/projects/5)| [#20](https://github.com/iStandaarden/iWlz-RFC/issues/20) |
-| [0017](/RFC/RFC0017%20-%20Diensten.md)                                                 | Diensten                                         | [klik hier](https://github.com/orgs/iStandaarden/projects/5) | [#15](https://github.com/iStandaarden/iWlz-RFC/issues/15) |
 | [0018](/RFC/RFC0018%20-%20(Fout-)meldingen.md)                                         | (Fout-)meldingen                                 | [klik hier](https://github.com/orgs/iStandaarden/projects/5) | [#16](https://github.com/iStandaarden/iWlz-RFC/issues/16) |
 | [0019](/RFC/RFC0019%20-%20Logging.md)                                                  | Logging                                          | [klik hier](https://github.com/orgs/iStandaarden/projects/5) | [#17](https://github.com/iStandaarden/iWlz-RFC/issues/17) |
 | [0020](/RFC/RFC0020%20-%20Verwijsindex%20&%20Cooperative%20Search.md)                  | Verwijsindex & cooperative search                | [klik hier](https://github.com/orgs/iStandaarden/projects/5) | [#19](https://github.com/iStandaarden/iWlz-RFC/issues/19) |
-| [0021](/RFC/RFC0021%20-%20Contactgegevens%20cliënt%20(opvragen).md)                    | Contactgegevens client (opvragen)                | [klik hier](https://github.com/orgs/iStandaarden/projects/5) | [18](https://github.com/iStandaarden/iWlz-RFC/issues/18)  |
-| [0022](/RFC/RFC0022%20-%20Lua-scripts%20Bemiddelingsregister.md)                       | Lua-script Bemiddelingsregister                  | [klik hier](https://github.com/orgs/iStandaarden/projects/5) | [#11](https://github.com/iStandaarden/iWlz-RFC/issues/11) |
 
 ### Vervallen RFC
 |RFC | onderwerp | status | issue |
