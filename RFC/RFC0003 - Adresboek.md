@@ -46,13 +46,15 @@ De belangrijkste functionaliteiten van het Adresboek zijn:
 Over het algemeen fungeert het adresboek als een centrale hub die netwerkdeelnemers in staat stelt hun services te publiceren EN afnemers van gegevens in staat stelt om de juiste services te ontdekken. Het vereenvoudigt het proces van integratie en orchestratie binnen het iWLZ-netwerk, en bevordert interoperabiliteit en efficiënte gegevensuitwisseling.
 
 # 4. Gegevens
+Uitgaande van de structuur van het ZorgAdresboek van VZVZ worden bji een organisatie de volgende gegevens met betrekking tot technische adressering vastgelegd.
+
 | Gegeven | Omschrijving | Voorbeeld                      |
 |:-----------------|:----------------------|:----------------------------------------|
-| Type  | Type elektronische dienst | Geen keuze; ontvangt notificatie altijd |
-| Active  | Geeft aan of deze elektronische dienst actief is | Keuze ligt bij deelnemer                |
-| Value  | ID van de elektronische dienst, bijvoorbeeld ‘000000001’ | Keuze ligt bij deelnemer                |
-| Address  | Adres (endpoint) van de elektronische dienst | Keuze ligt bij deelnemer                |
-| Description  | Beschrijving van de elektronische dienst | Keuze ligt bij deelnemer                |
+| Type  | Type elektronische dienst | "iWLZ Indicatieregister" |
+| Active  | Geeft aan of deze elektronische dienst actief is | "TRUE" |
+| Value  | ID van de elektronische dienst, bijvoorbeeld ‘000000001’ | “00001” |
+| Address  | Adres (endpoint) van de elektronische dienst | “https://netwerkpunt.ciz.nl/indicatie” |
+| Description  | Beschrijving van de elektronische dienst | "Endpoint voor het afhandelen van graphQL requests"               |
 
 # 4. Services
 Het adresboek bevat services voor het publiceren en ophalen van informatie over de diverse deelnemers binnen het iWLZ-netwerk.
