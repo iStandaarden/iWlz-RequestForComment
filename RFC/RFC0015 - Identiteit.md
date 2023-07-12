@@ -11,7 +11,9 @@ Op basis van de identiteiten van deelnemers en hun dienstverleners kunnen vervol
 ![Alt text](../imagesrc/rfc0015-01-Identiteit.png)
 Schematische weergave van RFC002 Identiteit (blauw gemarkeerd) in relatie tot de applicatiecomponenten
 
+**Status RFC**
 
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**

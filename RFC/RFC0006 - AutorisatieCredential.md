@@ -6,6 +6,10 @@ Dit document beschrijft de wijze en AutorisatieCredential. Een AutorisatieCreden
 
 De AutorisatieCredential is gebaseerd op de internationale standaard Verifiable Credentials en heeft de vorm van een attest (zie ook RFC004). De AutorisatieCredential wordt gebruikt samen met de inhoud van het afgesproken access policy (zie RFC00Z Access Policy) om toegang te verlenen tot brongegevens in een register.
 
+**Status RFC**
+
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+
 ---
 **Inhoudsopgave**
 - [RFC0006 - AutorisatieCredential](#rfc0006---autorisatiecredential)

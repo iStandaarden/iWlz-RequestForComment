@@ -10,6 +10,10 @@ Met het LedenadministratieCredential, dat wordt gespecificeerd in deze RFC, kan 
 
 Deze RFC vervangt RFC001A “iWlz Attest deelnemer en validatie abonnement”.
 
+**Status RFC**
+
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+
 ---
 **Inhoudsopgave**
 - [RFC0005 - Ledenadministratie Credential](#rfc0005---ledenadministratie-credential)

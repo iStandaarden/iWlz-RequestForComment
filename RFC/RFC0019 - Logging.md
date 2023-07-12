@@ -4,6 +4,10 @@
 
 Dit document beschrijft de wijze ....
 
+**Status RFC**
+
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+
 ---
 **Inhoudsopgave**
 - [RFC0019 - Logging](#rfc0019---logging)

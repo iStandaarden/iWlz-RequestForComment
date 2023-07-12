@@ -12,6 +12,10 @@ Zo kan een deelnemer verklaringen geven over andere deelnemers. Bijvoorbeeld: �
 
 Een valideerbare en interpreteerbare verklaring met daarin 1 of meerdere claims wordt in de context van het iWlz-netwerkmodel een ‘attest’ genoemd. Voor het aanmaken, uitgeven, presenteren en controleren van attesten wordt in het iWlz-netwerkmodel de open internationale Verifiable Credentials van W3C gebruikt. Deze RFC specificeert op welke wijze deze standaard dient te worden toegepast.
 
+**Status RFC**
+
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+
 ---
 **Inhoudsopgave**
 - [RFC0004 - Verifiable Credentials](#rfc0004---verifiable-credentials)

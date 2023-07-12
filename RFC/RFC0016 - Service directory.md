@@ -7,6 +7,10 @@
 
 Deze RFC beschrijft de werking van de Service Directory binnen het iWLZ netwerk. In de Service Directory wordt vast gelegd welke typen notificatie door de diverse netwerkdeelnemers worden aangeboden en onder welke voorwaarden deze kunnen worden afgesloten. 
 
+**Status RFC**
+
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+
 ---
 **Inhoudsopgave**
 - [RFC0016 - Service Directory](#rfc0016---service-directory)

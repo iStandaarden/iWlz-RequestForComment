@@ -4,6 +4,10 @@
 
 Dit document beschrijft de wijze waarop de VDR binnen het iWlz-netwerkmodel wordt geïmplementeerd. Deze implementatie maakt gebruikt van RFC0002 Decentralized Identifiers iWlz-netwerkmodel.
 
+**Status RFC**
+
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+
 ---
 **Inhoudsopgave**
 - [RFC0023 - VDR](#rfc0023---vdr)

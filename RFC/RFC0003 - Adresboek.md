@@ -4,13 +4,18 @@
 
 Dit document beschrijft de wijze waarop het adresboekbinnen het iWlz-netwerkmodel wordt geïmplementeerd.
 
+**Status RFC**
+
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+
 ---
 **Inhoudsopgave**
-- [RFC0003a - Adresboek](#rfc0003a---adresboek)
+- [RFC0003 - Adresboek](#rfc0003---adresboek)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
 - [2. Terminologie](#2-terminologie)
 - [3. Functionaliteiten](#3-functionaliteiten)
+- [4. Gegevens](#4-gegevens)
 - [4. Services](#4-services)
   - [4.1 Publiceren](#41-publiceren)
   - [4.2 Raadplegen](#42-raadplegen)

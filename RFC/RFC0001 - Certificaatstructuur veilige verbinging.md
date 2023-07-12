@@ -8,6 +8,10 @@ Naast het gebruik van certificaten voor een veilige verbinding maakt het iWlz-ne
 
 ![Alt text](../imagesrc/rfc0001-01-SysteemrolGegevensgids.png)
 
+**Status RFC**
+
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+
 ---
 **Inhoudsopgave**
 - [RFC0001 - Certificaatstructuur veilige verbinging](#rfc0001---certificaatstructuur-veilige-verbinging)

@@ -15,7 +15,9 @@ Op basis van de centrale en/of decentrale identiteiten van deelnemers en hun die
 ![Alt text](../imagesrc/rfc0013-01-Identiteit.png)
 Schematische weergave van RFC002 Identiteit (blauw gemarkeerd) in relatie tot de applicatiecomponenten
 
+**Status RFC**
 
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**
