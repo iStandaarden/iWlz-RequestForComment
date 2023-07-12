@@ -111,6 +111,7 @@ REST request voor het zoeken van een organisatie, bijvoorbeeld op AGB code:
 GET https://{baseURL}/zab/organizations?search={agbCode}
 ```
 
+Voorbeeld response:
 ```json
 [
   {
