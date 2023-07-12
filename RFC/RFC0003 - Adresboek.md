@@ -76,17 +76,14 @@ box bronhouder #lightblue
     bs -> ab : publiceer adresgegevens
     activate ab
     activate bs
-ab -> bs : response
+    ab -> bs : response
     deactivate bs
-deactivate ab
-    
-    
-
+    deactivate ab
 
     dnp -> ab: zoek endpoint deelnemer op
 
     activate ab
-activate dnp
+    activate dnp
     ab -> dnp: return {endpoint deelnemer}
     deactivate ab
 deactivate dnp
