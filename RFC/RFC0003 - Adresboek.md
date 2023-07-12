@@ -45,6 +45,17 @@ De belangrijkste functionaliteiten van het Adresboek zijn:
 
 Over het algemeen fungeert het adresboek als een centrale hub die netwerkdeelnemers in staat stelt hun services te publiceren EN afnemers van gegevens in staat stelt om de juiste services te ontdekken. Het vereenvoudigt het proces van integratie en orchestratie binnen het iWLZ-netwerk, en bevordert interoperabiliteit en efficiënte gegevensuitwisseling.
 
+# 4. Gegevens
+Uitgaande van de structuur van het ZorgAdresboek van VZVZ worden bji een organisatie de volgende gegevens met betrekking tot technische adressering vastgelegd.
+
+| Gegeven | Omschrijving | Voorbeeld                      |
+|:-----------------|:----------------------|:----------------------------------------|
+| Type  | Type elektronische dienst | "iWLZ Indicatieregister" |
+| Active  | Geeft aan of deze elektronische dienst actief is | "TRUE" |
+| Value  | ID van de elektronische dienst, bijvoorbeeld ‘000000001’ | “00001” |
+| Address  | Adres (endpoint) van de elektronische dienst | “https://netwerkpunt.ciz.nl/indicatie” |
+| Description  | Beschrijving van de elektronische dienst | "Endpoint voor het afhandelen van graphQL requests"               |
+
 # 4. Services
 Het adresboek bevat services voor het publiceren en ophalen van informatie over de diverse deelnemers binnen het iWLZ-netwerk.
 
@@ -92,10 +103,62 @@ deactivate dnp
 </details>
 
 ## 4.1 Publiceren
->```Beschrijving van de service voor het publiceren van adresboekgegevens.`
+REST request voor het publiceren van een service in het Zorg-AB
+```http
+POST https://{baseURL}/zab/organizations/1/electronicServices
+```
+Voorbeeld body:
+```json
+{
+  "type": "iWLZ Indicatieregister",
+  "active": true,
+  "value": "00001",
+  "address": "https://netwerkpunt.ciz.nl/indicatie",
+  "description": "Endpoint voor het afhandelen van graphQL requests"
+}
+```
+succesvol response: 
+```http
+HTTP/1.1 201
+```
 
 ## 4.2 Raadplegen
->```Beschrijving van de service voor het raadplegen van adresboekgegevens.`
+REST request voor het zoeken van een organisatie, bijvoorbeeld op AGB code:
+```http
+GET https://{baseURL}/zab/organizations?search={agbCode}
+```
+
+Voorbeeld response:
+```json
+[
+  {
+    "_self": "sample _self",
+    "_className": "sample _className",
+    "_id": "sample _id",
+    "addresses": [],
+    "telecoms": [],
+    "identifications": [],
+    "credentials": [],
+    "electronicServices": [],
+    "attachments": [],
+    "speciality": "sample speciality",
+    "comment": "sample comment",
+    "types": [],
+    "timestamp": "sample timestamp",
+    "names": [],
+    "type": [
+      "sample type"
+    ],
+    "applicationIds": [
+      "sample applicationIds"
+    ],
+    "ura": "sample ura",
+    "displayName": "sample displayName"
+  }
+]
+```
 
 # 5 Foutmeldingen
->```Foutmeldingen.`
+400
+401
+404
