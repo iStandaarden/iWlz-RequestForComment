@@ -2,7 +2,7 @@
 
 **SAMENVATTING**
 
-Dit document beschrijft de wijze waarop de adresseringsvoorziening binnen het iWlz-netwerkmodel wordt geïmplementeerd.
+Dit document beschrijft de wijze waarop het adresboekbinnen het iWlz-netwerkmodel wordt geïmplementeerd.
 
 ---
 **Inhoudsopgave**
