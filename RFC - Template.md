@@ -1,10 +1,12 @@
-[link naar issue](https://github.com/iStandaarden)
-
 # <TITEL - RFC>
 
 **SAMENVATTING**
 
 Dit document beschrijft de wijze ....
+
+**Status RFC**
+
+Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**
