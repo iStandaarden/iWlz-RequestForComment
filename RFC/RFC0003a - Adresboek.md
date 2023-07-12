@@ -22,6 +22,9 @@ Dit document beschrijft de wijze waarop de adresseringsvoorziening binnen het iW
 Binnen het iWLZ-netwerk worden gegevens uitgewisseld via REST-services (GraphQL), hierbij speelt het Adresboek een cruciale rol bij het faciliteren van het ontdekken en communiceren met beschikbare gegevensdiensten binnen het netwerk. Het fungeert als een register dat informatie bijhoudt over verschillende gegevensdiensten en notificaties die worden aangeboden door verschillende netwerkdeelnemers. Het primaire doel van het adresboek is om gebruikers van gegevensbronnen in staat te stellen de juiste services te vinden, begrijpen en verbinden om aan hun behoeften te voldoen.
 <br>
 
+## 1.1 Uitgangspunten
+- Het adresboek is uitsluitend toegankelijk voor netwerkdeelnemers.
+
 # 2. Terminologie
 Opsomming van de in dit document gebruikte termen.
 
@@ -44,6 +47,11 @@ De belangrijkste functionaliteiten van het Adresboek zijn:
 Over het algemeen fungeert het adresboek als een centrale hub die serviceproviders in staat stelt hun REST-services te publiceren en serviceconsumenten in staat stelt om naadloos de juiste services te ontdekken, evalueren en verbinden. Het vereenvoudigt het proces van integratie en orchestratie van REST-services binnen een genetwerkte omgeving, en bevordert interoperabiliteit en efficiënte gegevensuitwisseling.
 
 # 4. Services
+Het adresboek bevat services voor het ophalen van informatie over de diverse gegevens registers die beschikbaar zijn binnen het iWLZ-netwerk. Ook is een service beschikbaar voor het raadplegen van de diverse type notificaties die per register beschikbaar zijn.
+
+## 4.1 Registers
+
+## 4.2 Notificaties
 
 # 5 Foutmeldingen
 >```Foutmeldingen.`
