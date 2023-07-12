@@ -21,18 +21,22 @@ De RFC's worden geprioriteerd in het project [RFC-netwerkmodel](https://github.c
 |[0001](RFC/RFC0001%20-%20Certificaatstructuur%20veilige%20verbinging.md) | Certificaatstructuur veilige verbinding | draft-intern | [#3](https://github.com/iStandaarden/iWlz-RFC/issues/3) |
 |[0003](RFC/RFC0003%20-%20Adresboek.md) | Adresboek | draft-intern | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4) |
 |[0004](/RFC/RFC0004%20-%20Verifiable%20Credentials.md) | Verifiable Credentials | draft-intern | [#5](https://github.com/iStandaarden/iWlz-RFC/issues/5) |
-|[0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md) | Ledenadministratie Credential | draft-intern | |
-|[0006](/RFC/RFC0006%20-%20AutorisatieCredential.md) | Autorisatie Credential | draft-intern | |
+|[0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md) | Ledenadministratie Credential | draft-intern | [#6](https://github.com/iStandaarden/iWlz-RFC/issues/6) |
+|[0006](/RFC/RFC0006%20-%20AutorisatieCredential.md) | Autorisatie Credential | draft-intern | [#7](https://github.com/iStandaarden/iWlz-RFC/issues/7)|
 |[0008](RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | draft-intern | [#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
-|[0013](/RFC/RFC0013%20-%20Identiteit.md) | Identiteit | draft-intern | |
 |[0014](RFC//RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) | Functionele uitwerking van aanvragen autorisatie | draft-intern | [#9](https://github.com/iStandaarden/iWlz-RFC/issues/9) |
 |[0016](/RFC/RFC0016%20-%20Service%20directory.md) | Service Directory | draft-intern | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/20) |
-|[0017](/RFC/RFC0017%20-%20Diensten.md) | Diensten | draft-intern | |
+|[0017](/RFC/RFC0017%20-%20Diensten.md) | Diensten | draft-intern | [#15](https://github.com/iStandaarden/iWlz-RFC/issues/15)|
 |[0018](/RFC/RFC0018%20-%20(Fout-)meldingen.md) | (Fout-)meldingen | draft-intern | [#16](https://github.com/iStandaarden/iWlz-RFC/issues/16) |
-|[0019](/RFC/RFC0019%20-%20Logging.md) | Logging | draft-intern | |
-|[0020](/RFC/RFC0020%20-%20Verwijsindex%20&%20Cooperative%20Search.md) | Verwijsindex & cooperative search | draft-intern | |
-|[0021](/RFC/RFC0021%20-%20Contactgegevens%20cliënt%20(opvragen).md) | Contactgegevens client (opvragen) | draft-intern | |
-|[0022](/RFC/RFC0022%20-%20Lua-scripts%20Bemiddelingsregister.md) | Lua-script Bemiddelingsregister | draft-intern | |
+|[0019](/RFC/RFC0019%20-%20Logging.md) | Logging | draft-intern | [#17](https://github.com/iStandaarden/iWlz-RFC/issues/17)|
+|[0020](/RFC/RFC0020%20-%20Verwijsindex%20&%20Cooperative%20Search.md) | Verwijsindex & cooperative search | draft-intern |[#19](https://github.com/iStandaarden/iWlz-RFC/issues/19) |
+|[0021](/RFC/RFC0021%20-%20Contactgegevens%20cliënt%20(opvragen).md) | Contactgegevens client (opvragen) | draft-intern |[18](https://github.com/iStandaarden/iWlz-RFC/issues/18) |
+|[0022](/RFC/RFC0022%20-%20Lua-scripts%20Bemiddelingsregister.md) | Lua-script Bemiddelingsregister | draft-intern |[#11](https://github.com/iStandaarden/iWlz-RFC/issues/11) |
+
+### Vervallen RFC
+|RFC | onderwerp | status | issue |
+|:--|:--|:--| :--|
+|[0013](/RFC/RFC0013%20-%20Identiteit.md) | Identiteit | *vervallen* | [#8](https://github.com/iStandaarden/iWlz-RFC/issues/8)|
 
 
 ## Terminologie
