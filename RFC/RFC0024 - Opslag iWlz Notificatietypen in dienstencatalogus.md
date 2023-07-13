@@ -1,4 +1,4 @@
-# RFC0016 - Service Directory
+# RFC0024 - Opslag en raadplegen iWlz notificatietype in dienstencatalogus
 
 @@todo
  - [ ] De interface van de Service Directory moet nog worden gespecificeerd evenals de concrete invulling van dit generieke component.
@@ -13,7 +13,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/20) om de actue
 
 ---
 **Inhoudsopgave**
-- [RFC0016 - Service Directory](#rfc0016---service-directory)
+- [RFC0024 - Opslag en raadplegen iWlz notificatietype in dienstencatalogus](#rfc0024---opslag-en-raadplegen-iwlz-notificatietype-in-dienstencatalogus)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC's](#12-relatie-andere-rfcs)
