@@ -172,6 +172,16 @@ Voorbeeld response:
 ```
 
 # 5 Foutmeldingen
-400
-401
-404
+Het adresboek kan één van de volgende HTTP foutcodes teruggeven.
+
+```http
+HTTP/1.1 400 Bad Request
+```
+
+```http
+HTTP/1.1 401 Bad Request
+```
+
+```http
+HTTP/1.1 404 Bad Request
+```
