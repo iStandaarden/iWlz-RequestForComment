@@ -1,4 +1,4 @@
-@startuml rfc008-03-publiceren_raadplegen_notificatietype
+ @startuml rfc0008-03-publiceren_raadplegen_notificatietype
   title Publiceren & raadplegen notificatietype
 
   skinparam handwritten false
@@ -11,7 +11,7 @@
   end box
 
   box 
-  participant "ServiceDirectory" as sd
+  participant "Dienstencatalogus" as sd
   end box
 
   box deelnemer #lightyellow
@@ -28,7 +28,7 @@
   end
 
   ||25|||
-  
+
   group raadplegen notificatietype
     dbs -> sd: raadpleeg notificatietype
     activate dbs

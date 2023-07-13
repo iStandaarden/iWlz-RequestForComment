@@ -25,7 +25,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuel
   - [4.4 Notificeren](#44-notificeren)
   - [4.5 iWlz-notificatie-typen](#45-iwlz-notificatie-typen)
 - [5. Publiceren en raadplegen beschikbare Notificatietype](#5-publiceren-en-raadplegen-beschikbare-notificatietype)
-  - [5.1 Publiceren en raadplegen notificatie-typen in Service Directory](#51-publiceren-en-raadplegen-notificatie-typen-in-service-directory)
+  - [5.1 Publiceren en raadplegen notificatie-typen in de Dienstencatalogus](#51-publiceren-en-raadplegen-notificatie-typen-in-de-dienstencatalogus)
   - [5.2 Inhoud notificatietype](#52-inhoud-notificatietype)
     - [5.2.1 Voorbeeld notificatietype-specificatie](#521-voorbeeld-notificatietype-specificatie)
 - [6. Abonneren](#6-abonneren)
@@ -47,13 +47,13 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuel
 # 1. Inleiding
 Binnen het iWlz netwerkmodel werken we met generieke technische oplossingen en contracten om minimaal afhankelijk te zijn van gezamenlijke releases. Daarom werken we bijvoorbeeld met GraphQL, zodat het uitleveren van extra gegevens via een register geen impact heeft op de overige deelnemers aan het netwerk. 
 Het mechanisme voor het aanbieden en afsluiten van abonnementen blijkt in de huidige opzet nog niet voldoende generiek te zijn. Het is namelijk nog niet mogelijk om nieuwe abonnementen op (iWlz-)notificaties toe te voegen zonder dat dit impact heeft voor alle netwerkdeelnemers. De reden hiervoor is dat de notificaties nu in de koppelvlak specificaties zijn vastgelegd. 
-Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één generiek mechanisme voor het beheren van abonnementen te specificeren in de koppelvlak specificaties en notificatietypen inhoudelijk vast te leggen in de Service Directory. Hierdoor kan een nieuwe notificatie worden geintroduceerd in het netwerk, zonder dat er een aanpassing van de koppelvlakspecificaties hoeft plaats te vinden.
+Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één generiek mechanisme voor het beheren van abonnementen te specificeren in de koppelvlak specificaties en notificatietypen inhoudelijk vast te leggen in de *Dienstencatalogus*. Hierdoor kan een nieuwe notificatie worden geintroduceerd in het netwerk, zonder dat er een aanpassing van de koppelvlakspecificaties hoeft plaats te vinden.
 
 ## 1.1 Uitgangspunten
-- Er is een **Service Directory** waarin notificatietypen gepubliceerd kunnen worden.
+- Er is een catalogus voorziening: **Dienstencatalogus** waarin notificatietypen gepubliceerd kunnen worden.
 - Er is een **Adresboek** waarin per deelnemer de (notificatie-)endpoints beschikbaar zijn. 
-- Netwerkdeelnemers raadplegen de **Service Directory** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten.
-- Een abonnement wordt geplaatst door een deelnemer aan het netwerk (abonnee). 
+- Netwerkdeelnemers raadplegen de **Dienstencatalogus** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten.
+- Een abonnement wordt geplaatst door een deelnemer van het netwerk (abonnee) bij de partij die het notificatie-type afhandeld (de bronhouder). 
 - Notificaties die randvoorwaardelijk zijn om een wettelijke taak uit te kunnen voeren worden door de bronhouder verstuurd zonder een apart abonnement per deelnemer.
 - Om een abonnement te kunnen plaatsen heeft een deelnemer een attest van deelname nodig.
 - Een notificatie is dun. Dat wil zeggen dat de ontvanger op basis van de notificatie in staat is te bepalen welke informatie relevant is om te raadplegen. 
@@ -285,8 +285,8 @@ Bekijk voor een uitgebreide lijst van notificatietypen per register het informat
 
 # 5. Publiceren en raadplegen beschikbare Notificatietype
 
-## 5.1 Publiceren en raadplegen notificatie-typen in Service Directory
-De verschillende typen notificaties die een organisatie aanbiedt worden gepubliceerd in de Service Directory. De overige netwerkdeelnemers kunnen vervolgens de Service Directory raadplegen om te ontdekken welke notificaties een organisatie aanbiedt en welk type notificatie worden aangeboden. Minimaal de hierboven beschreven iWlz-notificaties worden in de Service Directory gepubliceerd omdat dit de afgesproken notificaties zijn.  
+## 5.1 Publiceren en raadplegen notificatie-typen in de Dienstencatalogus
+De verschillende typen notificaties die een organisatie aanbiedt worden gepubliceerd in de *Dienstencatalogus*. De overige netwerkdeelnemers kunnen vervolgens de *Dienstencatalogus* raadplegen om te ontdekken welke notificaties een organisatie aanbiedt en welk type notificatie worden aangeboden. Minimaal de hierboven beschreven iWlz-notificaties worden in de *Dienstencatalogus* gepubliceerd omdat dit de afgesproken notificaties zijn.  
 
 ![publiceer_raadpleeg](../plantUMLsrc/rfc0008-03-publiceren_raadplegen_notificatietype.svg "publiceer_raadpleeg_nt")
 
@@ -294,7 +294,7 @@ De verschillende typen notificaties die een organisatie aanbiedt worden gepublic
   <summary>plantUML-source</summary>
 
   ```plantuml
-  @startuml rfc008-03-publiceren_raadplegen_notificatietype
+  @startuml rfc0008-03-publiceren_raadplegen_notificatietype
   title Publiceren & raadplegen notificatietype
 
   skinparam handwritten false
@@ -307,7 +307,7 @@ De verschillende typen notificaties die een organisatie aanbiedt worden gepublic
   end box
 
   box 
-  participant "ServiceDirectory" as sd
+  participant "Dienstencatalogus" as sd
   end box
 
   box deelnemer #lightyellow
@@ -338,14 +338,14 @@ De verschillende typen notificaties die een organisatie aanbiedt worden gepublic
 
 | #  | Beschrijving              | Toelichting                                                           |
 |----|---------------------------|-----------------------------------------------------------------------|
-| 01 | publiceer notificatietype | registreer de gegevens van het notificatietype in de servicedirectory |
+| 01 | publiceer notificatietype | registreer de gegevens van het notificatietype in de dienstencatalogus |
 | 02 | response                  | verwerk response                                                      |
-| 03 | raadpleeg notificatietype | raadpleeg de servicedirectory op de beschikbare notificaties          |
-| 04 | informatie                | beoordeel de informatie over het abonnementtype                       |
+| 03 | raadpleeg notificatietype | raadpleeg de dienstencatalogus op de beschikbare notificaties          |
+| 04 | informatie notificatietype| beoordeel de informatie over het abonnementtype                       |
 
 
 ## 5.2 Inhoud notificatietype
-De interface van de Service Directory moet nog worden gespecificeerd evenals de invulling van dit generieke component. Bij het vastleggen van een abonnementtype in de **Service Directory** worden de volgende gegevens geregistreerd:
+De interface van de *Dienstencatalogus* moet nog worden gespecificeerd evenals de invulling van dit generieke component. Bij het vastleggen van een abonnementtype in de ***Dienstencatalogus*** worden de volgende gegevens geregistreerd:
 
 | Gegeven                  | Beschrijving                                                                                                                                  | V/O<sup>*</sup> | Datatype                                                                   |
 |:-------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|:---------------------------------------------------------------------------|
