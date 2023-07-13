@@ -1,0 +1,28 @@
+ @startuml rfc0024-02-publiceren_notificatietype
+  title Publiceren & raadplegen notificatietype
+
+  skinparam handwritten false
+  skinparam participantpadding 20
+  skinparam boxpadding 40
+  autonumber "<b>[00]"
+  box bronhouder #lightblue
+  participant "Backoffice" as bs
+  participant "Netwerkpunt" as npb
+  end box
+
+  box 
+  participant "Dienstencatalogus" as sd
+  end box
+
+  box deelnemer #lightyellow
+  end box
+  
+  group vastleggen notificatietype
+    bs -> sd : publiceren notificatietype
+    activate bs
+    activate sd
+    sd -> sd: valideer {notificatyType}
+    return response
+    deactivate bs
+  end
+  @enduml
