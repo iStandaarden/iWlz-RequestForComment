@@ -148,9 +148,9 @@ Voorbeeld response:
 			{
 				"type": "iWLZ Indicatieregister",
 				"active": true,
-        "value": "00001",
-        "address": "https://netwerkpunt.ciz.nl/indicatie",
-        "description": "Endpoint voor het afhandelen van graphQL requests"
+				"value": "00001",
+				"address": "https://netwerkpunt.ciz.nl/indicatie",
+				"description": "Endpoint voor het afhandelen van graphQL requests"
 			}
 		],
 		"attachments": [],
