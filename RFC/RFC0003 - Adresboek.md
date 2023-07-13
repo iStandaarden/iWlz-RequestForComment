@@ -136,30 +136,38 @@ GET https://{baseURL}/zab/organizations?search={agbCode}
 Voorbeeld response:
 ```json
 [
-  {
-    "_self": "sample _self",
-    "_className": "sample _className",
-    "_id": "sample _id",
-    "addresses": [],
-    "telecoms": [],
-    "identifications": [],
-    "credentials": [],
-    "electronicServices": [],
-    "attachments": [],
-    "speciality": "sample speciality",
-    "comment": "sample comment",
-    "types": [],
-    "timestamp": "sample timestamp",
-    "names": [],
-    "type": [
-      "sample type"
-    ],
-    "applicationIds": [
-      "sample applicationIds"
-    ],
-    "ura": "sample ura",
-    "displayName": "sample displayName"
-  }
+	{
+		"_self": "sample _self",
+		"_className": "sample _className",
+		"_id": "sample _id",
+		"addresses": [],
+		"telecoms": [],
+		"identifications": [],
+		"credentials": [],
+		"electronicServices": [
+			{
+				"type": "iWLZ Indicatieregister",
+				"active": true,
+        "value": "00001",
+        "address": "https://netwerkpunt.ciz.nl/indicatie",
+        "description": "Endpoint voor het afhandelen van graphQL requests"
+			}
+		],
+		"attachments": [],
+		"speciality": "sample speciality",
+		"comment": "sample comment",
+		"types": [],
+		"timestamp": "sample timestamp",
+		"names": [],
+		"type": [
+			"sample type"
+		],
+		"applicationIds": [
+			"sample applicationIds"
+		],
+		"ura": "sample ura",
+		"displayName": "sample displayName"
+	}
 ]
 ```
 
