@@ -6,7 +6,7 @@ Dit document beschrijft functioneel de generieke werking van notificaties en mel
 
 **Status RFC**
 
-Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/24) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**
@@ -64,7 +64,7 @@ Deze RFC heeft de volgende relatie met andere RFCs:
 | RFC                                               | onderwerp         | relatie<sup>*</sup> | toelichting                             | issue                                                     |
 |:--------------------------------------------------|:------------------|:--------------------|:----------------------------------------|:----------------------------------------------------------|
 | [0003](/RFC/RFC0003%20-%20Adresboek.md)           | Adresboek         | afhankelijk         | beschrijft realisatie Adresboek         | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4)   |
-| [0020](/RFC/RFC0020%20-%20Service%20directory.md) | Service Directory | afhankelijk         | beschrijft realisatie Service Directory | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/20) |
+| [0020](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md) | Opslag en Raadplegen iWlz notificatietypen in dienstencatalogus | afhankelijk | beschrijft functioneel de dienst om notificatie-typen te publiceren en raadplegen | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/24) |
 
 <sup>*</sup>voorwaardelijk,*voor andere RFC* / afhankelijk, *van andere RFC*
 
