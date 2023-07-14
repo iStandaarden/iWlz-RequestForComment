@@ -20,10 +20,10 @@ jobs:
         uses: BaileyJM02/markdown-to-pdf@v1.2.0
         with:
           input_dir: RFC
-          output_dir: RFC_pdf
-          # images_dir: docs/images
+          output_dir: RFC_test
+          images_dir: plantUMLsrc
           # for example <img src="./images/file-name.png">
-          image_import: ./imagesrc
+          image_import: ./plantUMLsrc
           # Default is true, can set to false to only get PDF files
           build_html: false
       - uses: actions/upload-artifact@v1
