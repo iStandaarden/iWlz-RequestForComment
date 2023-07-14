@@ -2,7 +2,7 @@
 
 # <TITEL - RFC>
 
-<font size="4"> **SAMENVATTING**</font>
+<font size="4">**SAMENVATTING**</font>
 
 **Huidige situatie:**
 
