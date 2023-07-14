@@ -9,7 +9,7 @@ Deze RFC beschrijft de werking van de *Dienstencatalogus* binnen het iWLZ netwer
 
 **Status RFC**
 
-Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/20) om de actuele status van deze RFC te bekijken.
+Volg deze [link]([https://github.com/iStandaarden/iWlz-RFC/issues/20](https://github.com/iStandaarden/iWlz-RFC/issues/29) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**
