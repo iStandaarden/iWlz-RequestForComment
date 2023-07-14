@@ -49,8 +49,8 @@ body:
   - type: checkboxes
     id: project
     attributes:
-      label: Selecteer het juiste project
-      description: Selecteer in de kolom hier naast nog het juiste project "RFC-netwerkmodel"
+      label: Selecteer in de kolom rechts het project "RFC-netwerkmodel"
+      description: onder 'Projects', klik op het 'tandwieltje'
       options:
-        - label: project geselecteerd
+        - label: done
           required: true
