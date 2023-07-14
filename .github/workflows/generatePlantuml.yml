@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'plantUMLsrc'
 jobs:
   generate_plantuml:
     runs-on: ubuntu-latest
