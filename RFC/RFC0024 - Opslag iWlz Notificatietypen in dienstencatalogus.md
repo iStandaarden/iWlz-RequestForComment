@@ -1,6 +1,6 @@
 # RFC0024 - Opslag en raadplegen iWlz notificatietype in dienstencatalogus
 
-@@todo
+@todo
  - [ ] De interface van de *Dienstencatalogus* moet nog worden gespecificeerd evenals de concrete invulling van dit generieke component.
 
 **SAMENVATTING**
