@@ -23,7 +23,7 @@ jobs:
           output_dir: RFC_pdf
           images_dir: plantUMLsrc
           # for example <img src="./images/file-name.png">
-          image_import: ./plantUMLsrc
+          image_import: ../plantUMLsrc
           # Default is true, can set to false to only get PDF files
           build_html: false
       - uses: actions/upload-artifact@v1
