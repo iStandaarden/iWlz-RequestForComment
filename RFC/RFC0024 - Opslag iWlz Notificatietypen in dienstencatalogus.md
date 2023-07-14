@@ -42,7 +42,7 @@ Deze RFC is noodzakelijk voor de volgende RFC's en daar een relatie mee.
 |[0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | voorwaardelijk | <ul><li>Er is een ***Dienstencatalogus*** waarin notificatietypen gepubliceerd kunnen worden.</li> <li>Netwerkdeelnemers raadplegen de ***Dienstencatalogus*** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten. </li></ul>|[#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
 
 
-<sup>*</sup>voorwaardelijk, *voor andere RFC* / afhankelijk, *van andere RFC*
+<sup>*</sup>Relatie andere RFC = voorwaardelijk, *voor andere RFC* / afhankelijk, *van andere RFC*
 
 ## 1.3 Code-repository
 De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/POC-bemiddeling](https://github.com/iStandaarden/iWlz-generiek/tree/POC-bemiddeling)
