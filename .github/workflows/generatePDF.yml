@@ -3,7 +3,7 @@ on:
     push:
       paths:
         - 'RFC/**'
-  jobs:
+jobs:
     makepdfs:
       runs-on: ubuntu-latest
       steps:
@@ -17,3 +17,4 @@ on:
         with:
           name: platform-architecture-docs
           path: tmp
+  
