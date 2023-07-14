@@ -1,10 +1,8 @@
+name: generate pdf-file
 on:
     push:
       paths:
         - 'RFC/**'
-  
-  name: CreatePDFs
-  
   jobs:
     makepdfs:
       runs-on: ubuntu-latest
