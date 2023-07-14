@@ -19,7 +19,7 @@ jobs:
       - name: Markdown to PDF and HTML
         uses: BaileyJM02/markdown-to-pdf@v1.2.0
         with:
-          input_dir: RFC
+          input_dir: RFC_test
           output_dir: RFC_pdf
           images_dir: plantUMLsrc
           # for example <img src="./images/file-name.png">
