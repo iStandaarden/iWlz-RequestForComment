@@ -1,62 +1,51 @@
-name: Bug Report
-description: File a bug report
-title: "[Bug]: "
-labels: ["bug", "triage"]
-assignees:
-  - octocat
+name: RFC
+description: Issue voor het volgen van een RFC
+title: "[neem de titel RFC hier over]"
+labels: ["netwerk"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
-  - type: input
-    id: contact
-    attributes:
-      label: Contact Details
-      description: How can we get in touch with you if we need more info?
-      placeholder: ex. email@example.com
-    validations:
-      required: false
   - type: textarea
-    id: what-happened
+    id: onderwerp
     attributes:
-      label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
-      value: "A bug happened!"
+      label: Onderwerp
+      placeholder: Geef hier een korte omschrijving van het onderwerp van de RFC
     validations:
       required: true
-  - type: dropdown
-    id: version
-    attributes:
-      label: Version
-      description: What version of our software are you running?
-      options:
-        - 1.0.2 (Default)
-        - 1.0.3 (Edge)
-    validations:
-      required: true
-  - type: dropdown
-    id: browsers
-    attributes:
-      label: What browsers are you seeing the problem on?
-      multiple: true
-      options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
-  - type: textarea
-    id: logs
-    attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
-      render: shell
   - type: checkboxes
-    id: terms
+    id: partij
     attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      label: Beoordeling
+      description: De RFC is gezien door
       options:
-        - label: I agree to follow this project's Code of Conduct
+        - label: CIZ
+        - label: DSW
+        - label: Menzis
+        - label: VECOZO
+        - label: Zorgmatch
+        - label: Zorgverzekeraars Nederland
+        - label: Zorginstituut Nederland
+  - type: checkboxes
+    id: impact_onderdelen
+    attributes:
+      label: Impact is beoordeeld voor onderdelen
+      options:
+        - label: Indicatieregister
+        - label: Bemiddelingsregister - Centraal
+        - label: Bemiddelingsregister - Decentraal
+        - label: CIZ back-office
+        - label: CIZ Netwerkadapter
+        - label: nID 
+        - label: Silvester
+        - label: anders, (geef hieronder aan)
+  - type: textarea
+    id: anders
+    attributes:
+      label: Welk ander onderdeel?
+      description: voor welk ander onderdeel is de impact behoordeeld
+  - type: checkboxes
+    id: project
+    attributes:
+      label: Selecteer het juiste project
+      description: Selecteer in de kolom hier naast nog het juiste project "RFC-netwerkmodel"
+      options:
+        - label: project geselecteerd
           required: true
