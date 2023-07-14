@@ -1,4 +1,4 @@
-![header](../imagesrc/zzz-template_header.png "template_header")
+![header](../imagesrc/ZinBanner.png "template_header")
 
 # <TITEL - RFC>
 
