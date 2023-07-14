@@ -3,6 +3,11 @@ description: Issue voor het volgen van een RFC
 title: "[neem de titel RFC hier over]"
 labels: ["netwerk"]
 body:
+  - type: input
+    id: link
+    attributes:
+      label: Link naar RFC
+      placeholder: "plak hier de volledige link naar het RFC document, bijvoorbeeld: https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC%20-%20Template.md"
   - type: textarea
     id: onderwerp
     attributes:
