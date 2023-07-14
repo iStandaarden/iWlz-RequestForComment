@@ -1,14 +1,14 @@
 ---
 name: RFC-issue-template
-about: Beschrijf kort het onderwerp van de RFC
-title: ''
+about: Issue voor het volgen van een RFC
+title: 'Naam van de RFC'
 labels: ''
 assignees: ''
 
 ---
 
 ### Link naar RFC
-**[RFCxxxx - omschrijving](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/<rfc-document.md)**
+**[naam van de RFC en pas de link aan](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/<rfc-document.md)**
 
 ### RFC is beoordeeld door: 
 - [ ] CIZ
@@ -18,7 +18,7 @@ assignees: ''
 - [ ] Zorgmatch
 - [ ] Zorginstituut Nederland
 
-### Impact is beoordeeld voor:
+### Impact is beoordeeld op de onderdelen:
 - [ ] Indicatieregister
 - [ ] Bemiddelingsregister
 - [ ] Silvester
