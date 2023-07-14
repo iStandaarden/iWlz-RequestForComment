@@ -2,11 +2,17 @@
 
 # <TITEL - RFC>
 
-**SAMENVATTING**
+<font size="4"> **SAMENVATTING**</font>
 
-Dit document beschrijft de wijze ....
+**Huidige situatie:**
 
-**Status RFC**
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+**Beoogde situatie**
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+<font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
 
