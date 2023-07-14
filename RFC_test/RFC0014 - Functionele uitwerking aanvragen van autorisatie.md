@@ -1,4 +1,3 @@
-
 # RFC0014 - Functionele uitwerking aanvragen van autorisatie
 
 **SAMENVATTING**
