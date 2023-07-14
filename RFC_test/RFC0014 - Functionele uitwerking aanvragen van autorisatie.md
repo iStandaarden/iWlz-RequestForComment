@@ -1,5 +1,8 @@
 # RFC0014 - Functionele uitwerking aanvragen van autorisatie
 
+
+
+
 **SAMENVATTING**
 
 Dit document beschrijft functioneel de generieke wijze van autoriseren in het Netwerkmodel iWlz. Met de juiste autorisatie kunnen bronhouders en deelnemers acties uitvoeren zoals notificaties versturen, registers bevragen en sturen van meldingen. 
