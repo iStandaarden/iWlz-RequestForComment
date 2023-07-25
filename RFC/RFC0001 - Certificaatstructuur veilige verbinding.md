@@ -6,7 +6,7 @@
 
 **Huidige situatie:**
 
-```nog invullen```
+>```nog invullen```
 
 **Beoogde situatie**
 
@@ -44,7 +44,7 @@ Als het om certificaten gaat, willen we graag een balans vinden tussen bruikbaar
 
 
 ## 1.1. Uitgangspunten
->```uitgangspunten```  
+>```nog invullen``` 
 
 # 2. Terminologie
 Opsomming van de in dit document gebruikte termen.

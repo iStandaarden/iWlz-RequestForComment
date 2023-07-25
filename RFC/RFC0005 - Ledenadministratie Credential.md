@@ -6,7 +6,7 @@
 
 **Huidige situatie:**
 
-```nog invullen```
+>```nog invullen```
 
 **Beoogde situatie**
 
@@ -47,7 +47,7 @@ Deze RFC bouwt voort op [RFC004 Verifiable Credentials](RFC0004%20-%20Verifiable
 
 
 ## 1.1. Uitgangspunten
->```uitgangspunten```
+>```nog invullen```
 
 # 2. Terminologie
 Opsomming van de in dit document gebruikte termen.

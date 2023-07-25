@@ -6,7 +6,7 @@
 
 **Huidige situatie:**
 
-```nog invullen```
+>```nog invullen```
 
 **Beoogde situatie**
 
@@ -51,15 +51,15 @@ Om digitaal te kunnen ondertekenen is een combinatie van een private- en een pub
 
 
 ## 1.1. Uitgangspunten
->```uitgangspunten```
+>```nog invullen```
 
 ## 1.2 Relatie andere RFC
 Deze RFC heeft een relatie met de volgende RFC(s)
->```Relatie opsomming```
+>```nog invullen```
 
 
 # 2. Terminologie
->```Terminologie opsomming```
+>```nog invullen```
 
 # 3. Centraal identiteitsbeheer
 

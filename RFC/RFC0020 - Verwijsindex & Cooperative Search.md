@@ -6,11 +6,12 @@
 
 **Huidige situatie:**
 
-```nog invullen```
+>```nog invullen```
 
 **Beoogde situatie**
 
-```nog invullen```
+>```nog invullen```
+
 
 <font size="4">**Status RFC**</font>
 
@@ -27,11 +28,10 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/19) om de actue
 
 ---
 # 1. Inleiding
->```Inleiding```
-
+>```nog invullen```
 
 ## 1.1. Uitgangspunten
->```uitgangspunten```
+>```nog invullen```
 
 ## 1.2 Relatie andere RFC
 Deze RFC heeft een relatie met de volgende RFC(s)

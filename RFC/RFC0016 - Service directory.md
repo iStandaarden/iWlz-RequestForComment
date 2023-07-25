@@ -9,7 +9,7 @@
 
 **Huidige situatie:**
 
-```nog invullen```
+>```nog invullen```
 
 **Beoogde situatie**
 
@@ -30,11 +30,11 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/20) om de actue
 
 ---
 # 1. Inleiding
->```Inleiding```
+>```nog invullen```
 
 
 ## 1.1. Uitgangspunten
->```uitgangspunten```
+>```nog invullen```
 
 ## 1.2 Relatie andere RFC's
 Deze RFC is noodzakelijk voor de volgende RFC's en daar een relatie mee. 

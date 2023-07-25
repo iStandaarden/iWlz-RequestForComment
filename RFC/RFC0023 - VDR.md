@@ -6,7 +6,7 @@
 
 **Huidige situatie:**
 
-```nog invullen```
+>```nog invullen```
 
 **Beoogde situatie**
 
@@ -29,11 +29,11 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/23) om de actue
 
 ---
 # 1. Inleiding
->```Inleiding```
+>```nog invullen```
 <br>
 
 ## 1.1 Uitgangspunten
->```uitgangspunten```
+>```nog invullen```
 
 # 2. Terminologie
 Opsomming van de in dit document gebruikte termen.
