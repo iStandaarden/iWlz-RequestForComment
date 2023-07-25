@@ -1,12 +1,18 @@
 # RFC0006 - AutorisatieCredential
 
-**SAMENVATTING**
+<font size="4">**SAMENVATTING**</font>
+
+**Huidige situatie:**
+
+```nog invullen```
+
+**Beoogde situatie**
 
 Dit document beschrijft de wijze en AutorisatieCredential. Een AutorisatieCredential is een verifiable credential die gebruikt wordt om toegang te geven tot gegevens in het iWlz-netwerkmodel. Het beschrijft welke gegevens een deelnemer mag opvragen en geeft hierin aan welke dienst, bronhouder en cliënt betrokken zijn. Een zorgaanbieder heeft dus voor één cliënt per dienst per bronhouder een AutorisatieCredential nodig om gegevens op te vragen (bijvoorbeeld een bemiddeling van cliënt A bij zorgkantoor B).
 
 De AutorisatieCredential is gebaseerd op de internationale standaard Verifiable Credentials en heeft de vorm van een attest (zie ook RFC004). De AutorisatieCredential wordt gebruikt samen met de inhoud van het afgesproken access policy (zie RFC00Z Access Policy) om toegang te verlenen tot brongegevens in een register.
 
-**Status RFC**
+<font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/7) om de actuele status van deze RFC te bekijken.
 

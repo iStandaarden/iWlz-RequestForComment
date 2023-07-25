@@ -3,11 +3,17 @@
 @todo
  - [ ] De interface van de *Dienstencatalogus* moet nog worden gespecificeerd evenals de concrete invulling van dit generieke component.
 
-**SAMENVATTING**
+<font size="4">**SAMENVATTING**</font>
+
+**Huidige situatie:**
+
+```nog invullen```
+
+**Beoogde situatie**
 
 Deze RFC beschrijft de werking van de *Dienstencatalogus* binnen het iWLZ netwerk. In de *Dienstencatalogus* wordt vast gelegd welke typen notificatie door de diverse netwerkdeelnemers worden aangeboden en onder welke voorwaarden deze kunnen worden afgesloten. 
 
-**Status RFC**
+<font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/29) om de actuele status van deze RFC te bekijken.
 

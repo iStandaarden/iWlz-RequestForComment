@@ -1,11 +1,17 @@
 
 # RFC0014 - Functionele uitwerking aanvragen van autorisatie
 
-**SAMENVATTING**
+<font size="4">**SAMENVATTING**</font>
+
+**Huidige situatie:**
+
+```nog invullen```
+
+**Beoogde situatie**
 
 Dit document beschrijft functioneel de generieke wijze van autoriseren in het Netwerkmodel iWlz. Met de juiste autorisatie kunnen bronhouders en deelnemers acties uitvoeren zoals notificaties versturen, registers bevragen en sturen van meldingen. 
 
-**Status RFC**
+<font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/9) om de actuele status van deze RFC te bekijken.
 

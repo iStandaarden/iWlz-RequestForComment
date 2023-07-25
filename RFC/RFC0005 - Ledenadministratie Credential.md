@@ -1,6 +1,12 @@
 # RFC0005 - Ledenadministratie Credential
 
-**SAMENVATTING**
+<font size="4">**SAMENVATTING**</font>
+
+**Huidige situatie:**
+
+```nog invullen```
+
+**Beoogde situatie**
 
 Dit document beschrijft de wijze van ledenadministratie. De deelnemers aan het iWlz-netwerkmodel moeten andere deelnemers kunnen herkennen. Om dit te kunnen doen zijn er registraties nodig waarin de rollen en kenmerken van deelnemers te controleren zijn. Een voorbeeld hiervan is de registratie van zorgaanbieders inclusief rollen en kenmerken in het Landelijk Register Zorgaanbieders (LRZa). Een ander voorbeeld is de registratie van zorgkantoren in het UZOVI-register. Het beheren van een registratie van leden is de verantwoordelijkheid van de rol ledenadministratie. Binnen het iWlz-netwerkmodel is sprake van meerdere ledenadministraties. Deze ledenadministraties zijn verantwoordelijk voor het beheer van hun eigen informatie en communicatie met andere deelnemers in het iWlz-netwerkmodel.
 
@@ -10,7 +16,7 @@ Met het LedenadministratieCredential, dat wordt gespecificeerd in deze RFC, kan 
 
 Deze RFC vervangt RFC001A “iWlz Attest deelnemer en validatie abonnement”.
 
-**Status RFC**
+<font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/6) om de actuele status van deze RFC te bekijken.
 

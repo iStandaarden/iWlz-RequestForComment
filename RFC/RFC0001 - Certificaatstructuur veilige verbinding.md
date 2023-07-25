@@ -1,6 +1,12 @@
 # RFC0001 - Certificaatstructuur veilige verbinding
 
-**SAMENVATTING**
+<font size="4">**SAMENVATTING**</font>
+
+**Huidige situatie:**
+
+```nog invullen```
+
+**Beoogde situatie**
 
 Deze RFC beschrijft welke certificaten binnen het iWlz-netwerkmodel worden gebruikt voor het creëren van een beveiligde verbinding tussen netwerkpunten, door middel van authenticatie en versleuteling.
 
@@ -8,7 +14,7 @@ Naast het gebruik van certificaten voor een veilige verbinding maakt het iWlz-ne
 
 ![Alt text](../imagesrc/rfc0001-01-SysteemrolGegevensgids.png)
 
-**Status RFC**
+<font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/3) om de actuele status van deze RFC te bekijken.
 

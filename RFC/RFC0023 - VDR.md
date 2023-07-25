@@ -1,10 +1,16 @@
 # RFC0023 - VDR
 
-**SAMENVATTING**
+<font size="4">**SAMENVATTING**</font>
+
+**Huidige situatie:**
+
+```nog invullen```
+
+**Beoogde situatie**
 
 Dit document beschrijft de wijze waarop de VDR binnen het iWlz-netwerkmodel wordt geïmplementeerd. Deze implementatie maakt gebruikt van RFC0002 Decentralized Identifiers iWlz-netwerkmodel.
 
-**Status RFC**
+<font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/23) om de actuele status van deze RFC te bekijken.
 

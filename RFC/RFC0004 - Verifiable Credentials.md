@@ -1,6 +1,12 @@
 # RFC0004 - Verifiable Credentials
 
-**SAMENVATTING**
+<font size="4">**SAMENVATTING**</font>
+
+**Huidige situatie:**
+
+```nog invullen```
+
+**Beoogde situatie**
 
 Dit document beschrijft de wijze waarop Verifiable Credentials worden gebruikt voor ondertekenings- of validatiebewerkingen  binnen het iWlz-netwerkmodel.
 
@@ -12,7 +18,7 @@ Zo kan een deelnemer verklaringen geven over andere deelnemers. Bijvoorbeeld: �
 
 Een valideerbare en interpreteerbare verklaring met daarin 1 of meerdere claims wordt in de context van het iWlz-netwerkmodel een ‘attest’ genoemd. Voor het aanmaken, uitgeven, presenteren en controleren van attesten wordt in het iWlz-netwerkmodel de open internationale Verifiable Credentials van W3C gebruikt. Deze RFC specificeert op welke wijze deze standaard dient te worden toegepast.
 
-**Status RFC**
+<font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/5) om de actuele status van deze RFC te bekijken.
 

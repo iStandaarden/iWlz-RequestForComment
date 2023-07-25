@@ -1,10 +1,16 @@
 # RFC0019 - Logging
 
-**SAMENVATTING**
+<font size="4">**SAMENVATTING**</font>
 
-Dit document beschrijft de wijze ....
+**Huidige situatie:**
 
-**Status RFC**
+```nog invullen```
+
+**Beoogde situatie**
+
+```nog invullen```
+
+<font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actuele status van deze RFC te bekijken.
 

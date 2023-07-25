@@ -1,6 +1,12 @@
 # RFC0013 - Identiteit
 
-**SAMENVATTING**
+<font size="4">**SAMENVATTING**</font>
+
+**Huidige situatie:**
+
+```nog invullen```
+
+**Beoogde situatie**
 
 Deze RFC beschrijft hoe entiteiten in het iWlz-netwerkmodel van een verifieerbare identiteit worden voorzien. De entiteiten die hieronder vallen zijn deelnemers en dienstverleners die namens deze deelnemers optreden. De identiteit wordt verifieerbaar door gebruik te maken van sleutelmateriaal.
 
@@ -11,7 +17,7 @@ Op basis van de identiteiten van deelnemers en hun dienstverleners kunnen vervol
 ![Alt text](../imagesrc/rfc0015-01-Identiteit.png)
 Schematische weergave van RFC002 Identiteit (blauw gemarkeerd) in relatie tot de applicatiecomponenten
 
-**Status RFC**
+<font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/10) om de actuele status van deze RFC te bekijken.
 
