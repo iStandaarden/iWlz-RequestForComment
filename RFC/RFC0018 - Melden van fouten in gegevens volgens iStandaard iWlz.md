@@ -1,3 +1,5 @@
+![header](../imagesrc/ZinBanner.png "template_header")
+
 # RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz
 - [ ]  Verwijzing opnemen naar generiek GraphQL KV
 

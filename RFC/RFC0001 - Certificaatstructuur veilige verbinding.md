@@ -1,3 +1,5 @@
+![header](../imagesrc/ZinBanner.png "template_header")
+
 # RFC0001 - Certificaatstructuur veilige verbinding
 
 <font size="4">**SAMENVATTING**</font>

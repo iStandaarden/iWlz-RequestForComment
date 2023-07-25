@@ -1,3 +1,5 @@
+![header](../imagesrc/ZinBanner.png "template_header")
+
 # RFC0020 - Verwijsindex & Cooperative Search
 
 <font size="4">**SAMENVATTING**</font>

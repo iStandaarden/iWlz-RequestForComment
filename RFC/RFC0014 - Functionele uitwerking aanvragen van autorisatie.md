@@ -1,3 +1,4 @@
+![header](../imagesrc/ZinBanner.png "template_header")
 
 # RFC0014 - Functionele uitwerking aanvragen van autorisatie
 

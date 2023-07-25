@@ -1,3 +1,5 @@
+![header](../imagesrc/ZinBanner.png "template_header")
+
 # RFC0005 - Ledenadministratie Credential
 
 <font size="4">**SAMENVATTING**</font>

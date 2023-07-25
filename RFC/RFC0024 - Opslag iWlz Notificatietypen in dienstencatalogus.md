@@ -1,3 +1,5 @@
+![header](../imagesrc/ZinBanner.png "template_header")
+
 # RFC0024 - Opslag en raadplegen iWlz notificatietype in dienstencatalogus
 
 @todo

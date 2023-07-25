@@ -1,3 +1,5 @@
+![header](../imagesrc/ZinBanner.png "template_header")
+
 # RFC0008 -  Functionele uitwerking notificaties en abonnementen
 
 <font size="4">**SAMENVATTING**</font>

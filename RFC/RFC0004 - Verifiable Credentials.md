@@ -1,3 +1,5 @@
+![header](../imagesrc/ZinBanner.png "template_header")
+
 # RFC0004 - Verifiable Credentials
 
 <font size="4">**SAMENVATTING**</font>

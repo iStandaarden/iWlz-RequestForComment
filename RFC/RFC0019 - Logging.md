@@ -1,3 +1,5 @@
+![header](../imagesrc/ZinBanner.png "template_header")
+
 # RFC0019 - Logging
 
 <font size="4">**SAMENVATTING**</font>
