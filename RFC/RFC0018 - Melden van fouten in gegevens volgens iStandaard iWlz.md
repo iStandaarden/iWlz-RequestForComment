@@ -62,6 +62,7 @@ Opsomming van de in dit document gebruikte termen.
 | :-------- | :-------- | 
 | Bronhouder | Aanbieder van de data, houder van het register |
 | Deelnemer | De raadpleger van de bron, het register | 
+| DID | ... | 
 
 
 
@@ -206,7 +207,7 @@ De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare geg
 
 | Gegeven     | Beschrijving     |  V/O<sup>*</sup> | Datatype
 | --- | --- | :--: | :-- |
-| afzenderID     | Identificatie van de afzender in het netwerk | V | String |
+| afzenderID     | Identificatie van de afzender in het netwerk | V | DID |
 | timestamp     | Tijdstip waarop de melding is aangemaakt | V | Datetime |
 | meldingType     | Identificatie van het type melding. (nu alleen iWlzFoutmelding) | V | Enum[Foutmelding] |
 | melding     | inhoud van de melding (nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn) | V | String |

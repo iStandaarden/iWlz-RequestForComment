@@ -8,14 +8,10 @@ box "Deelnemer"
     participant "Client" as Client
 end box
 
-box "autorisatieserver"
-    
-end box
-
 box "nID"
-    participant "autorisatieserver" as AuthEP
+    participant "autorisatieserver" as AuthzServer
     participant "nID Filter" as Filter
-    participant "Resource-server" as ProxyR
+    participant "Resource-server" as nIDResourceServer
 end box
 
 box "Register"
@@ -24,38 +20,39 @@ end box
 
 autonumber "<b>[000]"
 activate Client
-Client -> AuthEP: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel
-activate AuthEP
-AuthEP -> AuthEP: Validate Authenticatiemiddel
-AuthEP -> AuthEP: Run Rule-engine o.b.v. scope(s)
-activate AuthEP #LightGray
-AuthEP -> AuthEP: Valideer autorisatie
-AuthEP -> AuthEP: Genereer Access-Token
-activate AuthEP #LightGray
-deactivate AuthEP
-deactivate AuthEP
-AuthEP --> Client --: 200 Response (Access-Token)
-deactivate AuthEP
+    Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel
+    activate AuthzServer
+        AuthzServer -> AuthzServer: Valideer Authenticatiemiddel
+        AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)
+        activate AuthzServer #LightGray
+            AuthzServer -> AuthzServer: Valideer autorisatie
+            AuthzServer -> AuthzServer: Genereer Access-Token
+            activate AuthzServer #LightGray
+            deactivate AuthzServer
+        deactivate AuthzServer
+        AuthzServer --> Client --: 200 Response (Access-Token)
+    deactivate AuthzServer
 deactivate Client
 
-Client -> ProxyR: **GraphQL Query**\nAuthenticatiemiddel + Access-Token
-activate ProxyR
+Client -> nIDResourceServer: **GraphQL Query**\nAuthenticatiemiddel + Access-Token
+activate nIDResourceServer
 activate Filter
 note right of Filter: Inline filtering requests
 activate Client
-
+Filter -> Filter: Valideer Authenticatiemiddel
 Filter -> Filter: Valideer Access-Token
+Filter -> Filter: Valideer GraphQL
 Filter -> Filter: Valideer GraphQL request met scope(s)
 
-ProxyR -> BEMRegister: GraphQL Request
+nIDResourceServer -> BEMRegister: GraphQL Request
 deactivate Filter
 activate BEMRegister
 
-BEMRegister --> ProxyR: 200 Response (GraphQL)
+BEMRegister --> nIDResourceServer: 200 Response (GraphQL)
 deactivate BEMRegister
 
-ProxyR --> Client: 200 Response (GraphQL)
-deactivate ProxyR
+nIDResourceServer --> Client: 200 Response (GraphQL)
+deactivate nIDResourceServer
 
 deactivate Client
 @enduml
