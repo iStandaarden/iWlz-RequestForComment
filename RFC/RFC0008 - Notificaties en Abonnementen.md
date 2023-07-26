@@ -6,7 +6,7 @@
 
 **Huidige situatie:**
 
->```nog invullen```
+Er is alleen nog een notificatie van het CIZ naar het zorgkantoor dat verantwoordelijk is voor de regio waar de postcode uit de BRP van de client in valt. Deze notificatie is nog niet generiek opgezet.
 
 **Beoogde situatie**
 
@@ -32,11 +32,9 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/24) om de actue
     - [4.3.1 Voorbeeld notificatie:](#431-voorbeeld-notificatie)
   - [4.4 Notificeren](#44-notificeren)
   - [4.5 iWlz-notificatie-typen](#45-iwlz-notificatie-typen)
-- [5. Publiceren en raadplegen beschikbare Notificatietype](#5-publiceren-en-raadplegen-beschikbare-notificatietype)
-  - [5.1 Publiceren en raadplegen notificatie-typen in de Dienstencatalogus](#51-publiceren-en-raadplegen-notificatie-typen-in-de-dienstencatalogus)
-  - [5.2 Inhoud notificatietype](#52-inhoud-notificatietype)
-    - [5.2.1 Voorbeeld notificatietype-specificatie](#521-voorbeeld-notificatietype-specificatie)
-- [6. Abonneren](#6-abonneren)
+  - [4.6 Publiceren en raadplegen beschikbare Notificatietype](#46-publiceren-en-raadplegen-beschikbare-notificatietype)
+- [5. Ontvangen iWlz-verplichte notificatie](#5-ontvangen-iwlz-verplichte-notificatie)
+- [6. Ontvangen (iWlz-) vrijwillige notificatie dmv abonneren](#6-ontvangen-iwlz--vrijwillige-notificatie-dmv-abonneren)
   - [6.1 Abonnementen binnen de iWlz](#61-abonnementen-binnen-de-iwlz)
   - [6.2 Abonneren op iWlz-Vrijwillige notificatie](#62-abonneren-op-iwlz-vrijwillige-notificatie)
   - [6.3 Plaatsen abonnement](#63-plaatsen-abonnement)
@@ -46,7 +44,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/24) om de actue
   - [6.4 Verwijderen iWlz-vrijwillig abonnement](#64-verwijderen-iwlz-vrijwillig-abonnement)
     - [6.4.1 request deleteAbonnement en inhoud verwijderen abonnement](#641-request-deleteabonnement-en-inhoud-verwijderen-abonnement)
     - [6.4.2 Validatie](#642-validatie)
-    - [6.4.2 Voorbeeld verwijderen abonnement](#642-voorbeeld-verwijderen-abonnement)
+    - [6.4.3 Voorbeeld verwijderen abonnement](#643-voorbeeld-verwijderen-abonnement)
 - [Bijlage: iWlz-Notificatie typen](#bijlage-iwlz-notificatie-typen)
 
 ---
@@ -54,7 +52,9 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/24) om de actue
 
 # 1. Inleiding
 Binnen het iWlz netwerkmodel werken we met generieke technische oplossingen en contracten om minimaal afhankelijk te zijn van gezamenlijke releases. Daarom werken we bijvoorbeeld met GraphQL, zodat het uitleveren van extra gegevens via een register geen impact heeft op de overige deelnemers aan het netwerk. 
+
 Het mechanisme voor het aanbieden en afsluiten van abonnementen blijkt in de huidige opzet nog niet voldoende generiek te zijn. Het is namelijk nog niet mogelijk om nieuwe abonnementen op (iWlz-)notificaties toe te voegen zonder dat dit impact heeft voor alle netwerkdeelnemers. De reden hiervoor is dat de notificaties nu in de koppelvlak specificaties zijn vastgelegd. 
+
 Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één generiek mechanisme voor het beheren van abonnementen te specificeren in de koppelvlak specificaties en notificatietypen inhoudelijk vast te leggen in de *Dienstencatalogus*. Hierdoor kan een nieuwe notificatie worden geintroduceerd in het netwerk, zonder dat er een aanpassing van de koppelvlakspecificaties hoeft plaats te vinden.
 
 ## 1.1 Uitgangspunten
@@ -87,6 +87,7 @@ De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/P
 | Bronhouder   | Aanbieder van de data, houder van het register                        |
 | Deelnemer    | De raadpleger van de bron, het register                               |
 | Register     | De feitelijke databron/database                                       |
+| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. |
 
 
 # 3. Notificatie of melding wat is het verschil
@@ -170,14 +171,14 @@ Op basis van de inhoud van een notificatie moet de ontvanger van de notificatie 
   - (autorisatie?)
 
 De notificatie bevat de volgende gegevens:
-| Gegeven           | Beschrijving                                                                                                 |
-|-------------------|--------------------------------------------------------------------------------------------------------------|
-| organisatieID     | Identificatie van de abonnee in het netwerk                                                                  |
-| timestamp         | Tijdstip waarop de notificatie is aangemaakt                                                                 |
-| abonnementID      | Identificatie van het abonnement. (zie verder in document)                                                   |
-| notificatieTypeID | Identificatie van het abonnement waaruit de notificatie voortvloeit. (zie verder in document)                |
-| parentID          | Identificatie van het parent-object waarover de autorisatie loopt.                                           |
-| objectID          | Identificatie van het object waar de notificatie betrekking op heeft en eventueel input voor de raadpleging. |
+| Gegeven           | Beschrijving                                                                                                 | Type |
+|-------------------|--------------------------------------------------------------------------------------------------------------| ---|
+| organisatieID     | Identificatie van de abonnee in het netwerk                                                                  | DID |
+| timestamp         | Tijdstip waarop de notificatie is aangemaakt                                                                 | Datetime |
+| abonnementID      | Identificatie van het abonnement. (zie verder in document)                                                   | UUID |
+| notificatieTypeID | Identificatie van het abonnement waaruit de notificatie voortvloeit. (zie verder in document)                | String |
+| parentID          | Identificatie van het parent-object waarover de autorisatie loopt.                                           | String |
+| objectID          | Identificatie van het object waar de notificatie betrekking op heeft en eventueel input voor de raadpleging. | String |
 
 ### 4.3.1 Voorbeeld notificatie: 
 Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkantoor. Op basis van het objectId kan het zorgkantoor een raadpleging doen van de nieuwe indicatie. 
@@ -258,7 +259,7 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
 | 01  | registratie data                  | data vanuit backoffice in register plaatsen                                                          |
 | 02  | event trigger                     | registratie of wijziging data laat een notificatie trigger afgaan                                    |
 | 03  | bepaal notificatietype            | bepaal notificatietype en bepaal of het een verplichte of vrijwillige notificatie is                 |
-| ALT | iWlz-vrijwillig                   | bij een iWlz-vrijwillige notificatie moet de abonnementenregistrate worden geraadpleegd op abonnee's |
+| ALT | iWlz-vrijwillig notificatietype   | bij een iWlz-vrijwillige notificatie moet de abonnementenregistrate worden geraadpleegd op abonnee's |
 | 04  | raadpleeg abonnementenregistratie | bepaal of er abonnee's zijn voor het vrijwillige notificatietype                                     |
 | 05  | geef geabonneerde deelnemer       | geef informatie over geabonneerde deelnemer om de notificatie te versturen                           |
 | 06  | zoek endpoint deelnemer op        | bepaal waar de notificatie moet worden afgeleverd                                                    |
@@ -272,7 +273,7 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
 Zodra een event zich voordoet waarvoor een notificatie-trigger is gedefinieerd verstuurd de bronhouder de bijbehorende notificatie. 
 
 ## 4.5 iWlz-notificatie-typen
-Alleen de notificaties die afgesproken zijn tussen een of meerdere ketenpartijen van de iWlz worden hier beschreven. Deze notificaties **moet** een bronhouder kunnen vesturen. Of een deelnemer de notificatie ontvangt is afhankelijk van het type. Een iWlz-verplichte notificatie ontvangt een deelnemer **altijd** wanneer die van toepassing is op die deelnemer. Een iWlz-vrijwillige notificatie ontvangt een deelnemer wanneer de notificatie van toepassing is op die deelnemer **EN** als die deelnemer is geabonneerd op die notificatie bij de bronhouder.
+Alleen de notificaties die afgesproken zijn tussen een of meerdere ketenpartijen van de iWlz worden hier beschreven. Deze notificaties **moet** een iWlz-bronhouder kunnen vesturen. Of een deelnemer de notificatie ontvangt is afhankelijk van het type. Een ***iWlz-verplichte*** notificatie ontvangt een deelnemer **altijd** wanneer die van toepassing is op die deelnemer. Een ***iWlz-vrijwillige*** notificatie ontvangt een deelnemer wanneer de notificatie van toepassing is op die deelnemer **EN** als die deelnemer is geabonneerd op die notificatie bij de bronhouder.
 
 *Het staat een bronhouder en deelnemer vrij om buiten de afgesproken iWlz notificatie een willekeurige notificatie af te spreken en te faciliteren met een deelnemer. Deze ‘ongereguleerde’ notificaties worden verder niet besproken, maar passen in hetzelfde principe van het iWlz-vrijwillige abonnement.*
 
@@ -291,103 +292,16 @@ Er zijn momenteel twee registers in ontwikkeling, het Indicatieregister van het 
 
 Bekijk voor een uitgebreide lijst van notificatietypen per register het informatiemodel en/of het afsprakenstel iWlz.
 
-# 5. Publiceren en raadplegen beschikbare Notificatietype
+## 4.6 Publiceren en raadplegen beschikbare Notificatietype
+Dit onderdeel is beschreven in een afzonderlijke RFC: [RFC0024 - Opslag iWlz Notificatietypen in dienstencatalogus](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md)
 
-## 5.1 Publiceren en raadplegen notificatie-typen in de Dienstencatalogus
-De verschillende typen notificaties die een organisatie aanbiedt worden gepubliceerd in de *Dienstencatalogus*. De overige netwerkdeelnemers kunnen vervolgens de *Dienstencatalogus* raadplegen om te ontdekken welke notificaties een organisatie aanbiedt en welk type notificatie worden aangeboden. Minimaal de hierboven beschreven iWlz-notificaties worden in de *Dienstencatalogus* gepubliceerd omdat dit de afgesproken notificaties zijn.  
+# 5. Ontvangen iWlz-verplichte notificatie
+Voor het ontvangen van een iWlz-verplichte notificatie hoeft een deelnemer geen extra handelingen te doen dan het kenbaar maken van een notifictie-endpoint waarop de notificatie op kunnen worden ontvangen. De als iWlz-verplichte notificaties worden namelijk op basis van de verantwoordelijkheid binnen de iWlz verstuurd en ontvangen. Zo moet een zorgkantoor op de hoogte gebracht worden van een nieuw Indicatiebesluit wanneer deze van een client is die volgens het BRP geregisteerd is in de regio van dat zorgkantoor. Het CIZ zorgt er daarom voor dat de notificatie wordt verzonden. Het ontvangende zorgkantoor heeft hierin geen keuze.
 
-![publiceer_raadpleeg](../plantUMLsrc/rfc0008-03-publiceren_raadplegen_notificatietype.svg "publiceer_raadpleeg_nt")
-
-<details>
-  <summary>plantUML-source</summary>
-
-  ```plantuml
-  @startuml rfc0008-03-publiceren_raadplegen_notificatietype
-  title Publiceren & raadplegen notificatietype
-
-  skinparam handwritten false
-  skinparam participantpadding 20
-  skinparam boxpadding 40
-  autonumber "<b>[00]"
-  box bronhouder #lightblue
-  participant "Backoffice" as bs
-  participant "Netwerkpunt" as npb
-  end box
-
-  box 
-  participant "Dienstencatalogus" as sd
-  end box
-
-  box deelnemer #lightyellow
-  participant "Netwerkpunt" as nps
-  participant "Backoffice" as dbs
-  end box
-  
-  group vastleggen notificatietype
-    bs -> sd : publiceren notificatietype
-    activate bs
-    activate sd
-    return response
-    deactivate bs
-  end
-
-  ||25|||
-
-  group raadplegen notificatietype
-    dbs -> sd: raadpleeg notificatietype
-    activate dbs
-    activate sd 
-    return response
-    deactivate dbs
-  end
-  @enduml
-  ```
-</details>
-
-| #  | Beschrijving              | Toelichting                                                           |
-|----|---------------------------|-----------------------------------------------------------------------|
-| 01 | publiceer notificatietype | registreer de gegevens van het notificatietype in de dienstencatalogus |
-| 02 | response                  | verwerk response                                                      |
-| 03 | raadpleeg notificatietype | raadpleeg de dienstencatalogus op de beschikbare notificaties          |
-| 04 | informatie notificatietype| beoordeel de informatie over het abonnementtype                       |
+Zie de bijlage voor een overzicht van de iWlz notificatietypen voor het Indicatie- en Bemiddelingsregister.
 
 
-## 5.2 Inhoud notificatietype
-De interface van de *Dienstencatalogus* moet nog worden gespecificeerd evenals de invulling van dit generieke component. Bij het vastleggen van een abonnementtype in de ***Dienstencatalogus*** worden de volgende gegevens geregistreerd:
-
-| Gegeven                  | Beschrijving                                                                                                                                  | V/O<sup>*</sup> | Datatype                                                                   |
-|:-------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|:---------------------------------------------------------------------------|
-| organisatieID            | Identificatie van de partij die het abonnement verstrekt in het netwerk                                                                       |        V        | String                                                                     |
-| notificatieTypeID        | Identificatie van het abonnement type                                                                                                         |        V        | String                                                                     |
-| notificatieType          | Aanduiding van de abonnementsvorm                                                                                                             |        V        | Enum[iWlz-Verplicht, iWlz-Vrijwillig, Vrijwillig ]                         |
-| notificatieDoel          | Aanduiding voor welke partij(rol) de notificatie is bedoeld                                                                                   |        V        | String                                                                     |
-| notificatieOmschrijving  | Beschrijving van het abonnement                                                                                                               |        V        | String                                                                     |
-| idTypeAbonnee            | Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement. Alleen bij een (iWlz-)vrijwillige notificatietype |        O        | Enum[Uzovi, AGB, ..]                                                       |
-| eventType                | Aanduiding welke register event de notificatie veroorzaakt                                                                                    |        V        | Enum[Create, Update, All] *(Is deze nodig, voldoet de omschrijving niet?)* |
-| objectIDType             | Beschrijving welke ObjectID wordt teruggeven in de notificatie, voor gebruik als juiste ID in de GraphQL query                                |        V        | String                                                                     |
-
-<sup>*</sup> V = verplicht / O = Optioneel
-
-
-### 5.2.1 Voorbeeld notificatietype-specificatie
-
-Het voorbeeld beschrijft de json-string voor het verplichte abonnement  van een zorgkantoor, dat een zorgaanbieder notificeert op een nieuwe bemiddeling wanneer de betreffende zorgaanbieder de of een van de bemiddelde aanbieders is. 
-
-```
-{
- "organisatieId": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
- "notificatieTypeID": "NIEUWE_BEMIDDELING_VOOR_ZORGAANBIEDER",
- "notificatieType": "IWLZ_VERPLICHT",
- "notificatieDoel": "iWlz Zorgaanbieder",
- "notificatieOmschrijving": "Bij elke registratie van een nieuwe ZorgInNatura voor een instelling, ontvangt die instelling daarvan een notificatie",
- "idTypeAbonnee": "AgbCode",
- "eventType": "CREATE",
- "objectIDType": "zorgInNaturaID"
-}
-```
-
-
-# 6. Abonneren
+# 6. Ontvangen (iWlz-) vrijwillige notificatie dmv abonneren
 
 Alleen voor het kunnen ontvangen van een iWlz-vrijwillige notificatie is het noodzakelijk dat een deelnemer zich abonneert. Elke iWlz-verplicht notificatie ontvangt een deelnemer altijd en dus onafhankelijk van een abonnement. 
 
@@ -479,12 +393,12 @@ Het plaatsen van een abonnement op een iWlz-vrijwillige notificatie of elke ande
 Bij het abonneren van een deelnemer moeten de volgende gegevens worden aangeboden: 
 
 
-| Gegeven                        | Beschrijving                                                                                                  |
-|:-------------------------------|:--------------------------------------------------------------------------------------------------------------|
-| organisatieId                  | NetwerkIdentificatie van de abonnerende partij, identificerend voor het kunnen afleveren van de notificatie. |
-| abonnementTypeIdabonnementType | IdentificatieAanduiding van het abonnement waarop deelnemer wil abonneren of geabonneerd moet worden.type     |
-| idTypeAbonnee                  | Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement                    |
-| idAbonnee                      | Daadwerkelijk identificatie conform bij idType geselecteerd id type                                           |
+| Gegeven           | Beschrijving                                                                                                 |
+|:------------------|:-------------------------------------------------------------------------------------------------------------|
+| organisatieId     | NetwerkIdentificatie van de abonnerende partij, identificerend voor het kunnen afleveren van de notificatie. |
+| notificatieTypeID | IdentificatieAanduiding van het abonnement waarop deelnemer wil abonneren of geabonneerd moet worden.type    |
+| idTypeAbonnee     | Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement                   |
+| idAbonnee         | Daadwerkelijk identificatie conform bij idType geselecteerd id type                                          |
 
 
 ### 6.3.2 Validatie
@@ -501,7 +415,7 @@ Voor het abonneren van een zorgaanbieder op de iWlz-vrijwillige notificatie ‘G
 ```graphql
 query createAbonnement{
  "organisatieId": "c40b3669-1b06-4c99-8c84-f4fac1264b39",
- "abonnementTypeId": "GEWIJZIGDE_DOSSIERHOUDER_OF_CZT",
+ "notificatieTypeID": "GEWIJZIGDE_DOSSIERHOUDER_OF_CZT",
  "idTypeAbonnee": "AgbCode",
  "idAbonnee": "12341234"
 }
@@ -607,7 +521,7 @@ In het netwerpunt van de bronhouder wordt gevalideerd of de abonnee gerechtigd v
 
 Als het abonnementsverzoek wordt afgekeurd ontvangt de abonnee een http code 400 (invalid_request + “Validation failed“) en wordt het abonnement niet gepersisteerd. Zo kan de bronhouder er op vertrouwen dat er uitsluitend legitieme abonnementen worden afgesloten.
 
-### 6.4.2 Voorbeeld verwijderen abonnement
+### 6.4.3 Voorbeeld verwijderen abonnement
 Voor het beeindigen van het abonnement met id: *"3fa85f64-5717-4562-b3fc-2c963f66afa6"*
 
 ```graphql
@@ -625,6 +539,8 @@ validatie fout response:
 HTTP/1.1 400 Bad Request
 {"ErrorCode" : "invalid_request", "Error" :"Validation failed"}
 ```
+
+
 
 
 ---

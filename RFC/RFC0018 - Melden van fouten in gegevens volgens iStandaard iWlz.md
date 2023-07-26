@@ -62,7 +62,7 @@ Opsomming van de in dit document gebruikte termen.
 | :-------- | :-------- | 
 | Bronhouder | Aanbieder van de data, houder van het register |
 | Deelnemer | De raadpleger van de bron, het register | 
-| DID | ... | 
+| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. | 
 
 
 

@@ -60,8 +60,7 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
 | :-------- | :-------- | 
-| *term* | *beschrijving/uitleg* | 
-
+| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. |
 
 # 3 *Dienstencatalogus* voor Notificatie-typen
 
@@ -89,7 +88,7 @@ De ***Dienstencatalogus*** faciliteert het vastleggen van de beschikbare notific
   end box
 
   box 
-  participant "ServiceDirectory" as sd
+  participant "Dienstencatalogus" as sd
   end box
 
   box deelnemer #lightyellow
@@ -120,9 +119,9 @@ De ***Dienstencatalogus*** faciliteert het vastleggen van de beschikbare notific
 
 | #  | Beschrijving              | Toelichting                                                           |
 |----|---------------------------|-----------------------------------------------------------------------|
-| 01 | publiceer notificatietype | registreer de gegevens van het notificatietype in de servicedirectory |
+| 01 | publiceer notificatietype | registreer de gegevens van het notificatietype in de dienstencatalogus |
 | 02 | response                  | verwerk response                                                      |
-| 03 | raadpleeg notificatietype | raadpleeg de servicedirectory op de beschikbare notificaties          |
+| 03 | raadpleeg notificatietype | raadpleeg de dienstencatalogus op de beschikbare notificaties          |
 | 04 | informatie                | beoordeel de informatie over het abonnementtype                       |
 
 
@@ -168,7 +167,7 @@ De verschillende notificatie-typen die een organisatie aanbiedt worden gepublice
 
 | #  | Beschrijving               | Toelichting                                                           |
 |:--:|----------------------------|-----------------------------------------------------------------------|
-| 01 | publiceer notificatietype  | registreer de gegevens van het notificatietype in de servicedirectory |
+| 01 | publiceer notificatietype  | registreer de gegevens van het notificatietype in de dienstencatalogus |
 | 03 | valideer notificatieTypeID | valideer of het meegegeven notificatieTypeID niet bestaat             |
 | 02 | response                   | verwerk response                                                      |
 
@@ -177,7 +176,7 @@ De interface van de *Dienstencatalogus* moet nog worden gespecificeerd evenals d
 
 | Gegeven                  | Beschrijving                                                                                                                                  | V/O<sup>*</sup> | Datatype                                                                   |
 |:-------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|:---------------------------------------------------------------------------|
-| organisatieID            | Identificatie van de partij die het abonnement verstrekt in het netwerk                                                                       |        V        | String                                                                     |
+| organisatieID            | Identificatie van de partij die het abonnement verstrekt in het netwerk                                                                       |        V        | DID                                                                     |
 | notificatieTypeID        | Identificatie van het abonnement type                                                                                                         |        V        | String                                                                     |
 | notificatieType          | Aanduiding van de abonnementsvorm                                                                                                             |        V        | Enum[iWlz-Verplicht, iWlz-Vrijwillig, Vrijwillig ]                         |
 | notificatieDoel          | Aanduiding voor welke partij(rol) de notificatie is bedoeld                                                                                   |        V        | ENUM[WLZ_ZORGAANBIEDER, ZORGKANTOOR, CIZ, CAK, ZIN, ANDERS]                                                                     |
