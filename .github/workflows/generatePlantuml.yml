@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - 'plantUMLsrc'
+      - 'plantUMLsrc/**.puml'
 jobs:
   generate_plantuml:
     runs-on: ubuntu-latest
