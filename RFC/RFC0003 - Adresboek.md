@@ -10,7 +10,7 @@
 
 **Beoogde situatie**
 
-Dit document beschrijft de wijze waarop het adresboekbinnen het iWlz-netwerkmodel wordt geïmplementeerd.
+Dit document beschrijft de wijze waarop het adresboek binnen het iWlz-netwerkmodel wordt geïmplementeerd.
 
 <font size="4">**Status RFC**</font>
 
