@@ -18,22 +18,9 @@ body:
     validations:
       required: true
   - type: checkboxes
-    id: partij
-    attributes:
-      label: Beoordeling
-      description: De RFC is gezien door
-      options:
-        - label: CIZ
-        - label: DSW
-        - label: Menzis
-        - label: VECOZO
-        - label: Zorgmatch
-        - label: Zorgverzekeraars Nederland
-        - label: Zorginstituut Nederland
-  - type: checkboxes
     id: impact_onderdelen
     attributes:
-      label: Impact is beoordeeld voor onderdelen
+      label: RFC heeft impact op
       options:
         - label: Indicatieregister
         - label: Bemiddelingsregister - Centraal
@@ -42,6 +29,7 @@ body:
         - label: CIZ Netwerkadapter
         - label: nID 
         - label: Silvester
+        - label: Raadplegers / GraphQL
         - label: anders, (geef hieronder aan)
   - type: textarea
     id: anders
