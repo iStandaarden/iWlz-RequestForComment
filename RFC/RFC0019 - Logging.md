@@ -61,7 +61,6 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
     - [7.5.2 Identificatie van de bron](#752-identificatie-van-de-bron)
     - [7.5.3 Type bron van de loggegevens](#753-type-bron-van-de-loggegevens)
 - [5. Export](#5-export)
-- [plant-uml embedding](#plant-uml-embedding)
 
 ---
 # 1. Inleiding
@@ -451,22 +450,3 @@ Syntax en semantiek van de export volgens het gestelde in hoofdstuk 7 van de NEN
 
 Voorbeeld export logrecord nID:
 
-
-
-# plant-uml embedding
-Neem een verwijzing op naar het gegenereerde diagram
- ```
-    ![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")
-```
-
-verberg de plant-Uml source tussen de tags: 
-
-    <details>
-     <summary>plantUML-source</summary>
-    
-     ```plantuml
-     @startuml rfc008-01-notificatie_melding
-     <plant-uml-source> 
-     
-    ```
-     </details>
