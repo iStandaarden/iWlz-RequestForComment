@@ -185,7 +185,7 @@ Een flow kan bijvoorbeeld een raadpleging zijn naar aanleiding van een notificat
 
 <font color=red>LET OP: Onderstaande schema moet nog correct  worden aangepast.</font>
 
-![voorbeeld_flow](../plantUMLsrc/rfc0019-01rfc0019-01-voorbeeldflow.svg "voorbeeld_flow")
+![voorbeeld_flow](../plantUMLsrc/rfc0019-01-voorbeeld_flow.svg "voorbeeld_flow")
 
 <details>
 <summary>plantUML-source</summary>
