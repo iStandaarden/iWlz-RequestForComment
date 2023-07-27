@@ -31,15 +31,15 @@
       deactivate bs
       end 
 
-    bs -> ab: zoek endpoint deelnemer op
+    bs -> ab: zoek endpoint & DID deelnemer op
 
     activate ab
-    ab -> bs: return {endpoint deelnemer}
+    ab -> bs: return {endpoint & DID deelnemer}
     deactivate ab
     bs -> bs: genereer notificatie
     bs -> dnp: zend notificatie
     activate dnp
-    dnp -> dnp: verwerk notificatie
+    dnp -> dnp: ontvang notificatie
     dnp --> bs: 200 response
     deactivate dnp  
     bs --> bs: verwerk response
