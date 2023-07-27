@@ -1,7 +1,16 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
 # RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz
+
+@@todo
 - [ ]  Verwijzing opnemen naar generiek GraphQL KV
+
+
+actiepunten meeting 27-07-2023:
+ - [ ] Afzender ID
+ - [ ] Type
+ - [ ] Melder
+  
 
 <font size="4">**SAMENVATTING**</font>
 
