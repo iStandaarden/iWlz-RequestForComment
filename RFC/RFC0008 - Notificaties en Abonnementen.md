@@ -4,7 +4,7 @@
 
 @@todo
 
-actiepunten meeting 27-07-2023:
+actiepunten n.a.v. meeting 27-07-2023:
  - [ ] Opnemen dat Silvester geen vrijwillige abonnementen ondersteund
 
 <font size="4">**SAMENVATTING**</font>
