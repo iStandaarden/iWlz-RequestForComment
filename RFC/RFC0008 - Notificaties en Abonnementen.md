@@ -171,27 +171,26 @@ Op basis van de inhoud van een notificatie moet de ontvanger van de notificatie 
   - (autorisatie?)
 
 De notificatie bevat de volgende gegevens:
-| Gegeven           | Beschrijving                                                                                                 | Type |
-|-------------------|--------------------------------------------------------------------------------------------------------------| ---|
-| organisatieID     | Identificatie van de abonnee in het netwerk                                                                  | DID |
+| Gegeven           | Beschrijving                                                                                                 | Type     |
+|-------------------|--------------------------------------------------------------------------------------------------------------|----------|
+| organisatieID     | Identificatie van de abonnee in het netwerk                                                                  | DID      |
 | timestamp         | Tijdstip waarop de notificatie is aangemaakt                                                                 | Datetime |
-| abonnementID      | Identificatie van het abonnement. (zie verder in document)                                                   | UUID |
-| notificatieTypeID | Identificatie van het abonnement waaruit de notificatie voortvloeit. (zie verder in document)                | String |
-| parentID          | Identificatie van het parent-object waarover de autorisatie loopt.                                           | String |
-| objectID          | Identificatie van het object waar de notificatie betrekking op heeft en eventueel input voor de raadpleging. | String |
+| abonnementID      | Identificatie van het abonnement. (zie verder in document)                                                   | UUID     |
+| notificatieTypeID | Identificatie van het abonnement waaruit de notificatie voortvloeit. (zie verder in document)                | String   |
+| parentID          | Identificatie van het parent-object waarover de autorisatie loopt.                                           | String   |
+| objectID          | Identificatie van het object waar de notificatie betrekking op heeft en eventueel input voor de raadpleging. | String   |
 
 ### 4.3.1 Voorbeeld notificatie: 
-Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkantoor. Op basis van het objectId kan het zorgkantoor een raadpleging doen van de nieuwe indicatie. 
+Het gaat hier om een notificatie van een ‘Zorg in natura’ voor een zorgaanbieder. Op basis van het objectId kan het zorgaanbieder een raadpleging doen van de nieuwe zorg in natura. 
 
 ```
 {
   "organisatieId": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
   "timestamp": "2022-09-27T12:07:07.492Z",
   "abonnementId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "notificatieTypeID": "NIEUWE_INDICATIE_VOOR_ZORGKANTOOR",
-  "parentId": "wlzIndicatie/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
-  "objectId": "https://api.ciz.nl/wlzindicatieregister/wlzindicaties/
-              da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+  "notificatieTypeID": "NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER",
+  "parentId": "Bemiddeling/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
+  "objectId": "https://api.zorgkantoor1.nl/bemiddelingsregister/zorginnatura/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
 }
 ```
 
@@ -236,15 +235,15 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
       deactivate bs
       end 
 
-    bs -> ab: zoek endpoint deelnemer op
+    bs -> ab: zoek endpoint & DID deelnemer op
 
     activate ab
-    ab -> bs: return {endpoint deelnemer}
+    ab -> bs: return {endpoint & DID deelnemer}
     deactivate ab
     bs -> bs: genereer notificatie
     bs -> dnp: zend notificatie
     activate dnp
-    dnp -> dnp: verwerk notificatie
+    dnp -> dnp: ontvang notificatie
     dnp --> bs: 200 response
     deactivate dnp  
     bs --> bs: verwerk response
@@ -254,21 +253,21 @@ Het gaat hier om een notificatie van een ‘Nieuwe indicatie’ voor het zorgkan
 </details>
 
 
-| #   | Beschrijving                      | Toelichting                                                                                          |
-|:----|:----------------------------------|:-----------------------------------------------------------------------------------------------------|
-| 01  | registratie data                  | data vanuit backoffice in register plaatsen                                                          |
-| 02  | event trigger                     | registratie of wijziging data laat een notificatie trigger afgaan                                    |
-| 03  | bepaal notificatietype            | bepaal notificatietype en bepaal of het een verplichte of vrijwillige notificatie is                 |
-| ALT | iWlz-vrijwillig notificatietype   | bij een iWlz-vrijwillige notificatie moet de abonnementenregistrate worden geraadpleegd op abonnee's |
+| #   | Beschrijving                      | Toelichting                                                                                            | Voorbeeld: Bemiddeling voor zorgaanbieder                                                                    |
+|:----|:----------------------------------|:-------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------|
+| 01  | registratie data                  | data vanuit backoffice in register plaatsen                                                            | Zorgkantoor bemiddelt client naar een zorgaanbieder en registreert het resultaat in het bemiddelingsregister |
+| 02  | event trigger                     | registratie of wijziging data laat een notificatie trigger afgaan                                      | Doordat de agbCode van de zorgaanbieder wordt gevuld in ZorgInNatura, gaat er een trigger af                 |
+| 03  | bepaal notificatietype            | bepaal notificatietype en bepaal of het een verplichte of vrijwillige notificatie is                   | Het is de trigger van de iWlz-verplichte notificatie: NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER.                |
+| ALT | *iWlz-vrijwillig notificatietype* | *bij een iWlz-vrijwillige notificatie moet de abonnementenregistrate worden geraadpleegd op abonnee's* | nvt.                                                                                                         |
 | 04  | raadpleeg abonnementenregistratie | bepaal of er abonnee's zijn voor het vrijwillige notificatietype                                     |
 | 05  | geef geabonneerde deelnemer       | geef informatie over geabonneerde deelnemer om de notificatie te versturen                           |
-| 06  | zoek endpoint deelnemer op        | bepaal waar de notificatie moet worden afgeleverd                                                    |
-| 07  | return {endpoint deelnemer}       | ontvang het afleveradres voor de notificatie                                                         |
-| 08  | genereer notificatie              | maak de gewenste notificatie aan                                                                     |
-| 09  | zend notificatie                  | verstuur de notificatie naar het endpoint van de deelnemer                                           |
+| 06  | zoek endpoint deelnemer op        | bepaal waar de notificatie moet worden afgeleverd                                                    | Met de geregisteerde agbCode kan het endpoint en DID van de zorgaanbieder worden opgezocht |
+| 07  | return {endpoint; DID deelnemer}       | ontvang het afleveradres en DID voor de notificatie                                                         |
+| 08  | genereer notificatie              | maak de gewenste notificatie aan                                                                     | Gebruik ontvangen DID in notificatie (zie voorbeeld 4.3.1) |
+| 09  | zend notificatie                  | verstuur de notificatie naar het endpoint van de deelnemer                                           | Gebruik ontvangen endpoint als afleveradres |
 | 10  | verwerk notificatie               | verwerk de ontvangen notificatie                                                                     |
-| 11  | http-response {200}               | stuur ontvangst bevestiging                                                                          |
-| 12  | verwerk response                  | bevestig ontvangst notificatie                                                                       |
+| 11  | http-response {200}               | stuur ontvangst bevestiging                                                                          | De zorgaanbieder bevestigt de ontvangst van de notificatie en kan deze verwerken en gebruiken voor een raadpleging |
+| 12  | verwerk response                  | bevestig ontvangst notificatie                                                                       | 
 
 Zodra een event zich voordoet waarvoor een notificatie-trigger is gedefinieerd verstuurd de bronhouder de bijbehorende notificatie. 
 
@@ -366,8 +365,8 @@ Het abonneren van een deelnemer voor een <span style="text-decoration:underline;
   ```
 </details>
 
-| #   | Beschrijving              | Toelichting                                                             ||
-|-----|---------------------------|-------------------------------------------------------------------------|--|
+| #   | Beschrijving              | Toelichting                                                             |
+|-----|---------------------------|-------------------------------------------------------------------------|
 | 01  | abonnement verzoek        | Stel een abonnementsverzoek op                                          |
 | 02  | verstuur verzoek          | Dien een abonnementsverzoek in                                          |
 | 03  | valideer verzoek          | Bepaal of de deelnemer abonnee mag worden op het betreffende abonnement |
@@ -393,12 +392,12 @@ Het plaatsen van een abonnement op een iWlz-vrijwillige notificatie of elke ande
 Bij het abonneren van een deelnemer moeten de volgende gegevens worden aangeboden: 
 
 
-| Gegeven           | Beschrijving                                                                                                 |
-|:------------------|:-------------------------------------------------------------------------------------------------------------|
-| organisatieId     | NetwerkIdentificatie van de abonnerende partij, identificerend voor het kunnen afleveren van de notificatie. |
-| notificatieTypeID | IdentificatieAanduiding van het abonnement waarop deelnemer wil abonneren of geabonneerd moet worden.type    |
-| idTypeAbonnee     | Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement                   |
-| idAbonnee         | Daadwerkelijk identificatie conform bij idType geselecteerd id type                                          |
+| Gegeven           | Beschrijving                                                                                                 | Type   |
+|:------------------|:-------------------------------------------------------------------------------------------------------------|--------|
+| organisatieId     | NetwerkIdentificatie van de abonnerende partij, identificerend voor het kunnen afleveren van de notificatie. | DID    |
+| notificatieTypeID | IdentificatieAanduiding van het abonnement waarop deelnemer wil abonneren of geabonneerd moet worden.type    | String |
+| idTypeAbonnee     | Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement                   | String |
+| idAbonnee         | Daadwerkelijk identificatie conform bij idType geselecteerd id type                                          | String |
 
 
 ### 6.3.2 Validatie
