@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0024 - Opslag en raadplegen iWlz notificatietype in dienstencatalogus
+# RFC0024 - Opslag en raadplegen (iWlz-)notificatietypen in dienstencatalogus
 
 @todo
  - [ ] De interface van de *Dienstencatalogus* moet nog worden gespecificeerd evenals de concrete invulling van dit generieke component.
@@ -9,7 +9,7 @@
 
 **Huidige situatie:**
 
->```nog invullen```
+>```Nieuwe voorziening```
 
 **Beoogde situatie**
 
@@ -37,11 +37,12 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/29) om de actue
 
 ---
 # 1. Inleiding
->```nog invullen```
+Deze RFC beschrijft de werking van de *Dienstencatalogus* binnen het iWLZ netwerk. In de *Dienstencatalogus* wordt vast gelegd welke typen notificatie door de diverse netwerkdeelnemers worden aangeboden en onder welke voorwaarden deze kunnen worden afgesloten.
 
 
 ## 1.1. Uitgangspunten
 - Dienstencatalogus is de functionele **werknaam** om deze dienst te beschrijven. Het kan goed dat deze dienst in de praktijk in een ander onderdeel wordt opgenomen.
+- Het publiceren van notificatietypen in de *Dienstencatalogus* beperkt zich niet tot enkel de iWlz-verplichte en iWlz-vrijwillige notificatietypen.
 
 ## 1.2 Relatie andere RFC's
 Deze RFC is noodzakelijk voor de volgende RFC's en daar een relatie mee. 
