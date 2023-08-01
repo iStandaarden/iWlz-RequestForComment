@@ -2,21 +2,19 @@
 
 # RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz
 
-@@todo
+@@todo actiepunten n.a.v. meeting 27-07-2023:
 - [ ]  Verwijzing opnemen naar generiek GraphQL KV
-
-
-actiepunten n.a.v. meeting 27-07-2023:
  - [ ] Afzender ID
- - [ ] Type
- - [ ] Melder
+ - [ ] AfzenderIDType: typering van het afzenderID (agbcode, uzovi, zorgkantoorcode, DID,...)
+ - [ ] Melder: Wie doet de feitelijk melding. Dit kan afwijkend zijn aan de afzender van de melding
+ - [ ] Structuur synchroniseren met notificatie.
   
 
 <font size="4">**SAMENVATTING**</font>
 
 **Huidige situatie:**
 
->```nog invullen```
+>```nieuwe functionaliteit```
 
 **Beoogde situatie**
 
