@@ -4,9 +4,10 @@
 
 @@todo: 
 actiepunten n.a.v. meeting 27-07-2023:
- - [ ] Opnemen dat Silvester geen vrijwillige abonnementen ondersteund
+ - [x] Opnemen dat Silvester geen vrijwillige abonnementen ondersteund
  - [ ] afzendertIDType toevoegen. Enum met mogelijke afzender identificatie typen. Bijvoorbeeld: Uzovi, Agbcode, DID, KVK
  - [ ] inhoud notificatie generiek(er) maken en vergelijkbaar met inhoud van een melding. 
+---
 
 <font size="4">**SAMENVATTING**</font>
 
@@ -72,6 +73,8 @@ Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één 
 - Om een abonnement te kunnen plaatsen heeft een deelnemer een attest van deelname nodig.
 - Een notificatie is dun. Dat wil zeggen dat de ontvanger op basis van de notificatie in staat is te bepalen welke informatie relevant is om te raadplegen. 
 - Een abonnement is in de basis permanent. De abonnee is zelf verantwoordelijk voor het intrekken van het abonnement. Bij uittreding uit het netwerk, bijvoorbeeld vanwege fusie of faillissement, kunnen abonnementen in bulk worden opgeruimd of gemuteerd. Dit zal in de praktijk altijd maatwerk zijn.
+- Silverster abonneert zich niet op de (iWlz-)vrijwillige notificaties.
+- Silverster handelt geen (iWlz-)vrijwillige notificaties af.
 
 ## 1.2 Relatie andere RFC
 Deze RFC heeft de volgende relatie met andere RFCs:
@@ -157,9 +160,9 @@ De reden voor notificatie is altijd de registratie of wijziging van gegevens in 
 ## 4.2 Typen notificatie
 Er zijn twee typen notificatie gedefinieerd, waarbij het onderscheid zit in de vrijwilligheid van het ontvangen van de notificatie door een deelnemer of het noodzakelijk ontvangen van de notificatie door de deelnemer. Wanneer het voor de afgesproken werking van de iWlz noodzakelijk is een deelnemer van een CRUD-event in een register op de hoogte te stellen is er sprake van een **iWlz-verplichte** notificatie. Een bronhouder moet deze notificatie versturen en een deelnemer hoeft zich voor de deze notificatie niet te abonneren. Is voor een goede werking van de iWlz gewenst dat een deelnemer op de hoogte te stellen van een CRUD-event, maar niet noodzakelijk, dan hoeft een bronhouder een notificatie alleen te versturen wanneer de deelnemer zich heeft geabonneerd op deze notificatie.  
 
-Denk bijvoorbeeld aan de registratie van een nieuw indicatiebesluit. Het zorgkantoor dat verantwoordelijk is voor de regio waarin de client van het indicatiebesluit volgens het BRP woont, moet op de hoogte gesteld worden. Het CIZ **moet** daarom een dergelijke notificatie verzenden aan het zorgkantoor en het zorgkantoor **moet** de notificatie volgens iWlz-afspraken afhandelen. Het zorgkantoor hoeft zich niet op deze notificatie *"nieuwe indicatie voor zorgkantoor"* te abonneren.  
+Denk bijvoorbeeld aan de registratie van een nieuw indicatiebesluit. Het zorgkantoor dat verantwoordelijk is voor de regio waarin de client van het indicatiebesluit volgens het BRP woont, moet op de hoogte gesteld worden. Het CIZ **moet** daarom een dergelijke notificatie verzenden aan het zorgkantoor en het zorgkantoor **moet** de notificatie volgens iWlz-afspraken afhandelen. Het zorgkantoor hoeft zich niet apart op deze notificatie *"nieuwe indicatie voor zorgkantoor"* te abonneren.  
 
-De twee typen notificaties zijn daarom: 
+De twee typen iWlz notificaties zijn daarom: 
 
 | Type notificatie | Verzenden notificatie | Invloed deelnemer                       |
 |:-----------------|:----------------------|:----------------------------------------|
@@ -173,7 +176,7 @@ Op basis van de inhoud van een notificatie moet de ontvanger van de notificatie 
   - van welke bronhouder is de notificatie afkomstig
   - wanneer is de notifictie verzonden
   - op welke informatie de notificatie betrekking heeft
-  - informatie om een  gerichte raadpleging te doen
+  - informatie om een gerichte raadpleging te kunnen doen
   - (autorisatie?)
 
 De notificatie bevat de volgende gegevens:
