@@ -2,10 +2,11 @@
 
 # RFC0008 -  Functionele uitwerking notificaties en abonnementen
 
-@@todo
-
+@@todo: 
 actiepunten n.a.v. meeting 27-07-2023:
  - [ ] Opnemen dat Silvester geen vrijwillige abonnementen ondersteund
+ - [ ] afzendertIDType toevoegen. Enum met mogelijke afzender identificatie typen. Bijvoorbeeld: Uzovi, Agbcode, DID, KVK
+ - [ ] inhoud notificatie generiek(er) maken en vergelijkbaar met inhoud van een melding. 
 
 <font size="4">**SAMENVATTING**</font>
 
