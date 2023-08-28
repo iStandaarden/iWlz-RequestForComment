@@ -444,9 +444,44 @@ Voorbeelden:
 
 ### 7.5.3 Type bron van de loggegevens
 
-
 # 5. Export
 Syntax en semantiek van de export volgens het gestelde in hoofdstuk 7 van de NEN7513.
 
-Voorbeeld export logrecord nID:
+## 5.1 Gebeurtenis
+| ~~Gebeurteniscode~~                          |  Actiecode  | Datum en tijd | Aard van de gebeurtenis | Resultaat | Controles |
+|----------------------------------------------|:-----------:|:-------------:|:-----------------------:|-----------|-----------|
+| *nID maakt geen gebruik van gebeurteniscode* | E (execute) |  20/01/2023   | [auth],nID,200,'Login'; | 1         | TTTT      |
+
+## 5.2 Gebruiker
+Het datamodel **Gebruiker** wordt gevisualiseerd in twee tabellen, zodat het beter op de pagina past.
+
+| Gebruikers-ID | Lokale gebruikers-ID                 | Gebruikersnaam | ~~Gebruikersrol~~      | Gebruiker is initiator | ID van verantwoordelijke gebruiker   |
+|---------------|--------------------------------------|----------------|------------------------|:----------------------:|--------------------------------------|
+| jansen@nID.nl | e8f1a194-3a7d-4ec4-8335-e3e8c3ce6072 | jansen@nID.nl  | *nID kent geen rollen* |          true          | e8f1a194-3a7d-4ec4-8335-e3e8c3ce6072 |
+
+| ~~Naam van verantwoordelijke gebruiker~~     | ~~Rol van verantwoordelijke gebruiker~~ | Type toegangspunt | Identificatie toeganspunt |
+|----------------------------------------------|-----------------------------------------|:-----------------:|:-------------------------:|
+| *nID auth kent geen namen van de gebruikers* | *nID kent geen rollen*                  |   2 (IP-adres)    |       10.145.240.60       |
+
+## 5.3 Object
+Het datamodel **object** wordt gevisualiseerd in twee tabellen, zodat het beter op de pagina past.
+
+| Identificatortype | Klasse | Identificator | ~~Naam~~                           | Details                                                 |
+|-------------------|--------|---------------|------------------------------------|---------------------------------------------------------|
+| ID                | Client | [UUID]        | Niet alle objecten hebben een naam | Een log text met inhoud over wat het code hoort te doen |
+
+| Autorisatieprotocol     | ~~Behandelrelatieprotocol~~  | ~~Toestemmingsprofiel~~      | ~~Gevoeligheid~~             | ~~Categorie~~              | Zoekvraag |
+|-------------------------|------------------------------|------------------------------|------------------------------|----------------------------|-----------|
+| cert_authz + nid-filter | nID kan dit niet vaststellen | nID kan dit niet vaststellen | nID kan dit niet vaststellen | nID heeft geen categorieën | Token     |
+
+## 5.4 Loggegevens
+
+| Identificatie van de locatie | Identificatie van de bron | Type bron van de loggegevens |
+|------------------------------|---------------------------|------------------------------|
+| AZ/NEU/PRD                   | 'nID/authservice'         | nID/service                  |
+
+
+
+
+
 
