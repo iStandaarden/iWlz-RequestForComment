@@ -212,22 +212,22 @@ end box
 
 autonumber "<b>[000]"
 activate Client
-    Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>X-B3-ParentSpanId:
+    Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>
     activate AuthzServer
         AuthzServer -> AuthzServer: Valideer Authenticatiemiddel
-        AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>X-B3-ParentSpanId:
+        AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 34cfd3ee730bbe13\n<font color=red>X-B3-ParentSpanId: a2fb4a1d1a96d312
         activate AuthzServer #LightGray
             AuthzServer -> AuthzServer: Valideer autorisatie
-            AuthzServer -> AuthzServer: Genereer Access-Token\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>X-B3-ParentSpanId:
+            AuthzServer -> AuthzServer: Genereer Access-Token\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 34cfd3ee730bbe13\n<font color=red>X-B3-ParentSpanId: a2fb4a1d1a96d312
             activate AuthzServer #LightGray
             deactivate AuthzServer
         deactivate AuthzServer
-        AuthzServer --> Client --: 200 Response (Access-Token)\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>X-B3-ParentSpanId:
+        AuthzServer --> Client --: 200 Response (Access-Token)
     deactivate AuthzServer
 deactivate Client
 
-Client -> nIDResourceServer: **GraphQL Query**\nAuthenticatiemiddel + Access-Token\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>X-B3-ParentSpanId:
-activate nIDResourceServer
+Client -> Filter: **GraphQL Query**\nAuthenticatiemiddel + Access-Token\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 2edb09379a27bfb1\n<font color=red>
+
 activate Filter
 note right of Filter: Inline filtering requests
 activate Client
@@ -236,19 +236,23 @@ Filter -> Filter: Valideer Access-Token
 Filter -> Filter: Valideer GraphQL
 Filter -> Filter: Valideer GraphQL request met scope(s)
 
-nIDResourceServer -> BEMRegister: GraphQL Request\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>X-B3-ParentSpanId:
+
+Filter -> nIDResourceServer
 deactivate Filter
+
+
+activate nIDResourceServer
+nIDResourceServer -> BEMRegister: GraphQL Request\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 75c38117346fa472\n<font color=red>X-B3-ParentSpanId: 2edb09379a27bfb1
 activate BEMRegister
 
-BEMRegister --> nIDResourceServer: 200 Response (GraphQL)\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>X-B3-ParentSpanId:
+BEMRegister --> nIDResourceServer: 200 Response (GraphQL)
 deactivate BEMRegister
 
-nIDResourceServer --> Client: 200 Response (GraphQL)\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>X-B3-ParentSpanId:
+nIDResourceServer --> Client: 200 Response (GraphQL)
 deactivate nIDResourceServer
 
 deactivate Client
 @enduml
-
 ```
 </details>
 
