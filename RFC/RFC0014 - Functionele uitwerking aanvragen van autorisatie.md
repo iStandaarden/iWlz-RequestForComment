@@ -151,16 +151,16 @@ deactivate Client
 |#|Beschrijving|Toelichting|
 |:--- |:--- |:--- |
 |01| Aanvraag van autorisatie       | client wil een actie uitvoeren op een register en vraagt hiervoor autorisatie aan bij het token endpoint van de autorisatieserver  |
-|02| Valideer Authenticatiemiddel  | autorisatieserver valideerd de client o.b.v. het aangeboden authenticatiemiddel |
+|02| Valideer Authenticatiemiddel  | autorisatieserver valideert de client o.b.v. het aangeboden authenticatiemiddel |
 |03| Run rule-engine o.b.v. scope(s)| de autorisatieserver doorloopt voor elke vraag (scope) de rule-engine |
-|04| Valideer autorisatie           | in de rule-engine wordt de scope gevalideerd tegen het access-model |
+|04| Valideer autorisatie           | in de rule-engine wordt de scope gevalideerd m.b.v. de ingestelde regels voor de scope |
 |05| Genereer Access-Token          | een access-token wordt gegenereerd, hierin zijn de scopes en de resources verwerkt.|
 |06| Response (Access-Token)        | indien succesvol doorlopen wordt een access-token uitgedeeld aan de client |
 |07| GraphQL Query | een client kan met het access-token een verzoek uitzetten bij de resource-server |
 |08| Valideer Authenticatiemiddel   | valideren van de client o.b.v. het aangeboden authenticatiemiddel |
-|09| Valideer Access-Token          | de resource-server valideerd de access-token o.a. op eigenaar en geldigheid |
+|09| Valideer Access-Token          | de resource-server valideert de access-token o.a. op eigenaar en geldigheid |
 |10| Valideer GraphQL               | parse en valideer het graphQL verzoek
-|11| Valideer GraphQL request met scope(s) | De resource-server valideerd ook of het verzoek overeenkomt met de autorisaties in het access-token |
+|11| Valideer GraphQL request met scope(s) | De resource-server valideert ook of het verzoek overeenkomt met de autorisaties in het access-token |
 |12| GraphQL Query | De resource-server routeert het graphQL verzoek aan de juiste resource |
 |13| Response (GraphQL) | De resource stuurt het GraphQL resultaat terug |
 |14| Response (GraphQL) | De resource-server routeert het resultaat terug aan de client |
@@ -168,7 +168,7 @@ deactivate Client
 
 # 4. Autorisatieserver
 
-In de kern is de autorisatieserver een engine om OAuth2 tokens uit te geven, een autorisatieserver past Access-policies toe. Een Access-Policy definieerd permissies en de duur van toegang tot een entiteit.
+In de kern is de autorisatieserver een engine om OAuth2 tokens uit te geven, een autorisatieserver past Access-policies toe. Een Access-Policy definieert permissies en de duur van toegang tot een entiteit.
 
 Op dit moment kan de autorisatieserver alleen autorisaties voor GraphQL API's uitdelen, de standaard in het iWlz Netwerkmodel.
 
@@ -180,7 +180,7 @@ De autorisatieserver is voor netwerkdeelnemers alleen toegangkelijk op het token
 
 
 
-Het token-endpoint van de autorisatieserver staat toe dat een client in het autorisatieverzoek een "scope" request parameter specificeerd. De autorisatieserver zal deze parameter gebruiken om het access-token als antwoord op het verzoek te voorzien van de scopes. De waarde van de scope parameter in het verzoek is uitgedrukt als een spatie-gescheiden lijst van case-sensitive strings. De mogelijke strings zijn gespecificeerd in de autorisatieserver en zijn gedocumenteerd. Als de lijst meerdere spatie-gescheiden strings bevatten, dan is de volgorde hiervan onbelangrijk. De autorisatieserver zal elke string verwerken als extra scope in het access-token.
+Het token-endpoint van de autorisatieserver staat toe dat een client in het autorisatieverzoek een "scope" request parameter specificeert. De autorisatieserver zal deze parameter gebruiken om het access-token als antwoord op het verzoek te voorzien van de scopes. De waarde van de scope parameter in het verzoek is uitgedrukt als een spatie-gescheiden lijst van case-sensitive strings. De mogelijke strings zijn gespecificeerd in de autorisatieserver en zijn gedocumenteerd. Als de lijst meerdere spatie-gescheiden strings bevat, dan is de volgorde hiervan onbelangrijk. De autorisatieserver zal elke string verwerken als extra scope in het access-token.
 
 **Voorbeeld:** van een scope request parameter waar meerdere scopes worden aangevraagd:  
 *"scope":"organisaties\zorgkantoren\[UZOVICode]\notificaties\notificatie:indicatie.create organisaties\zorgaanbieders\[AGBCode]\notificaties\notificatie:indicatie.create"*
@@ -312,7 +312,7 @@ Query{
 ```
 
 # 5 Resource-server
-Een resource-server beschermd achterliggende resources tegen ongeautoriseerder toegang.  
+Een resource-server beschermt achterliggende resources tegen ongeautoriseerde toegang.  
 - De resource-server is voor netwerkdeelnemers alleen toegangkelijk op het GraphQL-endpoint. 
 - De resource-server vereist een vertrouwd authenticatiemiddel en een geldig Access-Token. 
 - Alle bronnen worden beschermd door één resource-server(redundant). In de toekomst zijn meerdere zelfstandige resource-servers voorstelbaar. 
@@ -331,7 +331,7 @@ Na de autorisatievalidatie routeert de resource-server het verzoek naar de resou
 Voor verschillende toepassingen en acties is een timeouts van enkele 100 milliseconden wenselijk, denk hierbij aan online transacties. Daarentegen is voor andere acties een timeout van 15 seconden voorsterlbaar, acties voor complexe zoekacties.
 Om dit te ondersteunen moet een client een request-timeout in de header meesturen.
 
-indien de request-timeout in de header niet wordt opgegeven, hanteerd de resource-server een time-out van 5000 milliseconden.
+indien de request-timeout in de header niet wordt opgegeven, hanteert de resource-server een time-out van 5000 milliseconden.
 
 Bij het verstrijken van de time-out MOET de resource-server een http Error code 504 Gateway Timeout retourneren.
 
@@ -339,9 +339,9 @@ Bij het verstrijken van de time-out MOET de resource-server een http Error code 
 # 6 Foutmeldingen
 OAuth HTTP error responses
 
-In onderstaande schema worden de mogelijke fouten weergegeven die kunnen optreden bij het ophalen van autorisaties of het uitvoeren van een graphQL verzoek.
+In onderstaand schema worden de mogelijke fouten weergegeven die kunnen optreden bij het ophalen van autorisaties of het uitvoeren van een graphQL verzoek.
 
-<font color=red>LET OP: Onderstaande schema moet nog worden gevalideerd/aangepast en aangevult.</font>
+<font color=red>LET OP: Onderstaand schema moet nog worden gevalideerd/aangepast en aangevult.</font>
 
 ![foutmeldingen_overzicht](../plantUMLsrc/rfc0014-02-foutmeldingen_overzicht.svg "foutmeldingen_overzicht")
 
