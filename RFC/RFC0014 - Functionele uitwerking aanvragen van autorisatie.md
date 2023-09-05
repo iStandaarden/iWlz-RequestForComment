@@ -323,7 +323,7 @@ Een resource-server beschermt achterliggende resources tegen ongeautoriseerde to
 |Omgeving|URL|
 |:--- |:--- 
 |TST|https://tst-api.vecozo.nl/tst/netwerkmodel/v2/GraphQL|
-|PRD|https://api.vecozo.nl/netwerkmodel/v2/oauth2/GraphQL|
+|PRD|https://api.vecozo.nl/netwerkmodel/v2/GraphQL|
 
 Na de autorisatievalidatie routeert de resource-server het verzoek naar de resource.
 
