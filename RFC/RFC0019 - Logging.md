@@ -98,8 +98,8 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
 | :-------- | :-------- | 
-| *Logging* | *Stelselmatige geautomatiseerde registratie van gegevens rondom events op systemen* | 
-| *logverantwoordelijke* | *directie van zorginstelling of andere organisatie die (persoonlijke)(gezondheids)informatie verwerkt, delen, bevragen of muteren met of via het netwerkmodel.*
+| Logging | Stelselmatige geautomatiseerde registratie van gegevens rondom events op systemen | 
+| Logverantwoordelijke | Directie van zorginstelling of andere organisatie die (persoonlijke)(gezondheids)informatie verwerkt, delen, bevragen of muteren met of via het netwerkmodel.
 
 # 3 Zekerheidseisen
 ## 3.1 Algemeen
