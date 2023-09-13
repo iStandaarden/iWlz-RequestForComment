@@ -2,11 +2,7 @@
 
 # RFC0008 -  Functionele uitwerking notificaties en abonnementen
 
-@@todo: 
-actiepunten n.a.v. meeting 27-07-2023:
- - [x] Opnemen dat Silvester geen vrijwillige abonnementen ondersteund
- - [ ] afzendertIDType toevoegen. Enum met mogelijke afzender identificatie typen. Bijvoorbeeld: Uzovi, Agbcode, DID, KVK
- - [ ] inhoud notificatie generiek(er) maken en vergelijkbaar met inhoud van een melding. 
+
 ---
 
 <font size="4">**SAMENVATTING**</font>
@@ -36,8 +32,8 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/24) om de actue
   - [4.1 Doel notificatie](#41-doel-notificatie)
   - [4.2 Typen notificatie](#42-typen-notificatie)
   - [4.3 Inhoud notificatie](#43-inhoud-notificatie)
-    - [4.3.1 Voorbeeld notificatie:](#431-voorbeeld-notificatie)
   - [4.4 Notificeren](#44-notificeren)
+    - [4.4.1 Voorbeeld notificeren:](#441-voorbeeld-notificeren)
   - [4.5 iWlz-notificatie-typen](#45-iwlz-notificatie-typen)
   - [4.6 Publiceren en raadplegen beschikbare Notificatietype](#46-publiceren-en-raadplegen-beschikbare-notificatietype)
 - [5. Ontvangen iWlz-verplichte notificatie](#5-ontvangen-iwlz-verplichte-notificatie)
@@ -77,11 +73,12 @@ Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één 
 - Silverster handelt geen (iWlz-)vrijwillige notificaties af.
 
 ## 1.2 Relatie andere RFC
-Deze RFC heeft de volgende relatie met andere RFCs:
+Deze RFC heeft een relatie met de volgende andere RFC(s):
 | RFC                                               | onderwerp         | relatie<sup>*</sup> | toelichting                             | issue                                                     |
 |:--------------------------------------------------|:------------------|:--------------------|:----------------------------------------|:----------------------------------------------------------|
-| [0003](/RFC/RFC0003%20-%20Adresboek.md)           | Adresboek         | afhankelijk         | beschrijft realisatie Adresboek         | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4)   |
-| [0020](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md) | Opslag en Raadplegen iWlz notificatietypen in dienstencatalogus | afhankelijk | beschrijft functioneel de dienst om notificatie-typen te publiceren en raadplegen | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/24) |
+| [RFC0003](/RFC/RFC0003%20-%20Adresboek.md)           | Adresboek         | afhankelijk         | beschrijft realisatie Adresboek         | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4)   |
+| [RFC0020](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md) | Opslag en Raadplegen iWlz notificatietypen in dienstencatalogus | afhankelijk | beschrijft functioneel de dienst om notificatie-typen te publiceren en raadplegen | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/24) |
+| [RFC0018](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md)| Meldingen: Melden van iWlz gegevensfouten | gerelateerd | beschrijft het stroom van raadpleger aan bronhouder | [#16](https://github.com/iStandaarden/iWlz-RFC/issues/16) |
 
 <sup>*</sup>voorwaardelijk,*voor andere RFC* / afhankelijk, *van andere RFC*
 
@@ -171,7 +168,7 @@ De twee typen iWlz notificaties zijn daarom:
 
 
 ## 4.3 Inhoud notificatie
-Op basis van de inhoud van een notificatie moet de ontvanger van de notificatie onder andere kunnen bepalen:
+De notificatie is in structuur gelijk aan de melding (zie [RFC0018](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md)). Op basis van de inhoud van een notificatie moet de ontvanger van de notificatie onder andere kunnen bepalen:
   - wat is de trigger, wat is de reden van de notificatie
   - van welke bronhouder is de notificatie afkomstig
   - wanneer is de notifictie verzonden
@@ -180,28 +177,19 @@ Op basis van de inhoud van een notificatie moet de ontvanger van de notificatie 
   - (autorisatie?)
 
 De notificatie bevat de volgende gegevens:
-| Gegeven           | Beschrijving                                                                                                 | Type     |
-|-------------------|--------------------------------------------------------------------------------------------------------------|----------|
-| organisatieID     | Identificatie van de abonnee in het netwerk                                                                  | DID      |
-| timestamp         | Tijdstip waarop de notificatie is aangemaakt                                                                 | Datetime |
-| abonnementID      | Identificatie van het abonnement. (zie verder in document)                                                   | UUID     |
-| notificatieTypeID | Identificatie van het abonnement waaruit de notificatie voortvloeit. (zie verder in document)                | String   |
-| parentID          | Identificatie van het parent-object waarover de autorisatie loopt.                                           | String   |
-| objectID          | Identificatie van het object waar de notificatie betrekking op heeft en eventueel input voor de raadpleging. | String   |
+| Gegeven          | Algemene beschrijving                                              | Specifieke beschrijving voor notificeren                               | V/O<sup>*</sup> | Type     |
+|------------------|--------------------------------------------------------------------|------------------------------------------------------------------------|:---------------:|----------|
+| timestamp        | Tijdstip waarop de notificatie is aangemaakt                       |                                                                        |        V        | Datetime |
+| afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                        |        V        | Enum     |
+| afzenderID       | Identificatie van de verzender van het bericht                     |                                                                        |        V        | DID      |
+| ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                        |        V        | Enum     |
+| ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                        |        V        | DID      |
+| ontvangerKenmerk | Kenmerk van de ontvanger:                                          | Bij iWlz-vrijwillige notificatie gevuld met abonnementsID. Anders leeg |        O        | String   |
+| subjectType      | Onderwerptype van het bericht                                      | NotificatieTypeID (zie tabel)                                          |        V        | String   |
+| subject          | Onderwerp van het bericht                                          | Identificatie van het parent-object waarover de autorisatie loopt.     |        V        | String   |
+| recordID         | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de notificatie betrekking op heeft.  |        V        | String   |
+<sup>*</sup> V = verplicht / O = Optioneel
 
-### 4.3.1 Voorbeeld notificatie: 
-Het gaat hier om een notificatie van een ‘Zorg in natura’ voor een zorgaanbieder. Op basis van het objectId kan het zorgaanbieder een raadpleging doen van de nieuwe zorg in natura. 
-
-```
-{
-  "organisatieId": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
-  "timestamp": "2022-09-27T12:07:07.492Z",
-  "abonnementId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "notificatieTypeID": "NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER",
-  "parentId": "Bemiddeling/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
-  "objectId": "https://api.zorgkantoor1.nl/bemiddelingsregister/zorginnatura/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
-}
-```
 
 ## 4.4 Notificeren
 
@@ -279,6 +267,34 @@ Het gaat hier om een notificatie van een ‘Zorg in natura’ voor een zorgaanbi
 | 12  | verwerk response                  | bevestig ontvangst notificatie                                                                       | 
 
 Zodra een event zich voordoet waarvoor een notificatie-trigger is gedefinieerd verstuurd de bronhouder de bijbehorende notificatie. 
+
+### 4.4.1 Voorbeeld notificeren: 
+Het gaat hier om een notificatie van een nieuwe ‘Zorg in natura’ voor een zorgaanbieder. Op basis van het recordID kan het zorgaanbieder een raadpleging doen van de nieuwe zorg in natura. 
+
+Notificatie:
+
+```json
+{
+  "timestamp": "2022-09-27T12:07:07.492Z",
+  "afzenderTypeID": "UZOVI",
+  "afzenderID": "5505",
+  "ontvangerIDType": "Agbcode",
+  "ontvangerID": "12341234",
+  "ontvangerKenmerk": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "subjectType": "NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER",
+  "subject": "Bemiddeling/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
+  "recordID": "https://api.zorgkantoor1.nl/bemiddelingsregister/zorginnatura/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+}
+```
+Succesvol response: 
+```http
+HTTP/1.1 204 (No content)
+```
+Validatie fout response:
+```http
+HTTP/1.1 400 Bad Request
+{"ErrorCode" : "invalid_request", "Error" :"Validation failed"}
+```
 
 ## 4.5 iWlz-notificatie-typen
 Alleen de notificaties die afgesproken zijn tussen een of meerdere ketenpartijen van de iWlz worden hier beschreven. Deze notificaties **moet** een iWlz-bronhouder kunnen vesturen. Of een deelnemer de notificatie ontvangt is afhankelijk van het type. Een ***iWlz-verplichte*** notificatie ontvangt een deelnemer **altijd** wanneer die van toepassing is op die deelnemer. Een ***iWlz-vrijwillige*** notificatie ontvangt een deelnemer wanneer de notificatie van toepassing is op die deelnemer **EN** als die deelnemer is geabonneerd op die notificatie bij de bronhouder.
@@ -557,7 +573,7 @@ HTTP/1.1 400 Bad Request
 # Bijlage: iWlz-Notificatie typen
 <-- scroll naar links voor de volledige inhoud-->
 
-|  | Aanbieder | notificatieTypeID | notificatieType | notificatieOmschrijving | idTypeAbonnee | eventType | objectIDType |
+|  | Aanbieder | notificatieTypeID | notificatieType | notificatieOmschrijving | idTypeAbonnee | eventType | recordIDType |
 |---|---|---|---|---|---|---|---|
 | 1 | CIZ | NIEUWE_INDICATIE_ZORGKANTOOR | IWLZ-VERPLICHT | Bij de registratie van een nieuwe indicatie, waarbij de postcode van het adres volgens de BRP van de geindiceerde client valt in de regio van het zorgkantoor dat de notificatie dient te ontvangen | - | create | wlzIndicatieID |
 | 2 | CIZ | VERVALLEN_INDICATIE | IWLZ-VRIJWILLIG | Bij de update (vullen of verwijderen of aanpassen) van de vervaldatum van een indicatie, ontvangt het zorgkantoor dat een abonnement heeft en dat volgens een registratie heeft in [Bemiddeling] het Bemiddelingsregister bij de indicatie van toepassing een notificatie | Uzovicode zorgkantoor / of RegioCode | update | wlzIndicatieID |

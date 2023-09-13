@@ -1,13 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
 # RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz
-
-@@todo actiepunten n.a.v. meeting 27-07-2023:
-- [ ]  Verwijzing opnemen naar generiek GraphQL KV
- - [ ] Afzender ID
- - [ ] AfzenderIDType: typering van het afzenderID (agbcode, uzovi, zorgkantoorcode, DID,...)
- - [ ] Melder: Wie doet de feitelijk melding. Dit kan afwijkend zijn aan de afzender van de melding
- - [ ] Structuur synchroniseren met notificatie.
   
 
 <font size="4">**SAMENVATTING**</font>
@@ -53,9 +46,9 @@ In het netwerkmodel zal deze functionaliteit vervangen worden door **foutmelding
 
 ## 1.2 Relatie andere RFC's
 Deze RFC heeft de volgende relatie met andere RFCs:
-| RFC | onderwerp | relatie<sup>*</sup> | toelichting | issue |
-|:----|:----------|:--------------------|:------------|:------|
-|     |           |                     |             |       |
+| RFC                                                               | onderwerp                    | relatie<sup>*</sup> | toelichting                                                   | issue                                                   |
+|:------------------------------------------------------------------|:-----------------------------|:--------------------|:--------------------------------------------------------------|:--------------------------------------------------------|
+| [RFC0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnementen | gerelateerd         | Notificaties is de berichtgeving van bronhouder aan deelnemer | [#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
 
 <sup>*</sup>voorwaardelijk,*voor andere RFC* / afhankelijk, *van andere RFC*
 
@@ -212,13 +205,17 @@ end
 
 De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare gegevens:
 
-| Gegeven     | Beschrijving     |  V/O<sup>*</sup> | Datatype
-| --- | --- | :--: | :-- |
-| afzenderID     | Identificatie van de afzender in het netwerk | V | DID |
-| timestamp     | Tijdstip waarop de melding is aangemaakt | V | Datetime |
-| meldingType     | Identificatie van het type melding. (nu alleen iWlzFoutmelding) | V | Enum[Foutmelding] |
-| melding     | inhoud van de melding (nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn) | V | String |
-| objectID     | Identificatie van het object waar de melding betrekking op heeft en eventueel input voor de raadpleging. | V | String |
+| Gegeven          | Algemene beschrijving                                              | Beschrijving                                                                                                                             | V/O<sup>*</sup> | Datatype |
+|------------------|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|----------|
+| timestamp        | Tijdstip waarop de notificatie is aangemaakt                       |                                                                                                                                          |        V        | Datetime |
+| afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                                                                                          |        V        | Enum     |
+| afzenderID       | Identificatie van de verzender van het bericht                     |                                                                                                                                          |        V        | DID      |
+| ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                                                                                          |        V        | Enum     |
+| ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                                                                                          |        V        | DID      |
+| ontvangerKenmerk | Kenmerk van de ontvanger:                                          | Identificatie van de melder. Meestal gelijk aan de afzender                                                                              |        O        | String   |
+| subjectType      | Onderwerptype van het bericht                                      | Identificatie van het type melding. (nu alleen iWlzFoutmelding)                                                                          |        V        | String   |
+| subject          | Onderwerp van het bericht                                          | inhoud van de melding (nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn) |        V        | String   |
+| recordID         | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de melding betrekking op heeft.                                                                        |        V        | String   |
 
 <sup>*</sup> V = verplicht / O = Optioneel
 
@@ -228,11 +225,15 @@ Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element 
 
 ```json
 {
-  "afzenderID": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
   "timestamp": "2022-09-27T12:07:07.492Z",
-  "meldingType": "IWLZ_FOUTMELDING",
-  "melding": "IRG0012",
-  "objectId": "https://api.ciz.nl/wlzindicatieregister/wlzindicaties/Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+  "afzenderTypeID": "Agbcode",
+  "afzenderID": "12341234",
+  "ontvangerIDType": "Uzovi",
+  "ontvangerID": "1234",
+  "ontvangerKenmerk": "AGB: 12341234",
+  "subjectType": "iWLZFOUTMELDING",
+  "subject": "IRG0012",
+  "recordID": "https://api.ciz.nl/wlzindicatieregister/wlzindicaties/Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
 }
 ```
 
