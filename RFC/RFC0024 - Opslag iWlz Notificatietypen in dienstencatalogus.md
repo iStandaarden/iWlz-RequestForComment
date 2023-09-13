@@ -238,12 +238,12 @@ HTTP/1.1 400 Bad Request
 ## 3.3 Raadplegen beschikbare notificatietypen
 Een deelnemer van het iWlz netwerk kan in de ***Dienstencatalogus*** raadplegen welke notificatietypen er beschikbaar zijn, welke voor zijn rol/type en welke notificatietypen optioneel op te abonneren zijn. 
 
-  - gql-specificatie/netwerkpunt.graphql → Query: PublishNotificatieType
+  - gql-specificatie/netwerkpunt.graphql → Query: GetNotificatieType
 
 ```graphql
 query getNotificatieTypen()
   {
-
+  ntb.
   }
 ```
 
