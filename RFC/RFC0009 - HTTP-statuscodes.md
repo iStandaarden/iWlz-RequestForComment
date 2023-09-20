@@ -14,7 +14,7 @@
 
 <font size="4">**Status RFC**</font>
 
-Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/23) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/12) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**
