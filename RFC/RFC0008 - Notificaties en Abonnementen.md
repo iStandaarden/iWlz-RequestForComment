@@ -17,7 +17,7 @@ Dit document beschrijft functioneel de generieke werking van notificaties en mel
 
 <font size="4">**Status RFC**</font>
 
-Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/24) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**
