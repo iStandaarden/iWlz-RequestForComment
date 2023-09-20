@@ -6,7 +6,7 @@
 
 **Huidige situatie:**
 
->```nog invullen```
+Op dit moment is er geen adresboek functionaliteit beschikbaar binnen het iWLZ netwerk.
 
 **Beoogde situatie**
 
@@ -58,13 +58,12 @@ De belangrijkste functionaliteiten van het Adresboek zijn:
 Over het algemeen fungeert het adresboek als een centrale hub die netwerkdeelnemers in staat stelt hun services te publiceren EN afnemers van gegevens in staat stelt om de juiste services te ontdekken. Het vereenvoudigt het proces van integratie en orchestratie binnen het iWLZ-netwerk, en bevordert interoperabiliteit en efficiënte gegevensuitwisseling.
 
 # 4. Gegevens
-Uitgaande van de structuur van het ZorgAdresboek van VZVZ worden bji een organisatie de volgende gegevens met betrekking tot technische adressering vastgelegd.
+Uitgaande van de structuur van het ZorgAdresboek van VZVZ worden bij een organisatie de volgende gegevens met betrekking tot technische adressering vastgelegd.
 
 | Gegeven | Omschrijving | Voorbeeld                      |
 |:-----------------|:----------------------|:----------------------------------------|
 | Type  | Type elektronische dienst | "iWLZ Indicatieregister" |
 | Active  | Geeft aan of deze elektronische dienst actief is | "TRUE" |
-| Value  | ID van de elektronische dienst, bijvoorbeeld ‘000000001’ | “00001” |
 | Address  | Adres (endpoint) van de elektronische dienst | “https://netwerkpunt.ciz.nl/indicatie” |
 | Description  | Beschrijving van de elektronische dienst | "Endpoint voor het afhandelen van graphQL requests"               |
 
@@ -114,73 +113,55 @@ deactivate dnp
   ```
 </details>
 
-## 4.1 Publiceren
-REST request voor het publiceren van een service in het Zorg-AB
-```http
-POST https://{baseURL}/zab/organizations/1/electronicServices
-```
-Voorbeeld body:
-```json
+## 4.1 Publiceren adressen
+Voor het publiceren van een adres:
+ 
+  - gql-specificatie/netwerkpunt.graphql → Mutation: PublishAddress
+
+```graphql
+query publishAddress
 {
   "type": "iWLZ Indicatieregister",
   "active": true,
-  "value": "00001",
   "address": "https://netwerkpunt.ciz.nl/indicatie",
   "description": "Endpoint voor het afhandelen van graphQL requests"
 }
 ```
+
 succesvol response: 
 ```http
-HTTP/1.1 201
+HTTP/1.1 204 (No content)
 ```
-
-## 4.2 Raadplegen
-REST request voor het zoeken van een organisatie, bijvoorbeeld op AGB code:
+validatie fout response:
 ```http
-GET https://{baseURL}/zab/organizations?search={agbCode}
+HTTP/1.1 400 Bad Request
+  {"ErrorCode" : "invalid_request", "Error" :"Invalid addressType"}
+```
+## 4.2 Raadplegen beschikbare adressen
+Een deelnemer van het iWlz netwerk kan in het ***Adresboek*** raadplegen welke technische adressen (endpoints) er beschikbaar zijn binnen het netwerk.
+
+  - gql-specificatie/netwerkpunt.graphql → Query: GetAddress
+
+```graphql
+query getAddress()
+  {
+  ntb.
+  }
 ```
 
-Voorbeeld response:
+succesvol response: 
 ```json
-[
-	{
-		"_self": "sample _self",
-		"_className": "sample _className",
-		"_id": "sample _id",
-		"addresses": [],
-		"telecoms": [],
-		"identifications": [],
-		"credentials": [],
-		"electronicServices": [
-			{
-				"type": "iWLZ Indicatieregister",
-				"active": true,
-				"value": "00001",
-				"address": "https://netwerkpunt.ciz.nl/indicatie",
-				"description": "Endpoint voor het afhandelen van graphQL requests"
-			}
-		],
-		"attachments": [],
-		"speciality": "sample speciality",
-		"comment": "sample comment",
-		"types": [],
-		"timestamp": "sample timestamp",
-		"names": [],
-		"type": [
-			"sample type"
-		],
-		"applicationIds": [
-			"sample applicationIds"
-		],
-		"ura": "sample ura",
-		"displayName": "sample displayName"
-	}
-]
+  {
+	"organisatieId": "89e0e41a-13df-4fe2-ad72-d9c32ca5641c",
+	"type": "iWLZ Indicatieregister",
+	"active": true,
+	"address": "https://netwerkpunt.ciz.nl/indicatie",
+	"description": "Endpoint voor het afhandelen van graphQL requests"
+  }
+  
 ```
-
 # 5 Foutmeldingen
 Het adresboek kan één van de volgende HTTP foutcodes teruggeven.
-
 ```http
 HTTP/1.1 400 Bad Request
 ```
