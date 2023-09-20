@@ -4,6 +4,12 @@
 
 <font size="4">**SAMENVATTING**</font>
 
+**Status**
+
+!!! WAARSCHUWING
+
+Dit document is een duplicaat van [RFC0015](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0015%20-%20Identiteit.md) getiteld "Identiteit". Lezers wordt aangeraden om [RFC0015](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0015%20-%20Identiteit.md)  te raadplegen voor de meest actuele informatie.
+
 **Huidige situatie:**
 
 >```nog invullen```
