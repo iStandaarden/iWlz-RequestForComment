@@ -1,4 +1,4 @@
-name: Convert MD to PDF
+name: Convert MD to PDF (puppeteer)
 
 on:
   push:
