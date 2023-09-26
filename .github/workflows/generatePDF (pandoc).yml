@@ -19,6 +19,6 @@ jobs:
     - name: Convert MD to PDF
       uses: maxheld83/pandoc@v2 # Use the correct action name and version
       with:
-        input: RFC_test/*.md # Assuming your MD files are in the RFC_test directory
-        output: RFC_pdf/ # Output directory where PDFs will be saved
+        input: RFC_test # Assuming your MD files are in the RFC_test directory
+        output: RFC_pdf # Output directory where PDFs will be saved
         args: "--pdf-engine=xelatex" # Additional pandoc options if needed
