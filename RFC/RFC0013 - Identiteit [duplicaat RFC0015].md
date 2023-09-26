@@ -1,8 +1,14 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0013 - Identiteit
+# RFC0013 - Identiteit [duplicaat RFC0015]
 
 <font size="4">**SAMENVATTING**</font>
+
+**Status**
+
+!!! WAARSCHUWING
+
+Dit document is een duplicaat van [RFC0015](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0015%20-%20Identiteit.md) getiteld "Identiteit". Lezers wordt aangeraden om [RFC0015](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0015%20-%20Identiteit.md)  te raadplegen voor de meest actuele informatie.
 
 **Huidige situatie:**
 
@@ -29,7 +35,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/8) om de actuel
 
 ---
 **Inhoudsopgave**
-- [RFC0013 - Identiteit](#rfc0013---identiteit)
+- [RFC0013 - Identiteit \[duplicaat RFC0015\]](#rfc0013---identiteit-duplicaat-rfc0015)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)

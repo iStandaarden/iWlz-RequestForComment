@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0013 - Identiteit
+# RFC0015 - Identiteit
 
 <font size="4">**SAMENVATTING**</font>
 
@@ -25,7 +25,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/10) om de actue
 
 ---
 **Inhoudsopgave**
-- [RFC0013 - Identiteit](#rfc0013---identiteit)
+- [RFC0015 - Identiteit](#rfc0015---identiteit)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
