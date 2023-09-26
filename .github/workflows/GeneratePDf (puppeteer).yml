@@ -22,7 +22,7 @@ jobs:
     - name: Install Puppeteer
       run: npm install puppeteer
 
-      - name: Convert HTML to PDF
+    - name: Convert HTML to PDF
       run: |
         /bin/bash -c "const puppeteer = require('puppeteer');
     
