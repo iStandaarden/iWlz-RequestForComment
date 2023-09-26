@@ -15,14 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Markdown to PDF and HTML
-        uses: baileyjm02/markdown-to-pdf@v1
+        uses: BaileyJM02/markdown-to-pdf@v1.2.0
         with:
           input_path: RFC_test
           output_dir: RFC_pdf
+          images_dir: plantUMLsrc
+          # for example <img src="./images/file-name.png">
+          image_import: ../plantUMLsrc
+          # Default is true, can set to false to only get PDF files
           build_html: false
-      - uses: actions/upload-artifact@v3
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
         with:
           # name: upload
           path: RFC_pdf/
