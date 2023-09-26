@@ -181,13 +181,14 @@ De notificatie bevat de volgende gegevens:
 |------------------|--------------------------------------------------------------------|------------------------------------------------------------------------|:---------------:|----------|
 | timestamp        | Tijdstip waarop de notificatie is aangemaakt                       |                                                                        |        V        | Datetime |
 | afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                        |        V        | Enum     |
-| afzenderID       | Identificatie van de verzender van het bericht                     |                                                                        |        V        | DID      |
+| afzenderID       | Identificatie van de verzender van het bericht                     |                                                                        |        V        | String   |
 | ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                        |        V        | Enum     |
-| ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                        |        V        | DID      |
+| ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                        |        V        | String   |
 | ontvangerKenmerk | Kenmerk van de ontvanger:                                          | Bij iWlz-vrijwillige notificatie gevuld met abonnementsID. Anders leeg |        O        | String   |
-| subjectType      | Onderwerptype van het bericht                                      | NotificatieTypeID (zie tabel)                                          |        V        | String   |
+| eventType        | Onderwerptype van het bericht; wat is de reden van het bericht     | NotificatieTypeID (zie tabel)                                          |        V        | String   |
 | subject          | Onderwerp van het bericht                                          | Identificatie van het parent-object waarover de autorisatie loopt.     |        V        | String   |
 | recordID         | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de notificatie betrekking op heeft.  |        V        | String   |
+
 <sup>*</sup> V = verplicht / O = Optioneel
 
 
@@ -206,8 +207,8 @@ De notificatie bevat de volgende gegevens:
   skinparam boxpadding 40
   autonumber "<b>[00]"
   box bronhouder #lightblue
-  participant "Backoffice" as bs
-  participant "Register \n(data)" as rg
+  participant "Register" as bs
+  participant "Register- \ndata" as rg
   end box
 
   box adresboek
@@ -232,10 +233,10 @@ De notificatie bevat de volgende gegevens:
       deactivate bs
       end 
 
-    bs -> ab: zoek endpoint & DID deelnemer op
+    bs -> ab: zoek endpoint & ID deelnemer op
 
     activate ab
-    ab -> bs: return {endpoint & DID deelnemer}
+    ab -> bs: return {endpoint & ID deelnemer}
     deactivate ab
     bs -> bs: genereer notificatie
     bs -> dnp: zend notificatie
@@ -258,9 +259,9 @@ De notificatie bevat de volgende gegevens:
 | ALT | *iWlz-vrijwillig notificatietype* | *bij een iWlz-vrijwillige notificatie moet de abonnementenregistrate worden geraadpleegd op abonnee's* | nvt.                                                                                                         |
 | 04  | raadpleeg abonnementenregistratie | bepaal of er abonnee's zijn voor het vrijwillige notificatietype                                     |
 | 05  | geef geabonneerde deelnemer       | geef informatie over geabonneerde deelnemer om de notificatie te versturen                           |
-| 06  | zoek endpoint deelnemer op        | bepaal waar de notificatie moet worden afgeleverd                                                    | Met de geregisteerde agbCode kan het endpoint en DID van de zorgaanbieder worden opgezocht |
-| 07  | return {endpoint; DID deelnemer}       | ontvang het afleveradres en DID voor de notificatie                                                         |
-| 08  | genereer notificatie              | maak de gewenste notificatie aan                                                                     | Gebruik ontvangen DID in notificatie (zie voorbeeld 4.3.1) |
+| 06  | zoek endpoint deelnemer op        | bepaal waar de notificatie moet worden afgeleverd                                                    | Met de geregisteerde agbCode kan het endpoint en ID van de zorgaanbieder worden opgezocht |
+| 07  | return {endpoint; ID deelnemer}       | ontvang het afleveradres en ID voor de notificatie                                                         |
+| 08  | genereer notificatie              | maak de gewenste notificatie aan                                                                     | Gebruik ontvangen ID in notificatie (zie voorbeeld 4.3.1) |
 | 09  | zend notificatie                  | verstuur de notificatie naar het endpoint van de deelnemer                                           | Gebruik ontvangen endpoint als afleveradres |
 | 10  | verwerk notificatie               | verwerk de ontvangen notificatie                                                                     |
 | 11  | http-response {200}               | stuur ontvangst bevestiging                                                                          | De zorgaanbieder bevestigt de ontvangst van de notificatie en kan deze verwerken en gebruiken voor een raadpleging |
@@ -276,14 +277,14 @@ Notificatie:
 ```json
 {
   "timestamp": "2022-09-27T12:07:07.492Z",
-  "afzenderTypeID": "UZOVI",
+  "afzenderIDType": "UZOVI",
   "afzenderID": "5505",
   "ontvangerIDType": "Agbcode",
   "ontvangerID": "12341234",
   "ontvangerKenmerk": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "subjectType": "NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER",
+  "eventType": "NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER",
   "subject": "Bemiddeling/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
-  "recordID": "https://api.zorgkantoor1.nl/bemiddelingsregister/zorginnatura/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+  "recordID": "zorginnatura/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
 }
 ```
 Succesvol response: 
@@ -419,10 +420,10 @@ Bij het abonneren van een deelnemer moeten de volgende gegevens worden aangebode
 
 | Gegeven           | Beschrijving                                                                                                 | Type   |
 |:------------------|:-------------------------------------------------------------------------------------------------------------|--------|
-| organisatieId     | NetwerkIdentificatie van de abonnerende partij, identificerend voor het kunnen afleveren van de notificatie. | DID    |
+| organisatieId     | NetwerkIdentificatie van de abonnerende partij, identificerend voor het kunnen afleveren van de notificatie. | String |
 | notificatieTypeID | IdentificatieAanduiding van het abonnement waarop deelnemer wil abonneren of geabonneerd moet worden.type    | String |
-| idTypeAbonnee     | Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement                   | String |
-| idAbonnee         | Daadwerkelijk identificatie conform bij idType geselecteerd id type                                          | String |
+| abonneeIDType     | Aanduiding van het type Id dat moet worden meegegeven bij het afsluiten van het abonnement                   | String |
+| abonneeID         | Daadwerkelijk identificatie conform bij idType geselecteerd id type                                          | String |
 
 
 ### 6.3.2 Validatie

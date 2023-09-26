@@ -1,5 +1,4 @@
-
-  @startuml rfc008-02-notificatie_sequence
+@startuml rfc008-02-notificatie_sequence
   title notificatie sequence-diagram
   skinparam handwritten false
   skinparam participantpadding 20
@@ -32,10 +31,10 @@
       deactivate bs
       end 
 
-    bs -> ab: zoek endpoint & DID deelnemer op
+    bs -> ab: zoek endpoint & ID deelnemer op
 
     activate ab
-    ab -> bs: return {endpoint & DID deelnemer}
+    ab -> bs: return {endpoint & ID deelnemer}
     deactivate ab
     bs -> bs: genereer notificatie
     bs -> dnp: zend notificatie
