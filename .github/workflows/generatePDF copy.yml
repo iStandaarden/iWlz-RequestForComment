@@ -1,0 +1,24 @@
+name: Convert MD to PDF (new)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+ #   - name: Create RFC_pdf Directory
+ #     run: mkdir RFC_pdf
+
+    - name: Convert MD to PDF
+      uses: maxheld83/pandoc@v2 # Use the correct action name and version
+      with:
+        input: RFC_test/*.md # Assuming your MD files are in the RFC_test directory
+        output: RFC_pdf/ # Output directory where PDFs will be saved
+        args: "--pdf-engine=xelatex" # Additional pandoc options if needed
