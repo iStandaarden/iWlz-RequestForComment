@@ -1,4 +1,4 @@
-name: MD to PDF
+name: MD to PDF (DGW)
 # This workflow is triggered on pushes to the repository.
 on:
   push:
