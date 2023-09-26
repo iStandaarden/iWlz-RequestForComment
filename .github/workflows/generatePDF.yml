@@ -21,6 +21,7 @@ jobs:
         with:
           input_path: RFC_test
           output_dir: RFC_pdf
+          images_dir: plantUMLsrc
           build_html: false
       - uses: actions/upload-artifact@v3
         with:
