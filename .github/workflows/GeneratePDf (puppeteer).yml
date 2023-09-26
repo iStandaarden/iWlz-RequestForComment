@@ -1,0 +1,35 @@
+name: Convert MD to PDF
+
+on:
+  push:
+    branches:
+      - main # Adjust the branch name as needed
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Install Pandoc
+      run: sudo apt-get install pandoc -y
+
+    - name: Convert MD to HTML
+      run: pandoc -o RFC_pdf/output.html RFC_test/*.md
+
+    - name: Install Puppeteer
+      run: npm install puppeteer
+
+    - name: Convert HTML to PDF
+      run: |
+        const puppeteer = require('puppeteer');
+
+        (async () => {
+          const browser = await puppeteer.launch();
+          const page = await browser.newPage();
+          await page.goto('file:///github/workspace/RFC_pdf/output.html', { waitUntil: 'networkidle2' });
+          await page.pdf({ path: '/github/workspace/RFC_pdf/output.pdf', format: 'A4' });
+          await browser.close();
+        })();
