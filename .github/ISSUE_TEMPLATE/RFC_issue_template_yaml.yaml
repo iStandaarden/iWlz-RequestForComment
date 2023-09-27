@@ -1,6 +1,6 @@
-name: REVIEW
-description: Issue voor registreren van reviewcommentaar op een RFC
-title: "[neem het RFC nummer hier over]"
+name: RFC
+description: Issue voor het volgen van een RFC
+title: "[neem de titel RFC hier over]"
 labels: ["netwerk"]
 body:
   - type: input
@@ -11,9 +11,36 @@ body:
     validations:
       required: true
   - type: textarea
-    id: opmerkingen
+    id: onderwerp
     attributes:
       label: Onderwerp
-      placeholder: Ruimte voor opmerkingen op de RFC
+      placeholder: Geef hier een korte omschrijving van het onderwerp van de RFC
     validations:
       required: true
+  - type: checkboxes
+    id: impact_onderdelen
+    attributes:
+      label: RFC heeft impact op
+      options:
+        - label: Indicatieregister
+        - label: Bemiddelingsregister - Centraal
+        - label: Bemiddelingsregister - Decentraal
+        - label: CIZ back-office
+        - label: CIZ Netwerkadapter
+        - label: nID 
+        - label: Silvester
+        - label: Raadplegers / GraphQL
+        - label: anders, (geef hieronder aan)
+  - type: textarea
+    id: anders
+    attributes:
+      label: Welk ander onderdeel?
+      description: voor welk ander onderdeel is de impact behoordeeld
+  - type: checkboxes
+    id: project
+    attributes:
+      label: Selecteer in de kolom rechts het project "RFC-netwerkmodel"
+      description: onder 'Projects', klik op het 'tandwieltje'
+      options:
+        - label: done
+          required: true
