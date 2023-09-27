@@ -1,7 +1,8 @@
 name: REVIEW COMMENT
 description: Issue voor registreren van reviewcommentaar op een RFC
 title: "[neem het RFC nummer hier of de titel]"
-labels: ["netwerk"]
+labels: ["review comment"]
+projects: ["RFC-netwerkmodel"]
 body:
   - type: textarea
     id: issue_link
