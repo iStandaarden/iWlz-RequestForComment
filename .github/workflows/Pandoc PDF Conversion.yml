@@ -1,13 +1,16 @@
 name: Pandoc PDF Conversion
 
-on: push
+on:
+    push:
+      branches:
+        - main
 
 jobs:
   convert_via_pandoc:
     runs-on: ubuntu-22.04
     steps:
- #     - name: Checkout code
- #       uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Install Pandoc
         run: |
