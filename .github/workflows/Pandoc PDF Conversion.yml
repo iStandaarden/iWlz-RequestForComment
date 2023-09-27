@@ -14,6 +14,10 @@ jobs:
           sudo apt-get update -qy
           sudo apt-get install -qy pandoc
 
+      - name: Install TeX Live
+        run: |
+          sudo apt-get install -qy texlive-xetex  # Installs TeX Live with XeTeX (PDF engine)
+
       - name: Convert to PDF
         run: |
           pandoc RFC_test/MDTEST.md -o RFC_test/MDTEST.pdf
