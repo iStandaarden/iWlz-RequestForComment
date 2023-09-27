@@ -24,4 +24,4 @@ jobs:
 
     - name: Convert HTML to PDF
       run: |
-        node convert.js
+        .github/workflows/convert.js
