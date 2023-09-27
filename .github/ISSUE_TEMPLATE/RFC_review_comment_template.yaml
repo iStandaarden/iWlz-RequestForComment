@@ -1,0 +1,19 @@
+name: REVIEW
+description: Issue voor registreren van reviewcommentaar op een RFC
+title: "[neem het RFC nummer hier over]"
+labels: ["netwerk"]
+body:
+  - type: input
+    id: link
+    attributes:
+      label: Link naar RFC
+      placeholder: "plak hier de volledige link naar het RFC document, bijvoorbeeld: https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC%20-%20Template.md"
+    validations:
+      required: true
+  - type: textarea
+    id: opmerkingen
+    attributes:
+      label: Onderwerp
+      placeholder: Ruimte voor opmerkingen op de RFC
+    validations:
+      required: true
