@@ -26,5 +26,9 @@ jobs:
         run: |
           pandoc RFC_test/MDTEST.md -o RFC_test/MDTEST.pdf
 
+      - name: Copy PDF to repository
+        run: |
+          cp RFC_test/MDTEST.pdf $GITHUB_WORKSPACE/RFC_test/MDTEST.pdf
+
       - name: List files in directory after conversion
         run: ls -R RFC_test
