@@ -35,3 +35,9 @@ jobs:
 
       - name: List files in directory after conversion
         run: ls -R RFC_test
+
+      - name: Commit and push PDF
+        run: |
+          git add RFC_test/MDTEST.pdf
+          git commit -m "Add PDF file"
+          git push
