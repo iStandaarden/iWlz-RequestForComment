@@ -21,3 +21,6 @@ jobs:
       - name: Convert to PDF
         run: |
           pandoc RFC_test/MDTEST.md -o RFC_test/MDTEST.pdf
+
+      - name: List files in directory after conversion
+        run: ls -R RFC_test
