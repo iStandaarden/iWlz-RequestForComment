@@ -18,6 +18,10 @@ jobs:
         run: |
           sudo apt-get install -qy texlive-xetex  # Installs TeX Live with XeTeX (PDF engine)
 
+      - name: Set Permissions for RFC_test directory
+        run: |
+          chmod -R 755 RFC_test  # Adjust permissions as needed
+
       - name: Convert to PDF
         run: |
           pandoc RFC_test/MDTEST.md -o RFC_test/MDTEST.pdf
