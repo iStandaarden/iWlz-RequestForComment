@@ -38,6 +38,8 @@ jobs:
 
       - name: Commit and push PDF
         run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git add RFC_test/MDTEST.pdf
           git commit -m "Add PDF file"
           git push
