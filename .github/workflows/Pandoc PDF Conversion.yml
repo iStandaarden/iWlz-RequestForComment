@@ -17,13 +17,13 @@ jobs:
           sudo apt-get update -qy
           sudo apt-get install -qy pandoc
 
-      - name: Install TeX Live
+      - name: Install TeX Live with XeTeX (PDF engine)
         run: |
-          sudo apt-get install -qy texlive-xetex  # Installs TeX Live with XeTeX (PDF engine)
+          sudo apt-get install -qy texlive-xetex
 
-      - name: Set Permissions for RFC_test directory
+      - name: Set Permissions for RFC_test dir
         run: |
-          chmod -R 755 RFC_test  # Adjust permissions as needed
+          chmod -R 755 RFC_test
 
       - name: Convert to PDF
         run: |
@@ -33,7 +33,7 @@ jobs:
  #       run: |
  #         cp RFC_test/MDTEST.pdf $GITHUB_WORKSPACE/RFC_test/MDTEST.pdf
 
-      - name: List files in directory after conversion
+      - name: List files in directory after conversion (Debug)
         run: ls -R RFC_test
 
       - name: Commit and push PDF
