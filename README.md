@@ -16,7 +16,7 @@ De RFC's worden geprioriteerd in het [**project RFC-netwerkmodel**](https://gith
   - project view volgens [**STATUS RFC**](https://github.com/orgs/iStandaarden/projects/5/views/1)
   - project view volgens [**STATUS IMPLEMENTATIE**](https://github.com/orgs/iStandaarden/projects/5/views/5)
 
-> [Leeswijzer Project](/README_ProjectFlow.md)
+> [**Leeswijzer Project-flow >>**](/README_ProjectFlow.md)
 
 ## Terminologie
 De verklaring van de in de RFC's gebruikte termen zijn te vinden in het Afsprakenstelsel en [hier](/Terminologie.md).
