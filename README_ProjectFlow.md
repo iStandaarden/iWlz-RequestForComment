@@ -2,6 +2,8 @@ Project board voor het volgen van de status van de RFC's van het iWlz netwerkmod
 
 Alle RFC staan in de repository [iWlz-RFC](https://github.com/iStandaarden/iWlz-RFC/blob/main/README.md).
 
+Ga naar [**project RFC-netwerkmodel >>**](https://github.com/orgs/iStandaarden/projects/5)
+
 ## Project-flow
 
 ![Project RFC flow](/plantUMLsrc/rfc-flow.svg "project_rfc-flow")
