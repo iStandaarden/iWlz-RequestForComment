@@ -1,5 +1,5 @@
-name: RFC
-description: Issue voor het volgen van een RFC
+name: Request For Comments
+description: Issue voor het volgen van een Request for Comments
 title: "[neem de titel RFC hier over]"
 labels: ["netwerk"]
 body:
