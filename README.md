@@ -1,4 +1,4 @@
-# iWlz-RFC
+# iWlz-Request For Comments
 Repostistory voor de RFC's van het Netwerkmodel iWlz.
 
 - [iWlz-RFC](#iwlz-rfc)
