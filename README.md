@@ -2,9 +2,7 @@
 Repostistory voor de RFC's van het Netwerkmodel iWlz.
 
 - [iWlz-RFC](#iwlz-rfc)
-  - [Prioritering en project](#prioritering-en-project)
-  - [Inhoud](#inhoud)
-    - [Vervallen RFC](#vervallen-rfc)
+  - [Overzicht STATUS en IMPLEMENTATIE](#overzicht-status-en-implementatie)
   - [Terminologie](#terminologie)
   - [Directory-structuur](#directory-structuur)
   - [Werkwijze](#werkwijze)
@@ -17,6 +15,8 @@ Repostistory voor de RFC's van het Netwerkmodel iWlz.
 De RFC's worden geprioriteerd in het [**project RFC-netwerkmodel**](https://github.com/orgs/iStandaarden/projects/5). Ga naar dit project om de status en prioriteit te bekijken. De eerst volgende milestone zal de POC Bemiddeingsregister zijn. RFC's die hiervoor van belang zijn, zijn hier aan gelabeld. 
   - project view volgens [**STATUS RFC**](https://github.com/orgs/iStandaarden/projects/5/views/1)
   - project view volgens [**STATUS IMPLEMENTATIE**](https://github.com/orgs/iStandaarden/projects/5/views/5)
+
+> [Leeswijzer Project](/README_ProjectFlow.md)
 
 ## Terminologie
 De verklaring van de in de RFC's gebruikte termen zijn te vinden in het Afsprakenstelsel en [hier](/Terminologie.md).
