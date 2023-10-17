@@ -24,10 +24,11 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/16) om de actue
   - [1.2 Relatie andere RFC's](#12-relatie-andere-rfcs)
   - [1.3 Code](#13-code)
 - [2. Terminologie](#2-terminologie)
-- [3. Meldingen](#3-meldingen)
-  - [3.1 Melding of notificatie](#31-melding-of-notificatie)
-  - [3.2 Meldingsvormen](#32-meldingsvormen)
-  - [3.3 Foutmelden](#33-foutmelden)
+- [3. Melding of notificatie; wat is het verschil?](#3-melding-of-notificatie-wat-is-het-verschil)
+- [4. Meldingen](#4-meldingen)
+  - [4.1 Doel melding](#41-doel-melding)
+  - [4.2 Typen melding](#42-typen-melding)
+  - [4.3 Foutmelden](#43-foutmelden)
   - [3.4 Inhoud iWlz Foutmelding](#34-inhoud-iwlz-foutmelding)
     - [3.4.1 Voorbeeld iWlz Foutmelding](#341-voorbeeld-iwlz-foutmelding)
 
@@ -60,16 +61,14 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
 | :-------- | :-------- | 
+| Backoffice | Omgeving rondom register, o.a. voor afhandelen van netwerk-diensten |
 | Bronhouder | Aanbieder van de data, houder van het register |
 | Deelnemer | De raadpleger van de bron, het register | 
-| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. | 
+| Register | De feitelijke databron / database | 
 
 
 
-# 3. Meldingen
-
-## 3.1 Melding of notificatie
-Wanneer een deelnemer andere of nieuwe informatie heeft over gegevens in een register waar de deelnemer zelf geen bronhouder van is, kan die deelnemer dit kenbaar maken bij de bronhouder via een melding.
+# 3. Melding of notificatie; wat is het verschil?
 
 ![melding_notificatie](../plantUMLsrc/rfc0018-01-melding_notificatie.svg "melding_notificatie")
 <details>
@@ -118,10 +117,15 @@ end
 
 Het onderdeel Notificatie is verder uitgewerkt in **RFC0008 - Functionele uitwerking notificaties en abonnementen**.
 
-## 3.2 Meldingsvormen
+# 4. Meldingen
+
+## 4.1 Doel melding
+
+
+## 4.2 Typen melding
 Er zijn drie vormen van meldingen gedefinieerd aan de hand van de gestructueerdheid van de informatie in de melding en of die informatie direct betrekking heeft op gegevens in het register. 
 
-| # | vorm            | omschrijving                                                                                                               | gestructureerdheid/relateerbaarheid                                             |
+| # | Type melding            | omschrijving                                                                                                               | gestructureerdheid/relateerbaarheid                                             |
 |:-:|:----------------|:---------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------|
 | 1 | **Foutmelding** | Voor het melden van afwijking/overtreding van regels beschreven in de iWlz iStandaard                                      | Zeer, direct te relateren aan een gegeven en afgesproken inhoud dmv (fout-)code |
 | 2 | Terugmelding    | Voor het aandragen van een voorstel voor verbetering aandragen aan de bron;  bijvoorbeeld wijziging coördinator zorg thuis | minder, wel te relateren, maar vrije (tekstuele) inhoud                         |
@@ -129,7 +133,7 @@ Er zijn drie vormen van meldingen gedefinieerd aan de hand van de gestructueerdh
 
 Deze RFC gaat vooral over de **Foutmelding**, waarbij er zoveel mogelijk rekeninggehouden wordt met het mogelijk maken van de overige twee vormen. 
 
-## 3.3 Foutmelden
+## 4.3 Foutmelden
 
 iWlz foutmeldingen zijn nodig om een bronhouder te attenderen op overtredingen van een regel in het informatiemodel iWlz. Wanneer een deelnemer een dergelijke situatie detecteert stuurt deze een (fout-)melding aan de bronhouder. 
 
@@ -145,39 +149,33 @@ skinparam participantpadding 20
 skinparam boxpadding 40
 autonumber "<b>[00]"
 box bronhouder #lightblue
-participant "Backoffice" as bs
+participant "Resource" as brs
 participant "Register" as rg
 participant "Netwerkpunt" as bnp 
 end box
 
 box deelnemer #lightyellow
-participant "Netwerkpunt" as dnp
-participant "Backoffice" as dbs
+participant "Resource" as rsrc
 end box
 
-rg o-> dbs: raadpleging
-    activate dbs
+rg o-> rsrc: raadpleging
+    activate rsrc
 
 group fout melden
-    dbs -> dbs: iWlz-Fout \ngeconstateerd
-    dbs -> dnp: iWlz-Foutmelding verzenden
-    activate dnp
-    dnp -> bnp: iWlz-Foutmelding naar \nbronhouder
+    rsrc -> rsrc: iWlz-Fout \ngeconstateerd
+    rsrc -> bnp: iWlz-Foutmelding naar \nbronhouder
     activate bnp
     bnp -> bnp: valideer inzending
-    bnp -> bs: doorzetten iWlz-foutmelding
-    activate bs
-    bs -> bnp: return response {204}
-    deactivate bs
-    bnp -> dnp: return response {204}
-    dnp -> dbs: return response {204}
+    bnp -> brs: doorzetten iWlz-foutmelding
+    activate brs
+    brs -> bnp: return response {204}
+    deactivate brs
+    bnp -> rsrc: return response {204}
 
     alt #Pink
-      bnp --> dnp: response: {400} ongeldig verzoek
+      bnp --> rsrc: response: {400} ongeldig verzoek
       deactivate bnp
-      dnp --> dbs: response: {400} ongeldig verzoek
-      deactivate dnp
-      deactivate dbs
+      deactivate rsrc
     end alt
 
 end
@@ -191,15 +189,12 @@ end
 | 01 | raadpleging | Raadplegen van gegevens door de deelnemer |
 | 02 | iWlz-fout geconstateerd | Na raadpleging van gegevens in het register constateert de deelnemer een fout volgens de regels in het informatiemodel iWlz. De deelnemer maakt hiervoor een foutmelding aan met daarin het corresponderende foutcode van de regel die is overtreden |
 | 03 | iWlz-foutmelding verzenden | foutmelding aanmaken en verzenden |
-| 04 | iWlz-foutmelding naar bronhouder | routeren naar juiste bronhouder |
-| 05 | valideer iWlz-foutmelding | bepaal of afzender melding mag insturen |
-| 06 | doorzetten foutmelding | doorzetten foutmelding |
-| 07 | http-response {204} | ontvangstbevestiging verzenden aan deelnemer |
-| 08 | http-response {204} | routeren ontvangstbevestiging |
-| 09 | http-response {204} | ontvangen ontvangstbevestiging |
+| 04 | valideer iWlz-foutmelding | bepaal of afzender melding mag insturen |
+| 05 | doorzetten foutmelding | doorzetten foutmelding |
+| 06 | http-response {204} | ontvangstbevestiging verzenden aan deelnemer |
+| 07 | http-response {204} | routeren ontvangstbevestiging |
 | ALT | ongeldige inzending | Deelnemer is niet gerechtigd om de iWlz-foutmelding te doen. |
-| 10  | response ongeldig verzoek {400} | retourneer ongeldig verzoek |
-| 11  | response ongeldig verzoek {400} | ontvang ongeldig verzoek terug |
+| 08  | response ongeldig verzoek {400} | ontvang ongeldig verzoek terug |
 
 ## 3.4 Inhoud iWlz Foutmelding
 
