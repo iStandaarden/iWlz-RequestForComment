@@ -38,7 +38,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 |Term | Toelichting | RFC |
 |:--|:--|:--|
 | Deelnemer | De raadpleger van de bron, het register | [RFC-0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md), [RFC-0018](/RFC/RFC0018%20-%20(Fout-)meldingen.md) |
-| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. | [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md), [RFC-0006](/RFC/RFC0006%20-%20AutorisatieCredential.md), [RFC0018](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md), [RFC0024](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md) |
+| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. | [RFC0004](/RFC/RFC0004%20-%20Verifiable%20Credentials.md), [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md), [RFC-0006](/RFC/RFC0006%20-%20AutorisatieCredential.md), [RFC0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md), [RFC0018](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md), [RFC0024](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md) |
 | DID-document | Onderdeel van de DID-standaard die wordt gebruikt voor het publiceren van eigenschappen van een deelnemer of dienstverlener, in dit geval informatie over services en endpoints | [RFC0003](/RFC/RFC0003%20-%20Adresboek.md) |
 
 - [terug naar index](#index)
@@ -98,7 +98,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 ## O
 |Term | Toelichting | RFC |
 |:--|:--|:--|
-| Organisatie | Een deelnemer in het iWlz-netwerkmodel die gegevens uitwisselt met andere deelnemers. Een organisatie kan een andere partij controle geven over haar DID-document wanneer zij gegevensuitwisseling wil delegeren aan die andere partij (bijv. een softwareleverancier of een SaaS-aanbieder)   | [RFC0003](/RFC/RFC0003%20-%20Adresboek.md) |
+| Organisatie | Een deelnemer in het iWlz-netwerkmodel die gegevens uitwisselt met andere deelnemers. Een organisatie kan een andere partij controle geven over haar DID-document wanneer zij gegevensuitwisseling wil delegeren aan die andere partij (bijv. een softwareleverancier of een SaaS-aanbieder)   | [RFC0023](/RFC/RFC0023%20-%20VDR.md) |
 
 - [terug naar index](#index)
 ## P
@@ -141,7 +141,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 ## V
 |Term | Toelichting | RFC |
 |:--|:--|:--|
-| VC | Attest volgens de standaard Verifiable Credentials. Een attest is een valideerbare en  interpreteerbare verklaring met daarin één of meerdere claims. In de context van het iWlz-netwerkmodel worden attesten gebruikt om bepaalde claims te maken over een onderwerp, zoals een organisatie.   | [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md), [RFC-0006](/RFC/RFC0006%20-%20AutorisatieCredential.md) |
+| VC | Attest volgens de standaard Verifiable Credentials. Een attest is een valideerbare en  interpreteerbare verklaring met daarin één of meerdere claims. In de context van het iWlz-netwerkmodel worden attesten gebruikt om bepaalde claims te maken over een onderwerp, zoals een organisatie.   | [RFC0004](/RFC/RFC0004%20-%20Verifiable%20Credentials.md), [RFC0005](/RFC/RFC0005%20-%20Ledenadministratie%20Credential.md), [RFC-0006](/RFC/RFC0006%20-%20AutorisatieCredential.md) |
 
 - [terug naar index](#index)
 ## W
