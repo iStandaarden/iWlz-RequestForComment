@@ -28,9 +28,9 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/16) om de actue
 - [4. Meldingen](#4-meldingen)
   - [4.1 Doel melding](#41-doel-melding)
   - [4.2 Typen melding](#42-typen-melding)
-  - [4.3 Foutmelden](#43-foutmelden)
-  - [3.4 Inhoud iWlz Foutmelding](#34-inhoud-iwlz-foutmelding)
-    - [3.4.1 Voorbeeld iWlz Foutmelding](#341-voorbeeld-iwlz-foutmelding)
+  - [4.3 Inhoud iWlz Foutmelding](#43-inhoud-iwlz-foutmelding)
+  - [4.4 Foutmelden](#44-foutmelden)
+    - [4.4.1 Voorbeeld iWlz Foutmelding](#441-voorbeeld-iwlz-foutmelding)
 
 
 ---
@@ -61,12 +61,10 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
 | :-------- | :-------- | 
-| Backoffice | Omgeving rondom register, o.a. voor afhandelen van netwerk-diensten |
 | Bronhouder | Aanbieder van de data, houder van het register |
 | Deelnemer | De raadpleger van de bron, het register | 
-| DID | Decentralized Identifiers (DIDs) ofwel Gedecentraliseerde Identificatoren, zijn unieke identificatiemiddelen voor digitale identiteiten. Ze zijn ontworpen om zelfsoevereiniteit te bevorderen, waarbij individuen controle hebben over hun digitale identiteiten zonder afhankelijk te zijn van centrale autoriteiten. DIDs zijn gedecentraliseerd, veilig door cryptografie, interoperabel en persistent. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. |
-| Register | De feitelijke databron / database | 
-
+| Register | Omgeving rondom register, o.a. voor afhandelen van netwerk-diensten |
+| Register-data | De feitelijke databron / database | 
 
 
 # 3. Melding of notificatie; wat is het verschil?
@@ -121,12 +119,12 @@ Het onderdeel Notificatie is verder uitgewerkt in **RFC0008 - Functionele uitwer
 # 4. Meldingen
 
 ## 4.1 Doel melding
-
+Door middel van een melding kan een raadpleger van een bron de bronhouder voorzien van nieuwe informatie die direct betrekking heeft op data in die bron. Een melding loopt altijd van deelnemer (raadpleger) naar een bronhouder. 
 
 ## 4.2 Typen melding
 Er zijn drie vormen van meldingen gedefinieerd aan de hand van de gestructueerdheid van de informatie in de melding en of die informatie direct betrekking heeft op gegevens in het register. 
 
-| # | Type melding            | omschrijving                                                                                                               | gestructureerdheid/relateerbaarheid                                             |
+| # | Type melding    | omschrijving                                                                                                               | gestructureerdheid/relateerbaarheid                                             |
 |:-:|:----------------|:---------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------|
 | 1 | **Foutmelding** | Voor het melden van afwijking/overtreding van regels beschreven in de iWlz iStandaard                                      | Zeer, direct te relateren aan een gegeven en afgesproken inhoud dmv (fout-)code |
 | 2 | Terugmelding    | Voor het aandragen van een voorstel voor verbetering aandragen aan de bron;  bijvoorbeeld wijziging coördinator zorg thuis | minder, wel te relateren, maar vrije (tekstuele) inhoud                         |
@@ -134,7 +132,25 @@ Er zijn drie vormen van meldingen gedefinieerd aan de hand van de gestructueerdh
 
 Deze RFC gaat vooral over de **Foutmelding**, waarbij er zoveel mogelijk rekeninggehouden wordt met het mogelijk maken van de overige twee vormen. 
 
-## 4.3 Foutmelden
+## 4.3 Inhoud iWlz Foutmelding
+
+De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare gegevens:
+
+| Gegeven          | Algemene beschrijving                                              | Beschrijving                                                                                                                             | V/O<sup>*</sup> | Datatype |
+|------------------|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|----------|
+| timestamp        | Tijdstip waarop de notificatie is aangemaakt                       |                                                                                                                                          |        V        | Datetime |
+| afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                                                                                          |        V        | Enum     |
+| afzenderID       | Identificatie van de verzender van het bericht                     |                                                                                                                                          |        V        | DID      |
+| ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                                                                                          |        V        | Enum     |
+| ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                                                                                          |        V        | DID      |
+| ontvangerKenmerk | Kenmerk van de ontvanger:                                          | Identificatie van de melder. Meestal gelijk aan de afzender                                                                              |        O        | String   |
+| eventType      | Onderwerptype van het bericht                                      | Identificatie van het type melding. (nu alleen iWlzFoutmelding)                                                                          |        V        | String   |
+| subject          | Onderwerp van het bericht                                          | inhoud van de melding (nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn) |        V        | String   |
+| recordID         | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de melding betrekking op heeft.                                                                        |        V        | String   |
+
+<sup>*</sup> V = verplicht / O = Optioneel
+
+## 4.4 Foutmelden
 
 iWlz foutmeldingen zijn nodig om een bronhouder te attenderen op overtredingen van een regel in het informatiemodel iWlz. Wanneer een deelnemer een dergelijke situatie detecteert stuurt deze een (fout-)melding aan de bronhouder. 
 
@@ -150,8 +166,8 @@ skinparam participantpadding 20
 skinparam boxpadding 40
 autonumber "<b>[00]"
 box bronhouder #lightblue
-participant "Resource" as brs
-participant "Register" as rg
+participant "Register" as brs
+participant "Register-data" as rg
 participant "Netwerkpunt" as bnp 
 end box
 
@@ -197,25 +213,8 @@ end
 | ALT | ongeldige inzending | Deelnemer is niet gerechtigd om de iWlz-foutmelding te doen. |
 | 08  | response ongeldig verzoek {400} | ontvang ongeldig verzoek terug |
 
-## 3.4 Inhoud iWlz Foutmelding
 
-De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare gegevens:
-
-| Gegeven          | Algemene beschrijving                                              | Beschrijving                                                                                                                             | V/O<sup>*</sup> | Datatype |
-|------------------|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|----------|
-| timestamp        | Tijdstip waarop de notificatie is aangemaakt                       |                                                                                                                                          |        V        | Datetime |
-| afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                                                                                          |        V        | Enum     |
-| afzenderID       | Identificatie van de verzender van het bericht                     |                                                                                                                                          |        V        | DID      |
-| ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                                                                                          |        V        | Enum     |
-| ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                                                                                          |        V        | DID      |
-| ontvangerKenmerk | Kenmerk van de ontvanger:                                          | Identificatie van de melder. Meestal gelijk aan de afzender                                                                              |        O        | String   |
-| subjectType      | Onderwerptype van het bericht                                      | Identificatie van het type melding. (nu alleen iWlzFoutmelding)                                                                          |        V        | String   |
-| subject          | Onderwerp van het bericht                                          | inhoud van de melding (nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn) |        V        | String   |
-| recordID         | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de melding betrekking op heeft.                                                                        |        V        | String   |
-
-<sup>*</sup> V = verplicht / O = Optioneel
-
-### 3.4.1 Voorbeeld iWlz Foutmelding
+### 4.4.1 Voorbeeld iWlz Foutmelding
 
 Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element DiagnoseSubcodelijst niet aan de bijbehorende regel IRG0012: DiagnoseSubcodelijst vullen conform opgegeven DiagnoseCodelijst. Deze fout wordt op de volgende manier worden teruggegeven. Omdat het element niet afzonderlijk is te duiden, bevat het objectId de verwijzing naar het record in de klasse Stoornis, waar het element DiagnoseSubcodelijst onderdeel van is.
 
@@ -227,9 +226,9 @@ Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element 
   "ontvangerIDType": "Uzovi",
   "ontvangerID": "1234",
   "ontvangerKenmerk": "AGB: 12341234",
-  "subjectType": "iWLZFOUTMELDING",
+  "eventType": "iWLZFOUTMELDING",
   "subject": "IRG0012",
-  "recordID": "https://api.ciz.nl/wlzindicatieregister/wlzindicaties/Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+  "recordID": "wlzindicatie/Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
 }
 ```
 

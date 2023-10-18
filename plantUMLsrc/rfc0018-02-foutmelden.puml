@@ -4,8 +4,8 @@ skinparam participantpadding 20
 skinparam boxpadding 40
 autonumber "<b>[00]"
 box bronhouder #lightblue
-participant "Resource" as brs
-participant "Register" as rg
+participant "Register" as brs
+participant "Register-data" as rg
 participant "Netwerkpunt" as bnp 
 end box
 
