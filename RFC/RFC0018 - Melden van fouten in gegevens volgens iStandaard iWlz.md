@@ -64,6 +64,7 @@ Opsomming van de in dit document gebruikte termen.
 | Backoffice | Omgeving rondom register, o.a. voor afhandelen van netwerk-diensten |
 | Bronhouder | Aanbieder van de data, houder van het register |
 | Deelnemer | De raadpleger van de bron, het register | 
+| DID | Decentralized Identifiers (DIDs) ofwel Gedecentraliseerde Identificatoren, zijn unieke identificatiemiddelen voor digitale identiteiten. Ze zijn ontworpen om zelfsoevereiniteit te bevorderen, waarbij individuen controle hebben over hun digitale identiteiten zonder afhankelijk te zijn van centrale autoriteiten. DIDs zijn gedecentraliseerd, veilig door cryptografie, interoperabel en persistent. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. |
 | Register | De feitelijke databron / database | 
 
 

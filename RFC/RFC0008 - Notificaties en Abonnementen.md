@@ -89,11 +89,11 @@ De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/P
 # 2. Terminologie
 | Terminologie | Omschrijving                                                          |
 |:-------------|:----------------------------------------------------------------------|
-| Backoffice   | Omgeving rondom het register voor de afhandeling van netwerk-diensten |
-| Bronhouder   | Aanbieder van de data, houder van het register                        |
-| Deelnemer    | De raadpleger van de bron, het register                               |
-| Register     | De feitelijke databron/database                                       |
-| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. |
+| Backoffice | Omgeving rondom het register voor de afhandeling van netwerk-diensten |
+| Bronhouder | Aanbieder van de data, houder van het register |
+| Deelnemer | De raadpleger van de bron, het register |
+| DID | Decentralized Identifiers (DIDs) ofwel Gedecentraliseerde Identificatoren, zijn unieke identificatiemiddelen voor digitale identiteiten. Ze zijn ontworpen om zelfsoevereiniteit te bevorderen, waarbij individuen controle hebben over hun digitale identiteiten zonder afhankelijk te zijn van centrale autoriteiten. DIDs zijn gedecentraliseerd, veilig door cryptografie, interoperabel en persistent. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. |
+| Register | De feitelijke databron/database |
 
 
 # 3. Notificatie of melding wat is het verschil

@@ -21,7 +21,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/29) om de actue
 
 ---
 **Inhoudsopgave**
-- [RFC0024 - Opslag en raadplegen iWlz notificatietype in dienstencatalogus](#rfc0024---opslag-en-raadplegen-iwlz-notificatietype-in-dienstencatalogus)
+- [RFC0024 - Opslag en raadplegen (iWlz-)notificatietypen in dienstencatalogus](#rfc0024---opslag-en-raadplegen-iwlz-notificatietypen-in-dienstencatalogus)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC's](#12-relatie-andere-rfcs)
@@ -61,7 +61,7 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
 | :-------- | :-------- | 
-| DID | Decentralized Identifiers. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. Deze decentrale identificatoren kunnen gebruikt worden bij self-sovereign identity. |
+| DID | Decentralized Identifiers (DIDs) ofwel Gedecentraliseerde Identificatoren, zijn unieke identificatiemiddelen voor digitale identiteiten. Ze zijn ontworpen om zelfsoevereiniteit te bevorderen, waarbij individuen controle hebben over hun digitale identiteiten zonder afhankelijk te zijn van centrale autoriteiten. DIDs zijn gedecentraliseerd, veilig door cryptografie, interoperabel en persistent. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. |
 
 # 3 *Dienstencatalogus* voor Notificatie-typen
 
