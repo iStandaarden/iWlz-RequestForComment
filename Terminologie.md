@@ -49,33 +49,33 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 
 - [terug naar index](#index)
 ## F
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## G
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## H
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## I
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## J
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## K
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## L
@@ -86,8 +86,8 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 
 - [terug naar index](#index)
 ## M
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## N
@@ -111,8 +111,8 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 
 - [terug naar index](#index)
 ## Q
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## R
@@ -136,8 +136,8 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 
 - [terug naar index](#index)
 ## U
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## V
@@ -151,22 +151,22 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 
 - [terug naar index](#index)
 ## W
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## X
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## Y
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
 ## Z
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
 
 - [terug naar index](#index)
