@@ -79,8 +79,10 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 
 - [terug naar index](#index)
 ## L
-|Term | Toelichting |
-|:--|:--|
+|Term | Toelichting | RFC |
+|:--|:--|:--|
+| Logging | Stelselmatige geautomatiseerde registratie van gegevens rondom events op systemen | [RFC-0019](/RFC/RFC0019%20-%20Logging.md) |
+| Logverantwoordelijke | Directie van een organisatie zoals een zorginstelling die (persoonlijke)(gezondheids)informatie verwerkt, delen, bevragen of muteren met of via het netwerkmodel. | [RFC-0019](/RFC/RFC0019%20-%20Logging.md) |
 
 - [terug naar index](#index)
 ## M
