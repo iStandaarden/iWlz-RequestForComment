@@ -51,7 +51,7 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
 | :-------- | :-------- | 
-| CA | Certificaatautoriteit zoals gedefinieerd door [RFC2459](https://tools.ietf.org/html/rfc2459) | 
+| CA | Een certificaatautoriteit (CA), zoals gedefinieerd door [RFC2459](https://tools.ietf.org/html/rfc2459), ook wel bekend als een Certificate Authority, is een vertrouwde instantie die digitale certificaten uitgeeft. Deze certificaten worden gebruikt om de identiteit van entiteiten te verifiëren. <br><br> Een CA is verantwoordelijk voor het verifiëren van de identiteit van de aanvrager van een certificaat, het ondertekenen van het certificaat met de privésleutel van de CA en het beschikbaar stellen van het openbare sleutelgedeelte van het certificaat aan anderen. | 
 | CPS | [Certification Practise Statement](https://en.wikipedia.org/wiki/Certification_Practice_Statement) | 
 | CRL | [Certificatie Revocation List](https://en.wikipedia.org/wiki/Certificate_revocation_list) | 
 | Netwerkpunt-operator | een organisatie die een netwerkpunt beheert. In het iWlz-netwerkmodel een leverancier die software levert aan een deelnemer. | 

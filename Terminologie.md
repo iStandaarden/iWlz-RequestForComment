@@ -28,7 +28,7 @@ De complete begrippenlijst staat in het [Afsprakenstelsel iWlz](https://zorginst
 ## C
 |Term | Toelichting | RFC |
 |:--|:--|:--|
-| CA | Certificaatautoriteit zoals gedefinieerd door [RFC2459](https://tools.ietf.org/html/rfc2459) | [RFC-0001](/RFC/RFC0001%20-%20Certificaatstructuur%20veilige%20verbinging.md) |
+| CA | Een certificaatautoriteit (CA), zoals gedefinieerd door [RFC2459](https://tools.ietf.org/html/rfc2459), ook wel bekend als een Certificate Authority, is een vertrouwde instantie die digitale certificaten uitgeeft. Deze certificaten worden gebruikt om de identiteit van entiteiten te verifiëren. <br><br> Een CA is verantwoordelijk voor het verifiëren van de identiteit van de aanvrager van een certificaat, het ondertekenen van het certificaat met de privésleutel van de CA en het beschikbaar stellen van het openbare sleutelgedeelte van het certificaat aan anderen. | [RFC-0001](/RFC/RFC0001%20-%20Certificaatstructuur%20veilige%20verbinging.md) |
 | Claims | Een claim is een kwalificatie, een behaalde prestatie of een stukje informatie over de achtergrond van een entiteit, zoals een naam, id, huisadres of afgeronde opleiding. Een claim zegt iets over de entiteit (deelnemer) |  [RFC-0014](/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) |
 | CPS | [Certification Practise Statement](https://en.wikipedia.org/wiki/Certification_Practice_Statement) |[RFC-0001](/RFC/RFC0001%20-%20Certificaatstructuur%20veilige%20verbinging.md) |
 | CRL | [Certificatie Revocation List](https://en.wikipedia.org/wiki/Certificate_revocation_list) |  [RFC-0001](/RFC/RFC0001%20-%20Certificaatstructuur%20veilige%20verbinging.md) |
