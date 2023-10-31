@@ -92,7 +92,6 @@ De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/P
 | Backoffice | Omgeving rondom het register voor de afhandeling van netwerk-diensten |
 | Bronhouder | Aanbieder van de data, houder van het register |
 | Deelnemer | De raadpleger van de bron, het register |
-| DID | Decentralized Identifiers (DIDs) ofwel Gedecentraliseerde Identificatoren, zijn unieke identificatiemiddelen voor digitale identiteiten. Ze zijn ontworpen om zelfsoevereiniteit te bevorderen, waarbij individuen controle hebben over hun digitale identiteiten zonder afhankelijk te zijn van centrale autoriteiten. DIDs zijn gedecentraliseerd, veilig door cryptografie, interoperabel en persistent. De W3C-standaard Decentralized Identifiers maakt het verifiëren van  decentrale digitale identiteiten mogelijk. |
 | Register | De feitelijke databron/database |
 
 
@@ -180,16 +179,79 @@ De notificatie bevat de volgende gegevens:
 | Gegeven          | Algemene beschrijving                                              | Specifieke beschrijving voor notificeren                               | V/O<sup>*</sup> | Type     |
 |------------------|--------------------------------------------------------------------|------------------------------------------------------------------------|:---------------:|----------|
 | timestamp        | Tijdstip waarop de notificatie is aangemaakt                       |                                                                        |        V        | Datetime |
-| afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                        |        V        | Enum     |
+| afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                        |        V        | String   |
 | afzenderID       | Identificatie van de verzender van het bericht                     |                                                                        |        V        | String   |
-| ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                        |        V        | Enum     |
+| ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                        |        V        | String   |
 | ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                        |        V        | String   |
 | ontvangerKenmerk | Kenmerk van de ontvanger:                                          | Bij iWlz-vrijwillige notificatie gevuld met abonnementsID. Anders leeg |        O        | String   |
 | eventType        | Onderwerptype van het bericht; wat is de reden van het bericht     | NotificatieTypeID (zie tabel)                                          |        V        | String   |
-| subject          | Onderwerp van het bericht                                          | Identificatie van het parent-object waarover de autorisatie loopt.     |        V        | String   |
-| recordID         | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de notificatie betrekking op heeft.  |        V        | String   |
+| subjectList      | Lijst met onderwerpen van het bericht                              | ...                                                                    |        V        | Array    |
+| ../subject       | Onderwerp van het bericht                                          | Identificatie van het parent-object waarover de autorisatie loopt.     |        V        | String   |
+| ../recordID      | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de notificatie betrekking op heeft.  |        V        | String   |
 
 <sup>*</sup> V = verplicht / O = Optioneel
+
+<details>
+  <summary>open json-schema</summary>
+
+```json
+{
+  "title": "message-definition",
+  "description": "json-schema definitie voor iWlz-notificatie en iWlz-melding",
+  "type": "object",
+  "properties": {
+    "timestamp": {
+      "type": "string"
+    },
+    "afzenderIDType": {
+      "type": "string"
+    },
+    "afzenderID": {
+      "type": "string"
+    },
+    "ontvangerIDType": {
+      "type": "string"
+    },
+    "ontvangerID": {
+      "type": "string"
+    },
+    "ontvangerKenmerk": {
+      "type": "string"
+    },
+    "eventType": {
+      "type": "string"
+    },
+    "subjectList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "recordID": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject",
+          "recordID"
+        ]
+      }
+    }
+  },
+  "required": [
+    "timestamp",
+    "afzenderIDType",
+    "afzenderID",
+    "ontvangerIDType",
+    "ontvangerID",
+    "eventType",
+    "subjectList"
+  ]
+}
+```
+</details>
 
 
 ## 4.4 Notificeren
@@ -283,8 +345,13 @@ Notificatie:
   "ontvangerID": "12341234",
   "ontvangerKenmerk": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "eventType": "NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER",
-  "subject": "Bemiddeling/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
-  "recordID": "zorginnatura/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+  "subjectList": [
+    {
+      "subject": "Bemiddeling/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
+      "recordID": "zorginnatura/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+    }
+  ]
+
 }
 ```
 Succesvol response: 
@@ -304,16 +371,17 @@ Alleen de notificaties die afgesproken zijn tussen een of meerdere ketenpartijen
 
 Er zijn momenteel twee registers in ontwikkeling, het Indicatieregister van het CIZ en het Bemiddelingsregister van de zorgkantoren. Hiervoor zijn er nu de volgende iWlz notificaties gespecificeerd die gerealiseerd zullen worden. 
 
-|   | Trigger                                                                                      | Bronhouder  | Deelnemer                      | notificatie-type  |
-|:--|:---------------------------------------------------------------------------------------------|:------------|:-------------------------------|:------------------|
-| 1 | De registratie van een nieuwe indicatie                                                      | CIZ         | zorgkantoor                    | iWlz-verplicht    |
-| 2 | Een wijziging van de vervaldatum in een bestaande indicatie                                  | CIZ         | zorgkantoor                    | *iWlz-vrijwillig* |
-| 3 | De registratie van een nieuwe ZorgInNatura                                                   | zorgkantoor | zorgaanbieder                  | iWlz-verplicht    |
-| 4 | Een wijziging van een bestaande ZorgInNatura                                                 | zorgkantoor | zorgaanbieder                  | iWlz-verplicht    |
-| 5 | Gewijzigde bemiddeling t.g.v nieuwe of gewijzigde ZorgInNatura ander betrokken zorgaanbieder | zorgkantoor | overig betrokken zorgaanbieder | *iWlz-vrijwillig* |
-| 6 | Gewijzigde Dossierhouder of CZT                                                              | zorgkantoor | alle betrokken zorgaanbieders  | *iWlz-vrijwillig* |
-| 7 | Dossieroverdracht cliënt                                                                     | zorgkantoor | zorgkantoor                    | iWlz-verplicht    |
-| 8 | De registratie van een nieuwe ZorgInNatura voor een bovenregionaal (uitvoerend) zorgkantoor  | zorgkantoor | zorgkantoor                    | iWlz-verplicht    |
+|   | Trigger                                                                                       | Bronhouder  | Deelnemer                      | notificatie-type  |
+|:--|:----------------------------------------------------------------------------------------------|:------------|:-------------------------------|:------------------|
+| 1 | De registratie van een nieuwe indicatie                                                       | CIZ         | zorgkantoor                    | iWlz-verplicht    |
+| 2 | Een wijziging van de vervaldatum in een bestaande indicatie                                   | CIZ         | zorgkantoor                    | *iWlz-vrijwillig* |
+| 3 | De registratie van een nieuwe ZorgInNatura                                                    | zorgkantoor | zorgaanbieder                  | iWlz-verplicht    |
+| 4 | Een wijziging van een bestaande ZorgInNatura                                                  | zorgkantoor | zorgaanbieder                  | iWlz-verplicht    |
+| 5 | Gewijzigde bemiddeling t.g.v nieuwe of gewijzigde ZorgInNatura ander betrokken zorgaanbieder  | zorgkantoor | overig betrokken zorgaanbieder | *iWlz-vrijwillig* |
+| 6 | Gewijzigde Dossierhouder of CZT                                                               | zorgkantoor | alle betrokken zorgaanbieders  | *iWlz-vrijwillig* |
+| 7 | Dossieroverdracht cliënt                                                                      | zorgkantoor | zorgkantoor                    | iWlz-verplicht    |
+| 8 | De registratie van een nieuwe ZorgInNatura voor een bovenregionaal (uitvoerend) zorgkantoor   | zorgkantoor | zorgkantoor                    | iWlz-verplicht    |
+| 9 | Een wijziging van een bestaande ZorgInNatura voor een bovenregionaal (uitvoerend) zorgkantoor | zorgkantoor | zorgkantoor                    | iWlz-verplicht    |
 
 Bekijk voor een uitgebreide lijst van notificatietypen per register het informatiemodel en/of het afsprakenstel iWlz.
 
@@ -583,7 +651,8 @@ HTTP/1.1 400 Bad Request
 | 5 | Zorgkantoor | GEWIJZIGDE_ZORGINNATURA_BIJ_ANDERE_ZORGAANBIEDER | IWLZ-VRIJWILLIG | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt de zorgaanbieder die bij dezelfde bemiddeling betrokken zijn in de zorglevering (hebben een actuele ZorgInNatura) aan de client als in de bijgewerkte ZorgInNatura een notificatie wanneer die is geabonneerd | Agbcode zorgaanbieder | update | bemiddelingID |
 | 6 | Zorgkantoor | GEWIJZIGDE_DOSSIERHOUDER_CZT_VOOR_ZORGAANBIEDER | IWLZ-VRIJWILLIG | Bij de registratie van een nieuwe Dossierhouder of Coordinator Zorg Thuis, ontvangt de zorgaanbieder die actief betrokken is bij de zorg aan die client een notificatie wanneer die is geabonneerd | Agbcode zorgaanbieder | create | bemiddelingID |
 | 7 | Zorgkantoor | DOSSIEROVERDRACHT_ZORGKANTOOR | IWLZ-VERPLICHT | Bij de registratie van een nieuwe Overdracht, ontvangt het nieuwe verantwoordelijke zorgkantoor een notificatie | - | create | OverdrachtID |
-| 8 | Zorgkantoor | BOVENREGIONALE_BEMIDDELING_VOOR_ZORGKANTOOR | IWLZ-VERPLICHT | Bij de registratie van een nieuwe ZorgInNatura voor een zorgaanbieder die een contract heeft met een ander uitvoerend zorgkantoor (bovenregionale zorgkantoor) dan het registrerende verantwoordelijke zorgkantoor, ontvangt dat uitvoerende zorgkantoor daar een notificatie van | - | create | zorgInNaturaID |
+| 8 | Zorgkantoor | NIEUWE_ZORGINNATURA_VOOR_BOVENREGIONAAL_ZORGKANTOOR | IWLZ-VERPLICHT | Bij de registratie van een nieuwe ZorgInNatura voor een zorgaanbieder die een contract heeft met een ander uitvoerend zorgkantoor (bovenregionale zorgkantoor) dan het registrerende verantwoordelijke zorgkantoor, ontvangt dat uitvoerende zorgkantoor daar een notificatie van | - | create | zorgInNaturaID |
+|9| Zorgkantoor |GEWIJZIGDE_ZORGINNATURA_VOOR_BOVENREGIONAAL_ZORGKANTOOR | IWLZ-VERPLICHT | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt het bovenregionale zorgkantoor die in de bijgewerkte registratie is geregisteerd onder uitvoerendZorgkantoor een notificatie | - | update | zorgInNaturaID |
 
 
 

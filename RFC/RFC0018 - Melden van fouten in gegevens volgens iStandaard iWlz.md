@@ -145,10 +145,73 @@ De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare geg
 | ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                                                                                          |        V        | DID      |
 | ontvangerKenmerk | Kenmerk van de ontvanger:                                          | Identificatie van de melder. Meestal gelijk aan de afzender                                                                              |        O        | String   |
 | eventType      | Onderwerptype van het bericht                                      | Identificatie van het type melding. (nu alleen iWlzFoutmelding)                                                                          |        V        | String   |
-| subject          | Onderwerp van het bericht                                          | inhoud van de melding (nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn) |        V        | String   |
-| recordID         | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de melding betrekking op heeft.                                                                        |        V        | String   |
+| subjectList | Lijst met meldingen | | V | Array |
+| .. / subject          | Onderwerp van het bericht                                          | inhoud van de melding (nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn) |        V        | String   |
+| .. / recordID         | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de melding betrekking op heeft.                                                                        |        V        | String   |
 
 <sup>*</sup> V = verplicht / O = Optioneel
+
+<details>
+  <summary>open json-schema</summary>
+
+```json
+{
+  "title": "message-definition",
+  "description": "json-schema definitie voor iWlz-notificatie en iWlz-melding",
+  "type": "object",
+  "properties": {
+    "timestamp": {
+      "type": "string"
+    },
+    "afzenderIDType": {
+      "type": "string"
+    },
+    "afzenderID": {
+      "type": "string"
+    },
+    "ontvangerIDType": {
+      "type": "string"
+    },
+    "ontvangerID": {
+      "type": "string"
+    },
+    "ontvangerKenmerk": {
+      "type": "string"
+    },
+    "eventType": {
+      "type": "string"
+    },
+    "subjectList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "recordID": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject",
+          "recordID"
+        ]
+      }
+    }
+  },
+  "required": [
+    "timestamp",
+    "afzenderIDType",
+    "afzenderID",
+    "ontvangerIDType",
+    "ontvangerID",
+    "eventType",
+    "subjectList"
+  ]
+}
+```
+</details>
 
 ## 4.4 Foutmelden
 
@@ -216,7 +279,7 @@ end
 
 ### 4.4.1 Voorbeeld iWlz Foutmelding
 
-Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element DiagnoseSubcodelijst niet aan de bijbehorende regel IRG0012: DiagnoseSubcodelijst vullen conform opgegeven DiagnoseCodelijst. Deze fout wordt op de volgende manier worden teruggegeven. Omdat het element niet afzonderlijk is te duiden, bevat het objectId de verwijzing naar het record in de klasse Stoornis, waar het element DiagnoseSubcodelijst onderdeel van is.
+Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element DiagnoseSubcodelijst niet aan de bijbehorende regel IRG0012: DiagnoseSubcodelijst vullen conform opgegeven DiagnoseCodelijst. Deze fout wordt op de volgende manier worden teruggegeven. Omdat het element niet afzonderlijk is te duiden, bevat het objectId de verwijzing naar het record in de klasse Stoornis, waar het element DiagnoseSubcodelijst onderdeel van is. Ook overlappen er periodes voor Geindiceerde Zorgzwaartepakketen. 
 
 ```json
 {
@@ -227,8 +290,16 @@ Situatie: bij een indicatie voldoet in de klasse Stoornis de waarde van element 
   "ontvangerID": "1234",
   "ontvangerKenmerk": "AGB: 12341234",
   "eventType": "iWLZFOUTMELDING",
-  "subject": "IRG0012",
-  "recordID": "wlzindicatie/Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+  "subjectList": [
+    {
+      "subject": "IRG0012",
+      "recordID": "wlzindicatie/Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"     
+    },
+    {
+      "subject": "IRG0028",
+      "recordID": "wlzindicatie/GeindiceerdZorgzwaartepakket/5850ad49-7cf4-4711-8215-e160715900e7"     
+    }
+  ]
 }
 ```
 
