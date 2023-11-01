@@ -1,14 +1,18 @@
 # iWlz-Request For Comments
 Repostistory voor de RFC's van het Netwerkmodel iWlz.
 
-- [iWlz-RFC](#iwlz-rfc)
+- [iWlz-Request For Comments](#iwlz-request-for-comments)
   - [Overzicht STATUS en IMPLEMENTATIE](#overzicht-status-en-implementatie)
-    - [Leeswijzer](#Leeswijzer) 
+    - [Leeswijzer](#leeswijzer)
   - [Terminologie](#terminologie)
   - [Directory-structuur](#directory-structuur)
   - [Werkwijze](#werkwijze)
     - [Template RFC](#template-rfc)
     - [PlantUML-diagrammen](#plantuml-diagrammen)
+  - [Git](#git)
+    - [Git-introductie](#git-introductie)
+    - [Populaire Populaire lokale Git-clients](#populaire-populaire-lokale-git-clients)
+    - [Stappen voor samenwerking met Git en een Git-client](#stappen-voor-samenwerking-met-git-en-een-git-client)
   - [Contact](#contact)
 
 
@@ -47,6 +51,40 @@ Werkwijze:
     ![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")
     ```
 - Daarna is het gegeneerde diagram zichtbaar in de RFC
+
+## Git
+
+### Git-introductie
+Git is een gedistribueerd versiebeheersysteem dat wordt gebruikt voor het bijhouden van wijzigingen in bestanden en samenwerken aan projecten met anderen. Het biedt de mogelijkheid om wijzigingen vast te leggen, branches te maken en samen te werken aan softwareprojecten. Git kan zowel lokaal als via GitHub.com worden gebruikt. Hier bespreken we zowel het gebruik van Git op [Github.com](https://gitHub.com) als het gebruik van populaire lokale Git-clients als alternatief.
+
+### Populaire Populaire lokale Git-clients
+Een lijst van drie populaire lokale Git-clients, samen met links naar hun websites voor meer informatie:
+1. GitHub Desktop: https://desktop.github.com/
+2. GitKraken: https://www.gitkraken.com/
+3. Sourcetree: https://www.sourcetreeapp.com/
+
+Deze lokale Git-clients bieden een gebruiksvriendelijke interface voor het beheren van Git-repositories en maken het eenvoudiger om branches te maken, wijzigingen vast te leggen, commits te maken en samen te werken aan projecten. Ze zijn een handig alternatief voor ontwikkelaars die de voorkeur geven aan een visuele interface voor Git-beheer. 
+
+### Stappen voor samenwerking met Git en een Git-client
+1. **Git-client installeren:** Zorg ervoor dat je een Git-client naar keuze hebt geïnstalleerd op je computer. Dit stelt je in staat om Git-repositories te beheren en samen te werken met anderen.
+
+2. **Repository klonen:** Gebruik de Git-client om een kopie van het gewenste Git-repository naar je lokale computer te klonen. Je hebt de URL van het Git-repository nodig om dit te doen.
+
+3. **Branch maken:** Maak een nieuwe branch aan om aan je wijzigingen te werken. Geef de branch een duidelijke naam die de aard van je wijzigingen weerspiegelt.
+
+4. **Wijzigingen aanbrengen:** Gebruik een teksteditor of een Markdown-editor naar keuze om de gewenste Markdown-bestanden te bewerken in je lokale kloon van het repository. Voeg wijzigingen, toevoegingen of correcties toe zoals nodig.
+
+5. **Commits maken:** Nadat je wijzigingen hebt aangebracht, maak je "commits" om deze wijzigingen te verzenden naar je lokale branch. Geef elke commit een beschrijvende commit-boodschap, zodat het duidelijk is wat er is gewijzigd.
+
+6. **Push naar het repository:** Wanneer je klaar bent om je wijzigingen te delen, gebruik je de Git-client om je lokale branch naar het externe repository te "pushen". Dit zal je wijzigingen beschikbaar maken voor anderen om te bekijken.
+
+7. **Feedback en samenwerking:** Als je samenwerkt met anderen, kunnen zij ook branches maken, wijzigingen aanbrengen en deze pushen naar hetzelfde repository. Jullie kunnen de wijzigingen in elkaars branches beoordelen en opmerkingen toevoegen.
+
+8. **Pull updates:** Om wijzigingen van anderen in je lokale repository te krijgen, kun je de "pull" of "fetch" functie van je Git-client gebruiken om de wijzigingen van de hoofdbranch of andere branches binnen te halen.
+
+9. **Conflicten oplossen:** Als er conflicten optreden wanneer meerdere mensen tegelijkertijd aan hetzelfde Markdown-bestand werken, moeten deze conflicten worden opgelost voordat de wijzigingen kunnen worden samengevoegd. De Git-client biedt hulpmiddelen om conflicten op te lossen.
+
+Door deze stappen te volgen, kun je effectief samenwerken aan Markdown-bestanden in een Git-client zonder de (GUI) GitHub te gebruiken. Dit helpt bij het behouden van de integriteit van je documentatie en het bevordert een gestroomlijnde samenwerking.
 
 ## Contact
 * Dennis de Gouw - [@dennisdegouw](https://github.com/dennisdegouw)
