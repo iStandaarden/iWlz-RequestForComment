@@ -10,7 +10,7 @@
 
 **Beoogde situatie**
 
-Dit document beschrijft de wijze van geautomatiseerde registratie van gebeurtenissen in het netwerkmodel en is beschrijft de practische invulling van de norm in het netwerkmodel.Deze RFC is zeker geen vervanging van de NEN7513 richtlijnen.
+Dit document beschrijft de wijze van geautomatiseerde registratie van gebeurtenissen in het netwerkmodel en is beschrijft de practische invulling van de norm in het netwerkmodel. Deze RFC is zeker geen vervanging van de NEN7513 richtlijnen.
 
 <font size="4">**Status RFC**</font>
 
@@ -80,7 +80,7 @@ Het complete inzicht in de gegevensstromen biedt de mogelijkheid om snel verdach
 
 | Uitgangspunt | Omschrijving |
 | :-------- | :-------- | 
-| *Normering* | *Elke netwerkdeelnemer diendt aantoonbaar te beschikken over een juiste informatiebeveiliging conform NEN 7510-norm. <br>Elke organisatie waar persoonlijke gezondheidsinformatie wordt verwerkt moet voldoen aan NEN 7513.* |
+| *Normering* | *Elke netwerkdeelnemer dient aantoonbaar te beschikken over een juiste informatiebeveiliging conform NEN 7510-norm. <br>Elke organisatie waar persoonlijke gezondheidsinformatie wordt verwerkt moet voldoen aan NEN 7513.* |
 | *Standaardisatie* | *Alle ketendeelnemers voldoen aan de norm in het afsprakenstelsel iWlz, waaronder eenduidige logging en de mogelijkheid tot exporteren.*
 | *Onweerlegbaarheid* | *Volgens NEN 7513 moet de logging kunnen voorzien in informatie waardoor achteraf onweerlegbaar kan worden vastgesteld welke gebeurtenissen hebben plaatsgevonden op een patiëntendossier of op een elektronisch uitwisselingssysteem.* |
 
