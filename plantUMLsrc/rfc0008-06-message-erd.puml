@@ -1,0 +1,19 @@
+@startuml rfc0008-06-message-erd.puml
+
+entity Message {
+  timestamp : Datetime,
+  afzenderIDType : string,
+  afzenderID : string,
+  ontvangerIDType : string,
+  ontvangerID : string,
+  ontvangerKenmerk : string[0..1],
+  eventType : string,
+}
+entity SubjectList {
+      subject : string
+      recordID : string
+    }
+
+Message "1" *-- "1..*" SubjectList: contains
+
+@enduml
