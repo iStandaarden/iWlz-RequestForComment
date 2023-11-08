@@ -191,12 +191,40 @@ De notificatie bevat de volgende gegevens:
 
 <sup>*</sup> V = verplicht / O = Optioneel
 
+![notificatie_erd](../plantUMLsrc/rfc0008-06-message-erd.svg "notificatie_erd")
+
+<details>
+  <summary>plantUML-source</summary>
+
+```plantuml
+@startuml rfc0008-06-message-erd.puml
+
+entity Notification {
+  timestamp : Datetime,
+  afzenderIDType : string,
+  afzenderID : string,
+  ontvangerIDType : string,
+  ontvangerID : string,
+  ontvangerKenmerk : string[0..1],
+  eventType : string,
+}
+entity SubjectList {
+      subject : string
+      recordID : string
+    }
+
+Notification "1" *-- "1..*" SubjectList: contains
+
+@enduml
+```
+</details>
+
 <details>
   <summary>open json-schema</summary>
 
 ```json
 {
-  "title": "message-definition",
+  "title": "notification-definition",
   "description": "json-schema definitie voor iWlz-notificatie en iWlz-melding",
   "type": "object",
   "properties": {
