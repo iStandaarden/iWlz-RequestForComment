@@ -47,7 +47,7 @@ In de huidige infrastructuur is er geen voorziening voor het vastleggen en beher
 Deze RFC heeft een relatie met de volgende RFC(s)
 |RFC | onderwerp | relatie<sup>*</sup> | toelichting |issue |
 |:--|:--|:--| :--|:--|
-|[0008](RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | voorwaardelijk | <ul><li>Er is een **Service Directory** waarin notificatietypen gepubliceerd kunnen worden.</li> <li>Netwerkdeelnemers raadplegen de **Service Directory** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten. </li></ul>|[#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
+|[0008](RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | voorwaardelijk | Voor het ondersteunen van (iWlz) vrijwillige notificaties zoals beschreven in RFC-0008 |[#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
 
 <sup>*</sup>voorwaardelijk, *voor andere RFC* / afhankelijk, *van andere RFC*
 
