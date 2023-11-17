@@ -1,4 +1,4 @@
-  @startuml rfc008-05-verwijderen_abonnement
+  @startuml rfc0025-02-verwijderen_abonnement
   title "Verwijderen abonnement" 
   skinparam handwritten false
   skinparam participantpadding 20

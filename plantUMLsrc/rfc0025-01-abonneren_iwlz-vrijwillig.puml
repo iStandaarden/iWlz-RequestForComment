@@ -1,4 +1,4 @@
-@startuml rfc008-04-abonneren_iwlz-vrijwillig
+@startuml rfc0025-01-abonneren_iwlz-vrijwillig
   title Abonneren notificatie
 
   skinparam handwritten false
