@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0008 -  Functionele uitwerking notificaties en abonnementen
+# RFC0008 -  Functionele uitwerking notificaties
 
 
 ---
@@ -21,7 +21,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuel
 
 ---
 **Inhoudsopgave**
-- [RFC0008 -  Functionele uitwerking notificaties en abonnementen](#rfc0008----functionele-uitwerking-notificaties-en-abonnementen)
+- [RFC0008 -  Functionele uitwerking notificaties](#rfc0008----functionele-uitwerking-notificaties)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
@@ -35,6 +35,8 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuel
   - [4.4 Notificeren](#44-notificeren)
     - [4.4.1 Voorbeeld notificeren:](#441-voorbeeld-notificeren)
   - [4.5 iWlz-notificatie-typen](#45-iwlz-notificatie-typen)
+    - [4.5.1 iWlz VERPLICHTE notificaties](#451-iwlz-verplichte-notificaties)
+    - [4.5.1 iWlz VRIJWILLIGE notificaties](#451-iwlz-vrijwillige-notificaties)
   - [4.6 Publiceren en raadplegen beschikbare Notificatietype](#46-publiceren-en-raadplegen-beschikbare-notificatietype)
 - [5. Ontvangen iWlz-verplichte notificatie](#5-ontvangen-iwlz-verplichte-notificatie)
 - [6. Ontvangen (iWlz-) vrijwillige notificatie dmv abonneren](#6-ontvangen-iwlz--vrijwillige-notificatie-dmv-abonneren)
@@ -46,9 +48,9 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuel
 # 1. Inleiding
 Binnen het iWlz netwerkmodel werken we met generieke technische oplossingen en contracten om minimaal afhankelijk te zijn van gezamenlijke releases. Daarom werken we bijvoorbeeld met GraphQL, zodat het uitleveren van extra gegevens via een register geen impact heeft op de overige deelnemers aan het netwerk. 
 
-Het mechanisme voor het aanbieden en afsluiten van abonnementen blijkt in de huidige opzet nog niet voldoende generiek te zijn. Het is namelijk nog niet mogelijk om nieuwe abonnementen op (iWlz-)notificaties toe te voegen zonder dat dit impact heeft voor alle netwerkdeelnemers. De reden hiervoor is dat de notificaties nu in de koppelvlak specificaties zijn vastgelegd. 
+Het netwerkmodel moet in zijn geheel wel ondersteuning bieden aan het gehele iWlz ketenproces. Daarvoor is het in bepaalde situaties nodig om als ketenpartij op de hoogte gebracht te worden van relevante informatie om de voortgang in het proces van zorglevering aan een client te waarborgen. Een deelnemer moet daarom genotificeerd worden dat er relevante informatie beschikbaar is. 
 
-Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één generiek mechanisme voor het beheren van abonnementen te specificeren in de koppelvlak specificaties en notificatietypen inhoudelijk vast te leggen in de *Dienstencatalogus*. Hierdoor kan een nieuwe notificatie worden geintroduceerd in het netwerk, zonder dat er een aanpassing van de koppelvlakspecificaties hoeft plaats te vinden.
+Deze RFC beschrijft de werking van notificeren in het iWlz Netwerkmodel.
 
 ## 1.1 Uitgangspunten
 - Er is een catalogus voorziening: **Dienstencatalogus** waarin notificatietypen gepubliceerd kunnen worden.
@@ -64,12 +66,12 @@ Deze notitie beschrijft een oplossingsrichting om dit te corrigeren, door één 
 
 ## 1.2 Relatie andere RFC
 Deze RFC heeft een relatie met de volgende andere RFC(s):
-| RFC                                               | onderwerp         | relatie<sup>*</sup> | toelichting                             | issue                                                     |
-|:--------------------------------------------------|:------------------|:--------------------|:----------------------------------------|:----------------------------------------------------------|
-| [RFC0003](/RFC/RFC0003%20-%20Adresboek.md)           | Adresboek         | afhankelijk         | beschrijft realisatie Adresboek         | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4)   |
-| [RFC0020](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md) | Opslag en Raadplegen iWlz notificatietypen in dienstencatalogus | afhankelijk | beschrijft functioneel de dienst om notificatie-typen te publiceren en raadplegen | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/24) |
-| [RFC0018](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md)| Meldingen: Melden van iWlz gegevensfouten | gerelateerd | beschrijft het stroom van raadpleger aan bronhouder | [#16](https://github.com/iStandaarden/iWlz-RFC/issues/16) |
-| [RFC0025](/RFC/RFC0025%20-%20Abonnementenvoorziening%20voor%20(iWlz)%20vrijwillige%20notificaties.md) | Abonnementenvoorziening | afhankelijk | beschrijft de abonnementenvoorziening noodzakelijk voor het ondersteunen van (iWlz) vrijwillige notificaties | [#36](https://github.com/iStandaarden/iWlz-RFC/issues/36)
+| RFC                                                                                                   | onderwerp                                                       | relatie<sup>*</sup> | toelichting                                                                                                  | issue                                                     |
+| :---------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------- | :------------------ | :----------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------- |
+| [RFC0003](/RFC/RFC0003%20-%20Adresboek.md)                                                            | Adresboek                                                       | afhankelijk         | beschrijft realisatie Adresboek                                                                              | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4)   |
+| [RFC0020](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md)            | Opslag en Raadplegen iWlz notificatietypen in dienstencatalogus | afhankelijk         | beschrijft functioneel de dienst om notificatie-typen te publiceren en raadplegen                            | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/24) |
+| [RFC0018](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md)  | Meldingen: Melden van iWlz gegevensfouten                       | gerelateerd         | beschrijft het stroom van raadpleger aan bronhouder                                                          | [#16](https://github.com/iStandaarden/iWlz-RFC/issues/16) |
+| [RFC0025](/RFC/RFC0025%20-%20Abonnementenvoorziening%20voor%20(iWlz)%20vrijwillige%20notificaties.md) | Abonnementenvoorziening                                         | afhankelijk         | beschrijft de abonnementenvoorziening noodzakelijk voor het ondersteunen van (iWlz) vrijwillige notificaties | [#36](https://github.com/iStandaarden/iWlz-RFC/issues/36) |
 
 <sup>*</sup>voorwaardelijk,*voor andere RFC* / afhankelijk, *van andere RFC*
 
@@ -79,11 +81,11 @@ De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/P
 
 # 2. Terminologie
 | Terminologie | Omschrijving                                                          |
-|:-------------|:----------------------------------------------------------------------|
-| Backoffice | Omgeving rondom het register voor de afhandeling van netwerk-diensten |
-| Bronhouder | Aanbieder van de data, houder van het register |
-| Deelnemer | De raadpleger van de bron, het register |
-| Register | De feitelijke databron/database |
+| :----------- | :-------------------------------------------------------------------- |
+| Backoffice   | Omgeving rondom het register voor de afhandeling van netwerk-diensten |
+| Bronhouder   | Aanbieder van de data, houder van het register                        |
+| Deelnemer    | De raadpleger van de bron, het register                               |
+| Register     | De feitelijke databron/database                                       |
 
 
 # 3. Notificatie of melding wat is het verschil
@@ -130,11 +132,12 @@ end
 </details>
 
 |             | Van        | Naar       | Omschrijving                                                                                                                                                                |
-|:------------|:-----------|:-----------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| :---------- | :--------- | :--------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Notificatie | Bronhouder | Deelnemer  | op de hoogte stellen van een deelnemer over dat er nieuwe (of gewijzigde) informatie in een bron beschikbaar is die directe of afgeleide betrekking heeft op die deelnemer. |
 | Melding     | Deelnemer  | Bronhouder | verzoek tot muteren of het beschikbaar stellen van nieuwe informatie naar aanleiding van een gebeurtenis van een deelnemer aan een bron                                     |
 
-Het onderdeel Melding is verder uitgewerkt in **RFC0018 - (Fout-)meldingen iWlz Netwerkmodel**.
+Het onderdeel Melding is verder uitgewerkt in [**RFC0018 - (Fout-)meldingen iWlz Netwerkmodel**](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md).
+
 
 # 4. Notificaties
 
@@ -152,7 +155,7 @@ Denk bijvoorbeeld aan de registratie van een nieuw indicatiebesluit. Het zorgkan
 De twee typen iWlz notificaties zijn daarom: 
 
 | Type notificatie | Verzenden notificatie | Invloed deelnemer                       |
-|:-----------------|:----------------------|:----------------------------------------|
+| :--------------- | :-------------------- | :-------------------------------------- |
 | iWlz-Verplicht   | Altijd                | Geen keuze; ontvangt notificatie altijd |
 | iWlz-Vrijwillig  | Alleen naar abonnee's | Keuze ligt bij deelnemer                |
 
@@ -168,7 +171,7 @@ De notificatie is in structuur gelijk aan de melding (zie [RFC0018](/RFC/RFC0018
 
 De notificatie bevat de volgende gegevens:
 | Gegeven          | Algemene beschrijving                                              | Specifieke beschrijving voor notificeren                               | V/O<sup>*</sup> | Type     |
-|------------------|--------------------------------------------------------------------|------------------------------------------------------------------------|:---------------:|----------|
+| ---------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------- | :-------------: | -------- |
 | timestamp        | Tijdstip waarop de notificatie is aangemaakt                       |                                                                        |        V        | Datetime |
 | afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                        |        V        | String   |
 | afzenderID       | Identificatie van de verzender van het bericht                     |                                                                        |        V        | String   |
@@ -332,21 +335,21 @@ Notification "1" *-- "1..*" SubjectList: contains
 </details>
 
 
-| #   | Beschrijving                      | Toelichting                                                                                            | Voorbeeld: Bemiddeling voor zorgaanbieder                                                                    |
-|:----|:----------------------------------|:-------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------|
-| 01  | registratie data                  | data vanuit backoffice in register plaatsen                                                            | Zorgkantoor bemiddelt client naar een zorgaanbieder en registreert het resultaat in het bemiddelingsregister |
-| 02  | event trigger                     | registratie of wijziging data laat een notificatie trigger afgaan                                      | Doordat de agbCode van de zorgaanbieder wordt gevuld in ZorgInNatura, gaat er een trigger af                 |
-| 03  | bepaal notificatietype            | bepaal notificatietype en bepaal of het een verplichte of vrijwillige notificatie is                   | Het is de trigger van de iWlz-verplichte notificatie: NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER.                |
-| ALT | *iWlz-vrijwillig notificatietype* | *bij een iWlz-vrijwillige notificatie moet de abonnementenregistrate worden geraadpleegd op abonnee's* | nvt.                                                                                                         |
-| 04  | raadpleeg abonnementenregistratie | bepaal of er abonnee's zijn voor het vrijwillige notificatietype                                     |
-| 05  | geef geabonneerde deelnemer       | geef informatie over geabonneerde deelnemer om de notificatie te versturen                           |
-| 06  | zoek endpoint deelnemer op        | bepaal waar de notificatie moet worden afgeleverd                                                    | Met de geregisteerde agbCode kan het endpoint en ID van de zorgaanbieder worden opgezocht |
-| 07  | return {endpoint; ID deelnemer}       | ontvang het afleveradres en ID voor de notificatie                                                         |
-| 08  | genereer notificatie              | maak de gewenste notificatie aan                                                                     | Gebruik ontvangen ID in notificatie (zie voorbeeld 4.3.1) |
-| 09  | zend notificatie                  | verstuur de notificatie naar het endpoint van de deelnemer                                           | Gebruik ontvangen endpoint als afleveradres |
-| 10  | verwerk notificatie               | verwerk de ontvangen notificatie                                                                     |
-| 11  | http-response {200}               | stuur ontvangst bevestiging                                                                          | De zorgaanbieder bevestigt de ontvangst van de notificatie en kan deze verwerken en gebruiken voor een raadpleging |
-| 12  | verwerk response                  | bevestig ontvangst notificatie                                                                       | 
+| #    | Beschrijving                      | Toelichting                                                                                            | Voorbeeld: Bemiddeling voor zorgaanbieder                                                                          |
+| :--- | :-------------------------------- | :----------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
+| 01   | registratie data                  | data vanuit backoffice in register plaatsen                                                            | Zorgkantoor bemiddelt client naar een zorgaanbieder en registreert het resultaat in het bemiddelingsregister       |
+| 02   | event trigger                     | registratie of wijziging data laat een notificatie trigger afgaan                                      | Doordat de agbCode van de zorgaanbieder wordt gevuld in ZorgInNatura, gaat er een trigger af                       |
+| 03   | bepaal notificatietype            | bepaal notificatietype en bepaal of het een verplichte of vrijwillige notificatie is                   | Het is de trigger van de iWlz-verplichte notificatie: NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER.                      |
+| ALT  | *iWlz-vrijwillig notificatietype* | *bij een iWlz-vrijwillige notificatie moet de abonnementenregistrate worden geraadpleegd op abonnee's* | nvt.                                                                                                               |
+| 04   | raadpleeg abonnementenregistratie | bepaal of er abonnee's zijn voor het vrijwillige notificatietype                                       |
+| 05   | geef geabonneerde deelnemer       | geef informatie over geabonneerde deelnemer om de notificatie te versturen                             |
+| 06   | zoek endpoint deelnemer op        | bepaal waar de notificatie moet worden afgeleverd                                                      | Met de geregisteerde agbCode kan het endpoint en ID van de zorgaanbieder worden opgezocht                          |
+| 07   | return {endpoint; ID deelnemer}   | ontvang het afleveradres en ID voor de notificatie                                                     |
+| 08   | genereer notificatie              | maak de gewenste notificatie aan                                                                       | Gebruik ontvangen ID in notificatie (zie voorbeeld 4.3.1)                                                          |
+| 09   | zend notificatie                  | verstuur de notificatie naar het endpoint van de deelnemer                                             | Gebruik ontvangen endpoint als afleveradres                                                                        |
+| 10   | verwerk notificatie               | verwerk de ontvangen notificatie                                                                       |
+| 11   | http-response {200}               | stuur ontvangst bevestiging                                                                            | De zorgaanbieder bevestigt de ontvangst van de notificatie en kan deze verwerken en gebruiken voor een raadpleging |
+| 12   | verwerk response                  | bevestig ontvangst notificatie                                                                         |
 
 Zodra een event zich voordoet waarvoor een notificatie-trigger is gedefinieerd verstuurd de bronhouder de bijbehorende notificatie. 
 
@@ -390,19 +393,27 @@ Alleen de notificaties die afgesproken zijn tussen een of meerdere ketenpartijen
 
 Er zijn momenteel twee registers in ontwikkeling, het Indicatieregister van het CIZ en het Bemiddelingsregister van de zorgkantoren. Hiervoor zijn er nu de volgende iWlz notificaties gespecificeerd die gerealiseerd zullen worden. 
 
-|   | Trigger                                                                                       | Bronhouder  | Deelnemer                      | notificatie-type  |
-|:--|:----------------------------------------------------------------------------------------------|:------------|:-------------------------------|:------------------|
-| 1 | De registratie van een nieuwe indicatie                                                       | CIZ         | zorgkantoor                    | iWlz-verplicht    |
-| 2 | Een wijziging van de vervaldatum in een bestaande indicatie                                   | CIZ         | zorgkantoor                    | *iWlz-vrijwillig* |
-| 3 | De registratie van een nieuwe ZorgInNatura                                                    | zorgkantoor | zorgaanbieder                  | iWlz-verplicht    |
-| 4 | Een wijziging van een bestaande ZorgInNatura                                                  | zorgkantoor | zorgaanbieder                  | iWlz-verplicht    |
-| 5 | Gewijzigde bemiddeling t.g.v nieuwe of gewijzigde ZorgInNatura ander betrokken zorgaanbieder  | zorgkantoor | overig betrokken zorgaanbieder | *iWlz-vrijwillig* |
-| 6 | Gewijzigde Dossierhouder of CZT                                                               | zorgkantoor | alle betrokken zorgaanbieders  | *iWlz-vrijwillig* |
-| 7 | Dossieroverdracht cliënt                                                                      | zorgkantoor | zorgkantoor                    | iWlz-verplicht    |
-| 8 | De registratie van een nieuwe ZorgInNatura voor een bovenregionaal (uitvoerend) zorgkantoor   | zorgkantoor | zorgkantoor                    | iWlz-verplicht    |
-| 9 | Een wijziging van een bestaande ZorgInNatura voor een bovenregionaal (uitvoerend) zorgkantoor | zorgkantoor | zorgkantoor                    | iWlz-verplicht    |
+### 4.5.1 iWlz VERPLICHTE notificaties
+|      | Trigger                                                                                       | Bronhouder  | Deelnemer     |
+| :--- | :-------------------------------------------------------------------------------------------- | :---------- | :------------ |
+| 1    | De registratie van een nieuwe indicatie                                                       | CIZ         | zorgkantoor   |
+| 2    | Een wijziging van de vervaldatum in een bestaande indicatie                                   | CIZ         | zorgkantoor   |
+| 3    | De registratie van een nieuwe ZorgInNatura                                                    | zorgkantoor | zorgaanbieder |
+| 4    | Een wijziging van een bestaande ZorgInNatura                                                  | zorgkantoor | zorgaanbieder |
+| 5    | Dossieroverdracht cliënt                                                                      | zorgkantoor | zorgkantoor   |
+| 6    | De registratie van een nieuwe ZorgInNatura voor een bovenregionaal (uitvoerend) zorgkantoor   | zorgkantoor | zorgkantoor   |
+| 7    | Een wijziging van een bestaande ZorgInNatura voor een bovenregionaal (uitvoerend) zorgkantoor | zorgkantoor | zorgkantoor   |
+| 8    | Een toewijzing van de rol Dossierhouder of Coordinator zorg thuis                             | zorgkantoor | zorgaanbieder |
+| 9    | Een beeindiging van de rol Dossierhouder of Coordinator zorg thuis                            | zorgkantoor | zorgaanbieder |
+| 10   | Gewijzigde samenstelling bemiddeling (door wijzing van bemiddelingspecificatie(s))            | zorgkantoor | zorgaanbieder |
 
 Bekijk voor een uitgebreide lijst van notificatietypen per register het informatiemodel en/of het afsprakenstel iWlz.
+
+### 4.5.1 iWlz VRIJWILLIGE notificaties
+|      | Trigger                                                                                      | Bronhouder  | Deelnemer                      |
+| :--- | :------------------------------------------------------------------------------------------- | :---------- | :----------------------------- |
+| 5    | Gewijzigde bemiddeling t.g.v nieuwe of gewijzigde ZorgInNatura ander betrokken zorgaanbieder | zorgkantoor | overig betrokken zorgaanbieder |
+| 6    | Gewijzigde Dossierhouder of CZT                                                              | zorgkantoor | alle betrokken zorgaanbieders  |
 
 ## 4.6 Publiceren en raadplegen beschikbare Notificatietype
 Dit onderdeel is beschreven in een afzonderlijke RFC: [RFC0024 - Opslag iWlz Notificatietypen in dienstencatalogus](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md)
@@ -424,17 +435,17 @@ De beschrijving van de abonnenementenvoorziening is verplaatst naar [RFC0025 - A
 # Bijlage: iWlz-Notificatie typen
 <-- scroll naar links voor de volledige inhoud-->
 
-|  | Aanbieder | notificatieTypeID | notificatieType | notificatieOmschrijving | idTypeAbonnee | eventType | recordIDType |
-|---|---|---|---|---|---|---|---|
-| 1 | CIZ | NIEUWE_INDICATIE_ZORGKANTOOR | IWLZ-VERPLICHT | Bij de registratie van een nieuwe indicatie, waarbij de postcode van het adres volgens de BRP van de geindiceerde client valt in de regio van het zorgkantoor dat de notificatie dient te ontvangen | - | create | wlzIndicatieID |
-| 2 | CIZ | VERVALLEN_INDICATIE | IWLZ-VRIJWILLIG | Bij de update (vullen of verwijderen of aanpassen) van de vervaldatum van een indicatie, ontvangt het zorgkantoor dat een abonnement heeft en dat volgens een registratie heeft in [Bemiddeling] het Bemiddelingsregister bij de indicatie van toepassing een notificatie | Uzovicode zorgkantoor / of RegioCode | update | wlzIndicatieID |
-| 3 | Zorgkantoor | NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER | IWLZ-VERPLICHT | Bij de registratie van een nieuwe ZorgInNatura, ontvangt de zorgaanbieder die in [ZorgInNatura.instelling] is geregisteerd onder instelling een notificatie | - | create | zorgInNaturaID |
-| 4 | Zorgkantoor | GEWIJZIGDE_ZORGINNATURA_VOOR_ZORGAANBIEDER | IWLZ-VERPLICHT | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt de zorgaanbieder die in de bijgewerkte registratie is geregisteerd onder instelling een notificatie | - | update | zorgInNaturaID |
-| 5 | Zorgkantoor | GEWIJZIGDE_ZORGINNATURA_BIJ_ANDERE_ZORGAANBIEDER | IWLZ-VRIJWILLIG | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt de zorgaanbieder die bij dezelfde bemiddeling betrokken zijn in de zorglevering (hebben een actuele ZorgInNatura) aan de client als in de bijgewerkte ZorgInNatura een notificatie wanneer die is geabonneerd | Agbcode zorgaanbieder | update | bemiddelingID |
-| 6 | Zorgkantoor | GEWIJZIGDE_DOSSIERHOUDER_CZT_VOOR_ZORGAANBIEDER | IWLZ-VRIJWILLIG | Bij de registratie van een nieuwe Dossierhouder of Coordinator Zorg Thuis, ontvangt de zorgaanbieder die actief betrokken is bij de zorg aan die client een notificatie wanneer die is geabonneerd | Agbcode zorgaanbieder | create | bemiddelingID |
-| 7 | Zorgkantoor | DOSSIEROVERDRACHT_ZORGKANTOOR | IWLZ-VERPLICHT | Bij de registratie van een nieuwe Overdracht, ontvangt het nieuwe verantwoordelijke zorgkantoor een notificatie | - | create | OverdrachtID |
-| 8 | Zorgkantoor | NIEUWE_ZORGINNATURA_VOOR_BOVENREGIONAAL_ZORGKANTOOR | IWLZ-VERPLICHT | Bij de registratie van een nieuwe ZorgInNatura voor een zorgaanbieder die een contract heeft met een ander uitvoerend zorgkantoor (bovenregionale zorgkantoor) dan het registrerende verantwoordelijke zorgkantoor, ontvangt dat uitvoerende zorgkantoor daar een notificatie van | - | create | zorgInNaturaID |
-|9| Zorgkantoor |GEWIJZIGDE_ZORGINNATURA_VOOR_BOVENREGIONAAL_ZORGKANTOOR | IWLZ-VERPLICHT | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt het bovenregionale zorgkantoor die in de bijgewerkte registratie is geregisteerd onder uitvoerendZorgkantoor een notificatie | - | update | zorgInNaturaID |
+|     | Aanbieder   | notificatieTypeID                                       | notificatieType | notificatieOmschrijving                                                                                                                                                                                                                                                                                                                                                                                                          | idTypeAbonnee                        | eventType | recordIDType   |
+| --- | ----------- | ------------------------------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | --------- | -------------- |
+| 1   | CIZ         | NIEUWE_INDICATIE_ZORGKANTOOR                            | IWLZ-VERPLICHT  | Bij de registratie van een nieuwe indicatie, waarbij de postcode van het adres volgens de BRP van de geindiceerde client valt in de regio van het zorgkantoor dat de notificatie dient te ontvangen                                                                                                                                                                                                                              | -                                    | create    | wlzIndicatieID |
+| 2   | CIZ         | VERVALLEN_INDICATIE                                     | IWLZ-VRIJWILLIG | Bij de update (vullen of verwijderen of aanpassen) van de vervaldatum van een indicatie, ontvangt het zorgkantoor dat een abonnement heeft en dat volgens een registratie heeft in [Bemiddeling] het Bemiddelingsregister bij de indicatie van toepassing een notificatie                                                                                                                                                        | Uzovicode zorgkantoor / of RegioCode | update    | wlzIndicatieID |
+| 3   | Zorgkantoor | NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER                  | IWLZ-VERPLICHT  | Bij de registratie van een nieuwe ZorgInNatura, ontvangt de zorgaanbieder die in [ZorgInNatura.instelling] is geregisteerd onder instelling een notificatie                                                                                                                                                                                                                                                                      | -                                    | create    | zorgInNaturaID |
+| 4   | Zorgkantoor | GEWIJZIGDE_ZORGINNATURA_VOOR_ZORGAANBIEDER              | IWLZ-VERPLICHT  | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt de zorgaanbieder die in de bijgewerkte registratie is geregisteerd onder instelling een notificatie                                                                                                           | -                                    | update    | zorgInNaturaID |
+| 5   | Zorgkantoor | GEWIJZIGDE_ZORGINNATURA_BIJ_ANDERE_ZORGAANBIEDER        | IWLZ-VRIJWILLIG | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt de zorgaanbieder die bij dezelfde bemiddeling betrokken zijn in de zorglevering (hebben een actuele ZorgInNatura) aan de client als in de bijgewerkte ZorgInNatura een notificatie wanneer die is geabonneerd | Agbcode zorgaanbieder                | update    | bemiddelingID  |
+| 6   | Zorgkantoor | GEWIJZIGDE_DOSSIERHOUDER_CZT_VOOR_ZORGAANBIEDER         | IWLZ-VRIJWILLIG | Bij de registratie van een nieuwe Dossierhouder of Coordinator Zorg Thuis, ontvangt de zorgaanbieder die actief betrokken is bij de zorg aan die client een notificatie wanneer die is geabonneerd                                                                                                                                                                                                                               | Agbcode zorgaanbieder                | create    | bemiddelingID  |
+| 7   | Zorgkantoor | DOSSIEROVERDRACHT_ZORGKANTOOR                           | IWLZ-VERPLICHT  | Bij de registratie van een nieuwe Overdracht, ontvangt het nieuwe verantwoordelijke zorgkantoor een notificatie                                                                                                                                                                                                                                                                                                                  | -                                    | create    | OverdrachtID   |
+| 8   | Zorgkantoor | NIEUWE_ZORGINNATURA_VOOR_BOVENREGIONAAL_ZORGKANTOOR     | IWLZ-VERPLICHT  | Bij de registratie van een nieuwe ZorgInNatura voor een zorgaanbieder die een contract heeft met een ander uitvoerend zorgkantoor (bovenregionale zorgkantoor) dan het registrerende verantwoordelijke zorgkantoor, ontvangt dat uitvoerende zorgkantoor daar een notificatie van                                                                                                                                                | -                                    | create    | zorgInNaturaID |
+| 9   | Zorgkantoor | GEWIJZIGDE_ZORGINNATURA_VOOR_BOVENREGIONAAL_ZORGKANTOOR | IWLZ-VERPLICHT  | Bij de update (vullen lege elementen, wijzigen of leegmaken gevulde elementen) van elementen die volgens de regels van de wlz aangepast mogen worden zonder tot een nieuwe ZorgInNatura te moeten leiden, ontvangt het bovenregionale zorgkantoor die in de bijgewerkte registratie is geregisteerd onder uitvoerendZorgkantoor een notificatie                                                                                  | -                                    | update    | zorgInNaturaID |
 
 
 
