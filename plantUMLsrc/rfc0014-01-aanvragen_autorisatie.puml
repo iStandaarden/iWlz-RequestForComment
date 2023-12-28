@@ -27,7 +27,7 @@ activate Client
         activate AuthzServer #LightGray
             AuthzServer -> AuthzServer: Valideer autorisatie
             AuthzServer -> AuthzServer: Genereer Access-Token
-            activate AuthzServer #LightGray
+            activate AuthzServer #DarkGray
             deactivate AuthzServer
         deactivate AuthzServer
         AuthzServer --> Client --: 200 Response (Access-Token)
