@@ -24,10 +24,15 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
 - [2. Terminologie](#2-terminologie)
 - [3 Zekerheidseisen](#3-zekerheidseisen)
-  - [3.1 Algemeen](#31-algemeen)
-  - [3.2 De verantwoordelijkheid voor de logging](#32-de-verantwoordelijkheid-voor-de-logging)
-  - [3.5 De bewaartermijn van loggegevens](#35-de-bewaartermijn-van-loggegevens)
-  - [3.6 Voorwaarden voor interoperabiliteit](#36-voorwaarden-voor-interoperabiliteit)
+  - [3.1 Gebeurtenissen registreren](#31-gebeurtenissen-registreren)
+  - [3.2 Beschermen van informatie in logbestanden](#32-beschermen-van-informatie-in-logbestanden)
+  - [3.3 Logbestanden van beheerders en operators](#33-logbestanden-van-beheerders-en-operators)
+  - [3.4 Kloksynchronisatie](#34-kloksynchronisatie)
+  - [3.5 De verantwoordelijkheid voor de logging](#35-de-verantwoordelijkheid-voor-de-logging)
+  - [3.6 De beschikbaarheid van de logging](#36-de-beschikbaarheid-van-de-logging)
+  - [3.7 De toegang tot de logging](#37-de-toegang-tot-de-logging)
+  - [3.8 De bewaartermijn van loggegevens](#38-de-bewaartermijn-van-loggegevens)
+  - [3.9 Voorwaarden voor interoperabiliteit](#39-voorwaarden-voor-interoperabiliteit)
 - [4 Traceerbaarheid](#4-traceerbaarheid)
   - [4.1 TraceContext](#41-tracecontext)
   - [4.2 X-B3-TraceId](#42-x-b3-traceid)
@@ -80,15 +85,15 @@ Het complete inzicht in de gegevensstromen biedt de mogelijkheid om snel verdach
 
 | Uitgangspunt | Omschrijving |
 | :-------- | :-------- | 
-| *Normering* | *Elke netwerkdeelnemer dient aantoonbaar te beschikken over een juiste informatiebeveiliging conform NEN 7510-norm. <br>Elke organisatie waar persoonlijke gezondheidsinformatie wordt verwerkt moet voldoen aan NEN 7513.* |
-| *Standaardisatie* | *Alle ketendeelnemers voldoen aan de norm in het afsprakenstelsel iWlz, waaronder eenduidige logging en de mogelijkheid tot exporteren.*
+| *Normering* | *Elke netwerkbeheerder dient aantoonbaar logging toe te passen voor informatiebeveiliging, waarbij de logging voldoet aan relevante normen. In de context van de gezondheidszorg is naleving van de NEN 7513-norm voor logging essentieel.* |
+| *Standaardisatie* | *Alle ketendeelnemers voldoen aan de norm zoals vastgelegd in het afsprakenstelsel iWlz, waaronder eenduidige logging en de mogelijkheid tot exporteren.*
 | *Onweerlegbaarheid* | *Volgens NEN 7513 moet de logging kunnen voorzien in informatie waardoor achteraf onweerlegbaar kan worden vastgesteld welke gebeurtenissen hebben plaatsgevonden op een patiëntendossier of op een elektronisch uitwisselingssysteem.* |
 
 ## 1.2 Relatie andere RFC
 Deze RFC heeft een relatie met de volgende RFC(s)
 |RFC | onderwerp | relatie<sup>*</sup> | toelichting |issue |
 |:--|:--|:--| :--|:--|
-|[0008](RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | voorwaardelijk | <ul><li>Er is een **Service Directory** waarin notificatietypen gepubliceerd kunnen worden.</li> <li>Netwerkdeelnemers raadplegen de **Service Directory** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten. </li></ul>|[#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
+| - |  -  |  -  |  -  |
 
 <sup>*</sup>voorwaardelijk, *voor andere RFC* / afhankelijk, *van andere RFC*
 
@@ -100,30 +105,66 @@ Opsomming van de in dit document gebruikte termen.
 | :-------- | :-------- | 
 | Logging | Stelselmatige geautomatiseerde registratie van gegevens rondom events op systemen | 
 | Logverantwoordelijke | Directie van een organisatie zoals een zorginstelling die (persoonlijke)(gezondheids)informatie verwerkt, delen, bevragen of muteren met of via het netwerkmodel.
+| Verwerkingsverantwoordelijke |  De Verwerkingsverantwoordelijke is degene die beslist waarom en hoe persoonlijke gegevens worden verwerkt. Specifiek bij het loggen ter bescherming van (medische) gegevens heeft de Verwerkingsverantwoordelijke de controle over het vastleggen van activiteiten met betrekking tot deze gegevens, met als doel de beveiliging en naleving van privacyregelgeving te waarborgen.
 
 # 3 Zekerheidseisen
-## 3.1 Algemeen
+
 De logging moet een getrouw beeld geven van de gebeurtenissen waarop de logging betrekking heeft. Daartoe moet zekerheid worden geboden dat alle gebeurtenissen waarvoor dit geldt op de voorgeschreven wijze worden gelogd en dat de beschikbaarheid, integriteit en vertrouwelijkheid van de loging is gewaarborgd.
 
-De volgende zekerheidseisen zijn een aanvulling op de eisen uit 12.4 van NEN 7510-2017 en betreffen:
-- de verantwoodelijkheid voor de logging (3.2)
-- de beschikbaarheid van de logging (3.3)
-- de toegang tot de logging (3.4)
-- de bewaartermijn van loggegevens (3.5)
-- voorwaarden voor interoperabiliteit (3.6)
+De volgende zekerheidseisen, zoals beschreven in paragraaf 12.4 van NEN 7510-2017 (Verslaglegging en monitoren), zijn van toepassing op dit document:
+- Gebeurtenissen registreren (3.1)
+- Beschermen van informatie in logbestanden (3.2)
+- Logbestanden van beheerders en operators (3.3)
+- Kloksynchronisatie (3.4)
 
-## 3.2 De verantwoordelijkheid voor de logging
-Elke netwerkdeelnemer en elke deelnemende organisatie, diendt zich te kunnen verantwoorden en is gebaat bij een betrouwbare logging. Elke organisatie die faciliteerd in de elektronische gegevensuitwisselingen of een informatiesysteem heeft aangesloten op het netwerkmodel, is dan ook zelf logverantwoordelijke zoals beschreven in deze RFC.
+De volgende zekerheidseisen, afkomstig uit hoofdstuk 8 van NEN 7513, zijn van toepassing in aanvulling op de eisen uit hoofdstuk 12.4 van NEN 7510-2017 en betreffen:
+- De verantwoodelijkheid voor de logging (3.5)
+- De beschikbaarheid van de logging (3.6)
+- De toegang tot de logging (3.7)
+- De bewaartermijn van loggegevens (3.8)
+- Voorwaarden voor interoperabiliteit (3.9)
 
-## 3.5 De bewaartermijn van loggegevens
+## 3.1 Gebeurtenissen registreren
+Logbestanden van gebeurtenissen die gebruikersactiviteiten, uitzonderingen en informatiebeveiligingsgebeurtenissen registreren, moeten worden gemaakt, bewaard en regelmatig worden beoordeeld.
+
+## 3.2 Beschermen van informatie in logbestanden
+Logfaciliteiten en informatie in logbestanden moeten worden beschermd tegen vervalsing en onbevoegde toegang.
+
+**ZORGSPECIFIEKE BEHEERSMAATREGEL:**<br>
+Auditverslagen moeten beveiligd zijn en mogen niet gemanipuleerd kunnen worden. De toegang tot hulpmiddelen voor audits van systemen en audittrajecten moet worden beveiligd om misbruik of compromittering te voorkomen.
+
+## 3.3 Logbestanden van beheerders en operators
+Activiteiten van systeembeheerders en -operators moeten worden vastgelegd en de logbestanden moeten worden beschermd en regelmatig worden beoordeeld.
+
+## 3.4 Kloksynchronisatie
+De klokken van alle relevante informatieverwerkende systemen binnen een organisatie of beveiligingsdomein moeten worden gesynchroniseerd met één referentietijdbron.
+
+**ZORGSPECIFIEKE BEHEERSMAATREGEL:**<br>
+Gezondheidsinformatiesystemen die tijdkritische activiteiten voor gedeelde zorg ondersteunen, moeten in tijdssynchronisatiediensten voorzien om het traceren en reconstrueren van de tijdlijnen voor activiteiten waar vereist te ondersteunen.
+
+## 3.5 De verantwoordelijkheid voor de logging
+Elke netwerkdeelnemer en elke deelnemende organisatie, dient zich te kunnen verantwoorden en is gebaat bij een betrouwbare logging. Elke organisatie die faciliteerd in de elektronische gegevensuitwisselingen of een informatiesysteem heeft aangesloten op het netwerkmodel, is dan ook zelf logverantwoordelijke zoals beschreven in deze RFC.
+
+## 3.6 De beschikbaarheid van de logging
+Het is essentieel dat het loggingsysteem zodanig is ingericht dat het tegemoetkomt aan zowel de informatieve behoeften als aan de wettelijke vereisten. De logverantwoordelijke moet daartoe regels vaststellen. dient hiervoor specifieke regels op te stellen. Dit is met name van belang wanneer het contract met de IT-dienstverlener wordt beëindigd of wanneer er een overgang plaatsvindt als gevolg van een fusie of overname.
+Bij het uitbesteden van taken aan een externe dienstverlener en bij de beëindiging van het contract moeten er afspraken worden vastgelegd om zowel de bewaartermijn als de toegang tot de loggegevens te waarborgen na het beëindigen van de overeenkomst.
+
+## 3.7 De toegang tot de logging
+De logging bevat net als het onderliggend dossier zeer gevoelige informatie. Op de logging moet daarom een strikte toegangsbeheersing worden toegepast, waarop controle moet worden uitgevoerd. Verantwoordelijkheid voor de controle moet in de organisatie zijn belegd. Directe toegang tot loggegevens en tot zoekvragen moet alleen mogelijk zijn op basis van expliciete autorisatie. De logverantwoordelijke moet daartoe regels vaststellen die vallen binnen de kaders van de WGBO ([Wet geneeskundige behandelingsovereenkomst](https://www.rivm.nl/cpt/kwaliteit-wet-en-regelgeving/wetgeving/wgbo)), de
+WBP ([Wet bescherming persoonsgegevens](https://wetten.overheid.nl/BWBR0011468/2018-05-01)) en de AVG ([Algemene verordening gegevensbescherming](https://www.autoriteitpersoonsgegevens.nl/themas/basis-avg/avg-algemeen/de-avg-in-het-kort)). Specifieke aandacht moet daarbij zijn voor gebruikers met uitgebreide toegangsrechten, zoals de logbeheerder en de systeembeheerder. Het uitgangspunt bij het inrichten van de toegangsbeheersing moet zijn dat er alleen toegang is indien dit strikt noodzakelijk is.
+
+## 3.8 De bewaartermijn van loggegevens
 Bij het bepalen van de bewaartermijn van logging is het van belang een zorgvuldige afweging te maken tussen de belangen van de cliënt/patiënt/burger enerzijds en de belangen van de medewerker van de netwerkdeelnemers en het elektronisch uitwisselingssysteem anderzijds.
 
-De bewaartermijn is vastgesteld op **5** jaar
+Op basis van [Besluit van de Minister voor Medische Zorg van 27 juni 2019, kenmerk 1529221-190512-WJZ](https://zoek.officielebekendmakingen.nl/stcrt-2019-38007.html) is de bewaartermijn vastgesteld op minimaal **5** jaar en maximaal gelijk aan de bewaartermijn van het medisch dossier.
 
-https://zoek.officielebekendmakingen.nl/stcrt-2019-38007.html
+| Bewaartermijn|          |
+|------|----------|
+| Minimale | 5 jaar |
+| Maximaal | gelijk aan de bewaartermijn van het medisch dossier |
 
-## 3.6 Voorwaarden voor interoperabiliteit
-In het netwerkmodel vindt veel informatiedomein overstijgende communicatie plaats. Logging uit verschillende bronnen moeten vergelijkbaar zijn. Hiertoe moet een exportfaciliteit aanwezig zijn. Hierbij moeten de syntax en semantiek van de export vastliggen volgens het gestelde in hoofdstuk 7 van de NEN7513.
+## 3.9 Voorwaarden voor interoperabiliteit
+In het netwerkmodel vindt veel informatiedomein overstijgende communicatie plaats. Logging uit verschillende bronnen moeten vergelijkbaar zijn. Hiertoe moet een exportfaciliteit aanwezig zijn. Hierbij moeten de syntax en semantiek van de export vastliggen volgens het gestelde in hoofdstuk 4.
 
 # 4 Traceerbaarheid
 Traceerbaarheid is de mogelijkheid om gebeurtenissen in de hele of gedeeltelijke keten te traceren. Het traceren geeft:
