@@ -2,6 +2,11 @@
 
 # RFC0019 - Logging
 
+@todo
+- [ ] 3.2 / 3.4 ZORGSPECIFIEKE BEHEERSMAATREGEL behouden?
+- [ ] 5.2.1 valideren
+- [ ] 5.2.6 nodig of laten vervallen?
+
 <font size="4">**SAMENVATTING**</font>
 
 **Huidige situatie:**
@@ -394,7 +399,6 @@ NEN7513 ||--|| Loggegevens
 | DisplayName      | Het tekstlabel van de code                   |
 | OriginalText     | De oorspronkelijke tekst die is vertaald naar de code |
 
-
 Voorbeelden:
 - nID,authz,1,'autorisatie request'
 - nID,RS,1,'GraphQL mutation'
@@ -413,7 +417,6 @@ Aanduiding van de *actie* bij deze *gebeurtenis*.
 | D | Delete; verwijderen of als verwijderd markeren van gegevens |
 | E | Execute; starten |
 
-
 Voorbeeld:
 - R (Read)
 
@@ -421,7 +424,7 @@ Voorbeeld:
 **Optionaliteit:** verplicht<br>
 **Formaat/waarde:** UTC datum en tijd. Notatie volgens NEN‐ISO 8601:2005
 
->```TOELICHTING Het tijdstip van de gebeurtenis wordt eenduidig vastgelegd en onafhankelijk van de actuele tijdzone waar het informatiesysteem of de gebruiker zich bevinden. Voor de tijd wordt gekozen het begin van de gebeurtenis.```
+>```TOELICHTING: Het tijdstip van de gebeurtenis wordt eenduidig vastgelegd en onafhankelijk van de actuele tijdzone waar het informatiesysteem of de gebruiker zich bevinden. Voor de tijd wordt gekozen het begin van de gebeurtenis.```
 
 || Tijdstempelprecisie | Standaard |
 |-|-|-|
@@ -431,17 +434,54 @@ Voorbeeld:
 - 2023-07-14T14:12:12
 
 ### 5.2.4 Aard van de gebeurtenis
-Nog te bepalen/verder uit te werken
+Code voor de aard van de *gebeurtenis* volgens het aangegeven codestelsel; via dit gegeven kan de *gebeurtenis*, aangeduid met de gebeurtenis‐code, desgewenst nader worden gespecificeerd.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** code
+
+Naar het toegepaste codestelsel wordt als volgt verwezen:
+
+| Attribuut |Waarde |
+|-|-|
+| CodeSystem | OID (Objectidentificator) van het codestelsel                               |
+| CodeSystemName | De naam van het codestelsel                           |
+| DisplayName | Het tekstlabel van de code                            |
+| OriginalText | De oorspronkelijke tekst die is vertaald naar de code |
+
+>```TOELICHTING: Voor rapportages uit de logging en analyses is de aard van de gebeurtenis een belangrijk sorteer‐ en selectiecriterium. Door het toekennen van een code aan het soort gebeurtenis kunnen bijvoorbeeld reguliere acties direct worden onderscheiden van noodsituaties of gebeurtenissen die de logging zelf betreffen.```
+
+Voorbeelden:
+- [OID],DCM,110122, ‘Login’;
+- [OID],DCM,110123, ‘Logout’.
 
 ### 5.2.5 Resultaat
 
-Een indicatie van het resultaat van de gebeurtenis. Hiermee kan worden aangegeven of de gelogde gebeurtenis is gelukt of niet. Het volgende codesysteem wordt gebruikt.
+Een indicatie van het resultaat van de *gebeurtenis*. Hiermee kan worden aangegeven of de gelogde *gebeurtenis* is gelukt of niet. Het volgende codesysteem wordt gebruikt.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** code
+
+Voorbeelden:
  - 1:Success
  - 2:Refused
  - 3:Error
 
+
 ### 5.2.6 Controles
-Nog te bepalen/verder uit te werken
+Beschrijft de resultaten van de uitgevoerde controles op *autorisatie*, behandelrelatie, toestemming *cliënt* en noodprocedure.
+
+**Optionaliteit:** verplicht<br>
+**Formaat/waarde:** volgens onderstaande tabel
+| Positie | Waarde | Weergavenaam |
+|-|-|-|
+| 1 | T/F | Resultaat controle autorisatie |
+| 2 | T/F | Resultaat controle behandelrelatie |
+| 3 | T/F | Resultaat controle toestemming cliënt |
+| 4 | T/F | Resultaat controle noodknopgebruik |
+
+Voorbeeld:
+- TFTT
+
 
 ## 5.3 Gebruiker
 Identificatie van de gebruiker.
