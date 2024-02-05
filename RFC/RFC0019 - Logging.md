@@ -39,33 +39,33 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
   - [4.3 X-B3-SpanId](#43-x-b3-spanid)
   - [4.4 X-B3-ParentSpanId](#44-x-b3-parentspanid)
   - [4.3 Voorbeeld van een flow](#43-voorbeeld-van-een-flow)
-- [7. Gegevensvelden in de logging](#7-gegevensvelden-in-de-logging)
-  - [7.1 Algemeen](#71-algemeen)
-  - [7.2 Gebeurtenis](#72-gebeurtenis)
-    - [7.2.1 Gebeurteniscode](#721-gebeurteniscode)
-    - [7.2.2 Actiecode](#722-actiecode)
-    - [7.2.3 Datum en tijd](#723-datum-en-tijd)
-    - [7.2.4 Aard van de gebeurtenis](#724-aard-van-de-gebeurtenis)
-    - [7.2.5 Resultaat](#725-resultaat)
-    - [7.2.6 Controles](#726-controles)
-  - [7.3 Gebruiker](#73-gebruiker)
-    - [7.3.1 Gebruikers-ID](#731-gebruikers-id)
-    - [7.3.2 Lokale gebruikers-ID](#732-lokale-gebruikers-id)
-    - [7.3.3 Gebruikersnaam optioneel](#733-gebruikersnaam-optioneel)
-    - [7.3.4 Gebruikersrol](#734-gebruikersrol)
-    - [7.3.5 Gebruiker is de initiator](#735-gebruiker-is-de-initiator)
-    - [7.3.9 Type toegangspunt](#739-type-toegangspunt)
-    - [7.3.10 Identificatie toegangspunt](#7310-identificatie-toegangspunt)
-  - [7.4 Object](#74-object)
+- [5. Gegevensvelden in de logging](#5-gegevensvelden-in-de-logging)
+  - [5.1 Algemeen](#51-algemeen)
+  - [5.2 Gebeurtenis](#52-gebeurtenis)
+    - [5.2.1 Gebeurteniscode](#521-gebeurteniscode)
+    - [5.2.2 Actiecode](#522-actiecode)
+    - [5.2.3 Datum en tijd](#523-datum-en-tijd)
+    - [5.2.4 Aard van de gebeurtenis](#524-aard-van-de-gebeurtenis)
+    - [5.2.5 Resultaat](#525-resultaat)
+    - [5.2.6 Controles](#526-controles)
+  - [5.3 Gebruiker](#53-gebruiker)
+    - [5.3.1 Gebruikers-ID](#531-gebruikers-id)
+    - [5.3.2 Lokale gebruikers-ID](#532-lokale-gebruikers-id)
+    - [5.3.3 Gebruikersnaam optioneel](#533-gebruikersnaam-optioneel)
+    - [5.3.4 Gebruikersrol](#534-gebruikersrol)
+    - [5.3.5 Gebruiker is de initiator](#535-gebruiker-is-de-initiator)
+    - [5.3.9 Type toegangspunt](#539-type-toegangspunt)
+    - [5.3.10 Identificatie toegangspunt](#5310-identificatie-toegangspunt)
+  - [5.4 Object](#54-object)
     - [7.4.1 Identificatortype](#741-identificatortype)
-    - [7.4.3 Identificator](#743-identificator)
-    - [7.4.6 Autorisatieprotocol](#746-autorisatieprotocol)
-    - [7.4.12 Zoekvraag](#7412-zoekvraag)
-  - [7.5 Loggegevens](#75-loggegevens)
-    - [7.5.1 Identificatie van de locatie](#751-identificatie-van-de-locatie)
-    - [7.5.2 Identificatie van de bron](#752-identificatie-van-de-bron)
-    - [7.5.3 Type bron van de loggegevens](#753-type-bron-van-de-loggegevens)
-- [5. Export](#5-export)
+    - [5.4.3 Identificator](#543-identificator)
+    - [5.4.6 Autorisatieprotocol](#546-autorisatieprotocol)
+    - [5.4.12 Zoekvraag](#5412-zoekvraag)
+  - [5.5 Loggegevens](#55-loggegevens)
+    - [5.5.1 Identificatie van de locatie](#551-identificatie-van-de-locatie)
+    - [5.5.2 Identificatie van de bron](#552-identificatie-van-de-bron)
+    - [5.5.3 Type bron van de loggegevens](#553-type-bron-van-de-loggegevens)
+- [6. Export](#6-export)
 
 ---
 # 1. Inleiding
@@ -130,7 +130,7 @@ Logbestanden van gebeurtenissen die gebruikersactiviteiten, uitzonderingen en in
 ## 3.2 Beschermen van informatie in logbestanden
 Logfaciliteiten en informatie in logbestanden moeten worden beschermd tegen vervalsing en onbevoegde toegang.
 
-**ZORGSPECIFIEKE BEHEERSMAATREGEL:**<br>
+>```ZORGSPECIFIEKE BEHEERSMAATREGEL:```<br>
 Auditverslagen moeten beveiligd zijn en mogen niet gemanipuleerd kunnen worden. De toegang tot hulpmiddelen voor audits van systemen en audittrajecten moet worden beveiligd om misbruik of compromittering te voorkomen.
 
 ## 3.3 Logbestanden van beheerders en operators
@@ -139,7 +139,7 @@ Activiteiten van systeembeheerders en -operators moeten worden vastgelegd en de 
 ## 3.4 Kloksynchronisatie
 De klokken van alle relevante informatieverwerkende systemen binnen een organisatie of beveiligingsdomein moeten worden gesynchroniseerd met één referentietijdbron.
 
-**ZORGSPECIFIEKE BEHEERSMAATREGEL:**<br>
+>```ZORGSPECIFIEKE BEHEERSMAATREGEL:```<br>
 Gezondheidsinformatiesystemen die tijdkritische activiteiten voor gedeelde zorg ondersteunen, moeten in tijdssynchronisatiediensten voorzien om het traceren en reconstrueren van de tijdlijnen voor activiteiten waar vereist te ondersteunen.
 
 ## 3.5 De verantwoordelijkheid voor de logging
@@ -298,9 +298,9 @@ deactivate Client
 </details>
 
 
-# 7. Gegevensvelden in de logging
+# 5. Gegevensvelden in de logging
 
-## 7.1 Algemeen
+## 5.1 Algemeen
 <font color=red>LET OP: In onderstaande schema moet nog de trace informatie worden toegevoegd.</font>
 
 ![gegevensvelden](../plantUMLsrc/rfc0019-02-gegevensvelden.svg "gegevensvelden")
@@ -377,45 +377,78 @@ NEN7513 ||--|| Loggegevens
 ```
 </details>
 
-## 7.2 Gebeurtenis
-### 7.2.1 Gebeurteniscode
-Indentificator van het type gebeurtenis; het type gebeurtenis duidt aan wat er in het systeem is gedaan.
+## 5.2 Gebeurtenis
+**Omschrijving:** *identificatie* van de *gebeurtenis*. Duidt de gebeurtenis die is uitgevoerd met welk resultaat.
+**Optionaliteit:** verplicht
+
+### 5.2.1 Gebeurteniscode
+*Indentificator* van het type *gebeurtenis*; het type *gebeurtenis* duidt aan wat er in het systeem is gedaan.
+
+**Optionaliteit:** verplicht<br>
+**Formaat/waarde:** code
+
+| Attribuut        | Waarde                                      |
+|------------------|---------------------------------------------|
+| CodeSystem       | OID van het codestelsel                      |
+| CodeSystemName   | De naam van het codestelsel                  |
+| DisplayName      | Het tekstlabel van de code                   |
+| OriginalText     | De oorspronkelijke tekst die is vertaald naar de code |
+
 
 Voorbeelden:
 - nID,authz,1,'autorisatie request'
 - nID,RS,1,'GraphQL mutation'
 
-### 7.2.2 Actiecode
-Aanduiding van de actie bij deze gebeurtenis.
+### 5.2.2 Actiecode
+Aanduiding van de *actie* bij deze *gebeurtenis*.
+
+**Optionaliteit:** verplicht<br>
+**Formaat/waarde:** volgens onderstaande tabel
+
+| Actiecode |Omschrijving |
+|-|-|
+| C | Create; creëren van nieuwe gegevens |
+| R | Read; lezen van gegevens door een gebruiker of proces |
+| U | Update; aanpassen van bestaande gegevens |
+| D | Delete; verwijderen of als verwijderd markeren van gegevens |
+| E | Execute; starten |
+
 
 Voorbeeld:
 - R (Read)
 
-### 7.2.3 Datum en tijd
-UTC datum en tijd. Notatie volgens NEN-ISO 8601:2005
+### 5.2.3 Datum en tijd
+**Optionaliteit:** verplicht<br>
+**Formaat/waarde:** UTC datum en tijd. Notatie volgens NEN‐ISO 8601:2005
+
+>```TOELICHTING Het tijdstip van de gebeurtenis wordt eenduidig vastgelegd en onafhankelijk van de actuele tijdzone waar het informatiesysteem of de gebruiker zich bevinden. Voor de tijd wordt gekozen het begin van de gebeurtenis.```
+
+|| Tijdstempelprecisie | Standaard |
+|-|-|-|
+| Eigenschappen | Ten minste jaar (JJJJ), maand (MM), en dag (DD); uur (uu), minuut (mm) en seconde (ss) | NEN-ISO 8601:2005 |
 
 Voorbeeld:
 - 2023-07-14T14:12:12
 
-### 7.2.4 Aard van de gebeurtenis
+### 5.2.4 Aard van de gebeurtenis
 Nog te bepalen/verder uit te werken
 
-### 7.2.5 Resultaat
+### 5.2.5 Resultaat
 
 Een indicatie van het resultaat van de gebeurtenis. Hiermee kan worden aangegeven of de gelogde gebeurtenis is gelukt of niet. Het volgende codesysteem wordt gebruikt.
  - 1:Success
  - 2:Refused
  - 3:Error
 
-### 7.2.6 Controles
+### 5.2.6 Controles
 Nog te bepalen/verder uit te werken
 
-## 7.3 Gebruiker
+## 5.3 Gebruiker
 Identificatie van de gebruiker.
 
 De gebruiker kan een natuurlijk persoon zijn, maar ook een organisatie of een proces in een informatiesysteem
 
-### 7.3.1 Gebruikers-ID
+### 5.3.1 Gebruikers-ID
 Identificator van de gebruiker die de gebeurtenis initieert, uniek voor de bron van logging.
 
 Voorbeelden:
@@ -423,19 +456,19 @@ Voorbeelden:
 - ClientID
 - DiD
 
-### 7.3.2 Lokale gebruikers-ID
+### 5.3.2 Lokale gebruikers-ID
 Identificator waarmee de gebruiker in eerste instantie inlogt.
 
 Voorbeelden:
 - GUID
 
-### 7.3.3 Gebruikersnaam <sup>optioneel</sup>
+### 5.3.3 Gebruikersnaam <sup>optioneel</sup>
 Naam van de gebruiker in leesbare vorm.
 
 Voorbeelden:
 - Zorgkantoor Menzis
 
-### 7.3.4 Gebruikersrol
+### 5.3.4 Gebruikersrol
 De rol van de gebruiker bij de gebeurtenis.
 
 Nog verder uit te werken en te bepalen.
@@ -444,53 +477,53 @@ Voorbeelden:
 - Verifiable Presentation as proof.
 - Zorgkantoor
 
-### 7.3.5 Gebruiker is de initiator
+### 5.3.5 Gebruiker is de initiator
 Voorbeelden:
 - true
 - false
 
-### 7.3.9 Type toegangspunt
+### 5.3.9 Type toegangspunt
 Voorbeeld:
 - 2   (IP-adres)
 
-### 7.3.10 Identificatie toegangspunt
+### 5.3.10 Identificatie toegangspunt
 Voorbeeld:
 - 156.232.16.2   
 
 
-## 7.4 Object
+## 5.4 Object
 
 ### 7.4.1 Identificatortype
 Voorbeelden:
 - indicatieID
 
-### 7.4.3 Identificator
+### 5.4.3 Identificator
 Voorbeelden:
 - [GUID]
 
-### 7.4.6 Autorisatieprotocol
+### 5.4.6 Autorisatieprotocol
 Voorbeelden:
 - Accesspolicy(JSON) + versie ID
 
-### 7.4.12 Zoekvraag
+### 5.4.12 Zoekvraag
 Voorbeelden:
 - GetWlzIndicatieVoorIndicatieID
 
-## 7.5 Loggegevens
+## 5.5 Loggegevens
 
-### 7.5.1 Identificatie van de locatie
+### 5.5.1 Identificatie van de locatie
 Voorbeelden:
 - 'AZ/NEU/PRD'
 
-### 7.5.2 Identificatie van de bron
+### 5.5.2 Identificatie van de bron
 Voorbeelden:
 - 'nID/authservice'
 - 'nID/nID-Filter'
 
-### 7.5.3 Type bron van de loggegevens
+### 5.5.3 Type bron van de loggegevens
 
 
-# 5. Export
+# 6. Export
 Syntax en semantiek van de export volgens het gestelde in hoofdstuk 7 van de NEN7513.
 
 Voorbeeld export logrecord nID:
