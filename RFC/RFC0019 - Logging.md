@@ -6,6 +6,7 @@
 - [ ] 3.2 / 3.4 ZORGSPECIFIEKE BEHEERSMAATREGEL behouden?
 - [ ] 5.2.1 valideren
 - [ ] 5.2.6 nodig of laten vervallen?
+- [ ] 5.3.4 nodig of laten vervallen? indien nodig: verder uitwerken
 
 <font size="4">**SAMENVATTING**</font>
 
@@ -56,7 +57,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
   - [5.3 Gebruiker](#53-gebruiker)
     - [5.3.1 Gebruikers-ID](#531-gebruikers-id)
     - [5.3.2 Lokale gebruikers-ID](#532-lokale-gebruikers-id)
-    - [5.3.3 Gebruikersnaam optioneel](#533-gebruikersnaam-optioneel)
+    - [5.3.3 Gebruikersnaam](#533-gebruikersnaam)
     - [5.3.4 Gebruikersrol](#534-gebruikersrol)
     - [5.3.5 Gebruiker is de initiator](#535-gebruiker-is-de-initiator)
     - [5.3.9 Type toegangspunt](#539-type-toegangspunt)
@@ -484,38 +485,66 @@ Voorbeeld:
 
 
 ## 5.3 Gebruiker
-Identificatie van de gebruiker.
+*Identificatie* van de gebruiker.
 
-De gebruiker kan een natuurlijk persoon zijn, maar ook een organisatie of een proces in een informatiesysteem
+De gebruiker kan een natuurlijk persoon zijn, maar ook een organisatie of een proces in een *informatiesysteem*
+
+Bij elke *gebeurtenis* hoort ten minste één *gebruiker*; dit is de verantwoordelijke *gebruiker*. Een verantwoordelijke *gebruiker* is altijd een natuurlijk persoon. Deze *gebruiker* kan ook de initiator van de *gebeurtenis* zijn en kan dan als initiator worden gemarkeerd (‘*Gebruiker* is initiator’). Dit kan slechts bij één *gebruiker* het geval zijn. 
+
+Indien een andere *gebruiker* dan de verantwoordelijke *gebruiker* of een proces de *gebeurtenis* initieert, dan moet deze *gebruiker* of dit proces ook worden meegestuurd in de log.
+
+**Optionaliteit:** verplicht
 
 ### 5.3.1 Gebruikers-ID
-Identificator van de gebruiker die de gebeurtenis initieert, uniek voor de bron van logging.
+*Identificator* van de *gebruiker* die de gebeurtenis initieert, uniek voor de bron van logging.
+
+**Optionaliteit:** verplicht<br>
+**Formaat/waarde:** alfanumerieke aanduiding die de gebruiker uniek identificeert in het authenticatiesysteem dat als bron voor de logging dient
 
 Voorbeelden:
-- VECOZO Systeemcertificaat
-- ClientID
-- DiD
+- ‘VECOZO Systeemcertificaat’
+- ‘ClientID’
+- ‘DiD
+- ‘u12344’
+- ‘1234567890’
+- ‘jjan@nen7513’
 
 ### 5.3.2 Lokale gebruikers-ID
-Identificator waarmee de gebruiker in eerste instantie inlogt.
+*Identificator* waarmee de *gebruiker* in eerste instantie inlogt.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** alfanumerieke aanduiding die de gebruiker uniek identificeert in het authenticatiesysteem dat bij inloggen wordt gebruikt
 
 Voorbeelden:
-- GUID
+- ‘jjan1234’
+- ‘jan.janssen’
 
-### 5.3.3 Gebruikersnaam <sup>optioneel</sup>
-Naam van de gebruiker in leesbare vorm.
+### 5.3.3 Gebruikersnaam
+Naam van de *gebruiker* in leesbare vorm.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** alfanumerieke tekst
 
 Voorbeelden:
-- Zorgkantoor Menzis
+- ‘Jan Janssen’
+- ‘Klaas de Vries’
 
 ### 5.3.4 Gebruikersrol
-De rol van de gebruiker bij de gebeurtenis.
+De rol van de *gebruiker* bij de *gebeurtenis*.
 
-Nog verder uit te werken en te bepalen.
+Optionaliteit: verplicht
+Formaat/waarde: code voor de rol
 
 Voorbeelden:
-- Verifiable Presentation as proof.
-- Zorgkantoor
+| Code | Role                                          | Description                                                 |
+|------|-----------------------------------------------|-------------------------------------------------------------|
+| 01   | Subject of care                               | Recipient of care services, e.g. patient                      |
+| 02   | Subject of care proxy                         | e.g. parent, guardian, carer, or other legal representative  |
+| 03   | Personal healthcare professional              | Healthcare professional with the closest relationship to the subject of care, often the subject of care’s GP|
+| 04   | Privileged healthcare professional            | Healthcare professional nominated by the subject of care OR Nominated by the healthcare facility of care (if there is a nomination by regulation, practice, etc. such as an emergency over‐ride)  |
+| 05   | Directly involved healthcare professional     | Healthcare professional involved in providing direct care to the subject of care |
+| 06   | Indirectly involved healthcare professional   | Healthcare professional indirectly involved in caring the subject of care (teaching, research, etc.)    |
+| 07   | Supporting healthcare party                   | Party supporting service provision to the subject of care     |
 
 ### 5.3.5 Gebruiker is de initiator
 Voorbeelden:
