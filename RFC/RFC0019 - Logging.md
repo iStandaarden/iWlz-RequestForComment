@@ -8,6 +8,8 @@
 - [ ] 5.2.6 Noodzakelijk of schrappen?
 - [ ] 5.3.4 Noodzakelijk of schrappen? indien nodig: verder uitwerken
 - [ ] 5.4.9 Noodzakelijk of schrappen? indien nodig: verder uitwerken
+- [ ] 5.4.10 Noodzakelijk of schrappen? indien nodig: verder uitwerken
+- [ ] 5.4.11 Noodzakelijk of schrappen? indien nodig: verder uitwerken
 
 <font size="4">**SAMENVATTING**</font>
 
@@ -737,14 +739,22 @@ Voorbeelden:
 Classificatie van de gevoeligheid van het betrokken object.
 **Optionaliteit:** optioneel
 
-
 ### 5.4.10 Categorie
+Code die de categorie van het betrokken object weergeeft, zoals ‘Cliënt’, ‘Arts’, enz.
 
+**Optionaliteit:** optioneel
 
 ### 5.4.11 Stadium
+Code die het stadium van het betrokken object weergeeft voor een object dat een bepaalde levenscyclus kent, zoals een dossier.
 
+**Optionaliteit:** optioneel
 
 ### 5.4.12 Zoekvraag
+De feitelijke formulering van de opdracht ingeval het betrokken *object* een zoekvraag is.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** door het informatiesysteem bepaald
+
 Voorbeelden:
 - GetWlzIndicatieVoorIndicatieID
 
