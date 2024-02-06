@@ -616,13 +616,27 @@ Voorbeeld:
 - [OID],[NAAM],[LABEL],[TEKST].
 
 ### 5.3.9 Type toegangspunt
+Aanduiding van het type *toegangspunt* van waaruit de *gebeurtenis* is geïnitieerd.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** code
+
 Voorbeeld:
-- 2   (IP-adres)
+| Code | Weergavenaam                    |
+|------|---------------------------------|
+| 1    | Machinenaam, ook DNS‐naam       |
+| 2    | IP‐adres                         |
+
 
 ### 5.3.10 Identificatie toegangspunt
-Voorbeeld:
-- 156.232.16.2   
+*Identificator* van het *toegangspunt* van waaruit de *gebeurtenis* is geïnitieerd.
 
+**Optionaliteit:** optioneel
+**Formaat/waarde:** volgens de voor het desbetreffende toegangspunttype geldende regels
+
+Voorbeeld:
+- Type toegangspunt : 2<br>
+  identificatie toegangspunt : 10.145.240.60; 
 
 ## 5.4 Object
 
