@@ -109,9 +109,18 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
 | :-------- | :-------- | 
+| Actie | verwerking in een informatiesysteem, in het kader van een gebeurtenis |
+| Autorisatie | Het toekennen van bevoegdheden |
+| Cliënt | Persoon die zorg vraagt of aan wie zorg wordt verleend of de identificeerbare persoon van wie persoonlijke gezondheidsinformatie wordt verwerkt |
+| Gebeurtenis | Voorval, activiteit of optreden van een wijziging in een informatiesysteem |
+| Gebruiker | natuurlijke persoon, organisatie of proces in een informatiesysteem, betrokken bij een *actie* |
+| Identificator | Kenmerk dat een persoon of andere entiteit identificeert |
 | Logging | Stelselmatige geautomatiseerde registratie van gegevens rondom events op systemen | 
 | Logverantwoordelijke | Directie van een organisatie zoals een zorginstelling die (persoonlijke)(gezondheids)informatie verwerkt, delen, bevragen of muteren met of via het netwerkmodel.
+| Verantwoordelijk gebruiker | Natuurlijke persoon die verantwoordelijk is voor een actie. De verantwoordelijke gebruiker is meestal degene die de uitvoerende medewerker opdracht heeft gegeven of heeft gemandateerd tot het uitvoeren van de actie. |
 | Verwerkingsverantwoordelijke |  De Verwerkingsverantwoordelijke is degene die beslist waarom en hoe persoonlijke gegevens worden verwerkt. Specifiek bij het loggen ter bescherming van (medische) gegevens heeft de Verwerkingsverantwoordelijke de controle over het vastleggen van activiteiten met betrekking tot deze gegevens, met als doel de beveiliging en naleving van privacyregelgeving te waarborgen.
+
+
 
 # 3 Zekerheidseisen
 
@@ -496,10 +505,10 @@ Indien een andere *gebruiker* dan de verantwoordelijke *gebruiker* of een proces
 **Optionaliteit:** verplicht
 
 ### 5.3.1 Gebruikers-ID
-*Identificator* van de *gebruiker* die de gebeurtenis initieert, uniek voor de bron van logging.
+*Identificator* van de *gebruiker* die de gebeurtenis initieert, uniek voor de bron van *logging*.
 
 **Optionaliteit:** verplicht<br>
-**Formaat/waarde:** alfanumerieke aanduiding die de gebruiker uniek identificeert in het authenticatiesysteem dat als bron voor de logging dient
+**Formaat/waarde:** alfanumerieke aanduiding die de gebruiker uniek identificeert in het authenticatiesysteem dat als bron voor de *logging* dient
 
 Voorbeelden:
 - ‘VECOZO Systeemcertificaat’
@@ -547,9 +556,19 @@ Voorbeelden:
 | 07   | Supporting healthcare party                   | Party supporting service provision to the subject of care     |
 
 ### 5.3.5 Gebruiker is de initiator
+
+Aanduiding dat de *gebruiker* de *gebeurtenis* al of niet initieert.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** Boolean (true/false); ‘nil’ is de default waarde
+
 Voorbeelden:
 - true
 - false
+
+
+
+
 
 ### 5.3.9 Type toegangspunt
 Voorbeeld:
