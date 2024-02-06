@@ -5,8 +5,9 @@
 @todo
 - [ ] 3.2 / 3.4 ZORGSPECIFIEKE BEHEERSMAATREGEL behouden?
 - [ ] 5.2.1 valideren
-- [ ] 5.2.6 nodig of laten vervallen?
-- [ ] 5.3.4 nodig of laten vervallen? indien nodig: verder uitwerken
+- [ ] 5.2.6 Noodzakelijk of schrappen?
+- [ ] 5.3.4 Noodzakelijk of schrappen? indien nodig: verder uitwerken
+- [ ] 5.4.9 Noodzakelijk of schrappen? indien nodig: verder uitwerken
 
 <font size="4">**SAMENVATTING**</font>
 
@@ -69,9 +70,14 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
     - [5.4.1 Identificatortype](#541-identificatortype)
     - [5.4.2 Klasse](#542-klasse)
     - [5.4.3 Identificator](#543-identificator)
-    - [5.4.4](#544)
-    - [5.4.5](#545)
+    - [5.4.4 Naam](#544-naam)
+    - [5.4.5 Details](#545-details)
     - [5.4.6 Autorisatieprotocol](#546-autorisatieprotocol)
+    - [5.4.7 Behandelrelatieprotocol](#547-behandelrelatieprotocol)
+    - [5.4.8 Toestemmingsprofiel](#548-toestemmingsprofiel)
+    - [5.4.9 Gevoeligheid](#549-gevoeligheid)
+    - [5.4.10 Categorie](#5410-categorie)
+    - [5.4.11 Stadium](#5411-stadium)
     - [5.4.12 Zoekvraag](#5412-zoekvraag)
   - [5.5 Loggegevens](#55-loggegevens)
     - [5.5.1 Identificatie van de locatie](#551-identificatie-van-de-locatie)
@@ -691,13 +697,52 @@ Unieke identificator van een bij de gebeurtenis betrokken object, bijvoorbeeld h
 Voorbeelden:
 - [GUID]
 
-### 5.4.4
+### 5.4.4 Naam
+Nadere aanduiding van het betrokken *object*, bijvoorbeeld de naam van de *cliënt*.
 
-### 5.4.5
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** tekst. Alfanumeriek
+
+### 5.4.5 Details
+Detailkenmerk over het *object* dat bij de *gebeurtenis* was betrokken.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** tekst
 
 ### 5.4.6 Autorisatieprotocol
+*Identificator* van het *autorisatieprotocol* dat bij de gebeurtenis is gehanteerd.
+
+**Optionaliteit:** verplicht<br>
+**Formaat/waarde:** code
+
 Voorbeelden:
 - Accesspolicy(JSON) + versie ID
+
+### 5.4.7 Behandelrelatieprotocol
+*Identificator* van het protocol dat beschrijft hoe wordt vastgesteld dat er sprake is van een behandelrelatie.
+
+**Optionaliteit:** conditioneel verplicht<br>
+**Formaat/waarde:** identificatie
+
+>TOELICHTING: Het behandelrelatieprotocol bepaalt of de gebruiker op basis van de behandelrelatie toegang mag krijgen tot de medische gegevens.
+
+### 5.4.8 Toestemmingsprofiel
+*Identificator* van het *toestemmingsprofiel* dat bij de gebeurtenis is gehanteerd.
+
+**Optionaliteit:** conditioneel verplicht
+
+>TOELICHTING: Dit is verplicht indien het object patiëntgebonden is, bijvoorbeeld de cliënt, zijn dossier, resultaten, enz.
+
+### 5.4.9 Gevoeligheid
+Classificatie van de gevoeligheid van het betrokken object.
+**Optionaliteit:** optioneel
+
+
+### 5.4.10 Categorie
+
+
+### 5.4.11 Stadium
+
 
 ### 5.4.12 Zoekvraag
 Voorbeelden:
