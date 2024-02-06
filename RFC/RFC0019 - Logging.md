@@ -66,8 +66,11 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
     - [5.3.9 Type toegangspunt](#539-type-toegangspunt)
     - [5.3.10 Identificatie toegangspunt](#5310-identificatie-toegangspunt)
   - [5.4 Object](#54-object)
-    - [7.4.1 Identificatortype](#741-identificatortype)
+    - [5.4.1 Identificatortype](#541-identificatortype)
+    - [5.4.2 Klasse](#542-klasse)
     - [5.4.3 Identificator](#543-identificator)
+    - [5.4.4](#544)
+    - [5.4.5](#545)
     - [5.4.6 Autorisatieprotocol](#546-autorisatieprotocol)
     - [5.4.12 Zoekvraag](#5412-zoekvraag)
   - [5.5 Loggegevens](#55-loggegevens)
@@ -639,14 +642,58 @@ Voorbeeld:
   identificatie toegangspunt : 10.145.240.60; 
 
 ## 5.4 Object
+*Identificatie* van een betrokken *object*
 
-### 7.4.1 Identificatortype
-Voorbeelden:
-- indicatieID
+**Optionaliteit:** verplicht
+
+### 5.4.1 Identificatortype
+Code die het type identificator van het betrokken object weergeeft
+
+**Optionaliteit:** verplicht<br>
+**Formaat/waarde:** code
+
+Naar het toegepaste codestelsel wordt als volgt verwezen:
+
+| Attribuut       | Waarde                                   |
+|-----------------|------------------------------------------|
+| CodeSystem      | OID van het codestelsel                   |
+| CodeSystemName  | De naam van het codestelsel               |
+| DisplayName     | Het tekstlabel van de code                |
+| OriginalText    | De oorspronkelijke tekst die is vertaald naar de code |
+
+>TOELICHTING: Het aangeven van het identificatortype is nodig om de identificator van het object te kunnen
+interpreteren en om onderscheid te kunnen maken tussen de verschillende identificatoren die verwijzen naar
+eenzelfde betrokken object, bijvoorbeeld naar eenzelfde cliënt.
+
+Voorbeeld:
+- [OID],[NAAM],[LABEL],[TEKST].
+
+### 5.4.2 Klasse
+Klasse van het betrokken *object* waarop de *gebeurtenis* betrekking heeft.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** code
+
+Voorbeeld:
+| Code | Weergavenaam    |
+|------|-----------------|
+| 1    | Persoon         |
+| 2    | Systeem object  |
+| 3    | Organisatie     |
+| 4    | Overig          |
 
 ### 5.4.3 Identificator
+Unieke identificator van een bij de gebeurtenis betrokken object, bijvoorbeeld het dossiernummer of patiëntnummer.
+
+**Optionaliteit:** verplicht
+**Formaat/waarde:** string. Alfanumeriek. Formaat en waarden hangen af van het identificatortype
+
 Voorbeelden:
 - [GUID]
+
+### 5.4.4
+
+### 5.4.5
 
 ### 5.4.6 Autorisatieprotocol
 Voorbeelden:
