@@ -60,6 +60,9 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
     - [5.3.3 Gebruikersnaam](#533-gebruikersnaam)
     - [5.3.4 Gebruikersrol](#534-gebruikersrol)
     - [5.3.5 Gebruiker is de initiator](#535-gebruiker-is-de-initiator)
+    - [5.3.6 ID van verantwoordelijke gebruiker](#536-id-van-verantwoordelijke-gebruiker)
+    - [5.3.7 Naam van verantwoordelijke gebruiker](#537-naam-van-verantwoordelijke-gebruiker)
+    - [5.3.8 Rol van verantwoordelijke gebruiker](#538-rol-van-verantwoordelijke-gebruiker)
     - [5.3.9 Type toegangspunt](#539-type-toegangspunt)
     - [5.3.10 Identificatie toegangspunt](#5310-identificatie-toegangspunt)
   - [5.4 Object](#54-object)
@@ -434,7 +437,7 @@ Voorbeeld:
 **Optionaliteit:** verplicht<br>
 **Formaat/waarde:** UTC datum en tijd. Notatie volgens NEN‐ISO 8601:2005
 
->```TOELICHTING: Het tijdstip van de gebeurtenis wordt eenduidig vastgelegd en onafhankelijk van de actuele tijdzone waar het informatiesysteem of de gebruiker zich bevinden. Voor de tijd wordt gekozen het begin van de gebeurtenis.```
+>TOELICHTING: Het tijdstip van de gebeurtenis wordt eenduidig vastgelegd en onafhankelijk van de actuele tijdzone waar het informatiesysteem of de gebruiker zich bevinden. Voor de tijd wordt gekozen het begin van de gebeurtenis.
 
 || Tijdstempelprecisie | Standaard |
 |-|-|-|
@@ -458,7 +461,7 @@ Naar het toegepaste codestelsel wordt als volgt verwezen:
 | DisplayName | Het tekstlabel van de code                            |
 | OriginalText | De oorspronkelijke tekst die is vertaald naar de code |
 
->```TOELICHTING: Voor rapportages uit de logging en analyses is de aard van de gebeurtenis een belangrijk sorteer‐ en selectiecriterium. Door het toekennen van een code aan het soort gebeurtenis kunnen bijvoorbeeld reguliere acties direct worden onderscheiden van noodsituaties of gebeurtenissen die de logging zelf betreffen.```
+>TOELICHTING: Voor rapportages uit de logging en analyses is de aard van de gebeurtenis een belangrijk sorteer‐ en selectiecriterium. Door het toekennen van een code aan het soort gebeurtenis kunnen bijvoorbeeld reguliere acties direct worden onderscheiden van noodsituaties of gebeurtenissen die de logging zelf betreffen.
 
 Voorbeelden:
 - [OID],DCM,110122, ‘Login’;
@@ -544,6 +547,18 @@ De rol van de *gebruiker* bij de *gebeurtenis*.
 Optionaliteit: verplicht
 Formaat/waarde: code voor de rol
 
+Naar het toegepaste codestelsel wordt als volgt verwezen:
+| Attribuut       | Waarde                                   |
+|-----------------|------------------------------------------|
+| CodeSystem      | OID van het codestelsel                   |
+| CodeSystemName  | De naam van het codestelsel               |
+| DisplayName     | Het tekstlabel van de code                |
+| OriginalText    | De oorspronkelijke tekst die is vertaald naar de code |
+
+>TOELICHTING: De rol van de gebruiker is in combinatie met het autorisatieprotocol bepalend voor het verlenen van toegang tot een patiëntdossier. ISO/TS 22600‐1:2014 en NEN‐EN‐ISO 21298:2017 gelden hier als leidraad, maar eigen codestelsels binnen het informatiedomein mogen ook worden gebruikt. In beginsel is de functionele rol bepalend voor de toegangsverlening, maar de verwijzing naar het feitelijk toegepaste codestelsel laat ook andere keuzen en ontwikkeling daarin toe. Indien de gebruiker bij deze gebeurtenis gedelegeerde is van een verantwoordelijke, behoren de identiteit en de rol van de verantwoordelijke ook te worden vastgelegd.
+
+Hieronder volgt de tabel van functionele rollen uit NEN‐EN‐ISO 21298:2017:
+
 Voorbeelden:
 | Code | Role                                          | Description                                                 |
 |------|-----------------------------------------------|-------------------------------------------------------------|
@@ -566,9 +581,39 @@ Voorbeelden:
 - true
 - false
 
+### 5.3.6 ID van verantwoordelijke gebruiker
+Unieke *identificator* van de *verantwoordelijke gebruiker* samen met zijn organisatie voor het initiëren van de *gebeurtenis*.
 
+**Optionaliteit:** conditioneel verplicht
+**Formaat/waarde:** alfanumerieke aanduiding die de verantwoordelijke gebruiker uniek identificeert; bijvoorbeeld in de vorm userid@organisatie
 
+>TOELICHTING: Dit veld is verplicht in het geval dat de gebruiker ook de initiator is.
 
+### 5.3.7 Naam van verantwoordelijke gebruiker
+Naam van de *verantwoordelijke gebruiker* in leesbare vorm.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** alfanumerieke tekst
+
+### 5.3.8 Rol van verantwoordelijke gebruiker
+De rol van de *verantwoordelijke gebruiker* bij de *gebeurtenis*.
+
+**Optionaliteit:** conditioneel verplicht<br>
+**Formaat/waarde:** code voor de rol
+
+Naar het toegepaste codestelsel wordt als volgt verwezen:
+
+| Attribuut       | Waarde                                   |
+|-----------------|------------------------------------------|
+| CodeSystem      | OID van het codestelsel                   |
+| CodeSystemName  | De naam van het codestelsel               |
+| DisplayName     | Het tekstlabel van de code                |
+| OriginalText    | De oorspronkelijke tekst die is vertaald naar de code |
+
+>TOELICHTING: De rol van de verantwoordelijke gebruiker is een essentieel gegeven voor de toegang tot een patiëntdossier. Als leidraad gelden hier ISO/TS 22600‐1:2006 en NEN‐EN‐ISO 21298:2017. In beginsel is de functionele rol bepalend voor de toegangsverlening, maar de verwijzing naar het feitelijk toegepaste codestelsel laat ook andere keuzen en ontwikkeling daarin toe. Zie tabel 3 die is opgenomen bij 7.3.4.
+
+Voorbeeld:
+- [OID],[NAAM],[LABEL],[TEKST].
 
 ### 5.3.9 Type toegangspunt
 Voorbeeld:
