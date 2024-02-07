@@ -10,12 +10,14 @@
 - [ ] 5.4.9 Noodzakelijk of schrappen? indien nodig: verder uitwerken
 - [ ] 5.4.10 Noodzakelijk of schrappen? indien nodig: verder uitwerken
 - [ ] 5.4.11 Noodzakelijk of schrappen? indien nodig: verder uitwerken
+- [ ] 5.5.3 Noodzakelijk of schrappen? indien nodig: verder uitwerken
+- [ ] 6 Voorbeeld logbestand toevoegen
 
 <font size="4">**SAMENVATTING**</font>
 
 **Huidige situatie:**
 
->```nog invullen```
+n.v.t.
 
 **Beoogde situatie**
 
@@ -90,7 +92,6 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 ---
 # 1. Inleiding
 
-
 Om de privacy van burgers te waarborgen is het meer dan ooit noodzakelijk om heldere afspraken te maken over de bescherming van (medische) gegevens tegen onbevoegde inzage en onbevoegd gebruik. De in deze RFC voorgeschreven wijze van logging heeft als doel een transparant beeld te geven van de gebeurtenissen in het netwerkmodel m.b.t. alle elektronische gegevensuitwisselingen en de toegang tot (zorg)informatiesystemen.
 
 Logging is de stelselmatige geautomatiseerde registratie van gegevens rond de toegang tot die systemen met als primaire doel de controle van de rechtmatigheid ervan mogelijk te maken. De logging levert een betrouwbaar overzicht van de gebeurtenissen waarbij (persoonlijke) (gezondheids)informatie is verwerkt. Met de logging kan door verwerkingsverantwoordelijken controle worden uitgeoefend op (on)rechtmatige toegang tot informatie en
@@ -122,17 +123,22 @@ Deze RFC heeft een relatie met de volgende RFC(s)
 Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
-| :-------- | :-------- | 
-| Actie | verwerking in een informatiesysteem, in het kader van een gebeurtenis |
+| :------------ | :------------ |
+| Actie | Verwerking in een informatiesysteem, in het kader van een gebeurtenis |
 | Autorisatie | Het toekennen van bevoegdheden |
+| Autorisatieprotocol | Autorisatietabel, die bepaalt welke categorieën *cliënt*gegevens voor welke categorieën zorginstellingen toegankelijk zijn onder welke voorwaarden. |
 | Cliënt | Persoon die zorg vraagt of aan wie zorg wordt verleend of de identificeerbare persoon van wie persoonlijke gezondheidsinformatie wordt verwerkt |
 | Gebeurtenis | Voorval, activiteit of optreden van een wijziging in een informatiesysteem |
-| Gebruiker | natuurlijke persoon, organisatie of proces in een informatiesysteem, betrokken bij een *actie* |
+| Gebruiker | Natuurlijke persoon, organisatie of proces in een informatiesysteem, betrokken bij een *actie* |
+| Identificatie | Kenmerk dat een persoon of andere entiteit identificeert |
 | Identificator | Kenmerk dat een persoon of andere entiteit identificeert |
+| Informatiedomein | Gespecificeerd gebied waarbinnen de verantwoordelijkheden voor de informatievoorziening zijn bepaald, dezelfde regels gelden voor informatiebeveiliging en dezelfde systematiek wordt gevolgd voor identificatie van personen, systemen en andere objecten |
+| Informatiesysteem |  |
 | Logging | Stelselmatige geautomatiseerde registratie van gegevens rondom events op systemen | 
-| Logverantwoordelijke | Directie van een organisatie zoals een zorginstelling die (persoonlijke)(gezondheids)informatie verwerkt, delen, bevragen of muteren met of via het netwerkmodel.
-| Verantwoordelijk gebruiker | Natuurlijke persoon die verantwoordelijk is voor een actie. De verantwoordelijke gebruiker is meestal degene die de uitvoerende medewerker opdracht heeft gegeven of heeft gemandateerd tot het uitvoeren van de actie. |
-| Verwerkingsverantwoordelijke |  De Verwerkingsverantwoordelijke is degene die beslist waarom en hoe persoonlijke gegevens worden verwerkt. Specifiek bij het loggen ter bescherming van (medische) gegevens heeft de Verwerkingsverantwoordelijke de controle over het vastleggen van activiteiten met betrekking tot deze gegevens, met als doel de beveiliging en naleving van privacyregelgeving te waarborgen.
+| Loggegevens |  |
+| Object |  |
+| Toegangspunt |  |
+| Toestemmingsprofiel |  |
 
 
 
@@ -759,21 +765,42 @@ Voorbeelden:
 - GetWlzIndicatieVoorIndicatieID
 
 ## 5.5 Loggegevens
+*Identificatie* van de bron van de *loggegevens*
+
+**Optionaliteit:** verplicht
 
 ### 5.5.1 Identificatie van de locatie
+*Identificator* van de locatie waar is gelogd.
+
+**Optionaliteit:** optioneel<br>
+**Formaat/waarde:** alfanumerieke tekst
+
 Voorbeelden:
 - 'AZ/NEU/PRD'
 
 ### 5.5.2 Identificatie van de bron
+Unieke *identificator* van de bron in het *informatiedomein* waar de *gebeurtenis* is gelogd.
+
+**Optionaliteit:** verplicht<br>
+**Formaat/waarde:** alfanumerieke tekst
+
 Voorbeelden:
 - 'nID/authservice'
 - 'nID/nID-Filter'
 
 ### 5.5.3 Type bron van de loggegevens
+Type (device) van de bron waar de *gebeurtenis* is gelogd.
+
+**Optionaliteit:** optioneel
 
 
 # 6. Export
-Syntax en semantiek van de export volgens het gestelde in hoofdstuk 7 van de NEN7513.
+Een exportfaciliteit is essentieel, waarbij de syntax en semantiek van de export moeten voldoen aan de richtlijnen uiteengezet in hoofdstuk 5.
 
-Voorbeeld export logrecord nID:
+
+De exportfunctionaliteit genereert een uitgebreide logging op basis van een opgegeven selectie, in de vorm van een XML-bestand. Alle velden in dit bestand zijn herleidbaar naar de naar de gegevensvelden zoals beschreven in hoofdstuk 5.
+
+
+
+>```Voorbeeld export logrecord nID:```
 
