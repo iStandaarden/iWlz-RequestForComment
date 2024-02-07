@@ -95,7 +95,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 Om de privacy van burgers te waarborgen is het meer dan ooit noodzakelijk om heldere afspraken te maken over de bescherming van (medische) gegevens tegen onbevoegde inzage en onbevoegd gebruik. De in deze RFC voorgeschreven wijze van logging heeft als doel een transparant beeld te geven van de gebeurtenissen in het netwerkmodel m.b.t. alle elektronische gegevensuitwisselingen en de toegang tot (zorg)informatiesystemen.
 
 Logging is de stelselmatige geautomatiseerde registratie van gegevens rond de toegang tot die systemen met als primaire doel de controle van de rechtmatigheid ervan mogelijk te maken. De logging levert een betrouwbaar overzicht van de gebeurtenissen waarbij (persoonlijke) (gezondheids)informatie is verwerkt. Met de logging kan door verwerkingsverantwoordelijken controle worden uitgeoefend op (on)rechtmatige toegang tot informatie en
-verantwoording worden afgelegd aan cliënten/burgers (die recht hebben op inzage van deze gegevens), collega’s en toezichthouders over de zorgvuldige en juiste omgang met de (gezondheids)gegevens. Cliënten kunnen de loggegevens gebruiken bij een klacht over (vermeende) onrechtmatige toegang tot persoonlijke informatie. De zorgaanbieder en verwerkingsverantwoordelijken kunnen
+verantwoording worden afgelegd aan cliënten/burgers (die recht hebben op inzage van deze gegevens), collega’s en *toezichthouders* over de zorgvuldige en juiste omgang met de (gezondheids)gegevens. Cliënten kunnen de loggegevens gebruiken bij een klacht over (vermeende) onrechtmatige toegang tot persoonlijke informatie. De *zorgaanbieder* en verwerkingsverantwoordelijken kunnen
 de logging gebruiken voor het verbeteren van het proces van de toegangscontrole tot (patiënt)gegevens en zo nodig om zich te verdedigen bij aansprakelijkheidsstellingen door cliënten of anderen betrokkenen.
 
 Het complete inzicht in de gegevensstromen biedt de mogelijkheid om snel verdachte patronen te signaleren en kan worden gebruikt om verantwoording af te leggen over onder meer privacy en informatieveiligheid.
@@ -124,23 +124,34 @@ Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
 | :------------ | :------------ |
-| Actie | Verwerking in een informatiesysteem, in het kader van een gebeurtenis |
+| Actie | *Verwerking* in een *informatiesysteem*, in het kader van een *gebeurtenis* |
 | Autorisatie | Het toekennen van bevoegdheden |
-| Autorisatieprotocol | Autorisatietabel, die bepaalt welke categorieën *cliënt*gegevens voor welke categorieën zorginstellingen toegankelijk zijn onder welke voorwaarden. |
-| Cliënt | Persoon die zorg vraagt of aan wie zorg wordt verleend of de identificeerbare persoon van wie persoonlijke gezondheidsinformatie wordt verwerkt |
-| Gebeurtenis | Voorval, activiteit of optreden van een wijziging in een informatiesysteem |
+| Autorisatieprotocol | Autorisatietabel, die bepaalt welke categorieën *cliënt*gegevens voor welke categorieën *zorginstellingen* toegankelijk zijn onder welke voorwaarden. |
+| Cliënt | Persoon die zorg vraagt of aan wie zorg wordt verleend of de identificeerbare persoon van wie *persoonlijke gezondheidsinformatie* wordt verwerkt |
+| Directie | Persoon of groep van personen die een organisatie op het hoogste niveau bestuurt en beheert |
+| Elektronisch patiëntdossier | Verzameling van alle elektronisch vastgelegde persoonlijke gezondheidsinformatie van een *cliënt* bij een *zorginstelling* of een andere organisatie die *persoonlijke gezondheidsinformatie* verwerkt |
+| Gebeurtenis | Voorval, activiteit of optreden van een wijziging in een *informatiesysteem* |
 | Gebruiker | Natuurlijke persoon, organisatie of proces in een informatiesysteem, betrokken bij een *actie* |
 | Identificatie | Kenmerk dat een persoon of andere entiteit identificeert |
 | Identificator | Kenmerk dat een persoon of andere entiteit identificeert |
-| Informatiedomein | Gespecificeerd gebied waarbinnen de verantwoordelijkheden voor de informatievoorziening zijn bepaald, dezelfde regels gelden voor informatiebeveiliging en dezelfde systematiek wordt gevolgd voor identificatie van personen, systemen en andere objecten |
-| Informatiesysteem |  |
-| Logging | Stelselmatige geautomatiseerde registratie van gegevens rondom events op systemen | 
-| Loggegevens |  |
-| Object |  |
-| Toegangspunt |  |
-| Toestemmingsprofiel |  |
-
-
+| Informatiedomein | Gespecificeerd gebied waarbinnen de verantwoordelijkheden voor de informatievoorziening zijn bepaald, dezelfde regels gelden voor informatiebeveiliging en dezelfde systematiek wordt gevolgd voor *identificatie* van personen, systemen en andere *objecten* |
+| Informatiesysteem | Toepassingen, diensten, informatietechnologische bedrijfsmiddelen of andere gegevensverwerkende componenten |
+| Logbeheerder | Functionaris die binnen een *zorginstelling* of andere organisatie die *persoonlijke gezondheidsinformatie* verwerkt, verantwoordelijk is voor het beheren van de logging en het uitvoeren van het door de *logverantwoordelijke* vastgestelde beleid |
+| Loggegevens | elektronisch vastgelegde gegevens die bij een bepaalde *gebeurtenis* worden gelogd |
+| Loggen | *Gebeurtenissen* chronologisch vastleggen |
+| Logging | Resultaat van het *loggen* |
+| Logverantwoordelijke | *Directie* van de organisatie die *persoonlijke gezondheidsinformatie* verwerkt |
+| Object | Zaak of persoon waarop een *actie* betrekking heeft |
+| Persoonlijke gezondheidsinformatie | Informatie over een identificeerbare persoon die verband houdt met de lichamelijke of geestelijke gesteldheid van, of de verlening van zorgdiensten aan, de persoon in kwestie |
+| Toegangspunt | Aansluiting van waaruit de *gebruiker* de *gebeurten*is in het *informatiesysteem* heeft doen plaatsvinden |
+| Toestemmingsprofiel | Vastlegging, landelijk, regionaal of lokaal, door de *cliënt* zelf bepaald, van wie in welke omstandigheden al of niet toegang mag krijgen tot bepaalde gegevens van de desbetreffende *cliënt* |
+| Toezichthouder | Functie van een persoon die binnen een zorginstelling of een andere organisatie die *persoonlijke gezondheidsinformatie* verwerkt, dan wel landelijk of regionaal toezicht houdt op de naleving van weten regelgeving rond de toegang tot *elektronische patiëntdossiers* |
+| Verantwoordelijke gebruiker | Natuurlijke persoon die verantwoordelijk is voor een *actie* |
+| Verwerking | Een bewerking of een geheel van bewerkingen met betrekking tot persoonsgegevens of een geheel van persoonsgegevens, al dan niet uitgevoerd via geautomatiseerde procedés, zoals het verzamelen, vastleggen, ordenen, structureren, opslaan, bijwerken of wijzigen, opvragen, raadplegen, gebruiken, verstrekken door middel van doorzending, verspreiden of op andere wijze ter beschikking stellen, aligneren of combineren, afschermen, wissen of vernietigen van gegevens |
+| XML‐exportfaciliteit | Dienst die de complete *logging* volgens een gevraagde selectie oplevert in de vorm van een XMLbestand waarbij alle velden herleidbaar zijn naar de in hoofdstuk 5 van deze norm benoemde gegevensvelden |
+| Zorgaanbieder | *Zorgverlener* of *zorginstelling* |
+| Zorginstelling | Rechtspersoon die bedrijfsmatig zorg verleent, alsmede een organisatorisch verband van natuurlijke personen die bedrijfsmatig zorg verlenen of doen verlenen, alsmede een natuurlijke persoon die bedrijfsmatig zorg doet verlenen, alsmede een solistisch werkende *zorgverlener* |
+| Zorgverlener | Een natuurlijke persoon die beroepsmatig zorg verleent |
 
 # 3 Zekerheidseisen
 
@@ -178,15 +189,15 @@ De klokken van alle relevante informatieverwerkende systemen binnen een organisa
 Gezondheidsinformatiesystemen die tijdkritische activiteiten voor gedeelde zorg ondersteunen, moeten in tijdssynchronisatiediensten voorzien om het traceren en reconstrueren van de tijdlijnen voor activiteiten waar vereist te ondersteunen.
 
 ## 3.5 De verantwoordelijkheid voor de logging
-Elke netwerkdeelnemer en elke deelnemende organisatie, dient zich te kunnen verantwoorden en is gebaat bij een betrouwbare logging. Elke organisatie die faciliteerd in de elektronische gegevensuitwisselingen of een informatiesysteem heeft aangesloten op het netwerkmodel, is dan ook zelf logverantwoordelijke zoals beschreven in deze RFC.
+Elke netwerkdeelnemer en elke deelnemende organisatie, dient zich te kunnen verantwoorden en is gebaat bij een betrouwbare logging. Elke organisatie die faciliteerd in de elektronische gegevensuitwisselingen of een informatiesysteem heeft aangesloten op het netwerkmodel, is dan ook zelf *logverantwoordelijke* zoals beschreven in deze RFC.
 
 ## 3.6 De beschikbaarheid van de logging
-Het is essentieel dat het loggingsysteem zodanig is ingericht dat het tegemoetkomt aan zowel de informatieve behoeften als aan de wettelijke vereisten. De logverantwoordelijke moet daartoe regels vaststellen. dient hiervoor specifieke regels op te stellen. Dit is met name van belang wanneer het contract met de IT-dienstverlener wordt beëindigd of wanneer er een overgang plaatsvindt als gevolg van een fusie of overname.
+Het is essentieel dat het loggingsysteem zodanig is ingericht dat het tegemoetkomt aan zowel de informatieve behoeften als aan de wettelijke vereisten. De *logverantwoordelijke* moet daartoe regels vaststellen. dient hiervoor specifieke regels op te stellen. Dit is met name van belang wanneer het contract met de IT-dienstverlener wordt beëindigd of wanneer er een overgang plaatsvindt als gevolg van een fusie of overname.
 Bij het uitbesteden van taken aan een externe dienstverlener en bij de beëindiging van het contract moeten er afspraken worden vastgelegd om zowel de bewaartermijn als de toegang tot de loggegevens te waarborgen na het beëindigen van de overeenkomst.
 
 ## 3.7 De toegang tot de logging
-De logging bevat net als het onderliggend dossier zeer gevoelige informatie. Op de logging moet daarom een strikte toegangsbeheersing worden toegepast, waarop controle moet worden uitgevoerd. Verantwoordelijkheid voor de controle moet in de organisatie zijn belegd. Directe toegang tot loggegevens en tot zoekvragen moet alleen mogelijk zijn op basis van expliciete autorisatie. De logverantwoordelijke moet daartoe regels vaststellen die vallen binnen de kaders van de WGBO ([Wet geneeskundige behandelingsovereenkomst](https://www.rivm.nl/cpt/kwaliteit-wet-en-regelgeving/wetgeving/wgbo)), de
-WBP ([Wet bescherming persoonsgegevens](https://wetten.overheid.nl/BWBR0011468/2018-05-01)) en de AVG ([Algemene verordening gegevensbescherming](https://www.autoriteitpersoonsgegevens.nl/themas/basis-avg/avg-algemeen/de-avg-in-het-kort)). Specifieke aandacht moet daarbij zijn voor gebruikers met uitgebreide toegangsrechten, zoals de logbeheerder en de systeembeheerder. Het uitgangspunt bij het inrichten van de toegangsbeheersing moet zijn dat er alleen toegang is indien dit strikt noodzakelijk is.
+De logging bevat net als het onderliggend dossier zeer gevoelige informatie. Op de logging moet daarom een strikte toegangsbeheersing worden toegepast, waarop controle moet worden uitgevoerd. Verantwoordelijkheid voor de controle moet in de organisatie zijn belegd. Directe toegang tot loggegevens en tot zoekvragen moet alleen mogelijk zijn op basis van expliciete autorisatie. De *logverantwoordelijke* moet daartoe regels vaststellen die vallen binnen de kaders van de WGBO ([Wet geneeskundige behandelingsovereenkomst](https://www.rivm.nl/cpt/kwaliteit-wet-en-regelgeving/wetgeving/wgbo)), de
+WBP ([Wet bescherming persoonsgegevens](https://wetten.overheid.nl/BWBR0011468/2018-05-01)) en de AVG ([Algemene verordening gegevensbescherming](https://www.autoriteitpersoonsgegevens.nl/themas/basis-avg/avg-algemeen/de-avg-in-het-kort)). Specifieke aandacht moet daarbij zijn voor gebruikers met uitgebreide toegangsrechten, zoals de *logbeheerder* en de systeembeheerder. Het uitgangspunt bij het inrichten van de toegangsbeheersing moet zijn dat er alleen toegang is indien dit strikt noodzakelijk is.
 
 ## 3.8 De bewaartermijn van loggegevens
 Bij het bepalen van de bewaartermijn van logging is het van belang een zorgvuldige afweging te maken tussen de belangen van de cliënt/patiënt/burger enerzijds en de belangen van de medewerker van de netwerkdeelnemers en het elektronisch uitwisselingssysteem anderzijds.
@@ -579,7 +590,7 @@ Hieronder volgt de tabel van functionele rollen uit NEN‐EN‐ISO 21298:2017:
 Voorbeelden:
 | Code | Role                                          | Description                                                 |
 |------|-----------------------------------------------|-------------------------------------------------------------|
-| 01   | Subject of care                               | Recipient of care services, e.g. patient                      |
+| 01   | Subject of care                               | Recipient of care services, e.g. cliënt                    |
 | 02   | Subject of care proxy                         | e.g. parent, guardian, carer, or other legal representative  |
 | 03   | Personal healthcare professional              | Healthcare professional with the closest relationship to the subject of care, often the subject of care’s GP|
 | 04   | Privileged healthcare professional            | Healthcare professional nominated by the subject of care OR Nominated by the healthcare facility of care (if there is a nomination by regulation, practice, etc. such as an emergency over‐ride)  |
@@ -602,7 +613,7 @@ Voorbeelden:
 Unieke *identificator* van de *verantwoordelijke gebruiker* samen met zijn organisatie voor het initiëren van de *gebeurtenis*.
 
 **Optionaliteit:** conditioneel verplicht
-**Formaat/waarde:** alfanumerieke aanduiding die de verantwoordelijke gebruiker uniek identificeert; bijvoorbeeld in de vorm userid@organisatie
+**Formaat/waarde:** alfanumerieke aanduiding die de *verantwoordelijke gebruiker* uniek identificeert; bijvoorbeeld in de vorm userid@organisatie
 
 >TOELICHTING: Dit veld is verplicht in het geval dat de gebruiker ook de initiator is.
 
@@ -627,7 +638,7 @@ Naar het toegepaste codestelsel wordt als volgt verwezen:
 | DisplayName     | Het tekstlabel van de code                |
 | OriginalText    | De oorspronkelijke tekst die is vertaald naar de code |
 
->TOELICHTING: De rol van de verantwoordelijke gebruiker is een essentieel gegeven voor de toegang tot een patiëntdossier. Als leidraad gelden hier ISO/TS 22600‐1:2006 en NEN‐EN‐ISO 21298:2017. In beginsel is de functionele rol bepalend voor de toegangsverlening, maar de verwijzing naar het feitelijk toegepaste codestelsel laat ook andere keuzen en ontwikkeling daarin toe. Zie tabel 3 die is opgenomen bij 7.3.4.
+>TOELICHTING: De rol van de *verantwoordelijke gebruiker* is een essentieel gegeven voor de toegang tot een patiëntdossier. Als leidraad gelden hier ISO/TS 22600‐1:2006 en NEN‐EN‐ISO 21298:2017. In beginsel is de functionele rol bepalend voor de toegangsverlening, maar de verwijzing naar het feitelijk toegepaste codestelsel laat ook andere keuzen en ontwikkeling daarin toe. Zie tabel 3 die is opgenomen bij 7.3.4.
 
 Voorbeeld:
 - [OID],[NAAM],[LABEL],[TEKST].
@@ -795,10 +806,9 @@ Type (device) van de bron waar de *gebeurtenis* is gelogd.
 
 
 # 6. Export
-Een exportfaciliteit is essentieel, waarbij de syntax en semantiek van de export moeten voldoen aan de richtlijnen uiteengezet in hoofdstuk 5.
+Een export in de vorm van een *XML-exportfaciliteit* is essentieel, waarbij de syntax en semantiek van de export moeten voldoen aan de richtlijnen uiteengezet in hoofdstuk 5.
 
-
-De exportfunctionaliteit genereert een uitgebreide logging op basis van een opgegeven selectie, in de vorm van een XML-bestand. Alle velden in dit bestand zijn herleidbaar naar de naar de gegevensvelden zoals beschreven in hoofdstuk 5.
+De *XML-exportfaciliteit* genereert een uitgebreide logging op basis van een opgegeven selectie. Alle velden in dit XML-bestand zijn herleidbaar naar de naar de gegevensvelden zoals beschreven in hoofdstuk 5.
 
 
 
