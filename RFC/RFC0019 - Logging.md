@@ -3,7 +3,7 @@
 # RFC0019 - Logging
 
 @todo
-- [ ] 3.2 / 3.4 ZORGSPECIFIEKE BEHEERSMAATREGEL behouden?
+- [ ] 3.2 / 3.4 ZORGSPECIFIEKE BEHEERSMAATREGEL opmerking behouden? 
 - [ ] 4 verder uitwerken, bv 4.3 schema is nog niet correct
 - [ ] 5.2.1 valideren
 - [ ] 5.2.6 Noodzakelijk of schrappen?
