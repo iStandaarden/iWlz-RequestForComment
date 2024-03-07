@@ -108,9 +108,9 @@ Het complete inzicht in de gegevensstromen biedt de mogelijkheid om snel verdach
 
 | Uitgangspunt | Omschrijving |
 | :-------- | :-------- | 
-| *Normering* | *Elke netwerkbeheerder dient aantoonbaar logging toe te passen voor informatiebeveiliging, waarbij de logging voldoet aan relevante normen. In de context van de gezondheidszorg is naleving van de NEN 7513-norm voor logging essentieel.* |
+| *Normering* | *Elke netwerkbeheerder dient aantoonbaar logging toe te passen voor informatiebeveiliging, ~~waarbij de logging voldoet aan relevante normen. In de context van de gezondheidszorg is naleving van de NEN 7513-norm voor logging essentieel.~~* |
 | *Standaardisatie* | *Alle ketendeelnemers voldoen aan de norm zoals vastgelegd in het afsprakenstelsel iWlz, waaronder eenduidige logging en de mogelijkheid tot exporteren.*
-| *Onweerlegbaarheid* | *Volgens NEN 7513 moet de logging kunnen voorzien in informatie waardoor achteraf onweerlegbaar kan worden vastgesteld welke gebeurtenissen hebben plaatsgevonden op een patiëntendossier of op een elektronisch uitwisselingssysteem.* |
+| *Onweerlegbaarheid* | *~~Volgens NEN 7513~~ moet de logging kunnen voorzien in informatie waardoor achteraf onweerlegbaar kan worden vastgesteld welke gebeurtenissen hebben plaatsgevonden op een patiëntendossier of op een elektronisch uitwisselingssysteem.* |
 
 ## 1.2 Relatie andere RFC
 Deze RFC heeft een relatie met de volgende RFC(s)
@@ -549,7 +549,7 @@ Voorbeelden:
 - ‘DiD
 - ‘u12344’
 - ‘1234567890’
-- ‘jjan@nen7513’
+- ‘jjan@zorgkantoor’
 
 ### 5.3.2 Lokale gebruikers-ID
 *Identificator* waarmee de *gebruiker* in eerste instantie inlogt.
