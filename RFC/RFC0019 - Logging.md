@@ -96,7 +96,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 
 Om de privacy van burgers te waarborgen is het meer dan ooit noodzakelijk om heldere afspraken te maken over de bescherming van (medische) gegevens tegen onbevoegde inzage en onbevoegd gebruik. De in deze RFC voorgeschreven wijze van logging heeft als doel een transparant beeld te geven van de gebeurtenissen in het netwerkmodel m.b.t. alle elektronische gegevensuitwisselingen en de toegang tot (zorg)informatiesystemen.
 
-Logging is de stelselmatige geautomatiseerde registratie van gegevens rond de toegang tot die systemen met als primaire doel de controle van de rechtmatigheid ervan mogelijk te maken. De logging levert een betrouwbaar overzicht van de gebeurtenissen waarbij (persoonlijke) (gezondheids)informatie is verwerkt. Met de logging kan door verwerkingsverantwoordelijken controle worden uitgeoefend op (on)rechtmatige toegang tot informatie en
+Logging is de stelselmatige geautomatiseerde registratie van gegevens rond de toegang tot gegevens met als primaire doel de controle van de rechtmatigheid ervan achteraf mogelijk te maken. De logging levert een betrouwbaar overzicht van de gebeurtenissen waarbij (persoonlijke) (gezondheids)informatie is verwerkt. Met de logging kan door verwerkingsverantwoordelijken controle worden uitgeoefend op (on)rechtmatige toegang tot informatie en
 verantwoording worden afgelegd aan cliënten/burgers (die recht hebben op inzage van deze gegevens), collega’s en *toezichthouders* over de zorgvuldige en juiste omgang met de (gezondheids)gegevens. Cliënten kunnen de loggegevens gebruiken bij een klacht over (vermeende) onrechtmatige toegang tot persoonlijke informatie. De *zorgaanbieder* en verwerkingsverantwoordelijken kunnen
 de logging gebruiken voor het verbeteren van het proces van de toegangscontrole tot (patiënt)gegevens en zo nodig om zich te verdedigen bij aansprakelijkheidsstellingen door cliënten of anderen betrokkenen.
 
@@ -471,7 +471,7 @@ Voorbeeld:
 
 || Tijdstempelprecisie | Standaard |
 |-|-|-|
-| Eigenschappen | Ten minste jaar (JJJJ), maand (MM), en dag (DD); uur (uu), minuut (mm) en seconde (ss) | NEN-ISO 8601:2005 |
+| Eigenschappen | Ten minste jaar (yyyy), maand (mm), en dag (dd); uur (hh), minuut (mm) en seconde (ss) | ~~NEN-ISO 8601:2005~~ NEN 8601:2019 |
 
 Voorbeeld:
 - 2023-07-14T14:12:12
