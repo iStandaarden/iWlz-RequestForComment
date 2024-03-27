@@ -22,9 +22,6 @@
 
 ### :warning: Waarschuwing
 ```
-!!! :warning: WAARSCHUWING
-### :warning: Waarschuwing
-
 Verouderd Document
 
 Dit document met de titel "Logging" is verouderd en niet langer actueel. De reden hiervoor is dat het is gesplitst in twee afzonderlijke documenten: één gericht op de technische aspecten van traceerbaarheid en export, en de andere gericht op loggingvereisten en gegevensspecificaties.
