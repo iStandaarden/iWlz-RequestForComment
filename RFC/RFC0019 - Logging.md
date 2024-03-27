@@ -26,8 +26,7 @@ Dit document met de titel "Logging" is verouderd en niet langer actueel. De rede
 Dit document is niet meer actueel vanwege de behoefte aan een meer gestructureerde en gedetailleerde benadering van loggingvereisten en de technische implementatie van traceerbaarheid en export.<br><br>
 >```WAAR TE VINDEN```
 <br>- Voor technische aspecten van traceerbaarheid en export, raadpleeg de RFC getiteld "[RFC0021 - Logging - Vereisten en Gegevensspecificaties](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0021%20-%20Logging%20-%20Vereisten%20en%20Gegevensspecificaties.md)".
-<br>- Voor loggingvereisten en gegevensspecificaties, raadpleeg het document getiteld "[RFC0022 - Logging - Traceerbaarheid en Export](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0022%20-%20Logging%20-%20Traceerbaarheid%20en%20Export.md)".<br>
-<br>
+<br>- Voor loggingvereisten en gegevensspecificaties, raadpleeg het document getiteld "[RFC0022 - Logging - Traceerbaarheid en Export](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0022%20-%20Logging%20-%20Traceerbaarheid%20en%20Export.md)".<br><br>
 Voor actuele informatie en richtlijnen wordt u geadviseerd de nieuwe documenten te raadplegen. Dit verouderde document zal niet langer worden bijgewerkt of onderhouden.
 
 **Huidige situatie:**
