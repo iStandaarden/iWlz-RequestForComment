@@ -1,19 +1,9 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0019 - Logging
+# RFC0022 - Logging - Traceerbaarheid en Export
 
 @todo
-- [ ] 3.2 / 3.4 ZORGSPECIFIEKE BEHEERSMAATREGEL opmerking behouden? 
-- [ ] 4 verder uitwerken, bv 4.3 schema is nog niet correct
-- [ ] 5.2.1 valideren
-- [ ] 5.2.6 Noodzakelijk of schrappen?
-- [ ] 5.3.4 Noodzakelijk of schrappen? indien nodig: verder uitwerken
-- [ ] 5.4.9 Noodzakelijk of schrappen? indien nodig: verder uitwerken
-- [ ] 5.4.10 Noodzakelijk of schrappen? indien nodig: verder uitwerken
-- [ ] 5.4.11 Noodzakelijk of schrappen? indien nodig: verder uitwerken
-- [ ] 5.5.3 Noodzakelijk of schrappen? indien nodig: verder uitwerken
-- [ ] 6 Voorbeeld logbestand toevoegen
-- [ ] Terminologie overnemen in terminologie.md
+- [ ] ..
 
 <font size="4">**SAMENVATTING**</font>
 
@@ -31,7 +21,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 
 ---
 **Inhoudsopgave**
-- [RFC0019 - Logging](#rfc0019---logging)
+- [RFC0022 - Logging - Traceerbaarheid en Export](#rfc0022---logging---traceerbaarheid-en-export)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)

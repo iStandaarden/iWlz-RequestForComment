@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0019 - Logging
+# RFC0021 - Logging - Vereisten en Gegevensspecificaties
 
 @todo
 - [ ] 3.2 / 3.4 ZORGSPECIFIEKE BEHEERSMAATREGEL opmerking behouden? 
@@ -31,7 +31,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 
 ---
 **Inhoudsopgave**
-- [RFC0019 - Logging](#rfc0019---logging)
+- [RFC0021 - Logging - Vereisten en Gegevensspecificaties](#rfc0021---logging---vereisten-en-gegevensspecificaties)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
