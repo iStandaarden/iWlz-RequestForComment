@@ -2,6 +2,10 @@
 
 # RFC0021 - Logging - Vereisten en Gegevensspecificaties
 
+### :warning: WAARSCHUWING
+>```VEROUDERD DOCUMENT```<br>
+Deze RFC is momenteel nog een kopie van de verouderde RFC0019 en moet nog worden bijgewerkt<br><br>
+
 @todo
 - [ ] 3.2 / 3.4 ZORGSPECIFIEKE BEHEERSMAATREGEL opmerking behouden? 
 - [ ] 4 verder uitwerken, bv 4.3 schema is nog niet correct
@@ -32,6 +36,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 ---
 **Inhoudsopgave**
 - [RFC0021 - Logging - Vereisten en Gegevensspecificaties](#rfc0021---logging---vereisten-en-gegevensspecificaties)
+    - [:warning: WAARSCHUWING](#warning-waarschuwing)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
