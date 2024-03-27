@@ -19,8 +19,11 @@
 
 **Status**
 
-<div style="border: 1px solid red; padding: 10px;">
-!!! WAARSCHUWING
+
+### :warning: Waarschuwing
+```
+!!! :warning: WAARSCHUWING
+### :warning: Waarschuwing
 
 Verouderd Document
 
@@ -36,8 +39,8 @@ Voor loggingvereisten en gegevensspecificaties, raadpleeg het document getiteld 
 Voor actuele informatie en richtlijnen wordt u geadviseerd de nieuwe documenten te raadplegen. Dit verouderde document zal niet langer worden bijgewerkt of onderhouden.
 
 Deze RFC is  [RFC0021](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0015%20-%20Identiteit.md) getiteld "Identiteit". Lezers wordt aangeraden om [RFC0022](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0015%20-%20Identiteit.md)  te raadplegen voor de meest actuele informatie.
+```
 
-</div>
 
 
 **Huidige situatie:**
@@ -55,6 +58,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 ---
 **Inhoudsopgave**
 - [RFC0019 - Logging](#rfc0019---logging)
+    - [:warning: Waarschuwing](#warning-waarschuwing)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
