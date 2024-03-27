@@ -19,13 +19,11 @@
 
 **Status**
 
-### :warning: VEROUDERD DOCUMENT
+### :warning: WAARSCHUWING
 >```VEROUDERD DOCUMENT```<br>
-Dit document met de titel "Logging" is verouderd en niet langer actueel. De reden hiervoor is dat het is gesplitst in twee afzonderlijke documenten: één gericht op de technische aspecten van traceerbaarheid en export, en de andere gericht op loggingvereisten en gegevensspecificaties.<br>
-<br>
+Dit document met de titel "Logging" is verouderd en niet langer actueel. De reden hiervoor is dat het is gesplitst in twee afzonderlijke documenten: één gericht op de technische aspecten van traceerbaarheid en export, en de andere gericht op loggingvereisten en gegevensspecificaties.<br><br>
 >```REDEN```<br>
-Dit document is niet meer actueel vanwege de behoefte aan een meer gestructureerde en gedetailleerde benadering van loggingvereisten en de technische implementatie van traceerbaarheid en export.<br>
-<br>
+Dit document is niet meer actueel vanwege de behoefte aan een meer gestructureerde en gedetailleerde benadering van loggingvereisten en de technische implementatie van traceerbaarheid en export.<br><br>
 >```WAAR TE VINDEN```
 <br>- Voor technische aspecten van traceerbaarheid en export, raadpleeg de RFC getiteld "[RFC0021 - Logging - Vereisten en Gegevensspecificaties](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0021%20-%20Logging%20-%20Vereisten%20en%20Gegevensspecificaties.md)".
 <br>- Voor loggingvereisten en gegevensspecificaties, raadpleeg het document getiteld "[RFC0022 - Logging - Traceerbaarheid en Export](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0022%20-%20Logging%20-%20Traceerbaarheid%20en%20Export.md)".<br>
@@ -47,7 +45,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 ---
 **Inhoudsopgave**
 - [RFC0019 - Logging](#rfc0019---logging)
-    - [:warning: VEROUDERD DOCUMENT](#warning-verouderd-document)
+    - [:warning: WAARSCHUWING](#warning-waarschuwing)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
