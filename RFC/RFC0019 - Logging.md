@@ -2,22 +2,7 @@
 
 # RFC0019 - Logging
 
-@todo
-- [ ] 3.2 / 3.4 ZORGSPECIFIEKE BEHEERSMAATREGEL opmerking behouden? 
-- [ ] 4 verder uitwerken, bv 4.3 schema is nog niet correct
-- [ ] 5.2.1 valideren
-- [ ] 5.2.6 Noodzakelijk of schrappen?
-- [ ] 5.3.4 Noodzakelijk of schrappen? indien nodig: verder uitwerken
-- [ ] 5.4.9 Noodzakelijk of schrappen? indien nodig: verder uitwerken
-- [ ] 5.4.10 Noodzakelijk of schrappen? indien nodig: verder uitwerken
-- [ ] 5.4.11 Noodzakelijk of schrappen? indien nodig: verder uitwerken
-- [ ] 5.5.3 Noodzakelijk of schrappen? indien nodig: verder uitwerken
-- [ ] 6 Voorbeeld logbestand toevoegen
-- [ ] Terminologie overnemen in terminologie.md
-
 <font size="4">**SAMENVATTING**</font>
-
-**Status**
 
 ### :warning: WAARSCHUWING
 >```VEROUDERD DOCUMENT```<br>
