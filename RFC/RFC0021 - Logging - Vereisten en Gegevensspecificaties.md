@@ -3,8 +3,7 @@
 # RFC0021 - Logging - Vereisten en Gegevensspecificaties
 
 ### :warning: WAARSCHUWING
->```VEROUDERD DOCUMENT```<br>
-Deze RFC is momenteel nog een kopie van de verouderde RFC0019 en moet nog worden bijgewerkt<br><br>
+**Deze RFC is momenteel nog een kopie van de verouderde RFC0019 en moet nog worden bijgewerkt**
 
 @todo
 - [ ] 3.2 / 3.4 ZORGSPECIFIEKE BEHEERSMAATREGEL opmerking behouden? 
