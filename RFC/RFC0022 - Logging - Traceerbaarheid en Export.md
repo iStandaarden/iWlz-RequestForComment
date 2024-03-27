@@ -17,29 +17,6 @@
 
 <font size="4">**SAMENVATTING**</font>
 
-**Status**
-
-<div style="border: 1px solid red; padding: 10px;">
-!!! WAARSCHUWING
-
-Verouderd Document
-
-Dit document met de titel "Logging" is verouderd en niet langer actueel. De reden hiervoor is dat het is gesplitst in twee afzonderlijke documenten: één gericht op de technische aspecten van traceerbaarheid en export, en de andere gericht op loggingvereisten en gegevensspecificaties.
-
-Reden voor de Veroudering:
-Dit document is niet meer actueel vanwege de behoefte aan een meer gestructureerde en gedetailleerde benadering van loggingvereisten en de technische implementatie van traceerbaarheid en export.
-
-Waar te vinden:
-
-Voor technische aspecten van traceerbaarheid en export, raadpleeg het document getiteld "Procedures voor Traceerbaarheid en Export".
-Voor loggingvereisten en gegevensspecificaties, raadpleeg het document getiteld "Logging Vereisten en Gegevensspecificaties".
-Voor actuele informatie en richtlijnen wordt u geadviseerd de nieuwe documenten te raadplegen. Dit verouderde document zal niet langer worden bijgewerkt of onderhouden.
-
-Deze RFC is  [RFC0021](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0015%20-%20Identiteit.md) getiteld "Identiteit". Lezers wordt aangeraden om [RFC0022](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0015%20-%20Identiteit.md)  te raadplegen voor de meest actuele informatie.
-
-</div>
-
-
 **Huidige situatie:**
 
 Nieuwe functionaliteit
