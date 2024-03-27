@@ -19,26 +19,18 @@
 
 **Status**
 
-
-### :warning: Waarschuwing
-```
-Verouderd Document
-
-Dit document met de titel "Logging" is verouderd en niet langer actueel. De reden hiervoor is dat het is gesplitst in twee afzonderlijke documenten: één gericht op de technische aspecten van traceerbaarheid en export, en de andere gericht op loggingvereisten en gegevensspecificaties.
-
-Reden voor de Veroudering:
-Dit document is niet meer actueel vanwege de behoefte aan een meer gestructureerde en gedetailleerde benadering van loggingvereisten en de technische implementatie van traceerbaarheid en export.
-
-Waar te vinden:
-
-Voor technische aspecten van traceerbaarheid en export, raadpleeg het document getiteld "Procedures voor Traceerbaarheid en Export".
-Voor loggingvereisten en gegevensspecificaties, raadpleeg het document getiteld "Logging Vereisten en Gegevensspecificaties".
+### :warning: VEROUDERD DOCUMENT
+>```VEROUDERD DOCUMENT```<br>
+Dit document met de titel "Logging" is verouderd en niet langer actueel. De reden hiervoor is dat het is gesplitst in twee afzonderlijke documenten: één gericht op de technische aspecten van traceerbaarheid en export, en de andere gericht op loggingvereisten en gegevensspecificaties.<br>
+<br>
+>```REDEN```<br>
+Dit document is niet meer actueel vanwege de behoefte aan een meer gestructureerde en gedetailleerde benadering van loggingvereisten en de technische implementatie van traceerbaarheid en export.<br>
+<br>
+>```WAAR TE VINDEN```
+<br>- Voor technische aspecten van traceerbaarheid en export, raadpleeg de RFC getiteld "[RFC0021 - Logging - Vereisten en Gegevensspecificaties](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0021%20-%20Logging%20-%20Vereisten%20en%20Gegevensspecificaties.md)".
+<br>- Voor loggingvereisten en gegevensspecificaties, raadpleeg het document getiteld "[RFC0022 - Logging - Traceerbaarheid en Export](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0022%20-%20Logging%20-%20Traceerbaarheid%20en%20Export.md)".<br>
+<br>
 Voor actuele informatie en richtlijnen wordt u geadviseerd de nieuwe documenten te raadplegen. Dit verouderde document zal niet langer worden bijgewerkt of onderhouden.
-
-Deze RFC is  [RFC0021](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0015%20-%20Identiteit.md) getiteld "Identiteit". Lezers wordt aangeraden om [RFC0022](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0015%20-%20Identiteit.md)  te raadplegen voor de meest actuele informatie.
-```
-
-
 
 **Huidige situatie:**
 
@@ -55,7 +47,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 ---
 **Inhoudsopgave**
 - [RFC0019 - Logging](#rfc0019---logging)
-    - [:warning: Waarschuwing](#warning-waarschuwing)
+    - [:warning: VEROUDERD DOCUMENT](#warning-verouderd-document)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
