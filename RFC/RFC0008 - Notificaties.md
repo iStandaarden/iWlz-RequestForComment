@@ -33,7 +33,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuel
   - [4.2 Typen notificatie](#42-typen-notificatie)
   - [4.3 Inhoud notificatie](#43-inhoud-notificatie)
   - [4.4 Notificeren](#44-notificeren)
-    - [4.4.1 Voorbeeld notificeren:](#441-voorbeeld-notificeren)
+    - [4.4.1 Voorbeeld notificatie:](#441-voorbeeld-notificatie)
   - [4.5 iWlz-notificatie-typen](#45-iwlz-notificatie-typen)
     - [4.5.1 iWlz VERPLICHTE notificaties](#451-iwlz-verplichte-notificaties)
     - [4.5.1 iWlz VRIJWILLIGE notificaties](#451-iwlz-vrijwillige-notificaties)
@@ -337,14 +337,14 @@ Notification "1" *-- "1..*" SubjectList: contains
 | #    | Beschrijving                      | Toelichting                                                                                            | Voorbeeld: Bemiddeling voor zorgaanbieder                                                                          |
 | :--- | :-------------------------------- | :----------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
 | 01   | registratie data                  | data vanuit backoffice in register plaatsen                                                            | Zorgkantoor bemiddelt client naar een zorgaanbieder en registreert het resultaat in het bemiddelingsregister       |
-| 02   | event trigger                     | registratie of wijziging data laat een notificatie trigger afgaan                                      | Doordat de agbCode van de zorgaanbieder wordt gevuld in ZorgInNatura, gaat er een trigger af                       |
-| 03   | bepaal notificatietype            | bepaal notificatietype en bepaal of het een verplichte of vrijwillige notificatie is                   | Het is de trigger van de iWlz-verplichte notificatie: NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER.                      |
+| 02   | event trigger                     | registratie of wijziging data laat een notificatie trigger afgaan                                      | Doordat de agbCode van de zorgaanbieder onder Instelling wordt gevuld in Bemiddelingspecificatie, gaat er een trigger af                       |
+| 03   | bepaal notificatietype            | bepaal notificatietype en bepaal of het een verplichte of vrijwillige notificatie is                   | Het is de trigger van de iWlz-verplichte notificatie: NIEUWE_BEMIDDELINGSPECIFICATIE_ZORGAANBIEDER.                      |
 | ALT  | *iWlz-vrijwillig notificatietype* | *bij een iWlz-vrijwillige notificatie moet de abonnementenregistrate worden geraadpleegd op abonnee's* | nvt.                                                                                                               |
 | 04   | raadpleeg abonnementenregistratie | bepaal of er abonnee's zijn voor het vrijwillige notificatietype                                       |
 | 05   | geef geabonneerde deelnemer       | geef informatie over geabonneerde deelnemer om de notificatie te versturen                             |
 | 06   | zoek endpoint deelnemer op        | bepaal waar de notificatie moet worden afgeleverd                                                      | Met de geregisteerde agbCode kan het endpoint en ID van de zorgaanbieder worden opgezocht                          |
 | 07   | return {endpoint; ID deelnemer}   | ontvang het afleveradres en ID voor de notificatie                                                     |
-| 08   | genereer notificatie              | maak de gewenste notificatie aan                                                                       | Gebruik ontvangen ID in notificatie (zie voorbeeld 4.3.1)                                                          |
+| 08   | genereer notificatie              | maak de gewenste notificatie aan                                                                       | Gebruik ontvangen ID in notificatie (zie voorbeeld 4.4.1)                                                          |
 | 09   | zend notificatie                  | verstuur de notificatie naar het endpoint van de deelnemer                                             | Gebruik ontvangen endpoint als afleveradres                                                                        |
 | 10   | verwerk notificatie               | verwerk de ontvangen notificatie                                                                       |
 | 11   | http-response {200}               | stuur ontvangst bevestiging                                                                            | De zorgaanbieder bevestigt de ontvangst van de notificatie en kan deze verwerken en gebruiken voor een raadpleging |
@@ -352,24 +352,24 @@ Notification "1" *-- "1..*" SubjectList: contains
 
 Zodra een event zich voordoet waarvoor een notificatie-trigger is gedefinieerd verstuurd de bronhouder de bijbehorende notificatie. 
 
-### 4.4.1 Voorbeeld notificeren: 
-Het gaat hier om een notificatie van een nieuwe ‘Zorg in natura’ voor een zorgaanbieder. Op basis van het recordID kan het zorgaanbieder een raadpleging doen van de nieuwe zorg in natura. 
+### 4.4.1 Voorbeeld notificatie: 
+Het gaat hier om een notificatie als gevolg van een nieuwe registratie in ‘Bemiddelingspecficatie’ voor een zorgaanbieder. Met deze registratie ontstaat er een nieuw record waarvan de zorgaanbieder op de hoogte moet worden gesteld. Hiervoor is de verplichte notificatie: NIEUWE_BEMIDDELINGSPECIFICATIE_ZORGAANBIEDER die naar de zorgaanbieder genoemd onder Instelling in het record moet worden verstuurd. Op basis van het recordID kan die zorgaanbieder een raadpleging doen. 
 
 Notificatie:
 
 ```json
 {
-  "timestamp": "2022-09-27T12:07:07.492Z",
+  "timestamp": "2022-09-27T12:07:07.492+1",
   "afzenderIDType": "UZOVI",
   "afzenderID": "5505",
   "ontvangerIDType": "Agbcode",
   "ontvangerID": "12341234",
   "ontvangerKenmerk": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "eventType": "NIEUWE_ZORGINNATURA_VOOR_ZORGAANBIEDER",
+  "eventType": "NIEUWE_BEMIDDELINGSPECIFICATIE_ZORGAANBIEDER",
   "subjectList": [
     {
       "subject": "Bemiddeling/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
-      "recordID": "zorginnatura/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+      "recordID": "Bemiddelingspecificatie/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
     }
   ]
 
@@ -393,14 +393,15 @@ Alleen de notificaties die afgesproken zijn tussen een of meerdere ketenpartijen
 Er zijn momenteel twee registers in ontwikkeling, het Indicatieregister van het CIZ en het Bemiddelingsregister van de zorgkantoren. Hiervoor zijn er nu de volgende iWlz notificaties gespecificeerd die gerealiseerd zullen worden. 
 
 ### 4.5.1 iWlz VERPLICHTE notificaties
-Zie voor de actuele lijst het [Informatiemodel iWlz](https://informatiemodel.istandaarden.nl/Landing/) bij de registers.
+
+Zie voor de actuele lijst het [Informatiemodel iWlz](https://informatiemodel.istandaarden.nl/Landing/) bij de registers onder het kopje Notificaties.
 
 
 
 ### 4.5.1 iWlz VRIJWILLIGE notificaties
-Zie voor de actuele lijst het [Informatiemodel iWlz](https://informatiemodel.istandaarden.nl/Landing/) bij de registers.
+Zie voor de actuele lijst het [Informatiemodel iWlz](https://informatiemodel.istandaarden.nl/Landing/) bij de registers onder het kopje notificaties.
 
-> N.B. In de eerste implementatie van notificaties zijn iWlz-VRIJWILLIGE notificaties nog niet beschikbaar. 
+> N.B. In de eerste implementatie van notificaties zijn iWlz-VRIJWILLIGE notificaties nog niet beschikbaar, waardoor een abonnementenregistratie voorziening ook niet nodig is. 
 
 ## 4.6 Publiceren en raadplegen beschikbare Notificatietype
 Dit onderdeel is beschreven in een afzonderlijke RFC: [RFC0024 - Opslag iWlz Notificatietypen in dienstencatalogus](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md)
