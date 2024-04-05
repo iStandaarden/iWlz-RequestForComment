@@ -29,6 +29,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/16) om de actue
   - [4.1 Doel melding](#41-doel-melding)
   - [4.2 Typen melding](#42-typen-melding)
   - [4.3 Inhoud iWlz Foutmelding](#43-inhoud-iwlz-foutmelding)
+    - [Afzender en Ontvanger lijst](#afzender-en-ontvanger-lijst)
   - [4.4 Foutmelden](#44-foutmelden)
     - [4.4.1 Voorbeeld iWlz Foutmelding](#441-voorbeeld-iwlz-foutmelding)
 
@@ -139,11 +140,11 @@ De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare geg
 | Gegeven          | Algemene beschrijving                                              | Beschrijving                                                                                                                             | V/O<sup>*</sup> | Datatype |
 |------------------|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|----------|
 | timestamp        | Tijdstip waarop de notificatie is aangemaakt                       |                                                                                                                                          |        V        | Datetime |
-| afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                                                                                          |        V        | Enum     |
-| afzenderID       | Identificatie van de verzender van het bericht                     |                                                                                                                                          |        V        | DID      |
-| ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                                                                                          |        V        | Enum     |
-| ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                                                                                          |        V        | DID      |
-| ontvangerKenmerk | Kenmerk van de ontvanger:                                          | Identificatie van de melder. Meestal gelijk aan de afzender                                                                              |        O        | String   |
+| afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                                                                                          |        V        | String     |
+| afzenderID       | Identificatie van de verzender van het bericht                     |                                                                                                                                          |        V        | String      |
+| ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                                                                                          |        V        | String     |
+| ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                                                                                          |        V        | String      |
+| ontvangerKenmerk | Kenmerk voor de ontvanger:                                          | Identificatie van de melder. Meestal gelijk aan de afzender                                                                              |        O        | String   |
 | eventType      | Onderwerptype van het bericht                                      | Identificatie van het type melding. (nu alleen iWlzFoutmelding)                                                                          |        V        | String   |
 | subjectList | Lijst met meldingen | | V | Array |
 | .. / subject          | Onderwerp van het bericht                                          | inhoud van de melding (nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn) |        V        | String   |
@@ -240,6 +241,15 @@ Notification "1" *-- "1..*" SubjectList: contains
 }
 ```
 </details>
+
+### Afzender en Ontvanger lijst
+| Code | Omschrijving | Referentie | Toepassing |
+| :-- | :-- | :-- | :-- |
+|  AGB | AGB-code | [AGB-register](https://www.vektis.nl/agb-register/zoeken) | identificatie Zorgaanbieder |
+|  BSN | Burgerservicenummer | | identificatie Burger (nog geen toepassing) |
+|  KVK | Kamer van Koophandel | | identificatie Ondernemer (nog geen toepassing) |
+|  OIN | Organisatie Identificatienummer | [OIN-register](https://www.vektis.nl/agb-register/zoeken) | identificatie CIZ |
+|  UZOVI | Unieke ZorgVerzekeraarsIdentificatie | [UZOVI-register](https://www.vektis.nl/uzovi-register) | identificatie Zorgkantoren |
 
 ## 4.4 Foutmelden
 

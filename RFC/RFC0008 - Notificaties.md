@@ -32,6 +32,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuel
   - [4.1 Doel notificatie](#41-doel-notificatie)
   - [4.2 Typen notificatie](#42-typen-notificatie)
   - [4.3 Inhoud notificatie](#43-inhoud-notificatie)
+    - [Afzender en Ontvanger lijst](#afzender-en-ontvanger-lijst)
   - [4.4 Notificeren](#44-notificeren)
     - [4.4.1 Voorbeeld notificatie:](#441-voorbeeld-notificatie)
   - [4.5 iWlz-notificatie-typen](#45-iwlz-notificatie-typen)
@@ -274,6 +275,14 @@ Notification "1" *-- "1..*" SubjectList: contains
 ```
 </details>
 
+### Afzender en Ontvanger lijst
+| Code | Omschrijving | Referentie | Toepassing |
+| :-- | :-- | :-- | :-- |
+|  AGB | AGB-code | [AGB-register](https://www.vektis.nl/agb-register/zoeken) | identificatie Zorgaanbieder |
+|  BSN | Burgerservicenummer | | identificatie Burger (nog geen toepassing) |
+|  KVK | Kamer van Koophandel | | identificatie Ondernemer (nog geen toepassing) |
+|  OIN | Organisatie Identificatienummer | [OIN-register](https://www.vektis.nl/agb-register/zoeken) | identificatie CIZ |
+|  UZOVI | Unieke ZorgVerzekeraarsIdentificatie | [UZOVI-register](https://www.vektis.nl/uzovi-register) | identificatie Zorgkantoren |
 
 ## 4.4 Notificeren
 
