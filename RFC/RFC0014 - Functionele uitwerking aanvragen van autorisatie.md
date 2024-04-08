@@ -56,7 +56,8 @@ Deze notitie beschrijft een oplossingsrichting om deze verwevenheid te corrigere
 ## 1.1 Uitgangspunten
 - Elke deelnemer heeft een authenticatiemiddel van een vertrouwde uitgever. Waar momenteel een VECOZO systeemcertificaat (i.c.m. een clientId en ClientSecret) wordt gebruikt, zal t.z.t. ook PKIOverheid worden vertrouwd of het gebruik van DiD en Verifiable Credentials mogelijk zijn.
 - Elke deelnemer heeft een API endpoint beschikbaar waarnaar andere deelnemers kunnen communiceren. Momenteel is alleen een GraphQL endpoint ondersteund.
-- Er is een **Service directory** waarin per bronregister het GraphQL endpoints beschikbaar is.
+- ~Er is een **Service directory** waarin per bronregister het GraphQL endpoints beschikbaar is.~
+- Elke deelnemer moet in het **Adresboek** zijn eindpoints registreren.
 - Er is een **Service directory** waarin per deelnemer zijn **rol** in het netwerkmodel is beschreven. 
 - Om autorisatie aan te vragen heeft een deelnemer een attest van deelname nodig.
 
