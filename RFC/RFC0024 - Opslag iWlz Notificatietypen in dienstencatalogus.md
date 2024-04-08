@@ -2,8 +2,11 @@
 
 # RFC0024 - Opslag en raadplegen (iWlz-)notificatietypen in dienstencatalogus
 
-@todo
- - [ ] De interface van de *Dienstencatalogus* moet nog worden gespecificeerd evenals de concrete invulling van dit generieke component.
+@N.B.
+- [ ] Dit is de eerste conceptbeschrijving van de functionalitiet *Dienstencatalogus.*
+ - [ ] De interface van de *Dienstencatalogus* moet nog worden gespecificeerd evenals de concrete invulling van dit generieke component. 
+ - [ ] In de eerste realisaties van Notificaties is er geen *Diensten catalogus* nodig.
+  
 
 <font size="4">**SAMENVATTING**</font>
 
@@ -48,13 +51,13 @@ Deze RFC beschrijft de werking van de *Dienstencatalogus* binnen het iWLZ netwer
 Deze RFC is noodzakelijk voor de volgende RFC's en daar een relatie mee. 
 |RFC | onderwerp | relatie<sup>*</sup> | toelichting |issue |
 |:--|:--|:--| :--|:--|
-|[0008](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) | Notificaties en abonnement | voorwaardelijk | <ul><li>Er is een ***Dienstencatalogus*** waarin notificatietypen gepubliceerd kunnen worden.</li> <li>Netwerkdeelnemers raadplegen de ***Dienstencatalogus*** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten. </li></ul>|[#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
+|[RFC0008](/RFC/RFC0008%20-%20Notificaties.md) | Notificaties | voorwaardelijk voor de ondersteuning van (iWlz) vrijwille notificaties | <ul><li>Er is een ***Dienstencatalogus*** waarin notificatietypen gepubliceerd kunnen worden.</li> <li>Netwerkdeelnemers raadplegen de ***Dienstencatalogus*** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten. </li></ul>|[#2](https://github.com/iStandaarden/iWlz-RFC/issues/2) |
 
 
 <sup>*</sup>Relatie andere RFC = voorwaardelijk, *voor andere RFC* / afhankelijk, *van andere RFC*
 
 ## 1.3 Code-repository
-De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/POC-bemiddeling](https://github.com/iStandaarden/iWlz-generiek/tree/POC-bemiddeling)
+De benodigde code staat in @@@
 
 # 2. Terminologie
 Opsomming van de in dit document gebruikte termen.
@@ -66,7 +69,7 @@ Opsomming van de in dit document gebruikte termen.
 # 3 *Dienstencatalogus* voor Notificatie-typen
 
 ## 3.1 Inleiding
-In [RFC-0008 - Notificaties en Abonnementen](/RFC/RFC0008%20-%20Notificaties%20en%20Abonnementen.md) is beschreven hoe notificaties een belangrijk onderdeel vormen in de werking van het iWlz-netwerkmodel. Deelnemers worden in dat netwerk door middel van notificaties op de hoogte gebracht van nieuwe of gewijzigde informatie die relevant is voor die deelnemer. Daarna en met gegevens uit de notificatie kan een deelnemer de informatie raadplegen. Het soort notificatie of de reden van een notificatie wordt bepaald door het verantwoordelijke **notificatie-type**.  Zo is er bijvoorbeeld een notificatie die het Zorgkantoor op de hoogte stelt van een nieuwe Wlz indicatie van een client die volgens de postcode in het BRP woont in de regio van dat zorgkantoor. 
+In [RFC-0008 - Notificaties](/RFC/RFC0008%20-%20Notificaties.md) is beschreven hoe notificaties een belangrijk onderdeel vormen in de werking van het iWlz-netwerkmodel. Deelnemers worden in dat netwerk door middel van notificaties op de hoogte gebracht van nieuwe of gewijzigde informatie die relevant is voor die deelnemer. Daarna en met gegevens uit de notificatie kan een deelnemer de informatie raadplegen. Het soort notificatie of de reden van een notificatie wordt bepaald door het verantwoordelijke **notificatie-type**.  Zo is er bijvoorbeeld een notificatie die het Zorgkantoor op de hoogte stelt van een nieuwe Wlz indicatie van een client die volgens de postcode in het BRP woont in de regio van dat zorgkantoor. 
 
 De ***Dienstencatalogus*** faciliteert het vastleggen van de beschikbare notificatie-typen in het netwerk zodat een deelnemer informatie hierover centraal kan raadplegen. 
 
