@@ -15,6 +15,11 @@ Er is alleen nog een notificatie van het CIZ naar het zorgkantoor dat verantwoor
 
 Dit document beschrijft functioneel de generieke werking van notificaties en meldingen in het Netwerkmodel iWlz. Met notificaties of meldingen worden respectievelijke afnemer of bronhouder geattendeerd op nieuwe informatie die relevant is voor die afnemer of bronhouder. 
 
+> **NB. De in deze RFC beschreven *VRIJWILLIGE* notificaties worden NIET in de eerste implementatie van notificaties gerealiseerd. Een aantal afhankelijkheden zijn daardoor nog niet noodzakelijk. Het gaat om:**
+> - De Dienstencatalogus, beschreven in RFC0020;
+> - Abonnementenvoorziening, beschreven in RFC0025;
+>
+
 <font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuele status van deze RFC te bekijken.
@@ -53,25 +58,28 @@ Het netwerkmodel moet in zijn geheel wel ondersteuning bieden aan het gehele iWl
 Deze RFC beschrijft de werking van notificeren in het iWlz Netwerkmodel.
 
 ## 1.1 Uitgangspunten
-- Er is een catalogus voorziening: **Dienstencatalogus** waarin notificatietypen gepubliceerd kunnen worden.
-- Er is een **Adresboek** waarin per deelnemer de (notificatie-)endpoints beschikbaar zijn. 
-- Netwerkdeelnemers raadplegen de **Dienstencatalogus** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten.
-- Een abonnement wordt geplaatst door een deelnemer van het netwerk (abonnee) bij de partij die het notificatie-type afhandeld (de bronhouder). 
-- Notificaties die randvoorwaardelijk zijn om een wettelijke taak uit te kunnen voeren worden door de bronhouder verstuurd zonder een apart abonnement per deelnemer.
-- Om een abonnement te kunnen plaatsen heeft een deelnemer een attest van deelname nodig.
-- Een notificatie is dun. Dat wil zeggen dat de ontvanger op basis van de notificatie in staat is te bepalen welke informatie relevant is om te raadplegen. 
-- Een abonnement is in de basis permanent. De abonnee is zelf verantwoordelijk voor het intrekken van het abonnement. Bij uittreding uit het netwerk, bijvoorbeeld vanwege fusie of faillissement, kunnen abonnementen in bulk worden opgeruimd of gemuteerd. Dit zal in de praktijk altijd maatwerk zijn.
-- Silverster abonneert zich niet op de (iWlz-)vrijwillige notificaties.
-- Silverster handelt geen (iWlz-)vrijwillige notificaties af.
+
+| **Uitgangspunt** | **Voor eerste implementatie?** |
+|---|---|
+| - Er is een catalogus voorziening: **Dienstencatalogus** waarin notificatietypen gepubliceerd kunnen worden. | nee |
+| - Er is een **Adresboek** waarin per deelnemer de (notificatie-)endpoints beschikbaar zijn. | ja |
+| - Netwerkdeelnemers raadplegen de **Dienstencatalogus** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten. | nee |
+| - Een abonnement wordt geplaatst door een deelnemer van het netwerk (abonnee) bij de partij die het notificatie-type afhandeld (de bronhouder). | nee |
+| - Notificaties die randvoorwaardelijk zijn om een wettelijke taak uit te kunnen voeren worden door de bronhouder verstuurd zonder een apart abonnement per deelnemer. | ja |
+| - Om een abonnement te kunnen plaatsen heeft een deelnemer een attest van deelname nodig. | nee |
+| - Een notificatie is dun. Dat wil zeggen dat de ontvanger op basis van de notificatie in staat is te bepalen welke informatie relevant is om te raadplegen. | ja |
+| - Een abonnement is in de basis permanent. De abonnee is zelf verantwoordelijk voor het intrekken van het abonnement. Bij uittreding uit het netwerk, bijvoorbeeld vanwege fusie of faillissement, kunnen abonnementen in bulk worden opgeruimd of gemuteerd. Dit zal in de praktijk altijd maatwerk zijn. | nee |
+| - Silverster abonneert zich niet op de (iWlz-)vrijwillige notificaties. | ja |
+| - Silverster handelt geen (iWlz-)vrijwillige notificaties af. | ja |
 
 ## 1.2 Relatie andere RFC
 Deze RFC heeft een relatie met de volgende andere RFC(s):
-| RFC                                                                                                   | onderwerp                                                       | relatie<sup>*</sup> | toelichting                                                                                                  | issue                                                     |
-| :---------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------- | :------------------ | :----------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------- |
-| [RFC0003](/RFC/RFC0003%20-%20Adresboek.md)                                                            | Adresboek                                                       | afhankelijk         | beschrijft realisatie Adresboek                                                                              | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4)   |
-| [RFC0020](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md)            | Opslag en Raadplegen iWlz notificatietypen in dienstencatalogus | afhankelijk         | beschrijft functioneel de dienst om notificatie-typen te publiceren en raadplegen                            | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/24) |
-| [RFC0018](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md)  | Meldingen: Melden van iWlz gegevensfouten                       | gerelateerd         | beschrijft het stroom van raadpleger aan bronhouder                                                          | [#16](https://github.com/iStandaarden/iWlz-RFC/issues/16) |
-| [RFC0025](/RFC/RFC0025%20-%20Abonnementenvoorziening%20voor%20(iWlz)%20vrijwillige%20notificaties.md) | Abonnementenvoorziening                                         | afhankelijk         | beschrijft de abonnementenvoorziening noodzakelijk voor het ondersteunen van (iWlz) vrijwillige notificaties | [#36](https://github.com/iStandaarden/iWlz-RFC/issues/36) |
+| RFC | onderwerp | relatie<sup>*</sup> | toelichting | issue | onderdeel eerste implementatie? |
+|---|---|---|---|---:|---|
+| [RFC0003](/RFC/RFC0003%20-%20Adresboek.md) | Adresboek | afhankelijk | beschrijft realisatie Adresboek | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4) | Nee |
+| [RFC0020](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md) | Opslag en Raadplegen iWlz notificatietypen in dienstencatalogus | afhankelijk | beschrijft functioneel de dienst om notificatie-typen te publiceren en raadplegen | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/24) | Nee |
+| [RFC0018](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md) | Meldingen: Melden van iWlz gegevensfouten | gerelateerd | beschrijft het stroom van raadpleger aan bronhouder | [#16](https://github.com/iStandaarden/iWlz-RFC/issues/16) | Ja |
+| [RFC0025](/RFC/RFC0025%20-%20Abonnementenvoorziening%20voor%20(iWlz)%20vrijwillige%20notificaties.md) | Abonnementenvoorziening | afhankelijk | beschrijft de abonnementenvoorziening noodzakelijk voor het ondersteunen van (iWlz) vrijwillige notificaties | [#36](https://github.com/iStandaarden/iWlz-RFC/issues/36) | Nee |
 
 <sup>*</sup>voorwaardelijk,*voor andere RFC* / afhankelijk, *van andere RFC*
 
@@ -154,10 +162,10 @@ Denk bijvoorbeeld aan de registratie van een nieuw indicatiebesluit. Het zorgkan
 
 De twee typen iWlz notificaties zijn daarom: 
 
-| Type notificatie | Verzenden notificatie | Invloed deelnemer                       |
-| :--------------- | :-------------------- | :-------------------------------------- |
-| iWlz-Verplicht   | Altijd                | Geen keuze; ontvangt notificatie altijd |
-| iWlz-Vrijwillig  | Alleen naar abonnee's | Keuze ligt bij deelnemer                |
+| Type notificatie | Verzenden notificatie | Invloed deelnemer                       | Onderdeel eerste implementatie? |
+| :--------------- | :-------------------- | :-------------------------------------- | :--- |
+| iWlz-Verplicht   | Altijd                | Geen keuze; ontvangt notificatie altijd | Ja |
+| iWlz-Vrijwillig  | Alleen naar abonnee's | Keuze ligt bij deelnemer                | Nee |
 
 
 ## 4.3 Inhoud notificatie
