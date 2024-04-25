@@ -84,7 +84,7 @@ Deze RFC heeft een relatie met de volgende andere RFC(s):
 <sup>*</sup>voorwaardelijk,*voor andere RFC* / afhankelijk, *van andere RFC*
 
 ## 1.3 Code-repository
-De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/POC-bemiddeling](https://github.com/iStandaarden/iWlz-generiek/tree/POC-bemiddeling)
+De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/master](https://github.com/iStandaarden/iWlz-generiek/tree/master)
 
 
 # 2. Terminologie
