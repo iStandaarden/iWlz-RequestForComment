@@ -1,0 +1,51 @@
+@startuml rfc0018a-01-meldingflow-Silvester
+title melding flow Silvester
+skinparam handwritten false
+skinparam participantpadding 20
+skinparam boxpadding 40
+autonumber "<b>[00]"
+box  #lightblue
+participant "bronhouder" as bron
+end box
+
+box  #lightyellow
+participant "Silvester" as silv
+end box
+
+box  #lightblue
+participant "ontvanger" as ontv
+end box
+
+activate bron
+bron -> bron: event
+bron -> silv: notificatie
+
+activate silv
+silv -> bron: raadpleeg bron
+bron -> silv: data
+silv -> silv: stel xml-bericht op
+silv -> ontv: stuur xml-bericht
+
+activate ontv
+
+alt #Pink xml-bericht kan niet afgeleverd
+  silv ->x ontv: xml-bericht niet afgeleverd
+  silv -> silv: bepaal BRS-fout
+  silv -> bron: BRS-melding
+  note across #GreenYellow: beschreven in deze RFC0018a
+end
+
+
+activate ontv
+ontv -> ontv: valideer xml-bericht
+ontv -> silv: stuur retourbericht
+deactivate ontv
+
+silv <- silv: controleer inhoud retourbericht
+
+alt #lightgrey retourbericht bevat iWlz-fouten 
+  silv -> bron: iWlz foutmelding
+  note over bron, silv : beschreven in RFC0018
+end
+
+@enduml
