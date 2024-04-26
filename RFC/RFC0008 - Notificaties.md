@@ -175,7 +175,7 @@ De notificatie is in structuur gelijk aan de melding (zie [RFC0018](/RFC/RFC0018
   - wanneer is de notifictie verzonden
   - op welke informatie de notificatie betrekking heeft
   - informatie om een gerichte raadpleging te kunnen doen
-  - (autorisatie?)
+  - autorisatievoorziening moet voldoende informatie hebben om te kunnen bepalen dat de notificatie terecht is. (Bijvoorbeeld: Notificatietype mag verzonden worden door verzender en stuurt naar juiste type ontvanger)
 
 De notificatie bevat de volgende gegevens:
 | Gegeven          | Algemene beschrijving                                              | Specifieke beschrijving voor notificeren                               | V/O<sup>*</sup> | Type     |
