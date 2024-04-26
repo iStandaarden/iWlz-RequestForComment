@@ -29,7 +29,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/16) om de actue
   - [4.1 Doel melding](#41-doel-melding)
   - [4.2 Typen melding](#42-typen-melding)
   - [4.3 Inhoud iWlz Foutmelding](#43-inhoud-iwlz-foutmelding)
-    - [Afzender en Ontvanger lijst](#afzender-en-ontvanger-lijst)
+    - [4.3.1 Afzender en Ontvanger lijst](#431-afzender-en-ontvanger-lijst)
   - [4.4 Foutmelden](#44-foutmelden)
     - [4.4.1 Voorbeeld iWlz Foutmelding](#441-voorbeeld-iwlz-foutmelding)
 
@@ -242,14 +242,16 @@ Notification "1" *-- "1..*" SubjectList: contains
 ```
 </details>
 
-### Afzender en Ontvanger lijst
+### 4.3.1 Afzender en Ontvanger lijst
 | Code | Omschrijving | Referentie | Toepassing |
 | :-- | :-- | :-- | :-- |
 |  AGB | AGB-code | [AGB-register](https://www.vektis.nl/agb-register/zoeken) | identificatie Zorgaanbieder |
 |  BSN | Burgerservicenummer | | identificatie Burger (nog geen toepassing) |
-|  KVK | Kamer van Koophandel | | identificatie Ondernemer (nog geen toepassing) |
-|  OIN | Organisatie Identificatienummer | [OIN-register](https://www.vektis.nl/agb-register/zoeken) | identificatie CIZ |
+|  KVK | Kamer van Koophandel | [KVK-register](https://www.kvk.nl/zoeken/) | identificatie Ondernemer (CIZ bij eerste implementatie<sup>*</sup>) |
+|  OIN | Organisatie Identificatienummer | [OIN-register](https://www.vektis.nl/agb-register/zoeken) | identificatie CIZ (toekomstig<sup>*</sup>) |
 |  UZOVI | Unieke ZorgVerzekeraarsIdentificatie | [UZOVI-register](https://www.vektis.nl/uzovi-register) | identificatie Zorgkantoren |
+
+<sup>*</sup> Op dit moment is het voor VECOZO niet mogelijk om een OIN te verifieren waardoor er geen claim kan worden afgegeven op basis van OIN. Bij de eerste implementatie van meldingen zal voor de identificatie van het CIZ  het KVK-nummer (62253778) worden gebruikt. 
 
 ## 4.4 Foutmelden
 
