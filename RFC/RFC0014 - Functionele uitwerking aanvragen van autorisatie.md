@@ -265,7 +265,7 @@ Hieronder zijn alle scope(s) gedocumenteerd die mogelijk zijn in het iWlz Netwer
 Deze scope staat toe WlzBemiddelingen op te vragen, maar verplicht de query te beperken tot de instelling waarvoor deze is gemachtigd.
 
 **Voorbeeld:**
-```json
+```graphql
 Query{
 	WlzBemiddelingen(filter: { instelling: "1234567890" }, first: 2) 
 	{
@@ -297,7 +297,7 @@ Query{
 Deze scope staat toe een specifieke indicatie op te vragen uit het wlzIndicatieregister, de rule-engine heeft bij het aanvragen van de autorisatie gecontroleerd of de deelnemer hiertoe is gemachtigd.
 
 **Voorbeeld:**
-```json
+```grapql
 Query{
 	WlzIndicaties(wlzindicatieID: "[indicatie-id]") {
     afgiftedatum        
