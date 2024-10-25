@@ -175,7 +175,7 @@ Op dit moment kan de autorisatieserver alleen autorisaties voor GraphQL API's ui
 
 De autorisatieserver is voor netwerkdeelnemers alleen toegangkelijk op het token-endpoint. Op dit endpoint is een vertrouwd authenticatiemiddel vereist.  
 |Omgeving|URL|
-|:--- |:--- 
+|:--- |:--- |
 |TST|https://tst-api.vecozo.nl/tst/netwerkmodel/v2/oauth2/token|
 |PRD|https://api.vecozo.nl/netwerkmodel/v2/oauth2/token|
 
