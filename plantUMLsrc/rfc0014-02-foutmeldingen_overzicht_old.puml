@@ -10,7 +10,7 @@ end box
 
 box "nID"
     participant "autorisatieserver" as AuthzServer
-    participant "PEP" as Filter
+    participant "nID Filter" as Filter
     participant "Resource-server" as nIDResourceServer
 end box
 

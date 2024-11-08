@@ -1,0 +1,95 @@
+@startuml rfc0014-03-opa-framework
+
+!pragma teoz true
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+box "Deelnemer"
+    participant "Client" as Client
+end box
+
+box "nID" #SkyBlue
+    participant "PEP" as PEP
+
+    box "OPA" #LightBlue
+    participant "PDP" as PDP
+    participant "PRP" as PRP
+    end box
+end box
+
+box "buiten nID"
+box "OPA" #LightBlue
+    participant "PIP" as PIP
+    participant "PAP" as PAP
+end box
+end box
+
+box "Register"
+    participant "Resource" as Register
+end box
+
+autonumber "<b>[000]"
+
+group raadplegen
+Client -> PEP: GraphQL Request
+activate Client
+
+  activate PEP
+  note right of PEP: Inline filtering requests
+  PEP --> PEP: valideer toegang
+  PEP -> PDP: Valideer Query met policy
+    activate PDP
+      PDP -> PDP: verify query
+      group context
+        PDP -> PIP: Verify context information
+        activate PDP #LightGray
+        activate PIP
+        PIP -> PIP: Verify
+        PIP -> PDP: Allow
+        deactivate PDP
+        deactivate PIP
+      end
+    PDP -> PEP: Query allow
+    deactivate PDP
+  
+  PEP -> PEP: Valideer GraphQL request met scope(s) 
+  PEP -> Register: GraphQL Request
+  autonumber stop
+  activate Register
+  Register --> PEP
+  deactivate Register
+
+  PEP --> Client
+  deactivate PEP
+
+deactivate Client
+end regular
+
+
+
+autonumber "<b>[000]" 
+
+group policy beheer 
+  activate PAP
+  PAP <- PAP: voer policy-\nbeheer uit
+
+  
+  PAP -> PRP: publiceer policy
+  activate PRP
+  deactivate PAP
+
+  PDP -> PRP: controleer op policy mutaties
+  activate PDP
+
+  PRP -> PDP: return nieuwe policy
+  deactivate PRP
+  PDP -> PDP: verwerk nieuwe policy
+  
+  PDP -> PDP: pas nieuwe policy toe
+  deactivate PDP
+
+end policy
+
+
+@enduml

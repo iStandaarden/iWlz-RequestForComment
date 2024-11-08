@@ -2,703 +2,744 @@
 
 # RFC0014 - Functionele uitwerking aanvragen van autorisatie
 
-<font size="4">**SAMENVATTING**</font>
+versie 0.9 - dd. 08-11-2024
+
+**SAMENVATTING**
 
 **Huidige situatie:**
 
->```nog invullen```
+Ongewenste afhankelijkheid in autorisatie tussen notificatie en raadpleging en inflexibel werking autorisatiemodel. 
 
 **Beoogde situatie**
 
-Dit document beschrijft functioneel de generieke wijze van autoriseren in het Netwerkmodel iWlz. Met de juiste autorisatie kunnen bronhouders en deelnemers acties uitvoeren zoals notificaties versturen, registers bevragen en sturen van meldingen. 
+Dit document beschrijft functioneel de generieke wijze van autoriseren in het Netwerkmodel iWlz. Met de juiste autorisatie kunnen bronhouders en deelnemers acties uitvoeren zoals notificaties versturen, registers bevragen en sturen van meldingen.
 
-<font size="4">**Status RFC**</font>
+**Status RFC**
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/9) om de actuele status van deze RFC te bekijken.
 
----
-**Inhoudsopgave**
+***
+
+Inhoudsopgave
+
 - [RFC0014 - Functionele uitwerking aanvragen van autorisatie](#rfc0014---functionele-uitwerking-aanvragen-van-autorisatie)
-- [1. Inleiding](#1-inleiding)
-  - [1.1 Uitgangspunten](#11-uitgangspunten)
-- [2. Terminologie](#2-terminologie)
-- [3. Schematische weergave](#3-schematische-weergave)
-- [4. Autorisatieserver](#4-autorisatieserver)
-  - [4.1 Rule engine](#41-rule-engine)
-  - [4.2 Scopes](#42-scopes)
-- [5 Resource-server](#5-resource-server)
-  - [5.1 Timeout (verder uitwerken)](#51-timeout-verder-uitwerken)
-- [6 Foutmeldingen](#6-foutmeldingen)
-  - [\[1\] 404 Not found](#1-404-not-found)
-  - [\[2\] 403 Invalid client certificate](#2-403-invalid-client-certificate)
-  - [\[3\] 403 Forbidden](#3-403-forbidden)
-  - [\[4\] 401 Unauthenticated](#4-401-unauthenticated)
-  - [\[5\] 400 No Client ID](#5-400-no-client-id)
-  - [\[6\] 401 Invalid Client ID](#6-401-invalid-client-id)
-  - [\[07\] 400 Invalid Scope](#07-400-invalid-scope)
-  - [\[07\] 400 verifying request: bad request: parsing GQL query: .......](#07-400-verifying-request-bad-request-parsing-gql-query-)
-  - [\[07\] 400 The following variables were not used: XXXXXX.](#07-400-the-following-variables-were-not-used-xxxxxx)
-  - [\[08\] 401 Access denied, Invalid Scope](#08-401-access-denied-invalid-scope)
-  - [\[08\] 401 Access denied, Invalid Scope](#08-401-access-denied-invalid-scope-1)
-  - [\[10\] 403 RBAC: access denied](#10-403-rbac-access-denied)
-  - [\[11\] 403 request does not match scopes](#11-403-request-does-not-match-scopes)
-  - [\[12\] 504 Gateway timeout](#12-504-gateway-timeout)
-  - [\[13\] 500 Internal Server Error](#13-500-internal-server-error)
+- [**1. Inleiding**](#1-inleiding)
+  - [**1.1 Uitgangspunten**](#11-uitgangspunten)
+- [**2. Terminologie**](#2-terminologie)
+- [**3. Schematische weergave**](#3-schematische-weergave)
+- [**4. Netwerkcomponenten**](#4-netwerkcomponenten)
+  - [**4.1 Autorisatieserver**](#41-autorisatieserver)
+    - [**4.1.1 Grant\_type**](#411-grant_type)
+    - [**4.1.2 Scopes**](#412-scopes)
+    - [**4.1.3 Audience**](#413-audience)
+    - [**4.1.4 Token request**](#414-token-request)
+  - [**4.2 Policy Enforcement Point (PEP)**](#42-policy-enforcement-point-pep)
+  - [**4.3 Policy Decision Point (PDP)**](#43-policy-decision-point-pdp)
+- [**5 Raadplegen registers**](#5-raadplegen-registers)
+  - [**5.1 Raadplegen Indicatieregister**](#51-raadplegen-indicatieregister)
+  - [**5.2 Raadplegen Bemiddelingsregister**](#52-raadplegen-bemiddelingsregister)
+- [**6 Foutmeldingen**](#6-foutmeldingen)
+  - [**6.1 Foutmeldingen Aanvraag van Autorisatie**](#61-foutmeldingen-aanvraag-van-autorisatie)
+    - [**\[1\] 401 Unauthenticated**](#1-401-unauthenticated)
+    - [**\[2\] 403 Unauthorized**](#2-403-unauthorized)
+    - [**\[3\] 403 Invalid Client Certificate**](#3-403-invalid-client-certificate)
+    - [**\[4\] 404 Not Found**](#4-404-not-found)
+    - [**\[5\] 400 Invalid Scope**](#5-400-invalid-scope)
+    - [**\[6\] 400 Audience Required**](#6-400-audience-required)
+    - [**\[7\] 400 Invalid Query**](#7-400-invalid-query)
+    - [**\[8\] 400 No Operation**](#8-400-no-operation)
+    - [**\[9\] 401 JWT is Expired**](#9-401-jwt-is-expired)
+    - [**\[10\] 401 JWT Header is an Invalid JSON**](#10-401-jwt-header-is-an-invalid-json)
+    - [**\[11\] 401 Access Denied, Invalid Scope**](#11-401-access-denied-invalid-scope)
+    - [**\[12\] 401 Token Invalid**](#12-401-token-invalid)
+    - [**\[13\] 403 RBAC: Access Denied**](#13-403-rbac-access-denied)
+    - [**\[14\] 403 Request Does Not Match Scopes**](#14-403-request-does-not-match-scopes)
+  - [**6.2 Foutmeldingen GraphQL Query**](#62-foutmeldingen-graphql-query)
+    - [**\[15\] 500 Internal Server Error**](#15-500-internal-server-error)
+    - [**\[16\] 502 Bad Gateway**](#16-502-bad-gateway)
+    - [**\[17\] 400 Invalid Scope**](#17-400-invalid-scope)
+    - [**\[18\] 400 Audience Required**](#18-400-audience-required)
+    - [**\[19\] 400 Invalid Query Syntax**](#19-400-invalid-query-syntax)
+    - [**\[20\] 400 No Operation**](#20-400-no-operation)
+    - [**\[21\] 401 Access Denied, Invalid Scope**](#21-401-access-denied-invalid-scope)
+    - [**\[22\] 403 RBAC: Access Denied**](#22-403-rbac-access-denied)
+    - [**\[23\] 403 Request Does Not Match Scopes**](#23-403-request-does-not-match-scopes)
+    - [**\[24\] 504 Gateway Timeout**](#24-504-gateway-timeout)
+    - [**\[25\] 500 Internal Server Error**](#25-500-internal-server-error)
+- [**7. Referenties**](#7-referenties)
 
----
 
 
-# 1. Inleiding
-Binnen het iWlz netwerkmodel werken we met generieke technische oplossingen en contracten om minimaal afhankelijk te zijn van gezamenlijke releases. Daarom werken we bijvoorbeeld met GraphQL, zodat het uitleveren van extra gegevens via een register geen impact heeft op de overige deelnemers aan het netwerk. 
-Het mechanisme voor autoriseren blijkt in de huidige opzet nog niet voldoende generiek te zijn. Het is namelijk nog niet mogelijk om een open bevragingen te doen op een (iWlz-)register. De reden hiervoor is dat autorisaties nu alleen worden uitgedeeld op initiatief van een register door het toesturen van een notificatie. hierdoor is notificeren en autoriseren met elkaar verweven. 
-Deze notitie beschrijft een oplossingsrichting om deze verwevenheid te corrigeren, door één generiek mechanisme voor autoriseren te specificeren in de koppelvlak specificaties los van notificaties. Hierdoor kan naast bevragen ook autorisatie plaatsvinden op andere berichtstromen, zoals het versturen van notificaties, meldingen of het rechtstreeks kunnen/mogen muteren van bronregisters.
+# **1. Inleiding**
 
-## 1.1 Uitgangspunten
-- Elke deelnemer heeft een authenticatiemiddel van een vertrouwde uitgever. Waar momenteel een VECOZO systeemcertificaat (i.c.m. een clientId en ClientSecret) wordt gebruikt, zal t.z.t. ook PKIOverheid worden vertrouwd of het gebruik van DiD en Verifiable Credentials mogelijk zijn.
-- Elke deelnemer heeft een API endpoint beschikbaar waarnaar andere deelnemers kunnen communiceren. Momenteel is alleen een GraphQL endpoint ondersteund.
-- ~Er is een **Service directory** waarin per bronregister het GraphQL endpoints beschikbaar is.~
-- Elke deelnemer moet in het **Adresboek** zijn eindpoints registreren.
-- Er is een **Service directory** waarin per deelnemer zijn **rol** in het netwerkmodel is beschreven. 
-- Om autorisatie aan te vragen heeft een deelnemer een attest van deelname nodig.
+Binnen het iWlz netwerkmodel werken we met generieke technische oplossingen zoveel mogelijk afgeleid van open standaarden. Dit om de noodzaak van gezamenlijke releases te beperken en een duurzaam informatiestelsel binnen de zorg te bewerkstelligen. Er is bijvoorbeeld voor GraphQL gekozen voor het delen van informatie zodat het toevoegen van extra of nieuwe gegevens vanuit een register geen impact hoeft te hebben op de bestaande deelnemers aan het netwerk. (Wanneer een deelnemer de nieuwe gegevens wil raadplegen heeft het uiteraard wel impact voor die raadpleger).
 
-# 2. Terminologie
+Het mechanisme voor autoriseren blijkt in de huidige opzet niet voldoende generiek. Het is namelijk niet mogelijk om een open bevraging te doen op een (iWlz-)register. De reden hiervoor is dat autorisaties nu alleen worden uitgedeeld op initiatief van een register door het toesturen van een notificatie (Notified Pull) hierdoor is notificeren en autoriseren met elkaar verweven. 
+
+Deze RFC beschrijft een oplossingsrichting om deze verwevenheid te corrigeren. Het zorgt voor losse autorisatie op het mogen versturen, raadplegen of wijzigen van informatie op een databron (scope) en is het mogelijk om voor elk van de deelnemers beleidsregels op te stellen onder en met welke voorwaarden een deelnemer dat mag (policy). 
+
+
+## **1.1 Uitgangspunten**
+
+- Elke deelnemer heeft een authenticatiemiddel van een vertrouwde uitgever. Waar momenteel een VECOZO systeemcertificaat wordt gebruikt, kan t.z.t. ook PKIOverheid worden vertrouwd of het gebruik van DiD en Verifiable Credentials mogelijk zijn.
+- Om als deelnemer notificaties te kunnen ontvangen moet deze deelnemer een notificatie-endpoint beschikbaar stellen. Deelnemers binnen het iWlz Netwerkmodel moeten een notificatie-endpoint conform RFC0008 implementeren.
+- Elke deelnemer moet in het Adresboek zijn endpoints registreren. (N.B. op dit moment is het adresboek nog niet gerealiseerd, endpoints worden nu in een lijst bijgehouden. Zie onder referenties) 
+- Elke deelnemer in het iWlz Netwerkmodel heeft een attest van deelname nodig. Momenteel wordt dit via VECOZO verzorgd tijdens de onboarding.
+
+
+# **2. Terminologie**
 
 Opsomming van de in dit document gebruikte termen.
 
+| Terminologie                 | Omschrijving                                                                                                                                                                                                                                                                                                                                                                               |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Claims                       | Een claim is een kwalificatie, een behaalde prestatie of een stukje informatie over de achtergrond van een entiteit, zoals een naam, id, huisadres of afgeronde opleiding. Een claim zegt iets over de entiteit (deelnemer) en helpt bij het bepalen van toegang en rechten binnen een systeem.                                                                                            |
+| Scopes                       | Een scope geeft de limieten van autorisatie tot een resource aan. Een scope kan een deelnemer bij de autorisatieserver aanvragen. Dit zal het systeem gebruiken om na te gaan welke acties een gebruiker mag doen voor het raadplegen van registers.                                                                                                                                       |
+| OAuth 2 Authorization server | Een OAuth 2 authorization server deelt Access-Tokens uit om te kunnen communiceren met een resource-server. communicatie met een resource-server verloopt in het het netwerkstelsel altijd via een policy-enforcement-point (PEP).                                                                                                                                                         |
+| Access-Token                 | Een access-token wordt uitgegeven aan een deelnemer door de autorisatieserver. Een Access-Token heeft een korte levensduur en bevat informatie over de deelnemer, de scopes(permissies) en diverse tijdsaspecten.                                                                                                                                                                          |
+| Audience                     | De audience staat voor de bedoelde ontvanger waarvoor het access-token bedoeld is. In dit geval is het de locatie oftewel de URL van de resource-server.                                                                                                                                                                                                                                   |
+| Resource-Server              | In het netwerkstelsel is een resource-server een Graphql server van een netwerk deelnemer die GraphQL-queries accepteert en uitvoert naar onder andere de brondata.                                                                                                                                                                                                                        |
+| OPA                          | De **Open Policy Agent** (OPA) is een open-source, generiek policy gebaseerde beleidsengine waarmee je consistente en flexibele toegangscontrole kunt instellen en afdwingen in softwaretoepassingen. Het framework is  om beleidsregels (policies) te beheren, te evalueren en te handhaven bij het raadplegen van de registers.. Het bestaat onder andere uit de componenten PEP en PDP. |
+| PEP                          | Policy Enforcement Point: service die het OPA framework aanroept om een beleidsbeslissing aan te vragen of te verkrijgen                                                                                                                                                                                                                                                                   |
+| PDP                          | Policy Decision Point: Neemt de beleidsbeslissingen, voert de policy uit.                                                                                                                                                                                                                                                                                                                  |
 
-|Terminologie|Omschrijving|
-|:--- |:--- 
-|Claims|Een claim is een kwalificatie, een behaalde prestatie of een stukje informatie over de achtergrond van een entiteit, zoals een naam, id, huisadres of afgeronde opleiding. Een claim zegt iets over de entiteit (deelnemer)  |
-|Scopes|Een scope geeft de limieten van autorisatie tot een resource aan. Een scope kan een deelnemer bij de autorisatieserver aanvragen. 
-|autorisatieserver|Een autorisatieserver deelt Access-Tokens uit om te kunnen communiceren met een Resouce Server.
-|Access-Token|Een access-token wordt uitgegeven aan een deelnemer door de autorisatieserver. Een Access-Token heeft een korte levensduur en bevat informatie over de deelnemer, de scopes(permissies) en diverse tijdsaspecten.|
-|Resource Server|Een resource server beschermd de resource, valideerd het Access-Token en geeft op basis van de beschreven scopes toegang tot de resource.| 
-|nID-Filter|Het nID-Filter is onderdeel van de Resource Server en heeft als taak het verzoek tot de resource te valideren tegen de uitgedeelde scope(s).
 
-# 3. Schematische weergave 
- 
- Voor alle activiteiten in het Netwerkstelstel is autorisatie noodzakelijk, deze autorasaties kunnen worden aangevraagd bij de autorisatieserver. Voorbeelden van activiteiten zijn: lezen, schrijven, aanpassen en verwijderen van data uit registers, maar ook het versturen van notificaties en meldingen. 
+# **3. Schematische weergave**
 
- In het onderstaande schema wordt de basis uitgelegd voor het aanvragen van autorisatie.
+Voor alle activiteiten in het netwerkstelstel is autorisatie noodzakelijk, deze autorisaties kunnen worden aangevraagd bij de autorisatieserver. Voorbeelden van activiteiten zijn: lezen, schrijven, aanpassen en verwijderen van data uit registers, maar ook autorisatie voor het mogen versturen van notificaties en meldingen.
+
+In het onderstaande schema wordt de basis uitgelegd voor het aanvragen van autorisatie en hoe vervolgens een raadpleging (GraphQL request) verloopt.
 
 ![aanvraag_autorisatie](../plantUMLsrc/rfc0014-01-aanvragen_autorisatie.svg "aanvraag_autorisatie")
 
-<details>
-<summary>plantUML-source</summary>
+_rfc0014-01-aanvragen\_autorisatie\_flow_
 
-```plantuml
-@startuml rfc0014-01-aanvragen_autorisatie
-' !pragma teoz true
+| #  | Beschrijving                    | Toelichting                                                                                                                                          |
+| -- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 01 | Aanvraag van autorisatie        | Client wil een actie uitvoeren op een register en vraagt hiervoor autorisatie aan bij het token endpoint van de autorisatieserver                    |
+| 02 | Valideer Authenticatiemiddel    | De autorisatieserver valideert de client o.b.v. het aangeboden authenticatiemiddel                                                                   |
+| 03 | Run rule-engine o.b.v. scope(s) | De autorisatieserver doorloopt voor elke vraag (scope) de rule-engine.                                                                               |
+| 04 | Valideer autorisatie            | In de rule-engine wordt de scope gevalideerd m.b.v. de ingestelde regels voor de aangevraagde scope(s).                                              |
+| 05 | Genereer Access-Token           | Een access-token wordt gegenereerd, hierin zijn de scopes en de resources verwerkt.                                                                  |
+| 06 | Response (Access-Token)         | Indien succesvol doorlopen wordt een access-token uitgedeeld aan de client.                                                                          |
+| 07 | GraphQL Request                 | Een client kan met het access-token een verzoek uitzetten bij de PEP om een raadpleging te doen bij een resource-server.                             |
+| 08 | Valideer Authenticatiemiddel    | Valideren van de client o.b.v. het aangeboden authenticatiemiddel.                                                                                   |
+| 09 | Valideer Access-Token           | Valideren van de access-token o.a. op eigenaar en geldigheid.                                                                                        |
+| 10 | Valideer query tegen policy     | De query wordt aangeboden aan de PDP om te beoordelen of deelnemer de ingediende query mag uitvoeren  en of de verplichte onderdelen aanwezig zijn.  |
+| 11 | Valideer query                  | Bepaal of de query aan de gestelde policy of beleidsregel voldoet.                                                                                   |
+| 12 | Verify context information      | Het kan nodig zijn dat de PDP contextinformatie nodig heeft om de query te valideren. Dit kan de PDP doen bij een externe resource.                  |
+| 13 | Query allow                     | Query voldoet aan de policy.                                                                                                                         |
+| 14 | GraphQL Request                 | De PEP routeert het graphQL verzoek aan de juiste resource-server.                                                                                   |
+| 15 | Response (GraphQL)              | De resource-server stuurt het GraphQL resultaat terug.                                                                                               |
+| 16 | Response (GraphQL)              | De PEP routeert het resultaat terug aan de client.                                                                                                   |
 
-skinparam ParticipantPadding 20
-skinparam BoxPadding 10
 
-box "Deelnemer"
-    participant "Client" as Client
-end box
+# **4. Netwerkcomponenten**
 
-box "nID"
-    participant "autorisatieserver" as AuthzServer
-    participant "nID Filter" as Filter
-    participant "Resource-server" as nIDResourceServer
-end box
+Het nID netwerkstelsel voorziet in de volgende key netwerkservices.
 
-box "Register"
-    participant "Resource" as BEMRegister
-end box
+- Autorisatieserver
+- Policy Enforcement Point
+- Policy Decision Point
 
-autonumber "<b>[000]"
-activate Client
-    Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel
-    activate AuthzServer
-        AuthzServer -> AuthzServer: Valideer Authenticatiemiddel
-        AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)
-        activate AuthzServer #LightGray
-            AuthzServer -> AuthzServer: Valideer autorisatie
-            AuthzServer -> AuthzServer: Genereer Access-Token
-            activate AuthzServer #LightGray
-            deactivate AuthzServer
-        deactivate AuthzServer
-        AuthzServer --> Client --: 200 Response (Access-Token)
-    deactivate AuthzServer
-deactivate Client
 
-Client -> nIDResourceServer: **GraphQL Query**\nAuthenticatiemiddel + Access-Token
-activate nIDResourceServer
-activate Filter
-note right of Filter: Inline filtering requests
-activate Client
-Filter -> Filter: Valideer Authenticatiemiddel
-Filter -> Filter: Valideer Access-Token
-Filter -> Filter: Valideer GraphQL
-Filter -> Filter: Valideer GraphQL request met scope(s)
+## **4.1 Autorisatieserver**
 
-nIDResourceServer -> BEMRegister: GraphQL Request
-deactivate Filter
-activate BEMRegister
+Binnen het netwerk is momenteel een autorisatieserver beschikbaar, bij deze autorisatieserver kunnen netwerkdeelnemers toestemming tot autorisatie aanvragen. De autorisatieaanvraag voldoet aan de OAuth 2.0 standaard. Het resultaat van de aanvraag is een access-token (JWT).
 
-BEMRegister --> nIDResourceServer: 200 Response (GraphQL)
-deactivate BEMRegister
+Toegang tot deze autorisatieserver is beperkt tot alleen netwerkdeelnemers en alleen via het token-endpoint waarvoor een vertrouwd authenticatiemiddel vereist is. Momenteel alleen met gebruik van een VECOZO systeemcertificaat.
 
-nIDResourceServer --> Client: 200 Response (GraphQL)
-deactivate nIDResourceServer
+De volgende token-endpoints zijn voor netwerkdeelnemers beschikbaar:
 
-deactivate Client
-@enduml
+|              |                                                                                                                        |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| **Omgeving** | **URL**                                                                                                                |
+| TST          | [https://tst-api.vecozo.nl/tst/netwerkmodel/v3/auth/token](https://tst-api.vecozo.nl/tst/netwerkmodel/v2/oauth2/token) |
+| PRD          | [https://api.vecozo.nl/netwerkmodel/v3/auth/token](https://api.vecozo.nl/netwerkmodel/v2/oauth2/token)                 |
 
+
+### **4.1.1 Grant\_type**
+
+OAuth 2.0 ondersteunt verschillende "flow standaarden" (ook wel grants genoemd) om toegang te verlenen. Voor server-naar-server communicatie wordt meestal de “Client Credential Flow” toegepast. Deze “Client Credential flow” wordt ook gebruikt bij het aanvragen van toestemming tot autorisatie bij de autorisatieserver in het netwerk stelsel.
+
+
+### **4.1.2 Scopes**
+
+De autorisatieserver “vereist” dat de client in het autorisatieverzoek een "scope" parameter specificeert. 
+
+De “scope” speelt een cruciale rol in het aanvragen van autorisatie. De scope geeft het bereik aan waarvoor autorisatie wordt aangevraagd en daarmee beperkt en specificeert welke gegevens of functionaliteiten de client kan gebruiken of bevragen. 
+
+Een scope is opgebouwd uit de combinatie van resource\_type en de benodigde toegang.
+
+**Voorbeeld:** De onderstaande scope is bruikbaar voor de autorisatieaanvraag tot het opvragen (read) van indicatiegegevens uit het indicatieregister:
+
+```json
+"scope":"registers/wlzindicatieregister/indicaties:read" 
 ```
-</details>
 
-|#|Beschrijving|Toelichting|
-|:--- |:--- |:--- |
-|01| Aanvraag van autorisatie       | client wil een actie uitvoeren op een register en vraagt hiervoor autorisatie aan bij het token endpoint van de autorisatieserver  |
-|02| Valideer Authenticatiemiddel  | autorisatieserver valideert de client o.b.v. het aangeboden authenticatiemiddel |
-|03| Run rule-engine o.b.v. scope(s)| de autorisatieserver doorloopt voor elke vraag (scope) de rule-engine |
-|04| Valideer autorisatie           | in de rule-engine wordt de scope gevalideerd m.b.v. de ingestelde regels voor de scope |
-|05| Genereer Access-Token          | een access-token wordt gegenereerd, hierin zijn de scopes en de resources verwerkt.|
-|06| Response (Access-Token)        | indien succesvol doorlopen wordt een access-token uitgedeeld aan de client |
-|07| GraphQL Query | een client kan met het access-token een verzoek uitzetten bij de resource-server |
-|08| Valideer Authenticatiemiddel   | valideren van de client o.b.v. het aangeboden authenticatiemiddel |
-|09| Valideer Access-Token          | de resource-server valideert de access-token o.a. op eigenaar en geldigheid |
-|10| Valideer GraphQL               | parse en valideer het graphQL verzoek
-|11| Valideer GraphQL request met scope(s) | De resource-server valideert ook of het verzoek overeenkomt met de autorisaties in het access-token |
-|12| GraphQL Query | De resource-server routeert het graphQL verzoek aan de juiste resource |
-|13| Response (GraphQL) | De resource stuurt het GraphQL resultaat terug |
-|14| Response (GraphQL) | De resource-server routeert het resultaat terug aan de client |
+Indien de autorisatieserver de scope van de aanvraag goedkeurt, zal de “scope” in het access-token terugkomen. De waarde van de scope parameter in het verzoek is uitgedrukt als een spatie-gescheiden lijst van case-sensitive strings.
 
+De volgorde van de spatie-gescheiden strings is onbelangrijk. De autorisatieserver zal elke string verwerken als extra scope in het access-token. Indien er 2 dezelfde scopes worden meegegeven, dan worden deze samengevoegd tot 1 unieke scope. 
 
-# 4. Autorisatieserver
+Voor een goede request flow is het nodig om de scope in de request body op te stellen zoals in onderstaande voorbeelden wordt weergegeven.
 
-In de kern is de autorisatieserver een engine om OAuth2 tokens uit te geven, een autorisatieserver past Access-policies toe. Een Access-Policy definieert permissies en de duur van toegang tot een entiteit.
+**Voorbeeld:** van een scope request parameter waarin meerdere scopes worden aangevraagd:
 
-Op dit moment kan de autorisatieserver alleen autorisaties voor GraphQL API's uitdelen, de standaard in het iWlz Netwerkmodel.
+```json
+"scope":"registers/wlzbemiddelingsregister/bemiddelingen:read registers/wlzbemiddelingsreigster/bemiddelingen:write"
+```
 
-De autorisatieserver is voor netwerkdeelnemers alleen toegangkelijk op het token-endpoint. Op dit endpoint is een vertrouwd authenticatiemiddel vereist.  
-|Omgeving|URL|
-|:--- |:--- |
-|TST|https://tst-api.vecozo.nl/tst/netwerkmodel/v2/oauth2/token|
-|PRD|https://api.vecozo.nl/netwerkmodel/v2/oauth2/token|
+Als een client een scope aanvraagt waarvoor hij geen autorisatie heeft, dan zal de autorisatieserver een foutmelding retourneren "Access denied, invalid scope", ongeacht of er in dezelfde aanvraag scopes zitten waarvoor wel is geautoriseerd. 
 
+Als de client geen of een lege scope parameter meegeeft in zijn request aan de autorisatieserver, dan MOET de autorisatieserver het verzoek verwerken door een vooraf gedefinieerde standaard scope toe te passen of een "Invalid scope" foutmelding te retourneren. Als de autorisatieserver een verzoek ontvangt waar 1 of meerdere scopes incorrect zijn MOET de autorisatieserver een "Access denied, invalid scope" retourneren.
 
+Een standaard scope zou kunnen zijn: *“user/profile:read”* (Deze scope is als voorbeeld en bestaat in het huidige netwerkmodel niet)
 
-Het token-endpoint van de autorisatieserver staat toe dat een client in het autorisatieverzoek een "scope" request parameter specificeert. De autorisatieserver zal deze parameter gebruiken om het access-token als antwoord op het verzoek te voorzien van de scopes. De waarde van de scope parameter in het verzoek is uitgedrukt als een spatie-gescheiden lijst van case-sensitive strings. De mogelijke strings zijn gespecificeerd in de autorisatieserver en zijn gedocumenteerd. Als de lijst meerdere spatie-gescheiden strings bevat, dan is de volgorde hiervan onbelangrijk. De autorisatieserver zal elke string verwerken als extra scope in het access-token.
+Hieronder zijn alle scope(s) gedocumenteerd die op moment van schrijven mogelijk zijn in het iWlz Netwerkmodel.
 
-**Voorbeeld:** van een scope request parameter waar meerdere scopes worden aangevraagd:  
-*"scope":"organisaties\zorgkantoren\[UZOVICode]\notificaties\notificatie:indicatie.create organisaties\zorgaanbieders\[AGBCode]\notificaties\notificatie:indicatie.create"*
+Afhankelijk van de definitie in de access-policy kan een deelnemer deze aanvragen.
+
+| Resource             | Scope                                                              | Omschrijving                                                                          |
+| -------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
+|                      | (no scope)                                                         | Retourneert de "Defaultscope", (momenteel niet mogelijk)                              |
+| Notificatie          | organisaties/zorgkantoor/notificaties/notificatie:create           |                                                                                       |
+| Notificatie          | organisaties/zorgaanbieder/notificaties/notificatie:create         |                                                                                       |
+| Melding              | organisaties/zorgkantoor/meldingen/melding:create                  |                                                                                       |
+| Melding              | organisaties/zorgaanbieder/meldingen/melding:create                |                                                                                       |
+| Indicatie-register   | registers/wlzindicatieregister/indicaties:read                     | Geeft leesrechten tot indicatie uit het indicatieregister                             |
+| Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:read   | Geeft leesrechten tot bemiddelingen uit het Bemiddelingregister.                      |
+| Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:create | Geeft create rechten om nieuwe bemiddelingen aan te maken in het Bemiddelingregister. |
 
 
-Als de client een scope aanvraagt waarvoor hij geen autorisatie heeft, dan zal de autorisatieserver een foutmelding retourneren "Access denied, invalid scope", ongeacht of er in dezelfde aanvraag scopes zitten waarvoor wel is geautoriseerd. Als de client geen scope parameter meegeeft in zijn request aan de autorisatieserver, dan MOET de autorisatieserver het verzoek verwerken door een voorgedefinieerde standaard scope toe te passen of een "Invalid scope" foutmelding retourneren. Als de autorisatieserver een verzoek ontvangt waar 1 of meerdere scopes incorrect zijn MOET de autorisatieserver een "Access denied, invalid scope" retourneren.
+### **4.1.3 Audience**
 
-Een standaard scope zou kunnen zijn:  
-*organisaties\zorgkantoren\[UZOVICode]:profiel.read*
+Als je in OAuth een access-token aanvraagt, moet je specificeren wie of wat de uiteindelijke ontvanger van deze token is, deze ontvanger wordt aangeduid als “audience”. Dit helpt om te verzekeren dat het token alleen kan worden gebruikt bij de bedoelde resource-server en nergens anders.
+
+- Het opgeven van een “audience” is verplicht. 
+- Enkel is één audience toegestaan.
+- De audience moet een valide “https” URL zijn. De audience is de afgeschermde URL van de resource-server welke ook alleen de Policy Enforcement Point van de resource-server vertrouwd,
+
+
+### **4.1.4 Token request**
 
 **Opmerking:** Een request header MOET het Content-Type: application/json bevatten om aan te geven dat de body in JSON formaat is.
+```json
+ POST https://api.vecozo.nl/netwerkmodel/v3/auth/token
+
+ Header: Authorization Basic <Client ID:Client Secret (Base64 encoded)>
+ {
+       "grant\_type": "client\_credentials",
+       "scope": "registers/wlzindicatieregister/indicaties:read",
+      "audience": "https\://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql" 
+  } 
 ```
-POST https://api.vecozo.nl/netwerkmodel/v2/oauth2/token
 
-Header: Authorization Basic <Client ID:Client Secret (Base64 encoded)>
-
+De response is een JWT:
+```json
 {
-    "grant_type":"client_credentials",
-    "scope":"myscope"
+   "iss": "auth.nid",
+   "sub": "agbcode:012345123",
+   "aud": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql",
+   "exp": 1731318519,
+   "nbf": 1730713599,
+   "iat": 1730713719,
+   "jti": "eaa55b46-8d97-46ab-82a3-3a5a44170c67",
+   "_claim_names": {
+    "agb": "localhost",
+    "uzovi": "localhost"
+   },
+   "_claim_sources": {
+    "localhost": {
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZ2IiOiIwMTIzNDUxMjMiLCJ1em92aSI6bnVsbH0.Y6XJZI7Ri0gV8Xqh6HZ0kk97oLu6sixc3T2v2K2GKfU"
+    }
+   },
+   "client_id": "agbcode:012345123",
+   "subjects": null,
+   "scopes": [
+    "registers/wlzindicatieregister/indicaties:read"
+   ],
+   "consent_id": "7a8ddf4d-8953-4232-9714-4d1926888a65",
+   "client_metadata": null,
+   "act": {
+    "sub": "20001000001131"
 }
 ```
-Response is een JWT 
 
-```
-{
-    "aud": [http://ciz.vecozo/netwerkmodel/v1/graphql],
-    "exp": 1677513301,
-    "jti": "fbd64991-e625-4a22-86ce-b705385574a0",
-    "iat": 1676908501,
-    "iss": "authz-nid",
-    "nbf": 1676908381,
-    "sub": "a5d99af1-111c-4a17-ae6f-e117efad0b31",
-    "client_id": "144feaa7-74f3-4c5d-8a89-215ea527fdec",
-    "subjects": {
-        "nid": ""
-    },
-    "scopes": {
-        <<LIJST VAN UITGEWERKTE SCOPES>>
-    },
-    "consent_id": "6d101f9a-b535-4fa8-bf73-b1f92d4499cf",
-    "client_metadata": {}
+**Opmerking:** De maximale token-duration (exp) is 1 uur, ongeacht de scope. 
+
+
+## **4.2 Policy Enforcement Point (PEP)**
+
+Een “Policy Enforcement Point” (kortweg PEP) regelt toegang tot resource-servers van deelnemers en beschermt deze resource-servers tegen ongeautoriseerde toegang/verzoeken. 
+
+De PEP stuurt alle toegangsverzoeken naar resource-servers eerst door naar de PDP ter beoordeling. Waarna (conform de beslissing) het verzoek wordt toegestaan of wordt afgewezen (Allow of Deny).
+
+- De PEP is voor netwerkdeelnemers alleen toegankelijk op het GraphQL-endpoint.
+- De PEP vereist een vertrouwd authenticatiemiddel en een geldig Access-Token.
+- De netwerkdeelnemer registreert zelf in het adresboek welke PEP zijn resource-server beschermt.
+- De resource-servers van de netwerkdeelnemers vertrouwen de PEP op het valideren van de grondslag.
+- In het netwerk is momenteel maar één PEP(redundant) beschikbaar. In de toekomst zijn meerdere zelfstandige PEPs voorstelbaar.
+
+In het netwerkstelsel zijn momenteel onderstaande PEP’s in gebruik.
+
+| Omgeving | URL                                                                                                                     |
+| -------- | ----------------------------------------------------------------------------------------------------------------------- |
+| TST      | [https://tst-api.vecozo.nl/tst/netwerkmodel/v3/resource-server/](https://tst-api.vecozo.nl/tst/netwerkmodel/v2/GraphQL) |
+| PRD      | [https://api.vecozo.nl/netwerkmodel/v3/resource-server](https://api.vecozo.nl/netwerkmodel/v2/GraphQL)/                 |
+
+**_Let op:_** _De URL bevat de term resource-server, dit is incorrect en zal tzt worden vervangen door PEP_
+
+
+## **4.3 Policy Decision Point (PDP)**
+
+Een “Policy Decision Point” (kortweg PDP) is het belangrijkste component in de toegangscontrole binnen het netwerkstelsel en is verantwoordelijk voor het nemen van beslissingen over toegangsverzoeken. 
+
+De PDP beoordeelt het toegangsverzoek in de vorm van een GraphQL-query aan de hand van de gedefinieerde beleidsregels (policies). Deze regels kunnen gebaseerd zijn op verschillende factoren zoals de scope, specifieke claims, eventueel verplichte operators en de opgevraagde entiteiten in de query.
+
+- Het verzoek tot een beslissing door de PDP verloopt altijd via de Policy Enforcement Point (PEP)
+- Het genomen besluit wordt vervolgens teruggestuurd naar de PEP
+- Elk besluit is gekoppeld aan een beleid(policy)
+- Elk besluit wordt vastgelegd (decision-log)
+
+
+# **5 Raadplegen registers**
+
+Hieronder de algemene beschrijving voor het raadplegen van het Indicatieregister en Bemiddelingregister in de vorm van twee voorbeelden.
+
+
+## **5.1 Raadplegen Indicatieregister**
+
+> **Benodigde scope: registers/wlzindicatieregister/indicaties:read** 
+
+Deze scope staat toe om een indicatie op te vragen uit het Indicatieregister. De autorisatieserver heeft bij het aanvragen van de autorisatie-token gecontroleerd of de deelnemer hiertoe is gemachtigd. Daarna mag de deelnemer een GrapqhQL query opsturen. 
+
+Wat en hoe de raadpleger met een GraphQL query mag raadplegen wordt bepaald door bijbehorende policy.
+
+**Voorbeeld:** Opvragen indicatie door het initieel verantwoordelijke zorgkantoor. 
+
+Het zorgkantoor moet hierbij verplicht zowel de eigen uzovi-code als het ID van de te raadplegen Wlz-indicatie meesturen. Als een van deze ontbreekt, wordt de query niet uitgevoerd. De PDP controleert of beide aanwezig zijn en beoordeelt ook welke gegevens worden opgevraagd. Alleen als er een gegeven wordt aangevraagd waarvoor het zorgkantoor geen toegang heeft (meer dan is toegestaan volgens de query-template), zal de PDP de query afkeuren.
+
+```gql
+# QIR-0001-ZKi.graphql
+# Query voor initieel Verantwoordelijk Zorgkantoor op Indicatieregister
+# Verplichte input:
+#   - wlzIndicatieID = te raadplegen WlzIndicatie
+#   - uzovicode zorgkantoor = eigen uzovicode raadpleger
+# versie 1.0.0 - 2024-10-04
+
+query WlzIndicatie(
+    $wlzIndicatieID: UUID!
+    $initieelVerantwoordelijkZorgkantoor: String!
+) {
+    wlzIndicatie(
+      where: {
+        wlzindicatieID: {eq: $wlzIndicatieID}
+        initieelVerantwoordelijkZorgkantoor: {eq: $initieelVerantwoordelijkZorgkantoor}
+        }
+    ) {
+        wlzindicatieID
+        bsn
+        besluitnummer
+        soortWlzindicatie
+        afgiftedatum
+        ingangsdatum
+        ...
+        grondslag {
+            grondslagID
+            grondslag
+            volgorde
+        }
+        geindiceerdZorgzwaartepakket {
+            geindiceerdZorgzwaartepakketID
+            zzpCode
+            ingangsdatum
+            ...
+        }
+   ...
 }
 ```
-## 4.1 Rule engine
-Onderdeel van de autorisatieserver is een rule-engine (Voorheen LUARunner genoemd). Op basis van gevraagde scope(s) en beschikbare variabelen worden policy-regels toegepast welke resulteren in rechten(scopes) of een afwijzing. 
+_(De volledige query-template is te vinden op:_  [_https://github.com/iStandaarden/iWlz-indicatie/tree/Indicatieregister-2_](https://github.com/iStandaarden/iWlz-indicatie/tree/Indicatieregister-2)_)_
 
-## 4.2 Scopes
-Scopes worden toegepast op verschillende entiteiten binnen het netwerkmodel. Een client kan een of meerdere Scopes (autorisaties) aanvragen bij de autorisatieserver.
+**Let op**: Of het raadplegende zorgkantoor uiteindelijk gegevens ontvangt, hangt er ook van af of de combinatie van _initieelVerantwoordelijkZorgkantoor_ en _wlzIndicatieID_ daadwerkelijk in het register voorkomt.
 
-Hieronder zijn alle scope(s) gedocumenteerd die mogelijk zijn in het iWlz Netwerkmodel. Afhankelijk van de definitie in de access-policy kan een deelnemer deze aanvragen.
 
-|Resource|Scope|Omschrijving|
-|:--- |:--- |:--- 
-| |(no scope)| Geeft read toegang tot het eigen organisatieprofiel info. | 
-| Service directory |servicedirectory\organisaties:profiel.create| Geeft de rechten tot het maken van een nieuw organisatieprofiel.  |
-| Service directory |servicedirectory\organisaties:profiel.read| Geeft read toegang tot de informatie van alle organisatieprofielen.  |
-| Service directory |servicedirectory\organisaties:profiel.update| Geeft update toegang tot alle organisatieprofielen.  |
-| servicedirectory |servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*:profiel.read| Geeft read toegang tot specifiek organisatieprofiel.(eigen profiel)|
-| Service directory |servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*:profiel.update| Geeft  update rechten op een specifiek organisatieprofiel.(eigen profiel)|
-| Service directory |servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*:profiel.delete| Geeft delete rechten, verwijderen van een specifiek organisatieprofiel.|
-| Service directory |servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*\notificaties\notificatie:Create.create| Geeft het recht om een notificatie te sturen aan organisatie [organisatie-id] naar aanleiding van een CREATE event.|
-| Service directory |servicedirectory\organisaties\\*[id-type]\\[organisatie-id]*\meldingen\melding:create| Geeft het recht om een melding te sturen aan organisatie [organisatie-id] |
-| servicedirectory |Service directory\organisaties\organisatierol:create| Geeft create rechten om een niewe organisatierol  toe te voegen. |
-| Service directory |servicedirectory\organisaties\organisatierol:read| Geeft read toegang tot de lijst van organisatierollen |
-| | | |
-| Verwijsindex | registers\verwijsindex\[bsn]:profiel.read | Geeft read rechten tot het volledige profiel van deze BSN.|
-| | | |
-| Cliëntregister | registers\wlzcliëntregister\cliënten\\*[bsn]*:profiel.create| Geeft create rechten tot een specifiek cliënt profiel|
-| Cliëntregister | registers\wlzcliëntregister\cliënten\\*[bsn]*:profiel.read| Geeft read rechten tot een specifiek cliënt profiel|
-| Cliëntregister | registers\wlzcliëntregister\cliënten\\*[bsn]*:profiel.update| Geeft update rechten tot een specifiek cliënt profiel|
-| | | |
-| wlz Bemiddelingsregister |registers\wlzbemiddelingsregister\bemiddelingen:read|Geeft read rechten tot bemiddelingen uit het wlzbemiddelingsregister.|
-| wlz Bemiddelingsregister |registers\wlzbemiddelingsregister\bemiddelingen\\*[bemiddeling-id]*:read|Geeft read rechten tot een specifieke bemiddelingen uit het wlzbemiddelingsregister.|
-| wlz Bemiddelingsregister |registers\wlzbemiddelingsregister\bemiddelingen\bemiddeling:create|Geeft create rechten om nieuwe bemiddelingen aan te maken in het bemiddelingsregister. |
-| | | | 
-| wlz Indicatieregister |registers\wlzindicatieregister\indicaties:read|Geeft read rechten tot indicaties uit het wlzindicatieregister.|
-| wlz Indicatieregister |registers\wlzindicatieregister\indicaties\\*[indicatie-id]*:read|Geeft read rechten tot een specifieke indicatie uit het wlzindicatieregister.|
+## **5.2 Raadplegen Bemiddelingsregister**
 
-- ## registers\wlzbemiddelingsregister\bemiddelingen:read
+> **Benodigde scope: registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:read** 
 
-Deze scope staat toe WlzBemiddelingen op te vragen, maar verplicht de query te beperken tot de instelling waarvoor deze is gemachtigd.
+Deze scope verleent toestemming om een bemiddeling op te vragen uit het Bemiddelingregister. De autorisatieserver controleert of de deelnemer hiervoor bevoegd is. Vervolgens mag de deelnemer een GraphQL-query indienen. Wat en hoe de deelnemer gegevens mag raadplegen met een GraphQL-query, wordt bepaald door de policy die bij de query hoort.
 
-**Voorbeeld:**
-```graphql
-Query{
-	WlzBemiddelingen(filter: { instelling: "1234567890" }, first: 2) 
-	{
-		totalcount
-		edges {
-			cursor
-			node {
-				bemiddelingID
-				wlzIndicatieID
-				verantwoordelijkZorgkantoor
-				.........
-				.........
-			}
-		}
-		WlzBemiddeling {
-				bemiddelingID
-				wlzIndicatieID
-				verantwoordelijkZorgkantoor
-		}
-		pageInfo {
-			endCursor
-			hasNextPage
-		}
-	}
-}
-```
-- ## registers\wlzindicatieregister\indicaties\\[indicatie-id]:read
+**Voorbeeld:** Raadplegen van een bemiddeling door de toegewezen zorgaanbieder.  
 
-Deze scope staat toe een specifieke indicatie op te vragen uit het wlzIndicatieregister, de rule-engine heeft bij het aanvragen van de autorisatie gecontroleerd of de deelnemer hiertoe is gemachtigd.
+De zorgaanbieder moet hierbij zowel de eigen AGB-code als het ID van de bemiddelingsspecificatie waarin deze zorgaanbieder is benoemd meesturen. Als een van deze ontbreekt, wordt de query niet uitgevoerd. De PDP controleert op de aanwezigheid van beide waarden en beoordeelt welke gegevens worden opgevraagd. Alleen als er informatie wordt opgevraagd waarvoor de zorgaanbieder op dat moment geen toegang heeft, zal de PDP de query afkeuren.
 
-**Voorbeeld:**
-```grapql
-Query{
-	WlzIndicaties(wlzindicatieID: "[indicatie-id]") {
-    afgiftedatum        
-    besluitnummer
-    bsn
-    commentaar
-    einddatum
-    ingangsdatum
-    .........
-    ......
+```gql
+# QBR-0001-ZA.graphql
+# Query voor Zorgaanbieder op Bemiddelingsregister
+# Verplichte input:
+#   - bemiddelingspecificatieID = te raadplegen bemiddelingsspecificatie
+#   - agbcode instelling = eigen agbcode raadpleger
+
+query Bemiddelingspecificatie(
+  $BemiddelingspecificatieID: UUID!
+  $Instelling: String!
+) {
+  bemiddelingspecificatie(
+    where: {
+      bemiddelingspecificatieID: { eq: $BemiddelingspecificatieID }
+      instelling: { eq: $Instelling }
+    }
+  ) {
+    bemiddelingspecificatieID
+    leveringsvorm
+    zzpCode
+    toewijzingIngangsdatum
+    toewijzingEinddatum
+    instelling
+    ...
+    bemiddeling {
+      bemiddelingID
+      wlzIndicatieID
+      verantwoordelijkZorgkantoor
+      verantwoordelijkheidIngangsdatum
+      verantwoordelijkheidEinddatum
+      # Overige Bemiddelingspecificaties van de bemiddeling mag je niet ophalen zonder datumfilter - zie QBR-0002-ZA.graphql
+      client {
+        bsn
+        clientID
+        taal
+        communicatievorm
+        huisarts
+        leefeenheid
+        # Sub entiteiten van de client mag je niet ophalen zonder datumfilter - zie QBR-0002-ZA.graphql
+      }
+    }
   }
 }
 ```
 
-# 5 Resource-server
-Een resource-server beschermt achterliggende resources tegen ongeautoriseerde toegang.  
-- De resource-server is voor netwerkdeelnemers alleen toegangkelijk op het GraphQL-endpoint. 
-- De resource-server vereist een vertrouwd authenticatiemiddel en een geldig Access-Token. 
-- Alle bronnen worden beschermd door één resource-server(redundant). In de toekomst zijn meerdere zelfstandige resource-servers voorstelbaar. 
-- De registratie van autorisatieservers vindt plaats in de organisatieprofielen binnen de servicesdirectory.  
-- De registratie van de resource maakt ook onderdeel uit van organisatieprofielen binnen de servicesdirectory. De access-policy past deze toe tijdens de autorisatie door de autorisatieserver.
+
+(Voor de volledige query-template en andere templates, zie:[ https://github.com/iStandaarden/iWlz-bemiddeling](https://github.com/iStandaarden/iWlz-bemiddeling))
+
+**Let op**: Of de raadplegende zorgaanbieder daadwerkelijk gegevens ontvangt, hangt ervan af of de combinatie van _instelling_ en _bemiddelingsspecificatieID_ ook in het register voorkomt.
 
 
-|Omgeving|URL|
-|:--- |:--- 
-|TST|https://tst-api.vecozo.nl/tst/netwerkmodel/v2/GraphQL|
-|PRD|https://api.vecozo.nl/netwerkmodel/v2/GraphQL|
+# **6 Foutmeldingen**
 
-Na de autorisatievalidatie routeert de resource-server het verzoek naar de resource.
+**OAuth HTTP Error Responses**In het onderstaande schema staan de mogelijke foutmeldingen die kunnen optreden bij het ophalen van autorisaties of het uitvoeren van een GraphQL-verzoek.
 
-## 5.1 Timeout (verder uitwerken)
-Voor verschillende toepassingen en acties is een timeouts van enkele 100 milliseconden wenselijk, denk hierbij aan online transacties. Daarentegen is voor andere acties een timeout van 15 seconden voorsterlbaar, acties voor complexe zoekacties.
-Om dit te ondersteunen moet een client een request-timeout in de header meesturen.
+**Overzicht van HTTP Error Responses**Let op: foutmeldingen kunnen afhankelijk van de geïmplementeerde client anders worden weergegeven.
 
-indien de request-timeout in de header niet wordt opgegeven, hanteert de resource-server een time-out van 5000 milliseconden.
-
-Bij het verstrijken van de time-out MOET de resource-server een http Error code 504 Gateway Timeout retourneren.
-
-
-# 6 Foutmeldingen
-OAuth HTTP error responses
-
-In onderstaand schema worden de mogelijke fouten weergegeven die kunnen optreden bij het ophalen van autorisaties of het uitvoeren van een graphQL verzoek.
-
-<font color=red>LET OP: Onderstaand schema moet nog worden gevalideerd/aangepast en aangevult.</font>
-
+\
 ![foutmeldingen_overzicht](../plantUMLsrc/rfc0014-02-foutmeldingen_overzicht.svg "foutmeldingen_overzicht")
 
-<details>
-<summary>plantUML-source</summary>
 
-```plantuml
-@startuml rfc0014-2-foutmeldingen_overzicht
-' !pragma teoz true
+## **6.1 Foutmeldingen Aanvraag van Autorisatie**
 
-skinparam ParticipantPadding 20
-skinparam BoxPadding 10
+### **\[1] 401 Unauthenticated**
 
-box "Deelnemer"
-    participant "Client" as Client
-end box
-
-box "nID"
-    participant "autorisatieserver" as AuthzServer
-    participant "nID Filter" as Filter
-    participant "Resource-server" as nIDResourceServer
-end box
-
-box "Register"
-    participant "Resource" as BEMRegister
-end box
-
-autonumber "<b>[000]"
-activate Client
-Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel
-
-autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[1] 404 Not found
-Client <-[#red]-X AuthzServer:<color:red>[2] 403 Invalid client certificate
-Client <-[#red]-X AuthzServer:<color:red>[3] 403 Forbidden
-autonumber resume
-
-activate AuthzServer
-AuthzServer -> AuthzServer: Valideer Authenticatiemiddel
-autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[4] 401 Unauthenticated
-Client <-[#red]-X AuthzServer:<color:red>[5] 400 No Client ID
-Client <-[#red]-X AuthzServer:<color:red>[6] 401 Invalid Client ID
-Client <-[#red]-X AuthzServer:<color:red>[7] 403 Invalid client certificate
-autonumber resume
-
-AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)
-autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[8] 400 Invalid Scope
-autonumber resume
-activate AuthzServer #LightGray
-AuthzServer -> AuthzServer: Valideer autorisatie
-autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[9] 401 Access denied, Invalid Scope
-autonumber resume
-AuthzServer -> AuthzServer: Genereer Access-Token
-activate AuthzServer #LightGray
-deactivate AuthzServer
-deactivate AuthzServer
-AuthzServer --> Client --: 200 Response (Access-Token)
-deactivate AuthzServer
-deactivate Client
-
-Client -> nIDResourceServer: **GraphQL Query**\nAuthenticatiemiddel + Access-Token
-activate nIDResourceServer
-activate Filter
-note right of Filter: Inline filtering requests
-activate Client
-autonumber stop
-    Client <-[#red]-X nIDResourceServer: <color:red>[10] 404 Resource not found.
-autonumber resume
-Filter -> Filter: Valideer Authenticatiemiddel
-autonumber stop
-Client <-[#red]-X Filter:<color:red>[11] 401 Unauthenticated
-Client <-[#red]-X Filter:<color:red>[12] 400 No Client ID
-Client <-[#red]-X Filter:<color:red>[13] 401 Invalid Client ID
-Client <-[#red]-X Filter:<color:red>[14] 403 Invalid client certificate
-autonumber resume
-
-Filter -> Filter: Valideer Access-Token
-autonumber stop
-    Client <-[#red]-X Filter: <color:red>[15] 401 Jwt is expired
-    Client <-[#red]-X Filter: <color:red>[16] 401 Jwt header is an invalid JSON
-autonumber resume
-
-
-Filter -> Filter: Valideer GraphQL
-autonumber stop
-    Client <-[#red]-X Filter: <color:red>[17] 400 verifying request: bad request: parsing GQL query: .......
-    Client <-[#red]-X Filter: <color:red>[18] 400 The following variables were not used: XXXXXX.
-autonumber resume
-
-Filter -> Filter: Valideer GraphQL request met scope(s)
-
-autonumber stop
-    Client <-[#red]-X Filter: <color:red>[19] 401 Access denied, Invalid Scope
-    Client <-[#red]-X Filter: <color:red>[20] 403 RBAC: access denied
-    Client <-[#red]-X Filter: <color:red>[21] 403 request does not match scopes
-autonumber resume
-
-nIDResourceServer -> BEMRegister: GraphQL Request
-deactivate Filter
-activate BEMRegister
-autonumber stop
-    Client <-[#red]-X nIDResourceServer: <color:red>[22] 504 Gateway timeout
-    nIDResourceServer <-[#red]-X BEMRegister: <color:red>[23] 500 Internal Server Error
-    Client <-[#red]-X nIDResourceServer: <color:red>[23] 500 Internal Server Error
-autonumber resume
-
-BEMRegister --> nIDResourceServer: 200 Response (GraphQL)
-deactivate BEMRegister
-
-nIDResourceServer --> Client: 200 Response (GraphQL)
-deactivate nIDResourceServer
-
-deactivate Client
-@enduml
-
+- **HTTP Response**: 
+```http
+HTTP/1.1 401 Unauthenticated 
 ```
-</details>
+
+- **Details**:\
+  Authenticatie is vereist voor het verkrijgen van het access token (JWT) en moet worden uitgevoerd met "Basic Authentication" en een geldig authenticatiemiddel.
 
 
-HTTP error responses. Let op: foutmeldingen kunnen door gebruik van een client anders worden gepresenteerd.
+### **\[2] 403 Unauthorized**
 
-<details>
-<summary>[1] 404 Not found</summary>
-
----
-## [1] 404 Not found
-```json
-HTTP/1.1 404 Not found
-{}
+- **HTTP Response**: 
+```http
+HTTP/1.1 403 Forbidden 
 ```
-Mogelijke oorzaak:
-- Het endpoint van de autorisatieserver is niet correct. Het juiste endpoint van de autorisatieserver is beschreven in dit document bij de autorisatieserver.
----
-</details>
 
-<details>
-<summary>[2] 403 Invalid client certificate</summary>
+- **Details**:\
+  Mogelijke oorzaken zijn:
 
----
-## [2] 403 Invalid client certificate
-```json
-HTTP/1.1 403 Invalid client certificate
-{}
+  - Het IP-adres is niet geregistreerd bij het authenticatiemiddel.
+
+  - Het authenticatiemiddel kan geblokkeerd zijn.
+
+
+### **\[3] 403 Invalid Client Certificate**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 403 Invalid Client Certificate 
 ```
-Mogelijke oorzaak:
-- Ontbrekend, ongeldig of verlopen certificaat (Bij gebruik van een VECOZO systeemcertificaat als auhtenticatiemiddel)
-- Het gebruikte authenticatiemiddel is bedoeld voor een andere omgeving 
----
-</details>
 
-<details>
-<summary>[3] 403 Forbidden</summary>
+- **Details**:
+  Het certificaat ontbreekt, is ongeldig of verlopen (van toepassing bij gebruik van een VECOZO-systeemcertificaat). Zorg ervoor dat het authenticatiemiddel overeenkomt met de juiste omgeving.
 
----
-## [3] 403 Forbidden
-```json
-HTTP/1.1 403 Forbidden
-{}
+
+### **\[4] 404 Not Found**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 404 Not Found
 ```
-Mogelijke oorzaak:
-- IP adres niet geregistreerd bij authenticatiemiddel (Bij gebruik van een VECOZO systeemcertificaat als auhtenticatiemiddel)
-- Authenticatiemiddel geblokkeerd
----
-</details>
+
+- **Details**:\
+  Een onjuist endpoint van de autorisatieserver is gebruikt. Controleer of het correcte endpoint is geconfigureerd, zoals gespecificeerd in dit document onder de details van de autorisatieserver.
 
 
-<details>
-<summary>[4] 401 Unauthenticated</summary>
+### **\[5] 400 Invalid Scope**
 
----
-## [4] 401 Unauthenticated
-```json
-HTTP/1.1 401 Unauthenticated
-{}
-```
-Mogelijke oorzaak:
-- Bij het ophalen van de access token (JWT) is authenticatie verplicht, authenticatie vindt plaats met "Basic Authentication" i.c.m. een geldig authenticatiemiddel.
----
-</details>
-
-
-<details>
-<summary>[5] 400 No Client ID</summary>
-
----
-## [5] 400 No Client ID
-```json
+- **HTTP Response**: 
+```http
 HTTP/1.1 400 Bad Request
-{"ErrorCode" : "invalid_request", "Error" :"The request is missing a required parameter : client_id"}
+{"ErrorCode": "invalid\_request", "Error": "Invalid Scope"} 
 ```
-Mogelijke oorzaak:
-- Bij het ophalen van de access token (JWT) is een Client ID verplicht, deze client ID is uitgegeven door nID bij het onboarden van de deelnemer op het netwerk.
----
-</details>
+- **Details**:\
+  Er is een niet-bestaande scope aangevraagd. Controleer de opgevraagde scope aan de hand van de documentatie.
 
-<details>
-<summary>[6] 401 Invalid Client ID</summary>
 
----
-## [6] 401 Invalid Client ID
-```json
-HTTP/1.1 401 Unauthorized
-{"ErrorCode" : "invalid_request", "Error" :"Invalid client id : AVD7ztXReEYyjpLFkkPiZpLEjeF2aYAz. ClientId is Invalid"}
+### **\[6] 400 Audience Required**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 400 Bad Request "audience is required"
 ```
-Mogelijke oorzaak:
-- Het gebruikte client ID komt niet overeen met het geregistreerde client ID op de omgeving waarmee wordt verbonden
-- Onjuiste combinatie van client ID en authenticatiemiddel.
----
-</details>
 
-
-
-<details>
-<summary>[07] 400 Invalid Scope</summary>
-
----
-## [07] 400 Invalid Scope
+- **Details**:\
+  Een `audience`-parameter is vereist bij het aanvragen van een token. Voeg deze toe aan de request body, bijvoorbeeld:
 ```json
-HTTP/1.1 400 Bad Request
-{"ErrorCode" : "invalid_request", "Error" :"Invalid Scope"}
+ "audience": "https://tst-api.vecozo.nl/tst/wlzbemiddelingsregister/v1/graphql" 
 ```
-Mogelijke oorzaak:
-- Er is een scope aangevraagd welke niet bestaat. controleer de opgevraagde scope aan de documentatie.
----
-</details>
 
-<details>
-<summary>[07] 400 verifying request: bad request: parsing GQL query: .......</summary>
+### **\[7] 400 Invalid Query**
 
----
-## [07] 400 verifying request: bad request: parsing GQL query: .......
-```json
-HTTP/1.1 400 verifying request: bad request: parsing GQL query: .......
-{}
+- **HTTP Response**: 
+```http
+HTTP/1.1 400 Bad Request 
 ```
-Mogelijke oorzaak:
-- Bij het controleren van de GraphQL zijn afwijkingen gevonden. Controleer de graphQL of deze voldoet aan de specificaties.
----
-</details>
 
-<details>
-<summary>[07] 400 The following variables were not used: XXXXXX.</summary>
+- **Details**:\
+  De query voldoet niet aan de vereiste syntax. Controleer de structuur van de query aan de hand van de specificaties.
 
----
-## [07] 400 The following variables were not used: XXXXXX.
-```json
-HTTP/1.1 400 The following variables were not used: XXXXXX.
-{}
+
+### **\[8] 400 No Operation**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 400 Bad Request 
+{"ErrorCode": "bad\_request", "Error": "No operation found to evaluate"} 
 ```
-Mogelijke oorzaak:
-- Het graphQL verwacht een niet optionele variable. Controleer de graphQL of deze voldoet aan de specificaties.
----
-</details>
 
 
-<details>
-<summary>[08] 401 Access denied, Invalid Scope</summary>
+- **Details**:\
+  Een `Client ID` is verplicht bij het verkrijgen van het access token (JWT). Dit ID wordt uitgegeven door nID tijdens de onboarding van de deelnemer.
 
----
-## [08] 401 Access denied, Invalid Scope
-```json
-HTTP/1.1 401 Unauthorized
-{"ErrorCode" : "invalid_request", "Error" :"Access denied, Invalid Scope"}
+
+### **\[9] 401 JWT is Expired**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 401 Unauthorized "JWT is expired" 
 ```
-Mogelijke oorzaak:
-- Het gestelde graphQL verzoek komt niet overeen met de aangevraagde/meegstuurde scope.
-- GraphQL verzoek komt niet overeen met de reikwijte in de scoop
-- GraphQL verzoek wordt uitgevoerd met een verkeerde ID (ClientID/Secret/Authentictiemiddel)
----
-</details>
+
+- **Details**:\
+  Het JWT-token is verlopen. Vraag een nieuw access token aan om de juiste authenticatie te verkrijgen.
 
 
-<details>
-<summary>[08] 401 Access denied, Invalid Scope</summary>
+### **\[10] 401 JWT Header is an Invalid JSON**
 
----
-## [08] 401 Access denied, Invalid Scope
-```json
-HTTP/1.1 401 Unauthorized
-{"ErrorCode" : "invalid_request", "Error" :"Access denied, Invalid Scope"}
+- **HTTP Response**: 
+```http
+HTTP/1.1 401 Unauthorized "JWT header is an invalid JSON"
 ```
-Mogelijke oorzaak:
-- Het gestelde graphQL verzoek komt niet overeen met de aangevraagde/meegstuurde scope.
-- GraphQL verzoek komt niet overeen met de reikwijte in de scoop
-- GraphQL verzoek wordt uitgevoerd met een verkeerde ID (ClientID/Secret/Authentictiemiddel)
----
-</details>
+
+- **Details**:\
+  De JWT-header voldoet niet aan de juiste JSON-structuur. Controleer de header en probeer opnieuw.
 
 
+### **\[11] 401 Access Denied, Invalid Scope**
 
-
-
-<details>
-<summary>[10] 403 RBAC: access denied</summary>
-
----
-## [10] 403 RBAC: access denied
-```json
-HTTP/1.1 403 RBAC: access denied
-{}
+- **HTTP Response**: 
+```http
+HTTP/1.1 401 Unauthorized 
+{"ErrorCode": "invalid\_request", "Error": "Access denied, invalid scope"}
 ```
-Mogelijke oorzaak:
-- De meegestuurde access token komt niet overeen met de identiteit van de indiener. 
-- Authenticatiemiddel/ClientID is anders dan gebruikt bij het aanvragen van de autorisatie.
 
----
-</details>
+- **Details**:\
+  De opgevraagde scope komt niet overeen met de geautoriseerde scope. Controleer of de juiste scope is ingesteld.
 
-<details>
-<summary>[11] 403 request does not match scopes</summary>
 
----
-## [11] 403 request does not match scopes
-```json
-HTTP/1.1 403 request does not match scopes
-{}
+### **\[12] 401 Token Invalid**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 401 Unauthorized {"ErrorCode": "invalid\_request", "Error": "Token invalid"} 
 ```
-Mogelijke oorzaak:
-- Het verzoek aan de resource-server voldoet niet aan de scopes in de access-token.
-- Bij het verzoek aan de autorisatie-server zijn niet de juiste scopes aangevraagd.
----
-</details>
+
+- **Details**:\
+  Het token bevat een ongeldige of ontbrekende claim. Controleer en wijzig de claim in de GraphQL-aanvraag.
 
 
-<details>
-<summary>[12] 504 Gateway timeout</summary>
+### **\[13] 403 RBAC: Access Denied**
 
----
-## [12] 504 Gateway timeout
-```json
-HTTP/1.1 504 Gateway timeout
-{}
+- **HTTP Response**: 
+```http
+HTTP/1.1 403 Forbidden 
 ```
-Mogelijke oorzaak:
-- Het register reageerd niet binnen de verwachte tijd. Treed dit vaker op, volg dan het incident management proces volgens het afsprakenstelsel.
 
----
-</details>
+- **Details**:\
+  Toegang geweigerd op basis van RBAC (Role-Based Access Control). Het gebruikte authenticatiemiddel heeft geen toegangsrechten voor de gevraagde actie.
 
-<details>
-<summary>[13] 500 Internal Server Error</summary>
 
----
-## [13] 500 Internal Server Error
-```json
+### **\[14] 403 Request Does Not Match Scopes**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 403 Forbidden 
+```
+
+- **Details**:\
+  De aanvraag voldoet niet aan de vereiste scopes die in het access token zijn gedefinieerd. Controleer de toegewezen scopes.
+
+***
+
+
+## **6.2 Foutmeldingen GraphQL Query**
+
+### **\[15] 500 Internal Server Error**
+
+- **HTTP Response**: 
+```http
 HTTP/1.1 500 Internal Server Error
-{}
 ```
-Mogelijke oorzaak:
-- Bij het Register is een onverwachte fout opgetreden, probeer het later nog eens. Volg het incident management proces volgens het afsprakenstelsel.
----
-</details>
+
+- **Details**:\
+  Er is een onverwachte fout opgetreden op de server. Probeer het later opnieuw of raadpleeg het incidentbeheerproces.
 
 
-    
+### **\[16] 502 Bad Gateway**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 502 Bad Gateway 
+```
+
+
+- **Details**:\
+  De server kreeg een ongeldige reactie van een upstream-server. Controleer de serverinstellingen of probeer het later opnieuw.
+
+
+### **\[17] 400 Invalid Scope**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 400 Bad Request
+{"ErrorCode": "invalid\_request", "Error": "Invalid Scope"} 
+```
+
+- **Details**:\
+  Er is een niet-bestaande scope aangevraagd. Controleer de opgevraagde scope aan de hand van de documentatie.
+
+
+### **\[18] 400 Audience Required**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 400 Bad Request"audience is required"
+```
+
+- **Details**:\
+  Een `audience`-parameter is vereist bij de aanvraag. Voeg deze toe aan de request body, bijvoorbeeld:
+
+```json
+ "audience": "https\://tst-api.vecozo.nl/tst/wlzbemiddelingsregister/v1/graphql" 
+```
+
+### **\[19] 400 Invalid Query Syntax**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 400 Bad Request
+```
+
+- **Details**:\
+  De query voldoet niet aan de vereiste syntax. Controleer de structuur van de query aan de hand van de specificaties.
+
+
+### **\[20] 400 No Operation**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 400 Bad Request
+{"ErrorCode": "bad\_request", "Error": "No operation found to evaluate"} 
+```
+
+- **Details**:\
+  Er ontbreekt een geldige operatie in de GraphQL-aanvraag. Controleer en pas de query aan om een bewerking te definiëren.
+
+
+### **\[21] 401 Access Denied, Invalid Scope**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 401 Unauthorized{"ErrorCode": "invalid\_request", "Error": "Access denied, invalid scope"} 
+```
+
+- **Details**:\
+  De opgevraagde scope komt niet overeen met de toegestane scope. Controleer de scope-instellingen.
+
+
+### **\[22] 403 RBAC: Access Denied**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 403 Forbidden 
+```
+
+- **Details**:\
+  Toegang geweigerd op basis van RBAC. De toegangsrechten van het gebruikte authenticatiemiddel voldoen niet aan de toegangsvereisten.
+
+
+### **\[23] 403 Request Does Not Match Scopes**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 403 Forbidden 
+```
+
+- **Details**:\
+  De aanvraag voldoet niet aan de vereiste scopes in het access token. Controleer de toegewezen scopes.
+
+
+### **\[24] 504 Gateway Timeout**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 504 Gateway Timeout 
+```
+
+- **Details**:\
+  De server reageerde niet binnen de verwachte tijd. Controleer de serververbindingen of probeer het later opnieuw.
+
+
+### **\[25] 500 Internal Server Error**
+
+- **HTTP Response**: 
+```http
+HTTP/1.1 500 Internal Server Error
+```
+
+- **Details**:\
+  Een onverwachte fout is opgetreden op de resource-server. Probeer het later opnieuw en volg het incidentbeheerproces indien nodig.
+
+> _LET OP: een GraphQL 200 OK inhoudelijk nog steeds fouten kan bevatten._
+
+# **7. Referenties**
+
+| Onderwerp                                  |                                                                          |
+| ------------------------------------------ | ------------------------------------------------------------------------ |
+| oAuth 2.0                                  | https\://oauth.net/2/                                                    |
+| OPA                                        | https\://www\.openpolicyagent.org/                                       |
+| Informatiemodel iWlz - Indicatieregister 2 | https\://informatiemodel.istandaarden.nl/iWlz-Indicatie-2/               |
+| Koppelvlakspecificatie Indicatieregister 2 | https\://github.com/iStandaarden/iWlz-indicatie/tree/Indicatieregister-2 |
+| Informatiemodel iWlz - Bemiddelingregister | https\://informatiemodel.istandaarden.nl/iWlz-Bemiddeling-1/             |
+| Koppelvlakspecificatie Bemiddeling         | https\://github.com/iStandaarden/iWlz-bemiddeling                        |
+| Audiences (tijdelijk alternatief zorgAB)   | https\://github.com/iStandaarden/iWlz-adresboek                          |
 

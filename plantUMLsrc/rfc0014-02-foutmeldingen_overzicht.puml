@@ -1,4 +1,4 @@
-@startuml rfc0014-2-foutmeldingen_overzicht
+@startuml
 ' !pragma teoz true
 
 skinparam ParticipantPadding 20
@@ -10,12 +10,11 @@ end box
 
 box "nID"
     participant "autorisatieserver" as AuthzServer
-    participant "nID Filter" as Filter
-    participant "Resource-server" as nIDResourceServer
+    participant "PEP" as Filter
 end box
 
 box "Register"
-    participant "Resource" as BEMRegister
+    participant "Resource-Server" as resourceserver
 end box
 
 autonumber "<b>[000]"
@@ -23,29 +22,35 @@ activate Client
 Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel
 
 autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[1] 404 Not found
-Client <-[#red]-X AuthzServer:<color:red>[2] 403 Invalid client certificate
-Client <-[#red]-X AuthzServer:<color:red>[3] 403 Forbidden
+Client <-[#red]-X AuthzServer:<color:red>[1] 401 Unauthenticated
+Client <-[#red]-X AuthzServer:<color:red>[2] 403 Unauthorized
+Client <-[#red]-X AuthzServer:<color:red>[3] 403 Invalid client certificate
+Client <-[#red]-X AuthzServer:<color:red>[4] 404 Not found
 autonumber resume
 
 activate AuthzServer
 AuthzServer -> AuthzServer: Valideer Authenticatiemiddel
 autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[4] 401 Unauthenticated
-Client <-[#red]-X AuthzServer:<color:red>[5] 400 No Client ID
-Client <-[#red]-X AuthzServer:<color:red>[6] 401 Invalid Client ID
-Client <-[#red]-X AuthzServer:<color:red>[7] 403 Invalid client certificate
+Client <-[#red]-X AuthzServer:<color:red>[5] 400 Invalid scope
+Client <-[#red]-X AuthzServer:<color:red>[6] 400 Audience required
+Client <-[#red]-X AuthzServer:<color:red>[7] 400 Invalid query
+Client <-[#red]-X AuthzServer:<color:red>[8] 400 No operation
+Client <-[#red]-X AuthzServer:<color:red>[9] 401 JWT is expired
+Client <-[#red]-X AuthzServer:<color:red>[10] 401 JWT header is an invalid JSON
 autonumber resume
 
 AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)
 autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[8] 400 Invalid Scope
+Client <-[#red]-X AuthzServer:<color:red>[11] 401 Access denied, invalid scope
+Client <-[#red]-X AuthzServer:<color:red>[12] 401 Token invalid
 autonumber resume
 activate AuthzServer #LightGray
 AuthzServer -> AuthzServer: Valideer autorisatie
 autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[9] 401 Access denied, Invalid Scope
+Client <-[#red]-X AuthzServer:<color:red>[13] 403 RBAC access denied
+Client <-[#red]-X AuthzServer:<color:red>[14] 403 Request does not match scopes
 autonumber resume
+
 AuthzServer -> AuthzServer: Genereer Access-Token
 activate AuthzServer #LightGray
 deactivate AuthzServer
@@ -54,57 +59,48 @@ AuthzServer --> Client --: 200 Response (Access-Token)
 deactivate AuthzServer
 deactivate Client
 
-Client -> nIDResourceServer: **GraphQL Query**\nAuthenticatiemiddel + Access-Token
-activate nIDResourceServer
+Client -> Filter: **GraphQL Query**\nAuthenticatiemiddel + Access-Token
+
 activate Filter
 note right of Filter: Inline filtering requests
 activate Client
 autonumber stop
-    Client <-[#red]-X nIDResourceServer: <color:red>[10] 404 Resource not found.
+    Client <-[#red]-X Filter: <color:red>[15] 500 Internal server error
+    Client <-[#red]-X Filter: <color:red>[16] 502 Bad gateway
 autonumber resume
+
 Filter -> Filter: Valideer Authenticatiemiddel
-autonumber stop
-Client <-[#red]-X Filter:<color:red>[11] 401 Unauthenticated
-Client <-[#red]-X Filter:<color:red>[12] 400 No Client ID
-Client <-[#red]-X Filter:<color:red>[13] 401 Invalid Client ID
-Client <-[#red]-X Filter:<color:red>[14] 403 Invalid client certificate
-autonumber resume
-
-Filter -> Filter: Valideer Access-Token
-autonumber stop
-    Client <-[#red]-X Filter: <color:red>[15] 401 Jwt is expired
-    Client <-[#red]-X Filter: <color:red>[16] 401 Jwt header is an invalid JSON
-autonumber resume
-
 
 Filter -> Filter: Valideer GraphQL
 autonumber stop
-    Client <-[#red]-X Filter: <color:red>[17] 400 verifying request: bad request: parsing GQL query: .......
-    Client <-[#red]-X Filter: <color:red>[18] 400 The following variables were not used: XXXXXX.
+    Client <-[#red]-X Filter: <color:red>[17] 400 Invalid scope
+    Client <-[#red]-X Filter: <color:red>[18] 400 Audience required
+    Client <-[#red]-X Filter: <color:red>[19] 400 Invalid query
+    Client <-[#red]-X Filter: <color:red>[20] 400 No operation
 autonumber resume
 
 Filter -> Filter: Valideer GraphQL request met scope(s)
 
 autonumber stop
-    Client <-[#red]-X Filter: <color:red>[19] 401 Access denied, Invalid Scope
-    Client <-[#red]-X Filter: <color:red>[20] 403 RBAC: access denied
-    Client <-[#red]-X Filter: <color:red>[21] 403 request does not match scopes
+    Client <-[#red]-X Filter: <color:red>[21] 401 Access denied, invalid scope
+    Client <-[#red]-X Filter: <color:red>[22] 403 RBAC access denied
+    Client <-[#red]-X Filter: <color:red>[23] 403 Request does not match scopes
 autonumber resume
 
-nIDResourceServer -> BEMRegister: GraphQL Request
-deactivate Filter
-activate BEMRegister
+Filter -> resourceserver: GraphQL Request
+
+activate resourceserver
 autonumber stop
-    Client <-[#red]-X nIDResourceServer: <color:red>[22] 504 Gateway timeout
-    nIDResourceServer <-[#red]-X BEMRegister: <color:red>[23] 500 Internal Server Error
-    Client <-[#red]-X nIDResourceServer: <color:red>[23] 500 Internal Server Error
+    Client <-[#red]-X Filter: <color:red>[24] 504 Gateway timeout
+    Filter <-[#red]-X resourceserver: <color:red>[25] 500 Internal server error
+    Client <-[#red]-X Filter: <color:red>[25] 500 Internal server error
 autonumber resume
 
-BEMRegister --> nIDResourceServer: 200 Response (GraphQL)
-deactivate BEMRegister
+resourceserver --> Filter: 200 Response (GraphQL)
+deactivate resourceserver
 
-nIDResourceServer --> Client: 200 Response (GraphQL)
-deactivate nIDResourceServer
+Filter --> Client: 200 Response (GraphQL)
+deactivate Filter
 
 deactivate Client
 @enduml

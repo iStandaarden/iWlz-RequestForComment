@@ -10,12 +10,12 @@ end box
 
 box "nID"
     participant "autorisatieserver" as AuthzServer
-    participant "nID Filter" as Filter
-    participant "Resource-server" as nIDResourceServer
+    participant "PEP" as PEP
+    participant "PDP" as PDP
 end box
 
 box "Register"
-    participant "Resource" as BEMRegister
+    participant "Resource-Server" as resourceserver
 end box
 
 autonumber "<b>[000]"
@@ -26,33 +26,41 @@ activate Client
         AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)
         activate AuthzServer #LightGray
             AuthzServer -> AuthzServer: Valideer autorisatie
-            AuthzServer -> AuthzServer: Genereer Access-Token
+            AuthzServer -> AuthzServer: Genereer JWT Access-Token
             activate AuthzServer #DarkGray
             deactivate AuthzServer
         deactivate AuthzServer
-        AuthzServer --> Client --: 200 Response (Access-Token)
+        AuthzServer --> Client --: 200 Response (JWT Access-Token)
     deactivate AuthzServer
 deactivate Client
 
-Client -> nIDResourceServer: **GraphQL Query**\nAuthenticatiemiddel + Access-Token
-activate nIDResourceServer
-activate Filter
-note right of Filter: Inline filtering requests
+
+Client -> PEP: **GraphQL Request**\nAuthenticatiemiddel + JWT Access-Token + Query 
 activate Client
-Filter -> Filter: Valideer Authenticatiemiddel
-Filter -> Filter: Valideer Access-Token
-Filter -> Filter: Valideer GraphQL
-Filter -> Filter: Valideer GraphQL request met scope(s)
 
-nIDResourceServer -> BEMRegister: GraphQL Request
-deactivate Filter
-activate BEMRegister
 
-BEMRegister --> nIDResourceServer: 200 Response (GraphQL)
-deactivate BEMRegister
+    activate PEP
+    note right of PEP: Inline filtering requests
 
-nIDResourceServer --> Client: 200 Response (GraphQL)
-deactivate nIDResourceServer
+    PEP -> PEP: Valideer Authenticatiemiddel
+    PEP -> PEP: Valideer Access-Token
+    PEP -> PDP: Query met policy valideren
+        activate PEP #LightGray
+            activate PDP
+                PDP -> PDP: Valideer query
+                PDP -> PDP: Verify context information    
+                PDP -> PEP: Query allowed
+            deactivate PDP
+            PEP -> resourceserver: GraphQL Request
+        deactivate PEP
+
+        activate resourceserver
+            resourceserver --> PEP: 200 Response (GraphQL)
+        deactivate resourceserver
+    
+    PEP --> Client: 200 Response (GraphQL)
+    deactivate PEP
 
 deactivate Client
+
 @enduml
