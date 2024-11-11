@@ -33,6 +33,8 @@ Inhoudsopgave
     - [**4.1.2 Scopes**](#412-scopes)
     - [**4.1.3 Audience**](#413-audience)
     - [**4.1.4 Token request**](#414-token-request)
+      - [4.1.4.1 Token request als partij zelf](#4141-token-request-als-partij-zelf)
+      - [4.1.4.2 Token request namens een andere partij (actor)](#4142-token-request-namens-een-andere-partij-actor)
   - [**4.2 Policy Enforcement Point (PEP)**](#42-policy-enforcement-point-pep)
   - [**4.3 Policy Decision Point (PDP)**](#43-policy-decision-point-pdp)
 - [**5 Raadplegen registers**](#5-raadplegen-registers)
@@ -40,32 +42,23 @@ Inhoudsopgave
   - [**5.2 Raadplegen Bemiddelingsregister**](#52-raadplegen-bemiddelingsregister)
 - [**6 Foutmeldingen**](#6-foutmeldingen)
   - [**6.1 Foutmeldingen Aanvraag van Autorisatie**](#61-foutmeldingen-aanvraag-van-autorisatie)
-    - [**\[1\] 401 Unauthenticated**](#1-401-unauthenticated)
-    - [**\[2\] 403 Unauthorized**](#2-403-unauthorized)
-    - [**\[3\] 403 Invalid Client Certificate**](#3-403-invalid-client-certificate)
-    - [**\[4\] 404 Not Found**](#4-404-not-found)
-    - [**\[5\] 400 Invalid Scope**](#5-400-invalid-scope)
-    - [**\[6\] 400 Audience Required**](#6-400-audience-required)
-    - [**\[7\] 400 Invalid Query**](#7-400-invalid-query)
-    - [**\[8\] 400 No Operation**](#8-400-no-operation)
-    - [**\[9\] 401 JWT is Expired**](#9-401-jwt-is-expired)
-    - [**\[10\] 401 JWT Header is an Invalid JSON**](#10-401-jwt-header-is-an-invalid-json)
-    - [**\[11\] 401 Access Denied, Invalid Scope**](#11-401-access-denied-invalid-scope)
-    - [**\[12\] 401 Token Invalid**](#12-401-token-invalid)
-    - [**\[13\] 403 RBAC: Access Denied**](#13-403-rbac-access-denied)
-    - [**\[14\] 403 Request Does Not Match Scopes**](#14-403-request-does-not-match-scopes)
+    - [**\[01\] 400 Audience Required**](#01-400-audience-required)
+    - [**\[02\] 403 Not Allowed**](#02-403-not-allowed)
+    - [**\[03\] 403 Invalid Client Certificate**](#03-403-invalid-client-certificate)
+    - [**\[04\] 404 Not Found**](#04-404-not-found)
+    - [**\[05\] 500 Internal Server Error**](#05-500-internal-server-error)
   - [**6.2 Foutmeldingen GraphQL Query**](#62-foutmeldingen-graphql-query)
-    - [**\[15\] 500 Internal Server Error**](#15-500-internal-server-error)
-    - [**\[16\] 502 Bad Gateway**](#16-502-bad-gateway)
-    - [**\[17\] 400 Invalid Scope**](#17-400-invalid-scope)
-    - [**\[18\] 400 Audience Required**](#18-400-audience-required)
-    - [**\[19\] 400 Invalid Query Syntax**](#19-400-invalid-query-syntax)
-    - [**\[20\] 400 No Operation**](#20-400-no-operation)
-    - [**\[21\] 401 Access Denied, Invalid Scope**](#21-401-access-denied-invalid-scope)
-    - [**\[22\] 403 RBAC: Access Denied**](#22-403-rbac-access-denied)
-    - [**\[23\] 403 Request Does Not Match Scopes**](#23-403-request-does-not-match-scopes)
-    - [**\[24\] 504 Gateway Timeout**](#24-504-gateway-timeout)
-    - [**\[25\] 500 Internal Server Error**](#25-500-internal-server-error)
+    - [**\[06\] 400 Invalid Query Syntax**](#06-400-invalid-query-syntax)
+    - [**\[07\] 400 No Operation**](#07-400-no-operation)
+    - [**\[08\] 401 Access Denied, Invalid Scope**](#08-401-access-denied-invalid-scope)
+    - [\[09\] 403 Invalid Client Certificate](#09-403-invalid-client-certificate)
+    - [\[10\] 403 Not Allowed](#10-403-not-allowed)
+    - [\[11\] 403 Unauthorized](#11-403-unauthorized)
+    - [\[12\] 403 Policy: Access Denied](#12-403-policy-access-denied)
+    - [\[13\] 403 Request Does Not Match Scopes](#13-403-request-does-not-match-scopes)
+    - [\[14\] 500 Internal Server Error](#14-500-internal-server-error)
+    - [\[15\] 502 Bad Gateway](#15-502-bad-gateway)
+    - [\[16\] 504 Gateway Timeout](#16-504-gateway-timeout)
 - [**7. Referenties**](#7-referenties)
 
 
@@ -202,10 +195,10 @@ Afhankelijk van de definitie in de access-policy kan een deelnemer deze aanvrage
 | Resource             | Scope                                                              | Omschrijving                                                                          |
 | -------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
 |                      | (no scope)                                                         | Retourneert de "Defaultscope", (momenteel niet mogelijk)                              |
-| Notificatie          | organisaties/zorgkantoor/notificaties/notificatie:create           |                                                                                       |
-| Notificatie          | organisaties/zorgaanbieder/notificaties/notificatie:create         |                                                                                       |
-| Melding              | organisaties/zorgkantoor/meldingen/melding:create                  |                                                                                       |
-| Melding              | organisaties/zorgaanbieder/meldingen/melding:create                |                                                                                       |
+| Notificatie          | organisaties/zorgkantoor/notificaties/notificatie:create           | Geeft recht om een notificatie te sturen aan het zorgkantoor                          |
+| Notificatie          | organisaties/zorgaanbieder/notificaties/notificatie:create         | Geeft recht om een notificatie te sturen aan een zorgaanbieder                        |
+| Melding              | organisaties/zorgkantoor/meldingen/melding:create                  | Geeft recht om een melding te sturen aan het zorgkantoor                              |
+| Melding              | organisaties/zorgaanbieder/meldingen/melding:create                | Geeft recht om een melding te sturen aan een zorgaanbieder                            |
 | Indicatie-register   | registers/wlzindicatieregister/indicaties:read                     | Geeft leesrechten tot indicatie uit het indicatieregister                             |
 | Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:read   | Geeft leesrechten tot bemiddelingen uit het Bemiddelingregister.                      |
 | Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:create | Geeft create rechten om nieuwe bemiddelingen aan te maken in het Bemiddelingregister. |
@@ -222,51 +215,113 @@ Als je in OAuth een access-token aanvraagt, moet je specificeren wie of wat de u
 
 ### **4.1.4 Token request**
 
+In het token request kan aangegeven worden namens wie het request wordt uitgevoerd. Dit kan op twee manieren, als de partij zelf of als “actor” namens een partij. Wanneer als partij een request wordt gedaan, dan wordt het Vecozo certificaat/Vecozo identity gebruikt om te bepalen wie de partij is.  Als “actor” moet (naast het Vecozo certificaat) in het token request worden opgegeven namens welke partij geacteerd moet worden. Op het moment kunnen deze partijen zorgaanbieders (agb’s) en zorgkantoren (uzovi’s) zijn.
+
 **Opmerking:** Een request header MOET het Content-Type: application/json bevatten om aan te geven dat de body in JSON formaat is.
+
+#### 4.1.4.1 Token request als partij zelf
+De partij vraagt een token aan voor zichzelf.
+
+Voorbeeld van een token request voor en door de partij zelf:
 ```json
  POST https://api.vecozo.nl/netwerkmodel/v3/auth/token
 
  Header: Authorization Basic <Client ID:Client Secret (Base64 encoded)>
  {
-       "grant\_type": "client\_credentials",
+       "grant_type": "client_credentials",
        "scope": "registers/wlzindicatieregister/indicaties:read",
-      "audience": "https\://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql" 
+      "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql" 
   } 
 ```
 
 De response is een JWT:
 ```json
 {
-   "iss": "auth.nid",
-   "sub": "agbcode:012345123",
-   "aud": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql",
-   "exp": 1731318519,
-   "nbf": 1730713599,
-   "iat": 1730713719,
-   "jti": "eaa55b46-8d97-46ab-82a3-3a5a44170c67",
-   "_claim_names": {
-    "agb": "localhost",
-    "uzovi": "localhost"
-   },
-   "_claim_sources": {
-    "localhost": {
-    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZ2IiOiIwMTIzNDUxMjMiLCJ1em92aSI6bnVsbH0.Y6XJZI7Ri0gV8Xqh6HZ0kk97oLu6sixc3T2v2K2GKfU"
+  "iss":"auth.nid",
+  "sub":"20001000001131",
+  "aud":"https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql",
+  "exp":1731318519,
+  "nbf":1730713599,
+  "iat":1730713719,
+  "jti":"eaa55b46-8d97-46ab-82a3-3a5a44170c67",
+  "_claim_names":{
+    "agb":"localhost",
+    "uzovi":"localhost"
+  },
+  "_claim_sources":{
+    "localhost":{
+      "jwt":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZ2IiOiIwMTIzNDUxMjMiLCJ1em92aSI6bnVsbH0.Y6XJZI7Ri0gV8Xqh6HZ0kk97oLu6sixc3T2v2K2GKfU"
     }
-   },
-   "client_id": "agbcode:012345123",
-   "subjects": null,
-   "scopes": [
+  },
+  "client_id":"20001000001131",
+  "subjects":null,
+  "scopes":[
     "registers/wlzindicatieregister/indicaties:read"
-   ],
-   "consent_id": "7a8ddf4d-8953-4232-9714-4d1926888a65",
-   "client_metadata": null,
-   "act": {
-    "sub": "20001000001131"
+  ],
+  "consent_id":"7a8ddf4d-8953-4232-9714-4d1926888a65",
+  "client_metadata":null
 }
 ```
 
 **Opmerking:** De maximale token-duration (exp) is 1 uur, ongeacht de scope. 
 
+#### 4.1.4.2 Token request namens een andere partij (actor)
+ 
+Wanneer als actor een request wordt ingediend, moet het token worden uitgebreid met een “access_token/sub” element. Dit element bevat de identificatie van de partij waarvoor een token wordt opgehaald. Op het moment kan er geacteerd worden als zorgkantoor of zorgaanbieder. De waarde van het element kan er als volgt uit zien:
+
+| Instantie Type | Identificatie   | Element waarde    |
+| :------------- | :-------------- | :---------------- |
+| Zorgkantoor    | 5000 (uzovi)    | uzovi:5000        |
+| Zorgaanbieder  | 012345678 (agb) | agbcode:012345678 |
+
+
+Voorbeeld token request als actor voor een partij:
+```json
+https://api.vecozo.nl/netwerkmodel/v3/auth/token
+
+Header: Authorization Basic <Client ID:Client Secret (Base64 encoded)>
+
+{
+    "grant_type": "client_credentials",
+    "scope": "registers/wlzindicatieregister/indicaties:read",
+    "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql",
+    "access_token" : {
+       "sub" : "uzovi:5000"
+    }
+}
+```
+
+```json
+{
+  "iss":"auth.nid",
+  "sub":"20001000001131",
+  "aud":"https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql",
+  "exp":1731318519,
+  "nbf":1730713599,
+  "iat":1730713719,
+  "jti":"eaa55b46-8d97-46ab-82a3-3a5a44170c67",
+  "_claim_names":{
+    "agb":"localhost",
+    "uzovi":"localhost"
+  },
+  "_claim_sources":{
+    "localhost":{
+      "jwt":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZ2IiOm51bGwsInV6b3ZpIjoiNTAwMCJ9.9mRf50AuhkVfGwIcqYA4I_8fChcXg_N9h-VHhMo2MlE"
+    }
+  },
+  "client_id":"uzovi:5000",
+  "subjects":null,
+  "scopes":[
+    "registers/wlzindicatieregister/indicaties:read"
+  ],
+  "consent_id":"7a8ddf4d-8953-4232-9714-4d1926888a65",
+  "client_metadata":null,
+  "act":{
+    "sub":"20001000001131"
+  }
+}
+```
+ 
 
 ## **4.2 Policy Enforcement Point (PEP)**
 
@@ -430,306 +485,204 @@ query Bemiddelingspecificatie(
 
 **Overzicht van HTTP Error Responses**Let op: foutmeldingen kunnen afhankelijk van de geïmplementeerde client anders worden weergegeven.
 
-\
 ![foutmeldingen_overzicht](../plantUMLsrc/rfc0014-02-foutmeldingen_overzicht.svg "foutmeldingen_overzicht")
 
 
 ## **6.1 Foutmeldingen Aanvraag van Autorisatie**
 
-### **\[1] 401 Unauthenticated**
+### **[01] 400 Audience Required**
 
-- **HTTP Response**: 
-```http
-HTTP/1.1 401 Unauthenticated 
-```
-
+- **HTTP Response:**
+    ```http
+    HTTP/1.1 400 Bad Request
+    "audience is required"
+     ```
 - **Details**:\
-  Authenticatie is vereist voor het verkrijgen van het access token (JWT) en moet worden uitgevoerd met "Basic Authentication" en een geldig authenticatiemiddel.
+    Controleer of alle headers op de juiste manier worden meegegeven zoals: ‘content-type’.
+    Het netwerkmodel gebruikt de flow standaard (grant_type) “client_credentials”. Een ***audience*** en ***scope*** parameter zijn vereist bij het aanvragen van een token. Voeg deze toe aan de request body. 
 
+    Bijvoorbeeld:
+    ```json
+    {
+    "grant_type": "client_credentials",
+    "scope": "registers/wlzindicatieregister/indicaties:read"
+    "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql"
+    }
+    ```
 
-### **\[2] 403 Unauthorized**
+### **\[02] 403 Not Allowed**
 
-- **HTTP Response**: 
-```http
-HTTP/1.1 403 Forbidden 
-```
+- **HTTP Response:** 
+    ```http
+    HTTP/1.1 403 Forbidden 
+    ```
 
 - **Details**:\
   Mogelijke oorzaken zijn:
 
   - Het IP-adres is niet geregistreerd bij het authenticatiemiddel.
+  - Het authenticatiemiddel kan geblokkeerd zijn. Neem contact op met de VECOZO contactpersoon binnen uw organisatie, deze kan in de portaal van VECOZO controleren of uw IP-adres is opgenomen in de lijst van IP-adressen.
+  - [Hoe kan ik mijn IP-adres registreren?](https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/) - (https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/)
 
-  - Het authenticatiemiddel kan geblokkeerd zijn.
 
-
-### **\[3] 403 Invalid Client Certificate**
+### **\[03] 403 Invalid Client Certificate**
 
 - **HTTP Response**: 
-```http
-HTTP/1.1 403 Invalid Client Certificate 
-```
+    ```http
+    HTTP/1.1 403 Invalid Client Certificate 
+    ```
 
-- **Details**:
+- **Details**:\
   Het certificaat ontbreekt, is ongeldig of verlopen (van toepassing bij gebruik van een VECOZO-systeemcertificaat). Zorg ervoor dat het authenticatiemiddel overeenkomt met de juiste omgeving.
 
+  [Uw certificaat installeren of vernieuwen](https://www.vecozo.nl/certificaten-installerenvernieuwen/) - (https://www.vecozo.nl/certificaten-installerenvernieuwen/) of neem contact op met VECOZO Functioneel Beheer.
 
-### **\[4] 404 Not Found**
+
+### **\[04] 404 Not Found**
 
 - **HTTP Response**: 
-```http
-HTTP/1.1 404 Not Found
-```
+    ```http
+    HTTP/1.1 404 Not Found
+    ```
 
 - **Details**:\
   Een onjuist endpoint van de autorisatieserver is gebruikt. Controleer of het correcte endpoint is geconfigureerd, zoals gespecificeerd in dit document onder de details van de autorisatieserver.
 
 
-### **\[5] 400 Invalid Scope**
+### **\[05] 500 Internal Server Error**
 
 - **HTTP Response**: 
-```http
-HTTP/1.1 400 Bad Request
-{"ErrorCode": "invalid\_request", "Error": "Invalid Scope"} 
-```
+    ```http
+    HTTP/1.1 500 Internal Server Error
+    ```
 - **Details**:\
-  Er is een niet-bestaande scope aangevraagd. Controleer de opgevraagde scope aan de hand van de documentatie.
-
-
-### **\[6] 400 Audience Required**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 400 Bad Request "audience is required"
-```
-
-- **Details**:\
-  Een `audience`-parameter is vereist bij het aanvragen van een token. Voeg deze toe aan de request body, bijvoorbeeld:
-```json
- "audience": "https://tst-api.vecozo.nl/tst/wlzbemiddelingsregister/v1/graphql" 
-```
-
-### **\[7] 400 Invalid Query**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 400 Bad Request 
-```
-
-- **Details**:\
-  De query voldoet niet aan de vereiste syntax. Controleer de structuur van de query aan de hand van de specificaties.
-
-
-### **\[8] 400 No Operation**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 400 Bad Request 
-{"ErrorCode": "bad\_request", "Error": "No operation found to evaluate"} 
-```
-
-
-- **Details**:\
-  Een `Client ID` is verplicht bij het verkrijgen van het access token (JWT). Dit ID wordt uitgegeven door nID tijdens de onboarding van de deelnemer.
-
-
-### **\[9] 401 JWT is Expired**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 401 Unauthorized "JWT is expired" 
-```
-
-- **Details**:\
-  Het JWT-token is verlopen. Vraag een nieuw access token aan om de juiste authenticatie te verkrijgen.
-
-
-### **\[10] 401 JWT Header is an Invalid JSON**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 401 Unauthorized "JWT header is an invalid JSON"
-```
-
-- **Details**:\
-  De JWT-header voldoet niet aan de juiste JSON-structuur. Controleer de header en probeer opnieuw.
-
-
-### **\[11] 401 Access Denied, Invalid Scope**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 401 Unauthorized 
-{"ErrorCode": "invalid\_request", "Error": "Access denied, invalid scope"}
-```
-
-- **Details**:\
-  De opgevraagde scope komt niet overeen met de geautoriseerde scope. Controleer of de juiste scope is ingesteld.
-
-
-### **\[12] 401 Token Invalid**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 401 Unauthorized {"ErrorCode": "invalid\_request", "Error": "Token invalid"} 
-```
-
-- **Details**:\
-  Het token bevat een ongeldige of ontbrekende claim. Controleer en wijzig de claim in de GraphQL-aanvraag.
-
-
-### **\[13] 403 RBAC: Access Denied**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 403 Forbidden 
-```
-
-- **Details**:\
-  Toegang geweigerd op basis van RBAC (Role-Based Access Control). Het gebruikte authenticatiemiddel heeft geen toegangsrechten voor de gevraagde actie.
-
-
-### **\[14] 403 Request Does Not Match Scopes**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 403 Forbidden 
-```
-
-- **Details**:\
-  De aanvraag voldoet niet aan de vereiste scopes die in het access token zijn gedefinieerd. Controleer de toegewezen scopes.
-
-***
+  Een onverwachte fout is opgetreden op de autorisatieserver. Probeer het later opnieuw of volg het incidentbeheerproces indien nodig.
 
 
 ## **6.2 Foutmeldingen GraphQL Query**
 
-### **\[15] 500 Internal Server Error**
+### **\[06] 400 Invalid Query Syntax**
 
 - **HTTP Response**: 
-```http
-HTTP/1.1 500 Internal Server Error
-```
+    ```http
+    HTTP/1.1 400 Bad Request
+    ```
+
+- **Details**:\
+    De query voldoet niet aan de vereiste syntax. Controleer de structuur van de query aan de hand van de specificaties.
+
+### **[07] 400 No Operation**
+
+- **HTTP Response**: 
+    ```http
+    HTTP/1.1 400 Bad Request
+    {"ErrorCode": "bad_request", "Error": "No operation found to evaluate"} 
+    ```
+
+- **Details**:\
+    Er ontbreekt een geldige operatie in de GraphQL-aanvraag. Controleer en pas de query aan om een bewerking te definiëren.
+
+
+### **[08] 401 Access Denied, Invalid Scope**
+
+- **HTTP Response**: 
+    ```http
+    HTTP/1.1 401 Unauthorized
+    {"ErrorCode": "invalid_request", "Error": "Access denied, invalid scope"} 
+    ```
+
+- **Details**:\
+    De opgevraagde scope komt niet overeen met de toegestane scope. Controleer de scope-instellingen.
+
+
+### [09] 403 Invalid Client Certificate
+
+- **HTTP Response**: 
+    ```http
+    HTTP/1.1 403 Invalid Client Certificate
+    ```
+
+- **Details**:\
+    Het certificaat ontbreekt, is ongeldig of verlopen (van toepassing bij gebruik van een VECOZO-systeemcertificaat). Zorg ervoor dat het authenticatiemiddel overeenkomt met de juiste omgeving.
+
+    Voor meer informatie ga naar: [Uw certificaat installeren of vernieuwen](https://www.vecozo.nl/certificaten-installerenvernieuwen/) - https://www.vecozo.nl/certificaten-installerenvernieuwen/ of neem contact op met VECOZO Functioneel Beheer
+
+
+### [10] 403 Not Allowed
+
+- **HTTP Response**: 
+    ```http
+    HTTP/1.1 403 Not Allowed 
+    ```
+
+- **Details**:\
+    Mogelijke oorzaken zijn:
+    - Het IP-adres is niet geregistreerd bij het authenticatiemiddel.
+    - Het authenticatiemiddel kan geblokkeerd zijn. Neem contact op met de VECOZO contactpersoon binnen uw organisatie, deze kan in de portaal van VECOZO controleren of uw IP-adres is opgenomen in de lijst van IP-adressen. 
+    - Voor meer informatie ga naar: [Hoe kan ik mijn IP-adres registreren?](https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/) - https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/
+
+### [11] 403 Unauthorized
+- **HTTP Response:**
+    ```http
+    HTTP/1.1 403 Unauthorized
+    ```
+
+- **Details:**\
+    De toegang werd geweigerd, omdat er mogelijk een access token ontbrak. Controleer of het access token correct is aangevraagd en wordt meegegeven. Indien de fout zich blijft voordoen, kunt u het incidentbeheerproces volgen.
+
+### [12] 403 Policy: Access Denied
+- **HTTP Response:**
+    ```http
+    HTTP/1.1 403 Forbidden
+    ```
+
+- **Details:**\
+    Toegang geweigerd op basis van een policy. De toegangsrechten van het gebruikte authenticatiemiddel voldoen niet aan de toegangsvereisten. Controleer de query en probeer opnieuw.
+
+### [13] 403 Request Does Not Match Scopes
+- **HTTP Response:**
+    ```http
+    HTTP/1.1 403 Forbidden
+    ```
+
+- **Details:**\
+     De aanvraag voldoet niet aan de vereiste scopes in het access token. Controleer de toegewezen scopes. Vraag een nieuwe access token aan indien de token voor een andere scope bestemd is.
+
+### [14] 500 Internal Server Error
+
+- **HTTP Response**: 
+    ```http
+    HTTP/1.1 500 Internal Server Error
+    ```
 
 - **Details**:\
   Er is een onverwachte fout opgetreden op de server. Probeer het later opnieuw of raadpleeg het incidentbeheerproces.
 
 
-### **\[16] 502 Bad Gateway**
+### [15] 502 Bad Gateway
 
 - **HTTP Response**: 
-```http
-HTTP/1.1 502 Bad Gateway 
-```
-
+    ```http
+    HTTP/1.1 502 Bad Gateway 
+    ```
 
 - **Details**:\
   De server kreeg een ongeldige reactie van een upstream-server. Controleer de serverinstellingen of probeer het later opnieuw.
 
-
-### **\[17] 400 Invalid Scope**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 400 Bad Request
-{"ErrorCode": "invalid\_request", "Error": "Invalid Scope"} 
-```
-
-- **Details**:\
-  Er is een niet-bestaande scope aangevraagd. Controleer de opgevraagde scope aan de hand van de documentatie.
-
-
-### **\[18] 400 Audience Required**
+### [16] 504 Gateway Timeout
 
 - **HTTP Response**: 
-```http
-HTTP/1.1 400 Bad Request"audience is required"
-```
-
-- **Details**:\
-  Een `audience`-parameter is vereist bij de aanvraag. Voeg deze toe aan de request body, bijvoorbeeld:
-
-```json
- "audience": "https\://tst-api.vecozo.nl/tst/wlzbemiddelingsregister/v1/graphql" 
-```
-
-### **\[19] 400 Invalid Query Syntax**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 400 Bad Request
-```
-
-- **Details**:\
-  De query voldoet niet aan de vereiste syntax. Controleer de structuur van de query aan de hand van de specificaties.
-
-
-### **\[20] 400 No Operation**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 400 Bad Request
-{"ErrorCode": "bad\_request", "Error": "No operation found to evaluate"} 
-```
-
-- **Details**:\
-  Er ontbreekt een geldige operatie in de GraphQL-aanvraag. Controleer en pas de query aan om een bewerking te definiëren.
-
-
-### **\[21] 401 Access Denied, Invalid Scope**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 401 Unauthorized{"ErrorCode": "invalid\_request", "Error": "Access denied, invalid scope"} 
-```
-
-- **Details**:\
-  De opgevraagde scope komt niet overeen met de toegestane scope. Controleer de scope-instellingen.
-
-
-### **\[22] 403 RBAC: Access Denied**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 403 Forbidden 
-```
-
-- **Details**:\
-  Toegang geweigerd op basis van RBAC. De toegangsrechten van het gebruikte authenticatiemiddel voldoen niet aan de toegangsvereisten.
-
-
-### **\[23] 403 Request Does Not Match Scopes**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 403 Forbidden 
-```
-
-- **Details**:\
-  De aanvraag voldoet niet aan de vereiste scopes in het access token. Controleer de toegewezen scopes.
-
-
-### **\[24] 504 Gateway Timeout**
-
-- **HTTP Response**: 
-```http
-HTTP/1.1 504 Gateway Timeout 
-```
+    ```http
+    HTTP/1.1 504 Gateway Timeout 
+    ```
 
 - **Details**:\
   De server reageerde niet binnen de verwachte tijd. Controleer de serververbindingen of probeer het later opnieuw.
 
 
-### **\[25] 500 Internal Server Error**
 
-- **HTTP Response**: 
-```http
-HTTP/1.1 500 Internal Server Error
-```
 
-- **Details**:\
-  Een onverwachte fout is opgetreden op de resource-server. Probeer het later opnieuw en volg het incidentbeheerproces indien nodig.
-
-> _LET OP: een GraphQL 200 OK inhoudelijk nog steeds fouten kan bevatten._
+> _LET OP: Een GraphQL 200 OK kan inhoudelijk nog steeds een fout-body bevatten._
 
 # **7. Referenties**
 

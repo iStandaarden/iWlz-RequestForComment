@@ -17,90 +17,54 @@ box "Register"
     participant "Resource-Server" as resourceserver
 end box
 
-autonumber "<b>[000]"
-activate Client
+autonumber "<b><[000]"
+
 Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel
-
-autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[1] 401 Unauthenticated
-Client <-[#red]-X AuthzServer:<color:red>[2] 403 Unauthorized
-Client <-[#red]-X AuthzServer:<color:red>[3] 403 Invalid client certificate
-Client <-[#red]-X AuthzServer:<color:red>[4] 404 Not found
-autonumber resume
-
+activate Client
 activate AuthzServer
+autonumber stop
+
+Client <-[#red]-X AuthzServer:<color:red>[01] 400 Audience Required
+Client <-[#red]-X AuthzServer:<color:red>[02] 403 Not Allowed
+Client <-[#red]-X AuthzServer:<color:red>[03] 403 Invalid client certificate
+Client <-[#red]-X AuthzServer:<color:red>[04] 404 Not found
+Client <-[#red]-X AuthzServer:<color:red>[05] 500 Internal Server Error
+autonumber resume
+
+
 AuthzServer -> AuthzServer: Valideer Authenticatiemiddel
-autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[5] 400 Invalid scope
-Client <-[#red]-X AuthzServer:<color:red>[6] 400 Audience required
-Client <-[#red]-X AuthzServer:<color:red>[7] 400 Invalid query
-Client <-[#red]-X AuthzServer:<color:red>[8] 400 No operation
-Client <-[#red]-X AuthzServer:<color:red>[9] 401 JWT is expired
-Client <-[#red]-X AuthzServer:<color:red>[10] 401 JWT header is an invalid JSON
-autonumber resume
-
 AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)
-autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[11] 401 Access denied, invalid scope
-Client <-[#red]-X AuthzServer:<color:red>[12] 401 Token invalid
-autonumber resume
-activate AuthzServer #LightGray
-AuthzServer -> AuthzServer: Valideer autorisatie
-autonumber stop
-Client <-[#red]-X AuthzServer:<color:red>[13] 403 RBAC access denied
-Client <-[#red]-X AuthzServer:<color:red>[14] 403 Request does not match scopes
-autonumber resume
-
-AuthzServer -> AuthzServer: Genereer Access-Token
-activate AuthzServer #LightGray
-deactivate AuthzServer
-deactivate AuthzServer
 AuthzServer --> Client --: 200 Response (Access-Token)
 deactivate AuthzServer
 deactivate Client
 
 Client -> Filter: **GraphQL Query**\nAuthenticatiemiddel + Access-Token
-
+activate Client
 activate Filter
 note right of Filter: Inline filtering requests
-activate Client
+
 autonumber stop
+    Client <-[#red]-X Filter: <color:red>[06] 400 Invalid Query Syntax
+    Client <-[#red]-X Filter: <color:red>[07] 400 No operation
+    Client <-[#red]-X Filter: <color:red>[08] 401 Access denied, invalid scope
+    Client <-[#red]-X Filter: <color:red>[09] 403 Invallid Client Certificate
+    Client <-[#red]-X Filter: <color:red>[10] 403 Not Allowed
+    Client <-[#red]-X Filter: <color:red>[11] 403 Unauthorized
+    Client <-[#red]-X Filter: <color:red>[12] 403 Policy Acces Denied
+    Client <-[#red]-X Filter: <color:red>[13] 403 Request does not match scopes
+    Client <-[#red]-X Filter: <color:red>[14] 504 Gateway timeout
     Client <-[#red]-X Filter: <color:red>[15] 500 Internal server error
     Client <-[#red]-X Filter: <color:red>[16] 502 Bad gateway
-autonumber resume
 
-Filter -> Filter: Valideer Authenticatiemiddel
-
-Filter -> Filter: Valideer GraphQL
-autonumber stop
-    Client <-[#red]-X Filter: <color:red>[17] 400 Invalid scope
-    Client <-[#red]-X Filter: <color:red>[18] 400 Audience required
-    Client <-[#red]-X Filter: <color:red>[19] 400 Invalid query
-    Client <-[#red]-X Filter: <color:red>[20] 400 No operation
-autonumber resume
-
-Filter -> Filter: Valideer GraphQL request met scope(s)
-
-autonumber stop
-    Client <-[#red]-X Filter: <color:red>[21] 401 Access denied, invalid scope
-    Client <-[#red]-X Filter: <color:red>[22] 403 RBAC access denied
-    Client <-[#red]-X Filter: <color:red>[23] 403 Request does not match scopes
 autonumber resume
 
 Filter -> resourceserver: GraphQL Request
-
 activate resourceserver
-autonumber stop
-    Client <-[#red]-X Filter: <color:red>[24] 504 Gateway timeout
-    Filter <-[#red]-X resourceserver: <color:red>[25] 500 Internal server error
-    Client <-[#red]-X Filter: <color:red>[25] 500 Internal server error
-autonumber resume
-
 resourceserver --> Filter: 200 Response (GraphQL)
 deactivate resourceserver
 
 Filter --> Client: 200 Response (GraphQL)
 deactivate Filter
-
 deactivate Client
+
 @enduml
