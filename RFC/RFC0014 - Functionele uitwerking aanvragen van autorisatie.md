@@ -223,7 +223,7 @@ In het token request kan aangegeven worden namens wie het request wordt uitgevoe
 De partij vraagt een token aan voor zichzelf.
 
 Voorbeeld van een token request voor en door de partij zelf:
-```json
+```http
  POST https://api.vecozo.nl/netwerkmodel/v3/auth/token
 
  Header: Authorization Basic <Client ID:Client Secret (Base64 encoded)>
@@ -276,7 +276,7 @@ Wanneer als actor een request wordt ingediend, moet het token worden uitgebreid 
 
 
 Voorbeeld token request als actor voor een partij:
-```json
+```http
 https://api.vecozo.nl/netwerkmodel/v3/auth/token
 
 Header: Authorization Basic <Client ID:Client Secret (Base64 encoded)>
