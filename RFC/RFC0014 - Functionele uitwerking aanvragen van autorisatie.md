@@ -179,7 +179,7 @@ Voor een goede request flow is het nodig om de scope in de request body op te st
 **Voorbeeld:** van een scope request parameter waarin meerdere scopes worden aangevraagd:
 
 ```json
-"scope":"registers/wlzbemiddelingsregister/bemiddelingen:read registers/wlzbemiddelingsreigster/bemiddelingen:write"
+"scope":"registers/wlzbemiddelingsregister/bemiddelingen:read registers/wlzbemiddelingsregister/bemiddelingen:write"
 ```
 
 Als een client een scope aanvraagt waarvoor hij geen autorisatie heeft, dan zal de autorisatieserver een foutmelding retourneren "Access denied, invalid scope", ongeacht of er in dezelfde aanvraag scopes zitten waarvoor wel is geautoriseerd. 
