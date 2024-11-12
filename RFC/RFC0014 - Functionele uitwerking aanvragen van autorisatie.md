@@ -2,7 +2,7 @@
 
 # RFC0014 - Functionele uitwerking aanvragen van autorisatie
 
-versie 0.9 - dd. 08-11-2024
+versie 0.9 - dd. 11-11-2024
 
 **SAMENVATTING**
 
@@ -23,34 +23,34 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/9) om de actuel
 Inhoudsopgave
 
 - [RFC0014 - Functionele uitwerking aanvragen van autorisatie](#rfc0014---functionele-uitwerking-aanvragen-van-autorisatie)
-- [**1. Inleiding**](#1-inleiding)
-  - [**1.1 Uitgangspunten**](#11-uitgangspunten)
-- [**2. Terminologie**](#2-terminologie)
-- [**3. Schematische weergave**](#3-schematische-weergave)
-- [**4. Netwerkcomponenten**](#4-netwerkcomponenten)
-  - [**4.1 Autorisatieserver**](#41-autorisatieserver)
-    - [**4.1.1 Grant\_type**](#411-grant_type)
-    - [**4.1.2 Scopes**](#412-scopes)
-    - [**4.1.3 Audience**](#413-audience)
-    - [**4.1.4 Token request**](#414-token-request)
+- [1. Inleiding](#1-inleiding)
+  - [1.1 Uitgangspunten](#11-uitgangspunten)
+- [2. Terminologie](#2-terminologie)
+- [3. Schematische weergave](#3-schematische-weergave)
+- [4. Netwerkcomponenten](#4-netwerkcomponenten)
+  - [4.1 Autorisatieserver](#41-autorisatieserver)
+    - [4.1.1 Grant\_type](#411-grant_type)
+    - [4.1.2 Scopes](#412-scopes)
+    - [4.1.3 Audience](#413-audience)
+    - [4.1.4 Token request](#414-token-request)
       - [4.1.4.1 Token request als partij zelf](#4141-token-request-als-partij-zelf)
       - [4.1.4.2 Token request namens een andere partij (actor)](#4142-token-request-namens-een-andere-partij-actor)
-  - [**4.2 Policy Enforcement Point (PEP)**](#42-policy-enforcement-point-pep)
-  - [**4.3 Policy Decision Point (PDP)**](#43-policy-decision-point-pdp)
-- [**5 Raadplegen registers**](#5-raadplegen-registers)
-  - [**5.1 Raadplegen Indicatieregister**](#51-raadplegen-indicatieregister)
-  - [**5.2 Raadplegen Bemiddelingsregister**](#52-raadplegen-bemiddelingsregister)
-- [**6 Foutmeldingen**](#6-foutmeldingen)
-  - [**6.1 Foutmeldingen Aanvraag van Autorisatie**](#61-foutmeldingen-aanvraag-van-autorisatie)
-    - [**\[01\] 400 Audience Required**](#01-400-audience-required)
-    - [**\[02\] 403 Not Allowed**](#02-403-not-allowed)
-    - [**\[03\] 403 Invalid Client Certificate**](#03-403-invalid-client-certificate)
-    - [**\[04\] 404 Not Found**](#04-404-not-found)
-    - [**\[05\] 500 Internal Server Error**](#05-500-internal-server-error)
-  - [**6.2 Foutmeldingen GraphQL Query**](#62-foutmeldingen-graphql-query)
-    - [**\[06\] 400 Invalid Query Syntax**](#06-400-invalid-query-syntax)
-    - [**\[07\] 400 No Operation**](#07-400-no-operation)
-    - [**\[08\] 401 Access Denied, Invalid Scope**](#08-401-access-denied-invalid-scope)
+  - [4.2 Policy Enforcement Point (PEP)](#42-policy-enforcement-point-pep)
+  - [4.3 Policy Decision Point (PDP)](#43-policy-decision-point-pdp)
+- [5 Raadplegen registers](#5-raadplegen-registers)
+  - [5.1 Raadplegen Indicatieregister](#51-raadplegen-indicatieregister)
+  - [5.2 Raadplegen Bemiddelingsregister](#52-raadplegen-bemiddelingsregister)
+- [6 Foutmeldingen](#6-foutmeldingen)
+  - [6.1 Foutmeldingen Aanvraag van Autorisatie](#61-foutmeldingen-aanvraag-van-autorisatie)
+    - [\[01\] 400 Audience Required](#01-400-audience-required)
+    - [\[02\] 403 Not Allowed](#02-403-not-allowed)
+    - [\[03\] 403 Invalid Client Certificate](#03-403-invalid-client-certificate)
+    - [\[04\] 404 Not Found](#04-404-not-found)
+    - [\[05\] 500 Internal Server Error](#05-500-internal-server-error)
+  - [6.2 Foutmeldingen GraphQL Query](#62-foutmeldingen-graphql-query)
+    - [\[06\] 400 Invalid Query Syntax](#06-400-invalid-query-syntax)
+    - [\[07\] 400 No Operation](#07-400-no-operation)
+    - [\[08\] 401 Access Denied, Invalid Scope](#08-401-access-denied-invalid-scope)
     - [\[09\] 403 Invalid Client Certificate](#09-403-invalid-client-certificate)
     - [\[10\] 403 Not Allowed](#10-403-not-allowed)
     - [\[11\] 403 Unauthorized](#11-403-unauthorized)
@@ -63,7 +63,7 @@ Inhoudsopgave
 
 
 
-# **1. Inleiding**
+# 1. Inleiding
 
 Binnen het iWlz netwerkmodel werken we met generieke technische oplossingen zoveel mogelijk afgeleid van open standaarden. Dit om de noodzaak van gezamenlijke releases te beperken en een duurzaam informatiestelsel binnen de zorg te bewerkstelligen. Er is bijvoorbeeld voor GraphQL gekozen voor het delen van informatie zodat het toevoegen van extra of nieuwe gegevens vanuit een register geen impact hoeft te hebben op de bestaande deelnemers aan het netwerk. (Wanneer een deelnemer de nieuwe gegevens wil raadplegen heeft het uiteraard wel impact voor die raadpleger).
 
@@ -72,7 +72,7 @@ Het mechanisme voor autoriseren blijkt in de huidige opzet niet voldoende generi
 Deze RFC beschrijft een oplossingsrichting om deze verwevenheid te corrigeren. Het zorgt voor losse autorisatie op het mogen versturen, raadplegen of wijzigen van informatie op een databron (scope) en is het mogelijk om voor elk van de deelnemers beleidsregels op te stellen onder en met welke voorwaarden een deelnemer dat mag (policy). 
 
 
-## **1.1 Uitgangspunten**
+## 1.1 Uitgangspunten
 
 - Elke deelnemer heeft een authenticatiemiddel van een vertrouwde uitgever. Waar momenteel een VECOZO systeemcertificaat wordt gebruikt, kan t.z.t. ook PKIOverheid worden vertrouwd of het gebruik van DiD en Verifiable Credentials mogelijk zijn.
 - Om als deelnemer notificaties te kunnen ontvangen moet deze deelnemer een notificatie-endpoint beschikbaar stellen. Deelnemers binnen het iWlz Netwerkmodel moeten een notificatie-endpoint conform RFC0008 implementeren.
@@ -80,7 +80,7 @@ Deze RFC beschrijft een oplossingsrichting om deze verwevenheid te corrigeren. H
 - Elke deelnemer in het iWlz Netwerkmodel heeft een attest van deelname nodig. Momenteel wordt dit via VECOZO verzorgd tijdens de onboarding.
 
 
-# **2. Terminologie**
+# 2. Terminologie
 
 Opsomming van de in dit document gebruikte termen.
 
@@ -97,7 +97,7 @@ Opsomming van de in dit document gebruikte termen.
 | PDP                          | Policy Decision Point: Neemt de beleidsbeslissingen, voert de policy uit.                                                                                                                                                                                                                                                                                                                  |
 
 
-# **3. Schematische weergave**
+# 3. Schematische weergave
 
 Voor alle activiteiten in het netwerkstelstel is autorisatie noodzakelijk, deze autorisaties kunnen worden aangevraagd bij de autorisatieserver. Voorbeelden van activiteiten zijn: lezen, schrijven, aanpassen en verwijderen van data uit registers, maar ook autorisatie voor het mogen versturen van notificaties en meldingen.
 
@@ -111,7 +111,7 @@ _rfc0014-01-aanvragen\_autorisatie\_flow_
 | -- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 01 | Aanvraag van autorisatie        | Client wil een actie uitvoeren op een register en vraagt hiervoor autorisatie aan bij het token endpoint van de autorisatieserver                    |
 | 02 | Valideer Authenticatiemiddel    | De autorisatieserver valideert de client o.b.v. het aangeboden authenticatiemiddel                                                                   |
-| 03 | Run rule-engine o.b.v. scope(s) | De autorisatieserver doorloopt voor elke vraag (scope) de rule-engine.                                                                               |
+| 03 | Run rule-engine o.b.v. scope(s) | De autorisatieserver doorloopt voor elke aanvraag (scope) de rule-engine.                                                                               |
 | 04 | Valideer autorisatie            | In de rule-engine wordt de scope gevalideerd m.b.v. de ingestelde regels voor de aangevraagde scope(s).                                              |
 | 05 | Genereer Access-Token           | Een access-token wordt gegenereerd, hierin zijn de scopes en de resources verwerkt.                                                                  |
 | 06 | Response (Access-Token)         | Indien succesvol doorlopen wordt een access-token uitgedeeld aan de client.                                                                          |
@@ -127,7 +127,7 @@ _rfc0014-01-aanvragen\_autorisatie\_flow_
 | 16 | Response (GraphQL)              | De PEP routeert het resultaat terug aan de client.                                                                                                   |
 
 
-# **4. Netwerkcomponenten**
+# 4. Netwerkcomponenten
 
 Het nID netwerkstelsel voorziet in de volgende key netwerkservices.
 
@@ -136,7 +136,7 @@ Het nID netwerkstelsel voorziet in de volgende key netwerkservices.
 - Policy Decision Point
 
 
-## **4.1 Autorisatieserver**
+## 4.1 Autorisatieserver
 
 Binnen het netwerk is momenteel een autorisatieserver beschikbaar, bij deze autorisatieserver kunnen netwerkdeelnemers toestemming tot autorisatie aanvragen. De autorisatieaanvraag voldoet aan de OAuth 2.0 standaard. Het resultaat van de aanvraag is een access-token (JWT).
 
@@ -151,12 +151,12 @@ De volgende token-endpoints zijn voor netwerkdeelnemers beschikbaar:
 | PRD          | [https://api.vecozo.nl/netwerkmodel/v3/auth/token](https://api.vecozo.nl/netwerkmodel/v2/oauth2/token)                 |
 
 
-### **4.1.1 Grant\_type**
+### 4.1.1 Grant\_type
 
 OAuth 2.0 ondersteunt verschillende "flow standaarden" (ook wel grants genoemd) om toegang te verlenen. Voor server-naar-server communicatie wordt meestal de “Client Credential Flow” toegepast. Deze “Client Credential flow” wordt ook gebruikt bij het aanvragen van toestemming tot autorisatie bij de autorisatieserver in het netwerk stelsel.
 
 
-### **4.1.2 Scopes**
+### 4.1.2 Scopes
 
 De autorisatieserver “vereist” dat de client in het autorisatieverzoek een "scope" parameter specificeert. 
 
@@ -204,7 +204,7 @@ Afhankelijk van de definitie in de access-policy kan een deelnemer deze aanvrage
 | Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:create | Geeft create rechten om nieuwe bemiddelingen aan te maken in het Bemiddelingregister. |
 
 
-### **4.1.3 Audience**
+### 4.1.3 Audience
 
 Als je in OAuth een access-token aanvraagt, moet je specificeren wie of wat de uiteindelijke ontvanger van deze token is, deze ontvanger wordt aangeduid als “audience”. Dit helpt om te verzekeren dat het token alleen kan worden gebruikt bij de bedoelde resource-server en nergens anders.
 
@@ -213,7 +213,7 @@ Als je in OAuth een access-token aanvraagt, moet je specificeren wie of wat de u
 - De audience moet een valide “https” URL zijn. De audience is de afgeschermde URL van de resource-server welke ook alleen de Policy Enforcement Point van de resource-server vertrouwd,
 
 
-### **4.1.4 Token request**
+### 4.1.4 Token request
 
 In het token request kan aangegeven worden namens wie het request wordt uitgevoerd. Dit kan op twee manieren, als de partij zelf of als “actor” namens een partij. Wanneer als partij een request wordt gedaan, dan wordt het Vecozo certificaat/Vecozo identity gebruikt om te bepalen wie de partij is.  Als “actor” moet (naast het Vecozo certificaat) in het token request worden opgegeven namens welke partij geacteerd moet worden. Op het moment kunnen deze partijen zorgaanbieders (agb’s) en zorgkantoren (uzovi’s) zijn.
 
@@ -323,7 +323,7 @@ Header: Authorization Basic <Client ID:Client Secret (Base64 encoded)>
 ```
  
 
-## **4.2 Policy Enforcement Point (PEP)**
+## 4.2 Policy Enforcement Point (PEP)
 
 Een “Policy Enforcement Point” (kortweg PEP) regelt toegang tot resource-servers van deelnemers en beschermt deze resource-servers tegen ongeautoriseerde toegang/verzoeken. 
 
@@ -345,7 +345,7 @@ In het netwerkstelsel zijn momenteel onderstaande PEP’s in gebruik.
 **_Let op:_** _De URL bevat de term resource-server, dit is incorrect en zal tzt worden vervangen door PEP_
 
 
-## **4.3 Policy Decision Point (PDP)**
+## 4.3 Policy Decision Point (PDP)
 
 Een “Policy Decision Point” (kortweg PDP) is het belangrijkste component in de toegangscontrole binnen het netwerkstelsel en is verantwoordelijk voor het nemen van beslissingen over toegangsverzoeken. 
 
@@ -357,12 +357,12 @@ De PDP beoordeelt het toegangsverzoek in de vorm van een GraphQL-query aan de ha
 - Elk besluit wordt vastgelegd (decision-log)
 
 
-# **5 Raadplegen registers**
+# 5 Raadplegen registers
 
 Hieronder de algemene beschrijving voor het raadplegen van het Indicatieregister en Bemiddelingregister in de vorm van twee voorbeelden.
 
 
-## **5.1 Raadplegen Indicatieregister**
+## 5.1 Raadplegen Indicatieregister
 
 > **Benodigde scope: registers/wlzindicatieregister/indicaties:read** 
 
@@ -418,7 +418,7 @@ _(De volledige query-template is te vinden op:_  [_https://github.com/iStandaar
 **Let op**: Of het raadplegende zorgkantoor uiteindelijk gegevens ontvangt, hangt er ook van af of de combinatie van _initieelVerantwoordelijkZorgkantoor_ en _wlzIndicatieID_ daadwerkelijk in het register voorkomt.
 
 
-## **5.2 Raadplegen Bemiddelingsregister**
+## 5.2 Raadplegen Bemiddelingsregister
 
 > **Benodigde scope: registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:read** 
 
@@ -479,7 +479,7 @@ query Bemiddelingspecificatie(
 **Let op**: Of de raadplegende zorgaanbieder daadwerkelijk gegevens ontvangt, hangt ervan af of de combinatie van _instelling_ en _bemiddelingsspecificatieID_ ook in het register voorkomt.
 
 
-# **6 Foutmeldingen**
+# 6 Foutmeldingen
 
 **OAuth HTTP Error Responses**In het onderstaande schema staan de mogelijke foutmeldingen die kunnen optreden bij het ophalen van autorisaties of het uitvoeren van een GraphQL-verzoek.
 
@@ -488,9 +488,9 @@ query Bemiddelingspecificatie(
 ![foutmeldingen_overzicht](../plantUMLsrc/rfc0014-02-foutmeldingen_overzicht.svg "foutmeldingen_overzicht")
 
 
-## **6.1 Foutmeldingen Aanvraag van Autorisatie**
+## 6.1 Foutmeldingen Aanvraag van Autorisatie
 
-### **[01] 400 Audience Required**
+### [01] 400 Audience Required
 
 - **HTTP Response:**
     ```http
@@ -505,12 +505,12 @@ query Bemiddelingspecificatie(
     ```json
     {
     "grant_type": "client_credentials",
-    "scope": "registers/wlzindicatieregister/indicaties:read"
+    "scope": "registers/wlzindicatieregister/indicaties:read",
     "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql"
     }
     ```
 
-### **\[02] 403 Not Allowed**
+### [02] 403 Not Allowed
 
 - **HTTP Response:** 
     ```http
@@ -525,7 +525,7 @@ query Bemiddelingspecificatie(
   - [Hoe kan ik mijn IP-adres registreren?](https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/) - (https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/)
 
 
-### **\[03] 403 Invalid Client Certificate**
+### [03] 403 Invalid Client Certificate
 
 - **HTTP Response**: 
     ```http
@@ -538,7 +538,7 @@ query Bemiddelingspecificatie(
   [Uw certificaat installeren of vernieuwen](https://www.vecozo.nl/certificaten-installerenvernieuwen/) - (https://www.vecozo.nl/certificaten-installerenvernieuwen/) of neem contact op met VECOZO Functioneel Beheer.
 
 
-### **\[04] 404 Not Found**
+### [04] 404 Not Found
 
 - **HTTP Response**: 
     ```http
@@ -549,7 +549,7 @@ query Bemiddelingspecificatie(
   Een onjuist endpoint van de autorisatieserver is gebruikt. Controleer of het correcte endpoint is geconfigureerd, zoals gespecificeerd in dit document onder de details van de autorisatieserver.
 
 
-### **\[05] 500 Internal Server Error**
+### \[05] 500 Internal Server Error
 
 - **HTTP Response**: 
     ```http
@@ -559,9 +559,9 @@ query Bemiddelingspecificatie(
   Een onverwachte fout is opgetreden op de autorisatieserver. Probeer het later opnieuw of volg het incidentbeheerproces indien nodig.
 
 
-## **6.2 Foutmeldingen GraphQL Query**
+## 6.2 Foutmeldingen GraphQL Query
 
-### **\[06] 400 Invalid Query Syntax**
+### [06] 400 Invalid Query Syntax
 
 - **HTTP Response**: 
     ```http
@@ -571,7 +571,7 @@ query Bemiddelingspecificatie(
 - **Details**:\
     De query voldoet niet aan de vereiste syntax. Controleer de structuur van de query aan de hand van de specificaties.
 
-### **[07] 400 No Operation**
+### [07] 400 No Operation
 
 - **HTTP Response**: 
     ```http
@@ -583,7 +583,7 @@ query Bemiddelingspecificatie(
     Er ontbreekt een geldige operatie in de GraphQL-aanvraag. Controleer en pas de query aan om een bewerking te definiëren.
 
 
-### **[08] 401 Access Denied, Invalid Scope**
+### [08] 401 Access Denied, Invalid Scope
 
 - **HTTP Response**: 
     ```http
@@ -688,11 +688,11 @@ query Bemiddelingspecificatie(
 
 | Onderwerp                                  |                                                                          |
 | ------------------------------------------ | ------------------------------------------------------------------------ |
-| oAuth 2.0                                  | https\://oauth.net/2/                                                    |
-| OPA                                        | https\://www\.openpolicyagent.org/                                       |
-| Informatiemodel iWlz - Indicatieregister 2 | https\://informatiemodel.istandaarden.nl/iWlz-Indicatie-2/               |
-| Koppelvlakspecificatie Indicatieregister 2 | https\://github.com/iStandaarden/iWlz-indicatie/tree/Indicatieregister-2 |
-| Informatiemodel iWlz - Bemiddelingregister | https\://informatiemodel.istandaarden.nl/iWlz-Bemiddeling-1/             |
-| Koppelvlakspecificatie Bemiddeling         | https\://github.com/iStandaarden/iWlz-bemiddeling                        |
-| Audiences (tijdelijk alternatief zorgAB)   | https\://github.com/iStandaarden/iWlz-adresboek                          |
+| oAuth 2.0                                  | https://oauth.net/2/                                                    |
+| OPA                                        | https://www.openpolicyagent.org/                                       |
+| Informatiemodel iWlz - Indicatieregister 2 | https://informatiemodel.istandaarden.nl/iWlz-Indicatie-2/               |
+| Koppelvlakspecificatie Indicatieregister 2 | https://github.com/iStandaarden/iWlz-indicatie/tree/Indicatieregister-2 |
+| Informatiemodel iWlz - Bemiddelingregister | https://informatiemodel.istandaarden.nl/iWlz-Bemiddeling-1/             |
+| Koppelvlakspecificatie Bemiddeling         | https://github.com/iStandaarden/iWlz-bemiddeling                        |
+| Audiences (tijdelijk alternatief ZorgAB)   | https://github.com/iStandaarden/iWlz-adresboek                          |
 
