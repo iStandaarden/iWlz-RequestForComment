@@ -2,7 +2,7 @@
 
 # RFC0014 - Functionele uitwerking aanvragen van autorisatie
 
-versie 0.9 - dd. 11-11-2024
+versie 0.91 - dd. 18-11-2024
 
 **SAMENVATTING**
 
@@ -76,7 +76,7 @@ Deze RFC beschrijft een oplossingsrichting om deze verwevenheid te corrigeren. H
 
 - Elke deelnemer heeft een authenticatiemiddel van een vertrouwde uitgever. Waar momenteel een VECOZO systeemcertificaat wordt gebruikt, kan t.z.t. ook PKIOverheid worden vertrouwd of het gebruik van DiD en Verifiable Credentials mogelijk zijn.
 - Om als deelnemer notificaties te kunnen ontvangen moet deze deelnemer een notificatie-endpoint beschikbaar stellen. Deelnemers binnen het iWlz Netwerkmodel moeten een notificatie-endpoint conform RFC0008 implementeren.
-- Elke deelnemer moet in het Adresboek zijn endpoints registreren. (N.B. op dit moment is het adresboek nog niet gerealiseerd, endpoints worden nu in een lijst bijgehouden. Zie onder referenties) 
+- Elke deelnemer moet in het Adresboek zijn endpoints registreren. (N.B. op dit moment is het adresboek nog niet gerealiseerd, endpoints worden nu in een lijst bijgehouden. Zie onder referenties). 
 - Elke deelnemer in het iWlz Netwerkmodel heeft een attest van deelname nodig. Momenteel wordt dit via VECOZO verzorgd tijdens de onboarding.
 
 
@@ -200,8 +200,8 @@ Afhankelijk van de definitie in de access-policy kan een deelnemer deze aanvrage
 | Melding              | organisaties/zorgkantoor/meldingen/melding:create                  | Geeft recht om een melding te sturen aan het zorgkantoor                              |
 | Melding              | organisaties/zorgaanbieder/meldingen/melding:create                | Geeft recht om een melding te sturen aan een zorgaanbieder                            |
 | Indicatie-register   | registers/wlzindicatieregister/indicaties:read                     | Geeft leesrechten tot indicatie uit het indicatieregister                             |
-| Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:read   | Geeft leesrechten tot bemiddelingen uit het Bemiddelingregister.                      |
-| Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:create | Geeft create rechten om nieuwe bemiddelingen aan te maken in het Bemiddelingregister. |
+| Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:read   | Geeft leesrechten tot bemiddelingen uit het Bemiddelingsregister.                      |
+| Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:create | Geeft create rechten om nieuwe bemiddelingen aan te maken in het Bemiddelingsregister. |
 
 
 ### 4.1.3 Audience
@@ -224,14 +224,13 @@ De partij vraagt een token aan voor zichzelf.
 
 Voorbeeld van een token request voor en door de partij zelf:
 ```http
- POST https://api.vecozo.nl/netwerkmodel/v3/auth/token
+POST https://api.vecozo.nl/netwerkmodel/v3/auth/token
 
- Header: Authorization Basic <Client ID:Client Secret (Base64 encoded)>
- {
-       "grant_type": "client_credentials",
-       "scope": "registers/wlzindicatieregister/indicaties:read",
-      "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql" 
-  } 
+{
+    "grant_type": "client_credentials",
+    "scope": "registers/wlzindicatieregister/indicaties:read",
+    "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql"
+}
 ```
 
 De response is een JWT:
@@ -277,9 +276,7 @@ Wanneer als actor een request wordt ingediend, moet het token worden uitgebreid 
 
 Voorbeeld token request als actor voor een partij:
 ```http
-https://api.vecozo.nl/netwerkmodel/v3/auth/token
-
-Header: Authorization Basic <Client ID:Client Secret (Base64 encoded)>
+POST https://api.vecozo.nl/netwerkmodel/v3/auth/token
 
 {
     "grant_type": "client_credentials",
@@ -351,15 +348,15 @@ Een “Policy Decision Point” (kortweg PDP) is het belangrijkste component in 
 
 De PDP beoordeelt het toegangsverzoek in de vorm van een GraphQL-query aan de hand van de gedefinieerde beleidsregels (policies). Deze regels kunnen gebaseerd zijn op verschillende factoren zoals de scope, specifieke claims, eventueel verplichte operators en de opgevraagde entiteiten in de query.
 
-- Het verzoek tot een beslissing door de PDP verloopt altijd via de Policy Enforcement Point (PEP)
-- Het genomen besluit wordt vervolgens teruggestuurd naar de PEP
-- Elk besluit is gekoppeld aan een beleid(policy)
-- Elk besluit wordt vastgelegd (decision-log)
+- Het verzoek tot een beslissing door de PDP verloopt altijd via de Policy Enforcement Point (PEP).
+- Het genomen besluit wordt vervolgens teruggestuurd naar de PEP.
+- Elk besluit is gekoppeld aan een beleid(policy).
+- Elk besluit wordt vastgelegd (decision-log).
 
 
 # 5 Raadplegen registers
 
-Hieronder de algemene beschrijving voor het raadplegen van het Indicatieregister en Bemiddelingregister in de vorm van twee voorbeelden.
+Hieronder de algemene beschrijving voor het raadplegen van het Indicatieregister en Bemiddelingsregister in de vorm van twee voorbeelden.
 
 
 ## 5.1 Raadplegen Indicatieregister
@@ -422,7 +419,7 @@ _(De volledige query-template is te vinden op:_  [_https://github.com/iStandaar
 
 > **Benodigde scope: registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:read** 
 
-Deze scope verleent toestemming om een bemiddeling op te vragen uit het Bemiddelingregister. De autorisatieserver controleert of de deelnemer hiervoor bevoegd is. Vervolgens mag de deelnemer een GraphQL-query indienen. Wat en hoe de deelnemer gegevens mag raadplegen met een GraphQL-query, wordt bepaald door de policy die bij de query hoort.
+Deze scope verleent toestemming om een bemiddeling op te vragen uit het Bemiddelingsregister. De autorisatieserver controleert of de deelnemer hiervoor bevoegd is. Vervolgens mag de deelnemer een GraphQL-query indienen. Wat en hoe de deelnemer gegevens mag raadplegen met een GraphQL-query, wordt bepaald door de policy die bij de query hoort.
 
 **Voorbeeld:** Raadplegen van een bemiddeling door de toegewezen zorgaanbieder.  
 
@@ -484,6 +481,15 @@ query Bemiddelingspecificatie(
 **OAuth HTTP Error Responses**In het onderstaande schema staan de mogelijke foutmeldingen die kunnen optreden bij het ophalen van autorisaties of het uitvoeren van een GraphQL-verzoek.
 
 **Overzicht van HTTP Error Responses**Let op: foutmeldingen kunnen afhankelijk van de geïmplementeerde client anders worden weergegeven.
+
+> **NB 1: GraphQL 200 OK**
+> 
+> Een GraphQL 200 OK response kan inhoudelijk nog steeds een fout-melding bevatten. De standaard beschrijft dat wanneer een GraphQL request door de server is ontvangen er altijd een 200 OK response volgt. Dit betekent niet automatisch dat de query volledig succesvol kon worden afgehandeld. 
+
+> **NB 2: Inhoud Error Responses**
+> 
+> Het overzicht geeft de mogelijke HTTP Error responses vanuit voornamelijk de PEP. Dezelfde fouten kunnen ook voorkomen bij de Resource-server. Een onderscheid in afzender moet mogelijk zijn.  In een volgende update zal er afzenderinformatie in de message-body moeten worden toegevoegd. 
+
 
 ![foutmeldingen_overzicht](../plantUMLsrc/rfc0014-02-foutmeldingen_overzicht.svg "foutmeldingen_overzicht")
 
@@ -559,7 +565,7 @@ query Bemiddelingspecificatie(
   Een onverwachte fout is opgetreden op de autorisatieserver. Probeer het later opnieuw of volg het incidentbeheerproces indien nodig.
 
 
-## 6.2 Foutmeldingen GraphQL Query
+## 6.2 Foutmeldingen PEP endpoint bij GraphQL request
 
 ### [06] 400 Invalid Query Syntax
 
@@ -681,9 +687,6 @@ query Bemiddelingspecificatie(
 
 
 
-
-> _LET OP: Een GraphQL 200 OK kan inhoudelijk nog steeds een fout-body bevatten._
-
 # **7. Referenties**
 
 | Onderwerp                                  |                                                                          |
@@ -692,7 +695,7 @@ query Bemiddelingspecificatie(
 | OPA                                        | https://www.openpolicyagent.org/                                       |
 | Informatiemodel iWlz - Indicatieregister 2 | https://informatiemodel.istandaarden.nl/iWlz-Indicatie-2/               |
 | Koppelvlakspecificatie Indicatieregister 2 | https://github.com/iStandaarden/iWlz-indicatie/tree/Indicatieregister-2 |
-| Informatiemodel iWlz - Bemiddelingregister | https://informatiemodel.istandaarden.nl/iWlz-Bemiddeling-1/             |
+| Informatiemodel iWlz - Bemiddelingsregister | https://informatiemodel.istandaarden.nl/iWlz-Bemiddeling-1/             |
 | Koppelvlakspecificatie Bemiddeling         | https://github.com/iStandaarden/iWlz-bemiddeling                        |
 | Audiences (tijdelijk alternatief ZorgAB)   | https://github.com/iStandaarden/iWlz-adresboek                          |
 
