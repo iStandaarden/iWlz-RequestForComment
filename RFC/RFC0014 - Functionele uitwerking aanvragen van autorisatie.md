@@ -47,10 +47,10 @@ Inhoudsopgave
     - [\[03\] 403 Invalid Client Certificate](#03-403-invalid-client-certificate)
     - [\[04\] 404 Not Found](#04-404-not-found)
     - [\[05\] 500 Internal Server Error](#05-500-internal-server-error)
-  - [6.2 Foutmeldingen GraphQL Query](#62-foutmeldingen-graphql-query)
+  - [6.2 Foutmeldingen PEP endpoint bij GraphQL request](#62-foutmeldingen-pep-endpoint-bij-graphql-request)
     - [\[06\] 400 Invalid Query Syntax](#06-400-invalid-query-syntax)
     - [\[07\] 400 No Operation](#07-400-no-operation)
-    - [\[08\] 401 Access Denied, Invalid Scope](#08-401-access-denied-invalid-scope)
+    - [\[08\] 400 Invalid Scope](#08-400-invalid-scope)
     - [\[09\] 403 Invalid Client Certificate](#09-403-invalid-client-certificate)
     - [\[10\] 403 Not Allowed](#10-403-not-allowed)
     - [\[11\] 403 Unauthorized](#11-403-unauthorized)
@@ -589,12 +589,12 @@ query Bemiddelingspecificatie(
     Er ontbreekt een geldige operatie in de GraphQL-aanvraag. Controleer en pas de query aan om een bewerking te definiëren.
 
 
-### [08] 401 Access Denied, Invalid Scope
+### [08] 400 Invalid Scope
 
 - **HTTP Response**: 
     ```http
-    HTTP/1.1 401 Unauthorized
-    {"ErrorCode": "invalid_request", "Error": "Access denied, invalid scope"} 
+    HTTP/1.1 400 Bad Request
+    "Scope is not allowed"
     ```
 
 - **Details**:\
