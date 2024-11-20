@@ -1,0 +1,32 @@
+@startuml rfc008-02-notificatie_sequence
+  title notificatie sequence-diagram
+  skinparam handwritten false
+  skinparam participantpadding 20
+  skinparam boxpadding 40
+  autonumber "<b>[00]"
+  box bronhouder #lightblue
+  participant "Register" as bs
+  participant "Register- \ndata" as rg
+  end box
+
+  box deelnemer #lightyellow
+  participant "Resource" as dnp
+  end box
+
+    bs -> rg : registratie data
+    activate rg
+    activate bs
+    rg -> rg: event trigger
+    rg -> bs : bepaal notificatietype
+    deactivate rg
+
+    
+    bs -> bs: genereer GraphQL notificatie
+    bs -> dnp: zend GraphQL notificatie
+    activate dnp
+    dnp -> dnp: ontvang notificatie
+    dnp --> bs: GraphQL 200 response
+    deactivate dnp  
+    bs --> bs: verwerk GraphQL 200 response
+
+  @enduml
