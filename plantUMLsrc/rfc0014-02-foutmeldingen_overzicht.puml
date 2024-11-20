@@ -46,7 +46,7 @@ note right of Filter: Inline filtering requests
 autonumber stop
     Client <-[#red]-X Filter: <color:red>[06] 400 Invalid Query Syntax
     Client <-[#red]-X Filter: <color:red>[07] 400 No operation
-    Client <-[#red]-X Filter: <color:red>[08] 401 Access denied, invalid scope
+    Client <-[#red]-X Filter: <color:red>[08] 400 Invalid scope
     Client <-[#red]-X Filter: <color:red>[09] 403 Invallid Client Certificate
     Client <-[#red]-X Filter: <color:red>[10] 403 Not Allowed
     Client <-[#red]-X Filter: <color:red>[11] 403 Unauthorized
