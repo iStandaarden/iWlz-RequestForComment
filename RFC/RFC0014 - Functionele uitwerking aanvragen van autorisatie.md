@@ -25,7 +25,7 @@ Inhoudsopgave
 - [RFC0014 - Functionele uitwerking aanvragen van autorisatie](#rfc0014---functionele-uitwerking-aanvragen-van-autorisatie)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
-  - [1.2 Scope Netwerkmodel](#12-scope-netwerkmodel)
+  - [1.2 Scope RFC](#12-scope-rfc)
 - [2. Terminologie](#2-terminologie)
 - [3. Schematische weergave](#3-schematische-weergave)
 - [4. Netwerkcomponenten](#4-netwerkcomponenten)
@@ -80,7 +80,7 @@ Deze RFC beschrijft een oplossingsrichting om deze verwevenheid te corrigeren. H
 - Elke deelnemer moet in het Adresboek zijn endpoints registreren. (N.B. op dit moment is het adresboek nog niet gerealiseerd, endpoints worden nu in een lijst bijgehouden. Zie onder referenties). 
 - Elke deelnemer in het iWlz Netwerkmodel heeft een attest van deelname nodig. Momenteel wordt dit via VECOZO verzorgd tijdens de onboarding.
 
-## 1.2 Scope Netwerkmodel
+## 1.2 Scope RFC
 Deze RFC beschrijft de fase van implementatie Indicatieregister 2 en de ontwikkelfase Bemiddelingsregister 1. Deelnemers zijn op dit moment het CIZ, de (softwareleveranciers van de) zorgkantoren en VECOZO. 
 
 
@@ -155,7 +155,7 @@ De volgende token-endpoints zijn voor netwerkdeelnemers beschikbaar:
 | PRD          | [https://api.vecozo.nl/netwerkmodel/v3/auth/token](https://api.vecozo.nl/netwerkmodel/v2/oauth2/token)                 |
 
 
-### 4.1.1 Grant\_type
+### 4.1.1 Grant_type
 
 OAuth 2.0 ondersteunt verschillende "flow standaarden" (ook wel grants genoemd) om toegang te verlenen. Voor server-naar-server communicatie wordt meestal de “Client Credential Flow” toegepast. Deze “Client Credential flow” wordt ook gebruikt bij het aanvragen van toestemming tot autorisatie bij de autorisatieserver in het netwerk stelsel.
 
@@ -335,6 +335,44 @@ De PEP stuurt alle toegangsverzoeken naar resource-servers eerst door naar de PD
 - De netwerkdeelnemer registreert zelf in het adresboek welke PEP zijn resource-server beschermt.
 - De resource-servers van de netwerkdeelnemers vertrouwen de PEP op het valideren van de grondslag.
 - In het netwerk is momenteel maar één PEP(redundant) beschikbaar. In de toekomst zijn meerdere zelfstandige PEPs voorstelbaar.
+
+Wanneer het request wordt toegestaan en wordt doorgestuurd naar de resource server, dan wordt een “claims” request header gezet met daarin de door de deelnemer gebruikte JWT exclusief de JWT header en signature. Deze header kan gebruikt worden voor eventuele logging doeleinden.
+
+Voorbeeld van claims header:
+```json
+{
+  "iss": "auth.nid",
+  "sub": "uzovi:5529",
+  "aud": "https://koppelpunt.test.ciz.nl/iwlz/indicatieregister/v2/graphql",
+  "exp": 1729689721,
+  "nbf": 1729084801,
+  "iat": 1729084921,
+  "jti": "38679b9f-6495-44d4-9875-503aff8e669e",
+  "_claim_names": {
+    "agb": "localhost",
+    "uzovi": "localhost"
+  },
+  "_claim_sources": {
+    "localhost": {
+      "jwt": "eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJhZ2IiOiBudWxsLCAidXpvdmkiOiAiNTUyOSJ9.4YmLNTMhftIz7jL3_BOuJG0uBVHA2MobjsbMXJ9hctw"
+    }
+  },
+  "client_id": "uzovi:5529",
+  "subjects": null,
+  "scopes": [
+    "registers/wlzindicatieregister/indicaties:read"
+  ],
+  "consent_id": "5879861e-ddee-4212-974c-1cdbb4a0c61b",
+  "client_metadata": null,
+  "act": {
+    "sub": "40000000100507"
+  }
+}
+```
+
+
+
+
 
 In het netwerkstelsel zijn momenteel onderstaande PEP’s in gebruik.
 
