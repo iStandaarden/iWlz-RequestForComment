@@ -25,6 +25,7 @@ Inhoudsopgave
 - [RFC0014 - Functionele uitwerking aanvragen van autorisatie](#rfc0014---functionele-uitwerking-aanvragen-van-autorisatie)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
+  - [1.2 Scope Netwerkmodel](#12-scope-netwerkmodel)
 - [2. Terminologie](#2-terminologie)
 - [3. Schematische weergave](#3-schematische-weergave)
 - [4. Netwerkcomponenten](#4-netwerkcomponenten)
@@ -61,7 +62,7 @@ Inhoudsopgave
     - [\[16\] 504 Gateway Timeout](#16-504-gateway-timeout)
 - [**7. Referenties**](#7-referenties)
 
-
+***
 
 # 1. Inleiding
 
@@ -78,6 +79,9 @@ Deze RFC beschrijft een oplossingsrichting om deze verwevenheid te corrigeren. H
 - Om als deelnemer notificaties te kunnen ontvangen moet deze deelnemer een notificatie-endpoint beschikbaar stellen. Deelnemers binnen het iWlz Netwerkmodel moeten een notificatie-endpoint conform RFC0008 implementeren.
 - Elke deelnemer moet in het Adresboek zijn endpoints registreren. (N.B. op dit moment is het adresboek nog niet gerealiseerd, endpoints worden nu in een lijst bijgehouden. Zie onder referenties). 
 - Elke deelnemer in het iWlz Netwerkmodel heeft een attest van deelname nodig. Momenteel wordt dit via VECOZO verzorgd tijdens de onboarding.
+
+## 1.2 Scope Netwerkmodel
+Deze RFC beschrijft de fase van implementatie Indicatieregister 2 en de ontwikkelfase Bemiddelingsregister 1. Deelnemers zijn op dit moment het CIZ, de (softwareleveranciers van de) zorgkantoren en VECOZO. 
 
 
 # 2. Terminologie
