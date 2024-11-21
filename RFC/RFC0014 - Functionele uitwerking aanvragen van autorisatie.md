@@ -2,7 +2,7 @@
 
 # RFC0014 - Functionele uitwerking aanvragen van autorisatie
 
-versie 0.91 - dd. 18-11-2024
+versie 1.9 - dd. 21-11-2024
 
 **SAMENVATTING**
 
@@ -233,7 +233,7 @@ POST https://api.vecozo.nl/netwerkmodel/v3/auth/token
 {
     "grant_type": "client_credentials",
     "scope": "registers/wlzindicatieregister/indicaties:read",
-    "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql"
+    "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/v2/graphql"
 }
 ```
 
@@ -242,7 +242,7 @@ De response is een JWT:
 {
   "iss":"auth.nid",
   "sub":"20001000001131",
-  "aud":"https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql",
+  "aud":"https://koppelpunt.ciz.nl/iwlz/indicatieregister/v2/graphql",
   "exp":1731318519,
   "nbf":1730713599,
   "iat":1730713719,
@@ -285,7 +285,7 @@ POST https://api.vecozo.nl/netwerkmodel/v3/auth/token
 {
     "grant_type": "client_credentials",
     "scope": "registers/wlzindicatieregister/indicaties:read",
-    "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql",
+    "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/v2/graphql",
     "access_token" : {
        "sub" : "uzovi:5000"
     }
@@ -296,7 +296,7 @@ POST https://api.vecozo.nl/netwerkmodel/v3/auth/token
 {
   "iss":"auth.nid",
   "sub":"20001000001131",
-  "aud":"https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql",
+  "aud":"https://koppelpunt.ciz.nl/iwlz/indicatieregister/v2/graphql",
   "exp":1731318519,
   "nbf":1730713599,
   "iat":1730713719,
