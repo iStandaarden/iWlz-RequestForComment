@@ -44,22 +44,23 @@ Inhoudsopgave
 - [6 Foutmeldingen](#6-foutmeldingen)
   - [6.1 Foutmeldingen Aanvraag van Autorisatie](#61-foutmeldingen-aanvraag-van-autorisatie)
     - [\[01\] 400 Audience Required](#01-400-audience-required)
-    - [\[02\] 403 Not Allowed](#02-403-not-allowed)
-    - [\[03\] 403 Invalid Client Certificate](#03-403-invalid-client-certificate)
-    - [\[04\] 404 Not Found](#04-404-not-found)
-    - [\[05\] 500 Internal Server Error](#05-500-internal-server-error)
+    - [\[02\] 401 Unauthorized](#02-401-unauthorized)
+    - [\[03\] 403 Not Allowed](#03-403-not-allowed)
+    - [\[04\] 403 Invalid Client Certificate](#04-403-invalid-client-certificate)
+    - [\[05\] 404 Not Found](#05-404-not-found)
+    - [\[06\] 500 Internal Server Error](#06-500-internal-server-error)
   - [6.2 Foutmeldingen PEP endpoint bij GraphQL request](#62-foutmeldingen-pep-endpoint-bij-graphql-request)
-    - [\[06\] 400 Invalid Query Syntax](#06-400-invalid-query-syntax)
-    - [\[07\] 400 No Operation](#07-400-no-operation)
-    - [\[08\] 400 Invalid Scope](#08-400-invalid-scope)
-    - [\[09\] 403 Invalid Client Certificate](#09-403-invalid-client-certificate)
-    - [\[10\] 403 Not Allowed](#10-403-not-allowed)
-    - [\[11\] 403 Unauthorized](#11-403-unauthorized)
-    - [\[12\] 403 Policy: Access Denied](#12-403-policy-access-denied)
-    - [\[13\] 403 Request Does Not Match Scopes](#13-403-request-does-not-match-scopes)
-    - [\[14\] 500 Internal Server Error](#14-500-internal-server-error)
-    - [\[15\] 502 Bad Gateway](#15-502-bad-gateway)
-    - [\[16\] 504 Gateway Timeout](#16-504-gateway-timeout)
+    - [\[07\] 400 Invalid Query Syntax](#07-400-invalid-query-syntax)
+    - [\[08\] 400 No Operation](#08-400-no-operation)
+    - [\[09\] 400 Invalid Scope](#09-400-invalid-scope)
+    - [\[10\] 403 Invalid Client Certificate](#10-403-invalid-client-certificate)
+    - [\[11\] 403 Not Allowed](#11-403-not-allowed)
+    - [\[12\] 403 Unauthorized](#12-403-unauthorized)
+    - [\[13\] 403 Policy: Access Denied](#13-403-policy-access-denied)
+    - [\[14\] 403 Request Does Not Match Scopes](#14-403-request-does-not-match-scopes)
+    - [\[15\] 500 Internal Server Error](#15-500-internal-server-error)
+    - [\[16\] 502 Bad Gateway](#16-502-bad-gateway)
+    - [\[17\] 504 Gateway Timeout](#17-504-gateway-timeout)
 - [**7. Referenties**](#7-referenties)
 
 ***
@@ -559,7 +560,42 @@ query Bemiddelingspecificatie(
     }
     ```
 
-### [02] 403 Not Allowed
+### [02] 401 Unauthorized
+- **HTTP Response:** 
+    ```http
+    HTTP/1.1 401 Unauthorized
+    "authenticating with issuing authority"
+    ```
+
+- **Details:**\
+    Er kan niet geacteerd worden namens een partij (subject), omdat hier geen rechten voor zijn geregistreerd.
+    Indien subject en actor hetzelfde zijn, dan wordt deze foutmelding ook gegeven.
+    - Controleer of acteren mogelijk moet zijn en neem contact op met VECOZO.
+    - Verander de body zodat er als directe partij een aanvraag wordt gedaan.
+  
+    Voorbeeld body als er geacteerd wordt namens een partij:
+    ```json
+    {
+      "grant_type": "client_credentials",
+      "scope": "registers/wlzindicatieregister/indicaties:read",
+      "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/v2/graphql",
+      "access_token": {
+          "sub": "uzovi:5000"
+      }
+    }
+    ```
+
+    Voorbeeld body als aanvraag wordt gedaan als directe partij:
+    ```json
+    {
+      "grant_type": "client_credentials",
+      "scope": "registers/wlzindicatieregister/indicaties:read",
+      "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/v2/graphql"
+    }
+    ```
+
+
+### [03] 403 Not Allowed
 
 - **HTTP Response:** 
     ```http
@@ -574,7 +610,7 @@ query Bemiddelingspecificatie(
   - [Hoe kan ik mijn IP-adres registreren?](https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/) - (https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/)
 
 
-### [03] 403 Invalid Client Certificate
+### [04] 403 Invalid Client Certificate
 
 - **HTTP Response**: 
     ```http
@@ -587,7 +623,7 @@ query Bemiddelingspecificatie(
   [Uw certificaat installeren of vernieuwen](https://www.vecozo.nl/certificaten-installerenvernieuwen/) - (https://www.vecozo.nl/certificaten-installerenvernieuwen/) of neem contact op met VECOZO Functioneel Beheer.
 
 
-### [04] 404 Not Found
+### [05] 404 Not Found
 
 - **HTTP Response**: 
     ```http
@@ -598,7 +634,7 @@ query Bemiddelingspecificatie(
   Een onjuist endpoint van de autorisatieserver is gebruikt. Controleer of het correcte endpoint is geconfigureerd, zoals gespecificeerd in dit document onder de details van de autorisatieserver.
 
 
-### \[05] 500 Internal Server Error
+### [06] 500 Internal Server Error
 
 - **HTTP Response**: 
     ```http
@@ -610,7 +646,7 @@ query Bemiddelingspecificatie(
 
 ## 6.2 Foutmeldingen PEP endpoint bij GraphQL request
 
-### [06] 400 Invalid Query Syntax
+### [07] 400 Invalid Query Syntax
 
 - **HTTP Response**: 
     ```http
@@ -620,7 +656,7 @@ query Bemiddelingspecificatie(
 - **Details**:\
     De query voldoet niet aan de vereiste syntax. Controleer de structuur van de query aan de hand van de specificaties.
 
-### [07] 400 No Operation
+### [08] 400 No Operation
 
 - **HTTP Response**: 
     ```http
@@ -632,7 +668,7 @@ query Bemiddelingspecificatie(
     Er ontbreekt een geldige operatie in de GraphQL-aanvraag. Controleer en pas de query aan om een bewerking te definiëren.
 
 
-### [08] 400 Invalid Scope
+### [09] 400 Invalid Scope
 
 - **HTTP Response**: 
     ```http
@@ -644,7 +680,7 @@ query Bemiddelingspecificatie(
     De opgevraagde scope komt niet overeen met de toegestane scope. Controleer de scope-instellingen.
 
 
-### [09] 403 Invalid Client Certificate
+### [10] 403 Invalid Client Certificate
 
 - **HTTP Response**: 
     ```http
@@ -657,7 +693,7 @@ query Bemiddelingspecificatie(
     Voor meer informatie ga naar: [Uw certificaat installeren of vernieuwen](https://www.vecozo.nl/certificaten-installerenvernieuwen/) - https://www.vecozo.nl/certificaten-installerenvernieuwen/ of neem contact op met VECOZO Functioneel Beheer
 
 
-### [10] 403 Not Allowed
+### [11] 403 Not Allowed
 
 - **HTTP Response**: 
     ```http
@@ -670,7 +706,8 @@ query Bemiddelingspecificatie(
     - Het authenticatiemiddel kan geblokkeerd zijn. Neem contact op met de VECOZO contactpersoon binnen uw organisatie, deze kan in de portaal van VECOZO controleren of uw IP-adres is opgenomen in de lijst van IP-adressen. 
     - Voor meer informatie ga naar: [Hoe kan ik mijn IP-adres registreren?](https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/) - https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/
 
-### [11] 403 Unauthorized
+
+### [12] 403 Unauthorized
 - **HTTP Response:**
     ```http
     HTTP/1.1 403 Unauthorized
@@ -679,7 +716,7 @@ query Bemiddelingspecificatie(
 - **Details:**\
     De toegang werd geweigerd, omdat er mogelijk een access token ontbrak. Controleer of het access token correct is aangevraagd en wordt meegegeven. Indien de fout zich blijft voordoen, kunt u het incidentbeheerproces volgen.
 
-### [12] 403 Policy: Access Denied
+### [13] 403 Policy: Access Denied
 - **HTTP Response:**
     ```http
     HTTP/1.1 403 Forbidden
@@ -688,7 +725,7 @@ query Bemiddelingspecificatie(
 - **Details:**\
     Toegang geweigerd op basis van een policy. De toegangsrechten van het gebruikte authenticatiemiddel voldoen niet aan de toegangsvereisten. Controleer de query en probeer opnieuw.
 
-### [13] 403 Request Does Not Match Scopes
+### [14] 403 Request Does Not Match Scopes
 - **HTTP Response:**
     ```http
     HTTP/1.1 403 Forbidden
@@ -697,7 +734,7 @@ query Bemiddelingspecificatie(
 - **Details:**\
      De aanvraag voldoet niet aan de vereiste scopes in het access token. Controleer de toegewezen scopes. Vraag een nieuwe access token aan indien de token voor een andere scope bestemd is.
 
-### [14] 500 Internal Server Error
+### [15] 500 Internal Server Error
 
 - **HTTP Response**: 
     ```http
@@ -708,7 +745,7 @@ query Bemiddelingspecificatie(
   Er is een onverwachte fout opgetreden op de server. Probeer het later opnieuw of raadpleeg het incidentbeheerproces.
 
 
-### [15] 502 Bad Gateway
+### [16] 502 Bad Gateway
 
 - **HTTP Response**: 
     ```http
@@ -718,7 +755,7 @@ query Bemiddelingspecificatie(
 - **Details**:\
   De server kreeg een ongeldige reactie van een upstream-server. Controleer de serverinstellingen of probeer het later opnieuw.
 
-### [16] 504 Gateway Timeout
+### [17] 504 Gateway Timeout
 
 - **HTTP Response**: 
     ```http

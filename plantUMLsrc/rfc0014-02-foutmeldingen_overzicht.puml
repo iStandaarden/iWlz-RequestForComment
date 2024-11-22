@@ -17,53 +17,57 @@ box "Register"
     participant "Resource-Server" as resourceserver
 end box
 
-autonumber "<b><[000]"
 
-Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel
+
+Client -> AuthzServer: <b>[001] **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel
 activate Client
 activate AuthzServer
+
+
+autonumber "<color:red><b>[00]"
+Client <-[#red]-X AuthzServer:<color:red> 400 Audience Required
+Client <-[#red]-X AuthzServer:<color:red> 403 Not Allowed
+Client <-[#red]-X AuthzServer:<color:red> 403 Invalid client certificate
+Client <-[#red]-X AuthzServer:<color:red> 404 Not found
+Client <-[#red]-X AuthzServer:<color:red> 500 Internal Server Error
 autonumber stop
 
-Client <-[#red]-X AuthzServer:<color:red>[01] 400 Audience Required
-Client <-[#red]-X AuthzServer:<color:red>[02] 403 Not Allowed
-Client <-[#red]-X AuthzServer:<color:red>[03] 403 Invalid client certificate
-Client <-[#red]-X AuthzServer:<color:red>[04] 404 Not found
-Client <-[#red]-X AuthzServer:<color:red>[05] 500 Internal Server Error
-autonumber resume
 
 
-AuthzServer -> AuthzServer: Valideer Authenticatiemiddel
-AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)
-AuthzServer --> Client --: 200 Response (Access-Token)
+AuthzServer -> AuthzServer: <b>[002] Valideer Authenticatiemiddel
+AuthzServer -> AuthzServer: <b>[003] Run Rule-engine o.b.v. scope(s)
+AuthzServer --> Client --: <b>[004] 200 Response (Access-Token)
 deactivate AuthzServer
 deactivate Client
 
-Client -> Filter: **GraphQL Query**\nAuthenticatiemiddel + Access-Token
+Client -> Filter: <b>[005] **GraphQL Query**\nAuthenticatiemiddel + Access-Token
 activate Client
 activate Filter
 note right of Filter: Inline filtering requests
 
-autonumber stop
-    Client <-[#red]-X Filter: <color:red>[06] 400 Invalid Query Syntax
-    Client <-[#red]-X Filter: <color:red>[07] 400 No operation
-    Client <-[#red]-X Filter: <color:red>[08] 400 Invalid scope
-    Client <-[#red]-X Filter: <color:red>[09] 403 Invallid Client Certificate
-    Client <-[#red]-X Filter: <color:red>[10] 403 Not Allowed
-    Client <-[#red]-X Filter: <color:red>[11] 403 Unauthorized
-    Client <-[#red]-X Filter: <color:red>[12] 403 Policy Acces Denied
-    Client <-[#red]-X Filter: <color:red>[13] 403 Request does not match scopes
-    Client <-[#red]-X Filter: <color:red>[14] 504 Gateway timeout
-    Client <-[#red]-X Filter: <color:red>[15] 500 Internal server error
-    Client <-[#red]-X Filter: <color:red>[16] 502 Bad gateway
-
 autonumber resume
 
-Filter -> resourceserver: GraphQL Request
+    Client <-[#red]-X Filter: <color:red>400 Invalid Query Syntax
+    Client <-[#red]-X Filter: <color:red>401 Unauthorized
+    Client <-[#red]-X Filter: <color:red>400 No operation
+    Client <-[#red]-X Filter: <color:red>400 Invalid scope
+    Client <-[#red]-X Filter: <color:red>403 Invallid Client Certificate
+    Client <-[#red]-X Filter: <color:red>403 Not Allowed
+    Client <-[#red]-X Filter: <color:red>403 Unauthorized
+    Client <-[#red]-X Filter: <color:red>403 Policy Acces Denied
+    Client <-[#red]-X Filter: <color:red>403 Request does not match scopes
+    Client <-[#red]-X Filter: <color:red>504 Gateway timeout
+    Client <-[#red]-X Filter: <color:red>500 Internal server error
+    Client <-[#red]-X Filter: <color:red>502 Bad gateway
+autonumber stop
+
+
+Filter -> resourceserver: <b>[006] GraphQL Request
 activate resourceserver
-resourceserver --> Filter: 200 Response (GraphQL)
+resourceserver --> Filter: <b>[007] 200 Response (GraphQL)
 deactivate resourceserver
 
-Filter --> Client: 200 Response (GraphQL)
+Filter --> Client: <b>[008] 200 Response (GraphQL)
 deactivate Filter
 deactivate Client
 
