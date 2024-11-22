@@ -40,7 +40,7 @@ AuthzServer --> Client --: <b>[004] 200 Response (Access-Token)
 deactivate AuthzServer
 deactivate Client
 
-Client -> Filter: <b>[005] **GraphQL Query**\nAuthenticatiemiddel + Access-Token
+Client -> Filter: <b>[005] **GraphQL Request**\nAuthenticatiemiddel + Access-Token + query
 activate Client
 activate Filter
 note right of Filter: Inline filtering requests
