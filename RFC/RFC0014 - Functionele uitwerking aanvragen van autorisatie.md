@@ -2,7 +2,7 @@
 
 # RFC0014 - Functionele uitwerking aanvragen van autorisatie
 
-versie 1.9 - dd. 21-11-2024
+versie 1.95 - dd. 22-11-2024
 
 **SAMENVATTING**
 
@@ -203,7 +203,8 @@ Afhankelijk van de definitie in de access-policy kan een deelnemer deze aanvrage
 | Notificatie          | organisaties/zorgaanbieder/notificaties/notificatie:create         | Geeft recht om een notificatie te sturen aan een zorgaanbieder                        |
 | Melding              | organisaties/zorgkantoor/meldingen/melding:create                  | Geeft recht om een melding te sturen aan het zorgkantoor                              |
 | Melding              | organisaties/zorgaanbieder/meldingen/melding:create                | Geeft recht om een melding te sturen aan een zorgaanbieder                            |
-| Indicatie-register   | registers/wlzindicatieregister/indicaties:read                     | Geeft leesrechten tot indicatie uit het indicatieregister                             |
+| Indicatie-register   | ~registers/wlzindicatieregister/indicaties:read~                   | Geeft leesrechten tot indicatie uit het indicatieregister                             |
+| Indicatie-register   | registers/wlzindicatieregister/indicaties/indicatie:read           | Geeft leesrechten tot indicatie uit het indicatieregister                             |
 | Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:read   | Geeft leesrechten tot bemiddelingen uit het Bemiddelingsregister.                      |
 | Bemiddelingsregister | registers/wlzbemiddelingsregister/bemiddelingen/bemiddeling:create | Geeft create rechten om nieuwe bemiddelingen aan te maken in het Bemiddelingsregister. |
 
