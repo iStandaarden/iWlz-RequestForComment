@@ -2,6 +2,10 @@
 
 # RFC0008 -  Functionele uitwerking notificaties
 
+> [!IMPORTANT]
+> Op dit moment wordt deze RFC geactualiseerd met het voorbeeld volgens de afgesproken graphql-mutation
+
+
 
 ---
 
