@@ -26,6 +26,7 @@ activate AuthzServer
 
 autonumber "<color:red><b>[00]"
 Client <-[#red]-X AuthzServer:<color:red> 400 Audience Required
+Client <-[#red]-X AuthzServer:<color:red> 401 Unauthorized
 Client <-[#red]-X AuthzServer:<color:red> 403 Not Allowed
 Client <-[#red]-X AuthzServer:<color:red> 403 Invalid client certificate
 Client <-[#red]-X AuthzServer:<color:red> 404 Not found
@@ -46,19 +47,17 @@ activate Filter
 note right of Filter: Inline filtering requests
 
 autonumber resume
-
-    Client <-[#red]-X Filter: <color:red>400 Invalid Query Syntax
-    Client <-[#red]-X Filter: <color:red>401 Unauthorized
-    Client <-[#red]-X Filter: <color:red>400 No operation
-    Client <-[#red]-X Filter: <color:red>400 Invalid scope
-    Client <-[#red]-X Filter: <color:red>403 Invallid Client Certificate
-    Client <-[#red]-X Filter: <color:red>403 Not Allowed
-    Client <-[#red]-X Filter: <color:red>403 Unauthorized
-    Client <-[#red]-X Filter: <color:red>403 Policy Acces Denied
-    Client <-[#red]-X Filter: <color:red>403 Request does not match scopes
-    Client <-[#red]-X Filter: <color:red>504 Gateway timeout
-    Client <-[#red]-X Filter: <color:red>500 Internal server error
-    Client <-[#red]-X Filter: <color:red>502 Bad gateway
+    Client <-[#red]-X Filter: <color:red> 400 Invalid Query Syntax
+    Client <-[#red]-X Filter: <color:red> 400 No operation
+    Client <-[#red]-X Filter: <color:red> 400 Invalid scope
+    Client <-[#red]-X Filter: <color:red> 401 Unauthorized
+    Client <-[#red]-X Filter: <color:red> 403 Invallid Client Certificate
+    Client <-[#red]-X Filter: <color:red> 403 Not Allowed
+    Client <-[#red]-X Filter: <color:red> 403 Policy Acces Denied
+    Client <-[#red]-X Filter: <color:red> 403 Request does not match scopes
+    Client <-[#red]-X Filter: <color:red> 500 Internal server error
+    Client <-[#red]-X Filter: <color:red> 502 Bad gateway
+    Client <-[#red]-X Filter: <color:red> 504 Gateway timeout
 autonumber stop
 
 

@@ -53,9 +53,9 @@ Inhoudsopgave
     - [\[07\] 400 Invalid Query Syntax](#07-400-invalid-query-syntax)
     - [\[08\] 400 No Operation](#08-400-no-operation)
     - [\[09\] 400 Invalid Scope](#09-400-invalid-scope)
-    - [\[10\] 403 Invalid Client Certificate](#10-403-invalid-client-certificate)
-    - [\[11\] 403 Not Allowed](#11-403-not-allowed)
-    - [\[12\] 403 Unauthorized](#12-403-unauthorized)
+    - [\[10\] 401 Unauthorized](#10-401-unauthorized)
+    - [\[11\] 403 Invalid Client Certificate](#11-403-invalid-client-certificate)
+    - [\[12\] 403 Not Allowed](#12-403-not-allowed)
     - [\[13\] 403 Policy: Access Denied](#13-403-policy-access-denied)
     - [\[14\] 403 Request Does Not Match Scopes](#14-403-request-does-not-match-scopes)
     - [\[15\] 500 Internal Server Error](#15-500-internal-server-error)
@@ -540,6 +540,7 @@ query Bemiddelingspecificatie(
 
 ## 6.1 Foutmeldingen Aanvraag van Autorisatie
 
+
 ### [01] 400 Audience Required
 
 - **HTTP Response:**
@@ -559,6 +560,7 @@ query Bemiddelingspecificatie(
     "audience": "https://koppelpunt.ciz.nl/iwlz/indicatieregister/graphql/v2/graphql"
     }
     ```
+
 
 ### [02] 401 Unauthorized
 - **HTTP Response:** 
@@ -646,6 +648,7 @@ query Bemiddelingspecificatie(
 
 ## 6.2 Foutmeldingen PEP endpoint bij GraphQL request
 
+
 ### [07] 400 Invalid Query Syntax
 
 - **HTTP Response**: 
@@ -655,6 +658,7 @@ query Bemiddelingspecificatie(
 
 - **Details**:\
     De query voldoet niet aan de vereiste syntax. Controleer de structuur van de query aan de hand van de specificaties.
+
 
 ### [08] 400 No Operation
 
@@ -680,7 +684,17 @@ query Bemiddelingspecificatie(
     De opgevraagde scope komt niet overeen met de toegestane scope. Controleer de scope-instellingen.
 
 
-### [10] 403 Invalid Client Certificate
+### [10] 401 Unauthorized
+- **HTTP Response:**
+    ```http
+    HTTP/1.1 403 Unauthorized
+    ```
+
+- **Details:**\
+    De toegang werd geweigerd, omdat er mogelijk een access token ontbrak. Controleer of het access token correct is aangevraagd en wordt meegegeven. Indien de fout zich blijft voordoen, kunt u het incidentbeheerproces volgen.
+
+
+### [11] 403 Invalid Client Certificate
 
 - **HTTP Response**: 
     ```http
@@ -693,7 +707,7 @@ query Bemiddelingspecificatie(
     Voor meer informatie ga naar: [Uw certificaat installeren of vernieuwen](https://www.vecozo.nl/certificaten-installerenvernieuwen/) - https://www.vecozo.nl/certificaten-installerenvernieuwen/ of neem contact op met VECOZO Functioneel Beheer
 
 
-### [11] 403 Not Allowed
+### [12] 403 Not Allowed
 
 - **HTTP Response**: 
     ```http
@@ -707,15 +721,6 @@ query Bemiddelingspecificatie(
     - Voor meer informatie ga naar: [Hoe kan ik mijn IP-adres registreren?](https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/) - https://www.vecozo.nl/support/controle-op-ip-adressen/ip-adres-registreren/hoe-kan-ik-mijn-ip-adres-registreren/
 
 
-### [12] 403 Unauthorized
-- **HTTP Response:**
-    ```http
-    HTTP/1.1 403 Unauthorized
-    ```
-
-- **Details:**\
-    De toegang werd geweigerd, omdat er mogelijk een access token ontbrak. Controleer of het access token correct is aangevraagd en wordt meegegeven. Indien de fout zich blijft voordoen, kunt u het incidentbeheerproces volgen.
-
 ### [13] 403 Policy: Access Denied
 - **HTTP Response:**
     ```http
@@ -725,6 +730,7 @@ query Bemiddelingspecificatie(
 - **Details:**\
     Toegang geweigerd op basis van een policy. De toegangsrechten van het gebruikte authenticatiemiddel voldoen niet aan de toegangsvereisten. Controleer de query en probeer opnieuw.
 
+
 ### [14] 403 Request Does Not Match Scopes
 - **HTTP Response:**
     ```http
@@ -733,6 +739,7 @@ query Bemiddelingspecificatie(
 
 - **Details:**\
      De aanvraag voldoet niet aan de vereiste scopes in het access token. Controleer de toegewezen scopes. Vraag een nieuwe access token aan indien de token voor een andere scope bestemd is.
+
 
 ### [15] 500 Internal Server Error
 
@@ -754,6 +761,7 @@ query Bemiddelingspecificatie(
 
 - **Details**:\
   De server kreeg een ongeldige reactie van een upstream-server. Controleer de serverinstellingen of probeer het later opnieuw.
+
 
 ### [17] 504 Gateway Timeout
 
