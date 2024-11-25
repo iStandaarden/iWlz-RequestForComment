@@ -1,8 +1,9 @@
-@startuml rfc008-02-notificatie_sequence
-title notificatie sequence-diagram
+@startuml rfc0008-04-error-flow
+title notificatie flow incl. nID
 skinparam handwritten false
 skinparam participantpadding 20
 skinparam boxpadding 40
+
 
 box bronhouder #lightblue
   participant "Resource" as Resource
@@ -21,48 +22,48 @@ box deelnemer #lightyellow
 end box
 
 note over PEP #lightgreen: Het autorisatie en validatie-proces \nis beschreven in RFC0014 \nFunctionele uitwerking aanvragen autorisatie \n(oAuth2.0) 
-autonumber "<b>[00]"
-Resource -> Register : <b>registratie data
+
+Resource -> Register : registratie data
 
 activate Resource 
   activate Register
-  Register -> Register: <b>event trigger
-  Register -> Resource : <b>bepaal notificatietype
+  Register -> Register: event trigger
+  Register -> Resource : bepaal notificatietype
   deactivate Register
 
-  Resource -> Resource: <b>genereer GraphQL notificatie
-autonumber stop
-  Resource -> AuthzServer: Aanvragen van autorisatie\n"scope": "../notificaties/notificatie:create" 
+  Resource -> Resource: genereer GraphQL notificatie
+
+  Resource -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "../notificaties/notificatie:create" 
     activate AuthzServer #Darkgrey
         AuthzServer --> Resource --: 200 Response (JWT Access-Token) 
     deactivate AuthzServer
-autonumber resume
-  Resource -> PEP: **GraphQL Request **\nAuthenticatiemiddel + JWT Access-Token + notificatie
 
-autonumber stop
+  Resource -> PEP: **GraphQL Request **\nAuthenticatiemiddel + JWT Access-Token + notificatie
   activate PEP
 
     PEP -> PEP: Valideer Authenticatie en \nAccess
     PEP -> PDP: GraphQL met policy valideren
       activate PEP #LightGray
         activate PDP
-        PDP -> PDP: Valideer graphql    
+        PDP -> PDP: Valideer graphql  
+        autonumber "<color:red><b>[00]"
+          Resource <-[#red]-X PDP: <color:red> 400 Bad Request
+          Resource <-[#red]-X PDP: <color:red> 400 Bad Request: GRAPHQL_VALIDATION_FAILED       
         autonumber stop
           PDP -> PEP: Graphql allowed
         deactivate PDP
-        PEP -> ResServer: **[05] GraphQL Request**
+        PEP -> ResServer: **GraphQL Request**
       deactivate PEP
 
-autonumber resume
     activate ResServer
-    ResServer -> ResServer: <b>ontvang notificatie
-    ResServer --> PEP: <b>GraphQL 200 response
+    ResServer -> ResServer: ontvang notificatie
+    ResServer --> PEP: GraphQL 200 response
     deactivate ResServer
-autonumber stop
-    PEP --> Resource: <b>[07] GraphQL 200 response
+    PEP --> Resource: GraphQL 200 response
 
+  note over PDP, ResServer #pink: Er komt een nieuwe RFC voor \nfoutafhandeling door de GraphQL-server
 
     deactivate PEP 
-    Resource --> Resource: <b>[08] verwerk GraphQL 200 response
+    Resource --> Resource: verwerk GraphQL 200 response
 
   @enduml
