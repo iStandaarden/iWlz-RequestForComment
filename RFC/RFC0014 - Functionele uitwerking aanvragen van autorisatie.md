@@ -82,7 +82,9 @@ Deze RFC beschrijft een oplossingsrichting om deze verwevenheid te corrigeren. H
 - Elke deelnemer in het iWlz Netwerkmodel heeft een attest van deelname nodig. Momenteel wordt dit via VECOZO verzorgd tijdens de onboarding.
 
 ## 1.2 Scope RFC
-Deze RFC beschrijft de fase van implementatie Indicatieregister 2 en de ontwikkelfase Bemiddelingsregister 1. Deelnemers zijn op dit moment het CIZ, de (softwareleveranciers van de) zorgkantoren en VECOZO. 
+> [!IMPORTANT]
+> Deze RFC beschrijft de fase van implementatie Indicatieregister 2 en de ontwikkelfase Bemiddelingsregister 1. Deelnemers zijn op dit moment het CIZ, de (softwareleveranciers van de) zorgkantoren en VECOZO.
+> Wijzigingen op deze RFC in de vorm van bijvoorbeeld uitbreiding op de scopes of error-codes gaan via een nieuwe RFC
 
 
 # 2. Terminologie
