@@ -2,7 +2,7 @@
 
 # RFC0014 - Functionele uitwerking aanvragen van autorisatie
 
-versie 1.95 - dd. 22-11-2024
+versie 2.0 - dd. 28-11-2024
 
 **SAMENVATTING**
 
