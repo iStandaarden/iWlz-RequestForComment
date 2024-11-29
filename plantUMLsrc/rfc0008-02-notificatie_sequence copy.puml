@@ -15,7 +15,6 @@ box "nID"
     participant "PDP" as PDP
 end box
 
-
 box deelnemer #lightyellow
   participant "Resource-\nServer" as ResServer
 end box
@@ -55,7 +54,7 @@ autonumber stop
 
 autonumber resume
     activate ResServer
-    ResServer -> ResServer: <b>ontvang notificatie
+    ResServer -> ResServer: <b>ontvang \n<b>notificatie
     ResServer --> PEP: <b>GraphQL 200 response
     deactivate ResServer
 autonumber stop
