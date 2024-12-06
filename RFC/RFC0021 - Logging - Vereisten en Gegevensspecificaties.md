@@ -277,7 +277,7 @@ Een flow kan bijvoorbeeld een raadpleging zijn naar aanleiding van een notificat
 
 <font color=red>LET OP: Onderstaande schema moet nog correct  worden aangepast.</font>
 
-![voorbeeld_flow](../plantUMLsrc/rfc0019-01-voorbeeld_flow.svg "voorbeeld_flow")
+![voorbeeld_flow](../plantUMLsrc/rfc0021-01-voorbeeld_flow.svg "voorbeeld_flow")
 
 <details>
 <summary>plantUML-source</summary>
@@ -355,7 +355,7 @@ deactivate Client
 ## 5.1 Algemeen
 <font color=red>LET OP: In onderstaande schema moet nog de trace informatie worden toegevoegd.</font>
 
-![gegevensvelden](../plantUMLsrc/rfc0019-02-gegevensvelden.svg "gegevensvelden")
+![gegevensvelden](../plantUMLsrc/rfc0021-02-gegevensvelden.svg "gegevensvelden")
 
 <details>
 <summary>plantUML-source</summary>

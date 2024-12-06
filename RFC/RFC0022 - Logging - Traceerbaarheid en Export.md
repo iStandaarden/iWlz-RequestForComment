@@ -168,7 +168,7 @@ Een flow kan bijvoorbeeld een raadpleging zijn naar aanleiding van een notificat
 
 <font color=red>LET OP: Onderstaande schema moet nog correct  worden aangepast.</font>
 
-![voorbeeld_flow](../plantUMLsrc/rfc0019-01-voorbeeld_flow.svg "voorbeeld_flow")
+![voorbeeld_flow](../plantUMLsrc/rfc0022-01-voorbeeld_flow.svg "voorbeeld_flow")
 
 <details>
 <summary>plantUML-source</summary>
@@ -240,6 +240,8 @@ deactivate Client
 ```
 </details>
 
+**Nieuwe versie: **
+![voorbeeld_flow](../plantUMLsrc/rfc0022-01-voorbeeld_flow_v2.svg "voorbeeld_flow")
 
 # 4. Export
 Een export in de vorm van een *XML-exportfaciliteit* is essentieel, waarbij de syntax en semantiek van de export moeten voldoen aan de richtlijnen uiteengezet in RFC0021.

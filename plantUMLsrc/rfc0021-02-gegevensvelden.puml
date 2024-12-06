@@ -1,0 +1,65 @@
+@startuml rfc0021-02-gegevensvelden
+
+object NEN7513 {
+  <#lightblue,#black>|=  Veld           |=  optionaliteit           |=  cardinaliteit  |
+  <#white>|  7.2 Gebeurtenis             | verplicht                 | 1...1 |
+  <#white>|  7.3 Gebruiker               | verplicht                 | 1...* |
+  <#white>|  7.4 Object                  | verplicht                 | 1...* |
+  <#white>|  7.5 Loggegevens             | verplicht                 | 1...1 |
+}
+
+object Gebeurtenis {
+  <#lightblue,#black>|=  Veld           |= soort    |=  optionaliteit           |=  cardinaliteit  |
+  <#white>|  1. Gebeurteniscode         |  code     | verplicht                 | 1...1 |
+  <#white>|  2. Actiecode               |  code     | verplicht                 | 1...1 |
+  <#white>|  3. Datum en tijd           |  datetime | verplicht                 | 1...1 |
+  <#white>|  4. Aard van de gebeurtenis |  code     | optioneel                 | 0...1 |
+  <#white>|  5. Resultaat               |  code     | optioneel                 | 1...1 |
+  <#white>|  6. Controles               |  tekst    | conditioneel\n verplicht  | 0...1 |
+}
+
+
+object Gebruiker {
+  <#lightblue,#black>|=  Veld                       |= soort          |=  optionaliteit           |=  cardinaliteit  |
+  <#white>|  1. Gebruikers-ID                       |  identificatie  | verplicht                 | 1...1 |
+  <#white>|  2. Lokale gebruikers-ID                |  identificatie  | optioneel                 | 0...1 |
+  <#white>|  3. Gebruikersnaam                      |  tekst          | optioneel                 | 0...1 |
+  <#white>|  4. Gebruikersrol                       |  code           | verplicht                 | 1...1 |
+  <#white>|  5. Gebruiker is initiator              |  boolean        | optioneel                 | 0...1 |
+  <#white>|  6. ID van verantwoordelijke gebruiker  |  identificatie  | conditioneel\n verplicht  | 0...1 |
+  <#white>|  7. Naam van verantwoordelijke gebruiker|  tekst          | optioneel                 | 0...1 |
+  <#white>|  8. Rol van verantwoordelijke gebruiker |  code           | conditioneel\n verplicht  | 0...1 |
+  <#white>|  9. Type Toegangspunt                   |  code           | optioneel                 | 0...1 |
+  <#white>|  10.Identificatie toegangspunt          |  identificatie  | optioneel                 | 0...1 |
+}
+
+object Object {
+  <#lightblue,#black>|=  Veld           |= soort            |=  optionaliteit           |=  cardinaliteit  |
+  <#white>|  1. Identificatortype       |  tekst            | verplicht                 | 1...1 |
+  <#white>|  2. Klasse                  |  tekst            | optioneel                 | 0...1 |
+  <#white>|  3. Identificator           |  tekst            | verplicht                 | 1...1 |
+  <#white>|  4. Naam                    |  tekst            | optioneel                 | 0...1 |
+  <#white>|  5. Details                 |  tekst            | optioneel                 | 0...1 |
+  <#white>|  6. Autorisatieprotocol     |  tekst            | verplicht                 | 1...1 |
+  <#white>|  7. Behandelrelatieprotocol |  inditificatie    | conditioneel\n verplicht  | 0...1 |
+  <#white>|  8. Toestemminsprofiel      |  inditificatie    | conditioneel\n verplicht  | 1...1 |
+  <#white>|  9. Gevoeligheid            |  tekst            | optioneel                 | 0...1 |
+  <#white>|  10. Categorie               |  code             | optioneel                 | 0...1 |
+  <#white>|  11. Stadium                 |  code             | optioneel                 | 0...1 |
+  <#white>|  12. Zoekvraag              |  string           | optioneel                 | 0...1 |
+}
+
+object Loggegevens {
+  <#lightblue,#black>|=  Veld                    |= soort            |=  optionaliteit            |=  cardinaliteit  |
+  <#white>|  1. Identificatie van de locatie     |  identificatie    | optioneel                  | 0...1 |
+  <#white>|  2. Identificatie van de bron        |  identificatie    | verplicht                  | 1...1 |
+  <#white>|  3. Type bron van de loggegevens     |  code             | optioneel                  | 0...1 |
+}
+
+
+NEN7513 ||--|| Gebeurtenis
+NEN7513 ||--{ Gebruiker
+NEN7513 ||--{ Object
+NEN7513 ||--|| Loggegevens
+
+@enduml

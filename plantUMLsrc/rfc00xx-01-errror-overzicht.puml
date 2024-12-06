@@ -1,0 +1,163 @@
+@startuml rfc00xx-01-errror-overzicht
+'!pragma teoz true
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+box "Deelnemer"
+participant "Client" as Client
+end box
+
+box "nID"
+participant "autorisatieserver" as AuthzServer
+participant "PEP" as PEP
+participant  "PDP" as PDP
+end box
+
+box "Register" 
+participant "Resource-Server" as resourceserver
+participant "GraphQL-Server" as graphqlserver
+end box
+
+Client -> AuthzServer: <b>[001] **Aanvragen van autorisatie**\n"\Scope + Authenticatiemiddel"
+activate Client
+activate AuthzServer
+
+AuthzServer -> AuthzServer: <b>[002] Valideer Aanvraag
+
+autonumber "<color:red><b>[00]"
+Client <-[#red]-X AuthzServer: <color:red> 40x - 50x http-errors
+autonumber stop
+
+
+AuthzServer --> Client --: <b>[003] 200 Response (Access-Token)
+deactivate AuthzServer
+deactivate Client
+
+Client -> PEP: <b>[004] **GraphQL Request**\nAuthenticatiemiddel + Access-Token + query/mutation
+activate Client
+activate PEP
+
+PEP -> PEP: <b>[005] Valideer Request
+
+autonumber resume
+Client <-[#red]-X PEP: <color:red> 40x - 50x http-errors
+autonumber stop
+
+PEP -> PDP: GraphQL met policy valideren
+activate PEP #LightGray
+activate PDP
+PDP -> PDP: Valideer graphql
+autonumber "<color:red><b>[00]"
+Client <-[#red]-X PDP: <color:red> 400 Bad Request: Graphql policy validation
+autonumber stop
+PDP -> PEP: Graphql allowed
+deactivate PDP
+PEP -> resourceserver: <b>[006] GraphQL Request
+deactivate PEP
+
+activate resourceserver
+Client <-[#red]-X resourceserver: <color:red> 500 Internal server error
+Client <-[#red]-X resourceserver: <color:red> 503 Service Unavailable
+Client <-[#red]-X resourceserver: <color:red> 504 Gateway timeout
+Client <-[#red]-X resourceserver: <color:red> nog aanvullen
+
+resourceserver -> graphqlserver: Graphql Request
+activate graphqlserver
+
+graphqlserver -> graphqlserver: process graphql
+Client <-[#red]-X graphqlserver: <color:red> 200 (GraphQL.extensions.code: GRAPHQL_VALIDATION_FAILED)
+Client <-[#red]-X graphqlserver: <color:red> 200 extensions.code: INTERNAL_SERVER_ERROR
+Client <-[#red]-X graphqlserver: <color:red> 200 extensions.code: NOT_FOUND
+
+graphqlserver --> resourceserver: <b>[007] 200 Response (GraphQL {data})
+deactivate graphqlserver
+resourceserver --> PEP: <b>[007] 200 Response (GraphQL {data})
+
+
+deactivate resourceserver
+
+PEP --> Client: <b>[008] 200 Response (GraphQL {data})
+deactivate PEP
+deactivate Client
+
+
+'-- volledig overzicht --'
+Client -> AuthzServer: <b>[001] **Aanvragen van autorisatie**\n"\Scope + Authenticatiemiddel"
+activate Client
+activate AuthzServer
+
+AuthzServer -> AuthzServer: <b>[002] Valideer Aanvraag
+
+autonumber "<color:red><b>[00]"
+Client <-[#red]-X AuthzServer:<color:red> 400 Audience Required
+Client <-[#red]-X AuthzServer:<color:red> 401 Unauthorized
+Client <-[#red]-X AuthzServer:<color:red> 403 Not Allowed
+Client <-[#red]-X AuthzServer:<color:red> 403 Invalid client certificate
+Client <-[#red]-X AuthzServer:<color:red> 404 Not found
+Client <-[#red]-X AuthzServer:<color:red> 500 Internal Server Error
+autonumber stop
+
+
+AuthzServer --> Client --: <b>[003] 200 Response (Access-Token)
+deactivate AuthzServer
+deactivate Client
+
+Client -> PEP: <b>[004] **GraphQL Request**\nAuthenticatiemiddel + Access-Token + query/mutation
+activate Client
+activate PEP
+
+PEP -> PEP: <b>[005] Valideer Request
+
+autonumber resume
+Client <-[#red]-X PEP: <color:red> 400 Invalid Query Syntax
+Client <-[#red]-X PEP: <color:red> 400 No operation
+Client <-[#red]-X PEP: <color:red> 400 Invalid scope
+Client <-[#red]-X PEP: <color:red> 401 Unauthorized
+Client <-[#red]-X PEP: <color:red> 403 Invallid Client Certificate
+Client <-[#red]-X PEP: <color:red> 403 Not Allowed
+Client <-[#red]-X PEP: <color:red> 403 Policy Acces Denied
+Client <-[#red]-X PEP: <color:red> 403 Request does not match scopes
+Client <-[#red]-X PEP: <color:red> 500 Internal server error
+Client <-[#red]-X PEP: <color:red> 502 Bad gateway
+Client <-[#red]-X PEP: <color:red> 504 Gateway timeout
+autonumber stop
+
+PEP -> PDP: GraphQL met policy valideren
+activate PEP #LightGray
+activate PDP
+PDP -> PDP: Valideer graphql
+autonumber "<color:red><b>[00]"
+Client <-[#red]-X PDP: <color:red> 400 Bad Request
+Client <-[#red]-X PDP: <color:red> 400 Bad Request: GRAPHQL_VALIDATION_FAILED
+autonumber stop
+PDP -> PEP: Graphql allowed
+deactivate PDP
+PEP -> resourceserver: <b>[006] GraphQL Request
+deactivate PEP
+
+activate resourceserver
+Client <-[#red]-X resourceserver: <color:red> 500 Internal server error
+Client <-[#red]-X resourceserver: <color:red> 504 Gateway timeout
+Client <-[#red]-X resourceserver: <color:red> nog aanvullen
+
+resourceserver -> graphqlserver: Graphql Request
+activate graphqlserver
+
+graphqlserver -> graphqlserver: process graphql
+Client <-[#red]-X graphqlserver: <color:red> 200 (GraphQL.extensions.code: GRAPHQL_VALIDATION_FAILED)
+Client <-[#red]-X graphqlserver: <color:red> 200 extensions.code: INTERNAL_SERVER_ERROR
+Client <-[#red]-X graphqlserver: <color:red> 200 extensions.code: NOT_FOUND
+
+graphqlserver --> resourceserver: <b>[007] 200 Response (GraphQL {data})
+deactivate graphqlserver
+resourceserver --> PEP: <b>[007] 200 Response (GraphQL {data})
+
+
+deactivate resourceserver
+
+PEP --> Client: <b>[008] 200 Response (GraphQL {data})
+deactivate PEP
+deactivate Client
+
+@enduml
