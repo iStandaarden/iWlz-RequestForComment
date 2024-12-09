@@ -240,8 +240,8 @@ deactivate Client
 ```
 </details>
 
-**Nieuwe versie: **
-![voorbeeld_flow](../plantUMLsrc/rfc0022-01-voorbeeld_flow_v2.svg "voorbeeld_flow")
+**Nieuwe versie:**
+![voorbeeld_flow](../plantUMLsrc/rfc0022-01-voorbeeldflow_v2.svg "voorbeeld_flow")
 
 # 4. Export
 Een export in de vorm van een *XML-exportfaciliteit* is essentieel, waarbij de syntax en semantiek van de export moeten voldoen aan de richtlijnen uiteengezet in RFC0021.
