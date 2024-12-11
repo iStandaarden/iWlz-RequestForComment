@@ -1,11 +1,8 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0008 -  Functionele uitwerking notificaties
+# RFC0008 - Functionele uitwerking notificaties
 
-> [!IMPORTANT]
-> Op dit moment wordt deze RFC geactualiseerd met het voorbeeld volgens de afgesproken graphql-mutation
-
-
+> versie 1.0 d.d. 05-12-2024
 
 ---
 
@@ -17,90 +14,65 @@ Er is alleen nog een notificatie van het CIZ naar het zorgkantoor dat verantwoor
 
 **Beoogde situatie**
 
-Dit document beschrijft functioneel de generieke werking van notificaties en meldingen in het Netwerkmodel iWlz. Met notificaties of meldingen worden respectievelijke afnemer of bronhouder geattendeerd op nieuwe informatie die relevant is voor die afnemer of bronhouder. 
+Dit document beschrijft functioneel de generieke werking van notificaties en meldingen in het Netwerkmodel iWlz. Met notificaties of meldingen worden respectievelijke afnemer of bronhouder geattendeerd op nieuwe informatie die relevant is voor die afnemer of bronhouder.
 
-> **NB. De in deze RFC beschreven *VRIJWILLIGE* notificaties worden NIET in de eerste implementatie van notificaties gerealiseerd. Een aantal afhankelijkheden zijn daardoor nog niet noodzakelijk. Het gaat om:**
-> - De Dienstencatalogus, beschreven in RFC0020;
-> - Abonnementenvoorziening, beschreven in RFC0025;
->
+> [!NOTE]
+> De in deze RFC beschreven VRIJWILLIGE notificaties worden NIET in de eerste implementatie van notificaties gerealiseerd.
 
 <font size="4">**Status RFC**</font>
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuele status van deze RFC te bekijken.
 
 ---
+
 **Inhoudsopgave**
-- [RFC0008 -  Functionele uitwerking notificaties](#rfc0008----functionele-uitwerking-notificaties)
+- [RFC0008 - Functionele uitwerking notificaties](#rfc0008---functionele-uitwerking-notificaties)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
   - [1.3 Code-repository](#13-code-repository)
-- [2. Terminologie](#2-terminologie)
-- [3. Notificatie of melding wat is het verschil](#3-notificatie-of-melding-wat-is-het-verschil)
-- [4. Notificaties](#4-notificaties)
-  - [4.1 Doel notificatie](#41-doel-notificatie)
-  - [4.2 Typen notificatie](#42-typen-notificatie)
-  - [4.3 Inhoud notificatie](#43-inhoud-notificatie)
-    - [4.3.1 Afzender en Ontvanger lijst](#431-afzender-en-ontvanger-lijst)
-  - [4.4 Notificeren](#44-notificeren)
-    - [4.4.1 Voorbeeld notificatie:](#441-voorbeeld-notificatie)
-  - [4.5 iWlz-notificatie-typen](#45-iwlz-notificatie-typen)
-    - [4.5.1 iWlz VERPLICHTE notificaties](#451-iwlz-verplichte-notificaties)
-    - [4.5.1 iWlz VRIJWILLIGE notificaties](#451-iwlz-vrijwillige-notificaties)
-  - [4.6 Publiceren en raadplegen beschikbare Notificatietype](#46-publiceren-en-raadplegen-beschikbare-notificatietype)
-- [5. Ontvangen iWlz-verplichte notificatie](#5-ontvangen-iwlz-verplichte-notificatie)
-- [6. Ontvangen (iWlz-) vrijwillige notificatie dmv abonneren](#6-ontvangen-iwlz--vrijwillige-notificatie-dmv-abonneren)
+- [2. Notificatie of melding wat is het verschil](#2-notificatie-of-melding-wat-is-het-verschil)
+- [3. Notificaties](#3-notificaties)
+  - [3.1 Doel notificatie](#31-doel-notificatie)
+  - [3.2 Typen notificatie](#32-typen-notificatie)
+    - [3.2.1 iWlz VERPLICHTE notificaties](#321-iwlz-verplichte-notificaties)
+  - [3.3 Inhoud notificatie](#33-inhoud-notificatie)
+    - [3.3.1 Afzender en Ontvanger lijst](#331-afzender-en-ontvanger-lijst)
+  - [3.4 Notificatie-flow](#34-notificatie-flow)
+  - [3.5 Voorbeeld notificatie:](#35-voorbeeld-notificatie)
+  - [3.6 Notificatie Responses vanuit OPA](#36-notificatie-responses-vanuit-opa)
+- [4 Referenties](#4-referenties)
 
 ---
 
-
 # 1. Inleiding
-Binnen het iWlz netwerkmodel werken we met generieke technische oplossingen en contracten om minimaal afhankelijk te zijn van gezamenlijke releases. Daarom werken we bijvoorbeeld met GraphQL, zodat het uitleveren van extra gegevens via een register geen impact heeft op de overige deelnemers aan het netwerk. 
 
-Het netwerkmodel moet in zijn geheel wel ondersteuning bieden aan het gehele iWlz ketenproces. Daarvoor is het in bepaalde situaties nodig om als ketenpartij op de hoogte gebracht te worden van relevante informatie om de voortgang in het proces van zorglevering aan een client te waarborgen. Een deelnemer moet daarom genotificeerd worden dat er relevante informatie beschikbaar is. 
+Binnen het iWlz netwerkmodel werken we met generieke technische oplossingen en contracten om minimaal afhankelijk te zijn van gezamenlijke releases. Daarom werken we bijvoorbeeld met GraphQL, zodat het uitleveren van extra gegevens via een register geen impact heeft op de overige deelnemers aan het netwerk.
+
+Het netwerkmodel moet in zijn geheel wel ondersteuning bieden aan het gehele iWlz ketenproces. Daarvoor is het in bepaalde situaties nodig om als ketenpartij op de hoogte gebracht te worden van relevante informatie om de voortgang in het proces van zorglevering aan een client te waarborgen. Een deelnemer moet daarom genotificeerd worden dat er relevante informatie beschikbaar is.
 
 Deze RFC beschrijft de werking van notificeren in het iWlz Netwerkmodel.
 
 ## 1.1 Uitgangspunten
 
-| **Uitgangspunt** | **Voor eerste implementatie?** |
-|---|---|
-| - Er is een catalogus voorziening: **Dienstencatalogus** waarin notificatietypen gepubliceerd kunnen worden. | nee |
-| - Er is een **Adresboek** waarin per deelnemer de (notificatie-)endpoints beschikbaar zijn. | ja |
-| - Netwerkdeelnemers raadplegen de **Dienstencatalogus** om op te halen welke abonnementen geplaatst kunnen worden en welke voorwaarden hier aan zitten. | nee |
-| - Een abonnement wordt geplaatst door een deelnemer van het netwerk (abonnee) bij de partij die het notificatie-type afhandeld (de bronhouder). | nee |
-| - Notificaties die randvoorwaardelijk zijn om een wettelijke taak uit te kunnen voeren worden door de bronhouder verstuurd zonder een apart abonnement per deelnemer. | ja |
-| - Om een abonnement te kunnen plaatsen heeft een deelnemer een attest van deelname nodig. | nee |
-| - Een notificatie is dun. Dat wil zeggen dat de ontvanger op basis van de notificatie in staat is te bepalen welke informatie relevant is om te raadplegen. | ja |
-| - Een abonnement is in de basis permanent. De abonnee is zelf verantwoordelijk voor het intrekken van het abonnement. Bij uittreding uit het netwerk, bijvoorbeeld vanwege fusie of faillissement, kunnen abonnementen in bulk worden opgeruimd of gemuteerd. Dit zal in de praktijk altijd maatwerk zijn. | nee |
-| - Silverster abonneert zich niet op de (iWlz-)vrijwillige notificaties. | ja |
-| - Silverster handelt geen (iWlz-)vrijwillige notificaties af. | ja |
+- Notificaties die randvoorwaardelijk zijn om een wettelijke taak uit te kunnen voeren worden door de bronhouder verstuurd zonder een apart abonnement per deelnemer.
+- Er is een lijst beschikbaar met notificatie end-points
+- De notificatie stelt de ontvanger in staat te bepalen welke informatie opgevraagd kan worden.
 
 ## 1.2 Relatie andere RFC
+
 Deze RFC heeft een relatie met de volgende andere RFC(s):
-| RFC | onderwerp | relatie<sup>*</sup> | toelichting | issue | 
+| RFC | onderwerp | relatie<sup>\*</sup> | toelichting | issue |
 |---|---|---|---|---:|
 | [RFC0003](/RFC/RFC0003%20-%20Adresboek.md) | Adresboek | afhankelijk | beschrijft realisatie Adresboek | [#4](https://github.com/iStandaarden/iWlz-RFC/issues/4) |
-| [RFC0020](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md) | Opslag en Raadplegen iWlz notificatietypen in dienstencatalogus | afhankelijk | beschrijft functioneel de dienst om notificatie-typen te publiceren en raadplegen | [#20](https://github.com/iStandaarden/iWlz-RFC/issues/24) | 
 | [RFC0018](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md) | Meldingen: Melden van iWlz gegevensfouten | gerelateerd | beschrijft het stroom van raadpleger aan bronhouder | [#16](https://github.com/iStandaarden/iWlz-RFC/issues/16) |
-| [RFC0025](/RFC/RFC0025%20-%20Abonnementenvoorziening%20voor%20(iWlz)%20vrijwillige%20notificaties.md) | Abonnementenvoorziening | afhankelijk | beschrijft de abonnementenvoorziening noodzakelijk voor het ondersteunen van (iWlz) vrijwillige notificaties | [#36](https://github.com/iStandaarden/iWlz-RFC/issues/36) | 
-
-<sup>*</sup>voorwaardelijk,*voor andere RFC* / afhankelijk, *van andere RFC*
+| [RFC0014](/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) | Functionele uitwerking aanvragen autorisatie | afhankelijk |Toegang en autorisatie voor verzenden notificatie | [#9](https://github.com/iStandaarden/iWlz-RFC/issues/9) |
 
 ## 1.3 Code-repository
+
 De benodigde code staat in [https://github.com/iStandaarden/iWlz-generiek/tree/master](https://github.com/iStandaarden/iWlz-generiek/tree/master)
 
-
-# 2. Terminologie
-| Terminologie | Omschrijving                                                          |
-| :----------- | :-------------------------------------------------------------------- |
-| Backoffice   | Omgeving rondom het register voor de afhandeling van netwerk-diensten |
-| Bronhouder   | Aanbieder van de data, houder van het register                        |
-| Deelnemer    | De raadpleger van de bron, het register                               |
-| Register     | De feitelijke databron/database                                       |
-
-
-# 3. Notificatie of melding wat is het verschil
+# 2. Notificatie of melding wat is het verschil
 
 ![notificatie_melding](../plantUMLsrc/rfc0008-01-notificatie_melding.svg "notificatie_melding")
 
@@ -141,6 +113,7 @@ Group Melden
 end
 @enduml
 ```
+
 </details>
 
 |             | Van        | Naar       | Omschrijving                                                                                                                                                                |
@@ -150,52 +123,80 @@ end
 
 Het onderdeel Melding is verder uitgewerkt in [**RFC0018 - (Fout-)meldingen iWlz Netwerkmodel**](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md).
 
+# 3. Notificaties
 
-# 4. Notificaties
+## 3.1 Doel notificatie
 
-## 4.1 Doel notificatie
-Het doel van een notificatie is het op de hoogte stellen van een deelnemer door een bron over nieuwe (of gewijzigde) informatie die directe of afgeleide betrekking heeft op die deelnemer en daarmee de deelnemer in staat stellen op basis van die notificatie de nieuwe informatie te raadplegen. Een notificatie verloopt altijd van bronhouder naar deelnemer.
+Het doel van een notificatie is het op de hoogte stellen van een deelnemer door een bron over nieuwe (of gewijzigde) informatie die directe of afgeleide betrekking heeft op die deelnemer en daarmee de deelnemer in staat stelt op basis van die notificatie de nieuwe informatie te raadplegen. Een notificatie verloopt altijd van bronhouder naar deelnemer.
 
-De reden voor notificatie is altijd de registratie of wijziging van gegevens in een bronregister. Dit is de *notificatie-trigger* en beschrijft welk CRUD-event in het register leidt tot een notificatie. 
+De reden voor notificatie is altijd de registratie of wijziging van gegevens in een bronregister. Dit is de notificatie-trigger en beschrijft welk CRUD-event in het register leidt tot een notificatie.
 
+## 3.2 Typen notificatie
 
-## 4.2 Typen notificatie
-Er zijn twee typen notificatie gedefinieerd, waarbij het onderscheid zit in de vrijwilligheid van het ontvangen van de notificatie door een deelnemer of het noodzakelijk ontvangen van de notificatie door de deelnemer. Wanneer het voor de afgesproken werking van de iWlz noodzakelijk is een deelnemer van een CRUD-event in een register op de hoogte te stellen is er sprake van een **iWlz-verplichte** notificatie. Een bronhouder moet deze notificatie versturen en een deelnemer hoeft zich voor de deze notificatie niet te abonneren. Is voor een goede werking van de iWlz gewenst dat een deelnemer op de hoogte wordt gesteld van een CRUD-event, maar niet noodzakelijk, dan hoeft een bronhouder een notificatie alleen te versturen wanneer de deelnemer zich heeft geabonneerd op deze notificatie.  
+Er zijn twee typen notificatie gedefinieerd, waarbij het onderscheid zit in de vrijwilligheid van het ontvangen van de notificatie door een deelnemer of het noodzakelijk ontvangen van de notificatie door de deelnemer. Wanneer het voor de afgesproken werking van de iWlz noodzakelijk is een deelnemer van een CRUD-event in een register op de hoogte te stellen is er sprake van een **iWlz-verplichte** notificatie. Een bronhouder moet deze notificatie versturen en een deelnemer hoeft zich voor de deze notificatie niet te abonneren. Is voor een goede werking van de iWlz gewenst dat een deelnemer op de hoogte wordt gesteld van een CRUD-event, maar niet noodzakelijk, dan hoeft een bronhouder een notificatie alleen te versturen wanneer de deelnemer zich heeft geabonneerd op deze notificatie.
 
-Denk bijvoorbeeld aan de registratie van een nieuw indicatiebesluit. Het zorgkantoor dat verantwoordelijk is voor de regio waarin de client van het indicatiebesluit volgens het BRP woont, moet op de hoogte gesteld worden. Het CIZ **moet** daarom een dergelijke notificatie verzenden aan het zorgkantoor en het zorgkantoor **moet** de notificatie volgens iWlz-afspraken afhandelen. Het zorgkantoor hoeft zich niet apart op deze notificatie *"nieuwe indicatie voor zorgkantoor"* te abonneren.  
+Denk bijvoorbeeld aan de registratie van een nieuw indicatiebesluit. Het zorgkantoor dat verantwoordelijk is voor de regio waarin de client van het indicatiebesluit volgens het BRP woont, moet op de hoogte gesteld worden. Het CIZ **moet** daarom een dergelijke notificatie verzenden aan het zorgkantoor en het zorgkantoor **moet** de notificatie volgens iWlz-afspraken afhandelen. Het zorgkantoor hoeft zich niet apart op deze notificatie _"nieuwe indicatie voor zorgkantoor"_ te abonneren.
 
-De twee typen iWlz notificaties zijn daarom: 
+De twee typen iWlz notificaties zijn daarom:
 
-| Type notificatie | Verzenden notificatie | Invloed deelnemer                       | Onderdeel eerste implementatie? |
-| :--------------- | :-------------------- | :-------------------------------------- | :--- |
-| iWlz-Verplicht   | Altijd                | Geen keuze; ontvangt notificatie altijd | Ja |
-| iWlz-Vrijwillig  | Alleen naar abonnee's | Keuze ligt bij deelnemer                | Nee |
+| Type notificatie | Verzenden notificatie | Invloed deelnemer                       |
+| :--------------- | :-------------------- | :-------------------------------------- |
+| iWlz-Verplicht   | Altijd                | Geen keuze; ontvangt notificatie altijd |
+| iWlz-Vrijwillig  | Alleen naar abonnee's | Keuze ligt bij deelnemer                |
 
+> [!NOTE]
+> In de eerste implementatie zal er alleen sprake zijn van iWlz-verplichte notificaties. Er zal geen functionaliteit worden ondersteund voor de iWlz-vrijwillige notificatie en er zal verder in deze RFC niet worden besproken.
 
-## 4.3 Inhoud notificatie
+### 3.2.1 iWlz VERPLICHTE notificaties
+
+Zie voor de actuele lijst het [Informatiemodel iWlz](https://informatiemodel.istandaarden.nl/iWlz-Indicatie-2/) bij de Registers onder het kopje Notificaties.
+| ObjectID | Omschrijving | Afzender | Type |
+|---|---|---|---|
+| GEWIJZIGDE_BEMIDDELINGSPECIFICATIE_ZORGAANBIEDER | Notificatie aan de zorgaanbieder als het verantwoordelijke zorgkantoor een Bemiddelingspecificatie van deze zorgaanbieder heeft gewijzigd. | Bemiddelingsregister | VERPLICHT |
+| GEWIJZIGDE_BEMIDDELINGSPECIFICATIE_ZORGKANTOOR | Notificatie aan het uitvoerende zorgkantoor als het verantwoordelijke zorgkantoor een Bemiddelingspecificatie van een gecontracteerde zorgaanbieder (van dit uitvoerende zorgkantoor) heeft gewijzigd. | Bemiddelingsregister | VERPLICHT |
+| GEWIJZIGDE_OVERDRACHT_ZORGKANTOOR | Notificatie aan het nieuwe verantwoordelijke zorgkantoor als het huidige (oude) verantwoordelijke zorgkantoor een Overdracht heeft gewijzigd. | Bemiddelingsregister | VERPLICHT |
+| GEWIJZIGDE_REGIEHOUDER_ZORGAANBIEDER | Notificatie aan de zorgaanbieder als het verantwoordelijke zorgkantoor de regieperiode van deze zorgaanbieder heeft gewijzigd. | Bemiddelingsregister | VERPLICHT |
+| NIEUWE_BEMIDDELINGSPECIFICATIE_ZORGAANBIEDER | Notificatie aan de zorgaanbieder als het verantwoordelijke zorgkantoor een nieuwe Bemiddelingspecificatie voor deze zorgaanbieder heeft geregistreerd. | Bemiddelingsregister | VERPLICHT |
+| NIEUWE_BEMIDDELINGSPECIFICATIE_ZORGKANTOOR | Notificatie aan het uitvoerende zorgkantoor als het verantwoordelijke zorgkantoor een nieuwe Bemiddelingspecificatie voor een gecontracteerde zorgaanbieder (van dit uitvoerende zorgkantoor) heeft geregistreerd. | Bemiddelingsregister | VERPLICHT |
+| NIEUWE_INDICATIE_ZORGKANTOOR | Notificatie aan het zorgkantoor als het CIZ een nieuwe Wlz-indicatie heeft geregistreerd voor een cliënt die in de regio van dit zorgkantoor woont. | Indicatieregister | VERPLICHT |
+| NIEUWE_OVERDRACHT_ZORGKANTOOR | Notificatie aan het nieuwe verantwoordelijke zorgkantoor als het huidige (oude) verantwoordelijke zorgkantoor een Overdracht heeft geregistreerd. | Bemiddelingsregister | VERPLICHT |
+| NIEUWE_REGIEHOUDER_ZORGAANBIEDER | Notificatie aan de zorgaanbieder als het verantwoordelijke zorgkantoor deze zorgaanbieder als Regiehouder heeft geregistreerd. | Bemiddelingsregister | VERPLICHT |
+| VERVALLEN_INDICATIE_ZORGKANTOOR | Notificatie aan het zorgkantoor als het CIZ een nieuwe vervaldatum heeft geregistreerd, of een vervaldatum heeft gewijzigd of verwijderd, bij een Wlz-indicatie waarvoor dit zorgkantoor verantwoordelijk is, was of wordt. | Indicatieregister | VERPLICHT |
+| VERWIJDERDE_BEMIDDELINGSPECIFICATIE_ZORGAANBIEDER | Notificatie aan de zorgaanbieder als het verantwoordelijke zorgkantoor een Bemiddelingspecificatie van deze zorgaanbieder heeft verwijderd. | Bemiddelingsregister | VERPLICHT |
+| VERWIJDERDE_BEMIDDELINGSPECIFICATIE_ZORGKANTOOR | Notificatie aan het uitvoerende zorgkantoor als het verantwoordelijke zorgkantoor een Bemiddelingspecificatie van een gecontracteerde zorgaanbieder (van dit uitvoerende zorgkantoor) heeft verwijderd. | Bemiddelingsregister | VERPLICHT |
+| VERWIJDERDE_OVERDRACHT_ZORGKANTOOR | Notificatie aan het nieuwe verantwoordelijke zorgkantoor als het huidige (oude) verantwoordelijke zorgkantoor een Overdracht heeft verwijderd. | Bemiddelingsregister | VERPLICHT |
+| VERWIJDERDE_REGIEHOUDER_ZORGAANBIEDER | Notificatie aan de zorgaanbieder als het verantwoordelijke zorgkantoor deze zorgaanbieder als Regiehouder heeft verwijderd. | Bemiddelingsregister | VERPLICHT |
+
+## 3.3 Inhoud notificatie
+
 De notificatie is in structuur gelijk aan de melding (zie [RFC0018](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md)). Op basis van de inhoud van een notificatie moet de ontvanger van de notificatie onder andere kunnen bepalen:
-  - wat is de trigger, wat is de reden van de notificatie
-  - van welke bronhouder is de notificatie afkomstig
-  - wanneer is de notifictie verzonden
-  - op welke informatie de notificatie betrekking heeft
-  - informatie om een gerichte raadpleging te kunnen doen
-  - autorisatievoorziening moet voldoende informatie hebben om te kunnen bepalen dat de notificatie terecht is. (Bijvoorbeeld: Notificatietype mag verzonden worden door verzender en stuurt naar juiste type ontvanger)
+
+- wat is de trigger, wat is de reden van de notificatie
+- van welke bronhouder is de notificatie afkomstig
+- wanneer is de notificatie verzonden
+- op welke informatie de notificatie betrekking heeft
+- informatie om een gerichte raadpleging te kunnen doen
+- autorisatievoorziening moet voldoende informatie hebben om te kunnen bepalen dat de notificatie terecht is. (Bijvoorbeeld: Notificatietype mag verzonden worden door verzender en stuurt naar juiste type ontvanger)
 
 De notificatie bevat de volgende gegevens:
-| Gegeven          | Algemene beschrijving                                              | Specifieke beschrijving voor notificeren                               | V/O<sup>*</sup> | Type     |
+| Gegeven | Algemene beschrijving | Specifieke beschrijving voor notificeren | V/O<sup>\*</sup> | Type |
 | ---------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------- | :-------------: | -------- |
-| timestamp        | Tijdstip waarop de notificatie is aangemaakt                       |                                                                        |        V        | Datetime |
-| afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                        |        V        | String   |
-| afzenderID       | Identificatie van de verzender van het bericht                     |                                                                        |        V        | String   |
-| ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                        |        V        | String   |
-| ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                        |        V        | String   |
-| ontvangerKenmerk | Kenmerk van de ontvanger:                                          | Bij iWlz-vrijwillige notificatie gevuld met abonnementsID. Anders leeg |        O        | String   |
-| eventType        | Onderwerptype van het bericht; wat is de reden van het bericht     | NotificatieTypeID (zie tabel)                                          |        V        | String   |
-| subjectList      | Lijst met onderwerpen van het bericht                              | ...                                                                    |        V        | Array    |
-| ../subject       | Onderwerp van het bericht                                          | Identificatie van het parent-object waarover de autorisatie loopt.     |        V        | String   |
-| ../recordID      | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de notificatie betrekking op heeft.  |        V        | String   |
+| timestamp | Tijdstip waarop de notificatie is aangemaakt | | V | Datetime [^1] |
+| afzenderIDType | Kenmerk van het type ID van de verzendende partij | | V | String |
+| afzenderID | Identificatie van de verzender van het bericht | | V | String |
+| ontvangerIDType | Kenmerk van het type ID van de ontvangende partij | | V | String |
+| ontvangerID | Identifictie van de ontvanger van het bericht | | V | String |
+| ontvangerKenmerk | Kenmerk van de ontvanger: | Bij iWlz-vrijwillige notificatie gevuld met abonnementsID. Anders leeg | O | String |
+| eventType | Onderwerptype van het bericht; wat is de reden van het bericht | Notificatie Object ID[^2] | V | String |
+| subjectList | Lijst met onderwerpen van het bericht | ... | V | Array |
+| ../subject | Onderwerp van het bericht | Identificatie van het parent-object waarover de autorisatie loopt. | V | String |
+| ../recordID | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de notificatie betrekking op heeft. | V | String |
 
-<sup>*</sup> V = verplicht / O = Optioneel
+<sup>\*</sup> V = verplicht / O = Optioneel
+
+[^1]: Datetime volgens ISO-8601 zie https://en.wikipedia.org/wiki/ISO_8601 en https://scalars.graphql.org/andimarek/date-time. Formaat is bijvoorbeeld: 2016-07-20T17:30:15Z, 2016-07-20T17:30:15+05:30, 2016-07-20T17:30:15.234890+05:30
+
+[^2]: Zie Informatiemodel iWlz onder het kopje Notificaties https://informatiemodel.istandaarden.nl/iWlz-Bemiddeling-1/ of https://informatiemodel.istandaarden.nl/iWlz-Indicatie-2/
 
 ![notificatie_erd](../plantUMLsrc/rfc0008-06-message-erd.svg "notificatie_erd")
 
@@ -223,218 +224,304 @@ Notification "1" *-- "1..*" SubjectList: contains
 
 @enduml
 ```
+
 </details>
 
-<details>
-  <summary>open json-schema</summary>
+### 3.3.1 Afzender en Ontvanger lijst
 
-```json
-{
-  "title": "notification-definition",
-  "description": "json-schema definitie voor iWlz-notificatie en iWlz-melding",
-  "type": "object",
-  "properties": {
-    "timestamp": {
-      "type": "string"
-    },
-    "afzenderIDType": {
-      "type": "string"
-    },
-    "afzenderID": {
-      "type": "string"
-    },
-    "ontvangerIDType": {
-      "type": "string"
-    },
-    "ontvangerID": {
-      "type": "string"
-    },
-    "ontvangerKenmerk": {
-      "type": "string"
-    },
-    "eventType": {
-      "type": "string"
-    },
-    "subjectList": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "subject": {
-            "type": "string"
-          },
-          "recordID": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "subject",
-          "recordID"
-        ]
-      }
-    }
-  },
-  "required": [
-    "timestamp",
-    "afzenderIDType",
-    "afzenderID",
-    "ontvangerIDType",
-    "ontvangerID",
-    "eventType",
-    "subjectList"
-  ]
-}
-```
-</details>
+| Code  | Omschrijving                         | Referentie                                                | Toepassing                                                           |
+| :---- | :----------------------------------- | :-------------------------------------------------------- | :------------------------------------------------------------------- |
+| AGB   | AGB-code                             | [AGB-register](https://www.vektis.nl/agb-register/zoeken) | identificatie Zorgaanbieder                                          |
+| BSN   | Burgerservicenummer                  |                                                           | identificatie Burger (nog geen toepassing)                           |
+| KVK   | Kamer van Koophandel                 | [KVK-register](https://www.kvk.nl/zoeken/)                | identificatie Ondernemer (CIZ bij eerste implementatie<sup>\*</sup>) |
+| OIN   | Organisatie Identificatienummer      | [OIN-register](https://www.vektis.nl/agb-register/zoeken) | identificatie CIZ (toekomstig[^3])                                   |
+| UZOVI | Unieke ZorgVerzekeraarsIdentificatie | [UZOVI-register](https://www.vektis.nl/uzovi-register)    | identificatie Zorgkantoren                                           |
 
-### 4.3.1 Afzender en Ontvanger lijst
-| Code | Omschrijving | Referentie | Toepassing |
-| :-- | :-- | :-- | :-- |
-|  AGB | AGB-code | [AGB-register](https://www.vektis.nl/agb-register/zoeken) | identificatie Zorgaanbieder |
-|  BSN | Burgerservicenummer | | identificatie Burger (nog geen toepassing) |
-|  KVK | Kamer van Koophandel | [KVK-register](https://www.kvk.nl/zoeken/) | identificatie Ondernemer (CIZ bij eerste implementatie<sup>*</sup>) |
-|  OIN | Organisatie Identificatienummer | [OIN-register](https://www.vektis.nl/agb-register/zoeken) | identificatie CIZ (toekomstig<sup>*</sup>) |
-|  UZOVI | Unieke ZorgVerzekeraarsIdentificatie | [UZOVI-register](https://www.vektis.nl/uzovi-register) | identificatie Zorgkantoren |
+[^3]: Op dit moment is het voor VECOZO niet mogelijk om een OIN te verifieren waardoor er geen claim kan worden afgegeven op basis van OIN. Bij de eerste implementatie van notificaties zal voor de identificatie van het CIZ het KVK-nummer (62253778) worden gebruikt.
 
-<sup>*</sup> Op dit moment is het voor VECOZO niet mogelijk om een OIN te verifieren waardoor er geen claim kan worden afgegeven op basis van OIN. Bij de eerste implementatie van notificaties zal voor de identificatie van het CIZ  het KVK-nummer (62253778) worden gebruikt. 
-## 4.4 Notificeren
+## 3.4 Notificatie-flow
 
-![notificatie_melding](../plantUMLsrc/rfc0008-02-notificatie_sequence.svg "notificatie_sequence")
+> [!NOTE]
+> De hier beschreven flow beschrijft alleen het notificeren zelf.Voor het notificeren is autorisatie nodig. Het aanvragen van autorisatie en de bijbehorende flow is beschreven in [RFC0014 - Functionele uitwerking aanvragen autorisatie](https://github.com/iStandaarden/iWlz-RFC/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md) .
+
+![notificatie_melding](../plantUMLsrc/rfc0008-02-notificatie_sequence_v2.svg "notificatie_sequence")
 
 <details>
   <summary>plantUML-source</summary>
 
-  ```plantuml
-  @startuml rfc008-02-notificatie_sequence
-  title notificatie sequence-diagram
-  skinparam handwritten false
-  skinparam participantpadding 20
-  skinparam boxpadding 40
-  autonumber "<b>[00]"
-  box bronhouder #lightblue
-  participant "Register" as bs
-  participant "Register- \ndata" as rg
-  end box
+```plantuml
+@startuml rfc008-02-notificatie_sequence
+title notificatie sequence-diagram
+skinparam handwritten false
+skinparam participantpadding 20
+skinparam boxpadding 40
 
-  box adresboek
-  participant "Adresboek" as ab
-  end box
+box bronhouder #lightblue
+  participant "Resource" as Resource
+  participant "Register- \ndata" as Register
+end box
 
-  box deelnemer #lightyellow
-  participant "Resource" as dnp
-  end box
+box "nID"
+    participant "autorisatieserver" as AuthzServer
+    participant "PEP" as PEP
+    participant "PDP" as PDP
+end box
 
-    bs -> rg : registratie data
-    activate rg
-    activate bs
-    rg -> rg: event trigger
-    rg -> bs : bepaal notificatietype
-    deactivate rg
+box deelnemer #lightyellow
+  participant "Resource-\nServer" as ResServer
+end box
 
-      alt iWlz-vrijwillige notificatie
-      bs -> bs: raadpleeg abonnementenregistratie
-      activate bs #grey
-      bs -> bs: geef geabonneerde deelnemer
-      deactivate bs
-      end 
+note over PEP #lightgreen: Het autorisatie en validatie-proces \nis beschreven in RFC0014 \nFunctionele uitwerking aanvragen autorisatie \n(oAuth2.0)
+autonumber "<b>[00]"
+Resource -> Register : <b>registratie data
 
-    bs -> ab: zoek endpoint & ID deelnemer op
+activate Resource
+  activate Register
+  Register -> Register: <b>event trigger
+  Register -> Resource : <b>bepaal notificatietype
+  deactivate Register
 
-    activate ab
-    ab -> bs: return {endpoint & ID deelnemer}
-    deactivate ab
-    bs -> bs: genereer notificatie
-    bs -> dnp: zend notificatie
-    activate dnp
-    dnp -> dnp: ontvang notificatie
-    dnp --> bs: 200 response
-    deactivate dnp  
-    bs --> bs: verwerk response
+  Resource -> Resource: <b>genereer GraphQL notificatie
+autonumber stop
+  Resource -> AuthzServer: Aanvragen van autorisatie\n"scope": "../notificaties/notificatie:create"
+    activate AuthzServer #Darkgrey
+        AuthzServer --> Resource --: 200 Response (JWT Access-Token)
+    deactivate AuthzServer
+autonumber resume
+  Resource -> PEP: **GraphQL Request **\nAuthenticatiemiddel + JWT Access-Token + notificatie
+
+autonumber stop
+  activate PEP
+
+    PEP -> PEP: Valideer Authenticatie en \nAccess
+    PEP -> PDP: GraphQL met policy valideren
+      activate PEP #LightGray
+        activate PDP
+        PDP -> PDP: Valideer graphql
+        autonumber stop
+          PDP -> PEP: Graphql allowed
+        deactivate PDP
+        PEP -> ResServer: **[05] GraphQL Request**
+      deactivate PEP
+
+autonumber resume
+    activate ResServer
+    ResServer -> ResServer: <b>ontvang \n<b>notificatie
+    ResServer --> PEP: <b>GraphQL 200 response
+    deactivate ResServer
+autonumber stop
+    PEP --> Resource: <b>[07] GraphQL 200 response
+
+
+    deactivate PEP
+    Resource --> Resource: <b>[08] verwerk GraphQL 200 response
 
   @enduml
-  ```
+```
+
 </details>
 
+| #   | Beschrijving                 | Toelichting                                                                          | Voorbeeld: Bemiddeling voor zorgaanbieder                                                                                                                        |
+| --- | ---------------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 01  | registratie data             | data vanuit backoffice in register plaatsen                                          | Het CIZ registreert een nieuwe Wlz Indicatie voor een cliënt                                                                                                     |
+| 02  | event trigger                | registratie of wijziging data laat een notificatie trigger afgaan                    | Het zorgkantoor dat verantwoordelijk is voor de regio waar de cliënt volgens het BRP woonachtig is, moet van deze nieuwe indicatie op de hoogte gebracht worden. |
+| 03  | bepaal notificatietype       | bepaal notificatietype en bepaal of het een verplichte of vrijwillige notificatie is | Het is de trigger van de iWlz-verplichte notificatie: NIEUWE_INDICATIE_ZORGKANTOOR                                                                               |
+| 04  | genereer GraphQL notificatie | maak de benodigde notificatie aan                                                    | Gebruik wlzIndictieID en uzovi-code uit ‘initieelVerantwoordelijkZorgkantoor’ in de notificatie.                                                                 |
+| 05  | zend GraphQL notificatie     | verstuur de notificatie naar het endpoint van de deelnemer                           |                                                                                                                                                                  |
+| 06  | verwerk notificatie          | verwerk de ontvangen notificatie                                                     |                                                                                                                                                                  |
+| 07  | GraphQL 200 response         | stuur ontvangst bevestiging                                                          | De zorgaanbieder bevestigt de ontvangst van de notificatie en kan deze verwerken en gebruiken voor een raadpleging                                               |
+| 08  | Verwerk GraphQL 200 response | Verwerk de ontvangstbevestiging                                                      |                                                                                                                                                                  |
 
-| #    | Beschrijving                      | Toelichting                                                                                            | Voorbeeld: Bemiddeling voor zorgaanbieder                                                                          |
-| :--- | :-------------------------------- | :----------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
-| 01   | registratie data                  | data vanuit backoffice in register plaatsen                                                            | Zorgkantoor bemiddelt client naar een zorgaanbieder en registreert het resultaat in het bemiddelingsregister       |
-| 02   | event trigger                     | registratie of wijziging data laat een notificatie trigger afgaan                                      | Doordat de agbCode van de zorgaanbieder onder Instelling wordt gevuld in Bemiddelingspecificatie, gaat er een trigger af                       |
-| 03   | bepaal notificatietype            | bepaal notificatietype en bepaal of het een verplichte of vrijwillige notificatie is                   | Het is de trigger van de iWlz-verplichte notificatie: NIEUWE_BEMIDDELINGSPECIFICATIE_ZORGAANBIEDER.                      |
-| ALT  | *iWlz-vrijwillig notificatietype* | *bij een iWlz-vrijwillige notificatie moet de abonnementenregistrate worden geraadpleegd op abonnee's* | nvt.                                                                                                               |
-| 04   | raadpleeg abonnementenregistratie | bepaal of er abonnee's zijn voor het vrijwillige notificatietype                                       |
-| 05   | geef geabonneerde deelnemer       | geef informatie over geabonneerde deelnemer om de notificatie te versturen                             |
-| 06   | zoek endpoint deelnemer op        | bepaal waar de notificatie moet worden afgeleverd                                                      | Met de geregisteerde agbCode kan het endpoint en ID van de zorgaanbieder worden opgezocht                          |
-| 07   | return {endpoint; ID deelnemer}   | ontvang het afleveradres en ID voor de notificatie                                                     |
-| 08   | genereer notificatie              | maak de gewenste notificatie aan                                                                       | Gebruik ontvangen ID in notificatie (zie voorbeeld 4.4.1)                                                          |
-| 09   | zend notificatie                  | verstuur de notificatie naar het endpoint van de deelnemer                                             | Gebruik ontvangen endpoint als afleveradres                                                                        |
-| 10   | verwerk notificatie               | verwerk de ontvangen notificatie                                                                       |
-| 11   | http-response {200}               | stuur ontvangst bevestiging                                                                            | De zorgaanbieder bevestigt de ontvangst van de notificatie en kan deze verwerken en gebruiken voor een raadpleging |
-| 12   | verwerk response                  | bevestig ontvangst notificatie                                                                         |
+Zodra een event zich voordoet waarvoor een notificatie-trigger is gedefinieerd verstuurd de bronhouder de bijbehorende notificatie.
 
-Zodra een event zich voordoet waarvoor een notificatie-trigger is gedefinieerd verstuurd de bronhouder de bijbehorende notificatie. 
+## 3.5 Voorbeeld notificatie:
 
-### 4.4.1 Voorbeeld notificatie: 
-Het gaat hier om een notificatie als gevolg van een nieuwe registratie in ‘Bemiddelingspecficatie’ voor een zorgaanbieder. Met deze registratie ontstaat er een nieuw record waarvan de zorgaanbieder op de hoogte moet worden gesteld. Hiervoor is de verplichte notificatie: NIEUWE_BEMIDDELINGSPECIFICATIE_ZORGAANBIEDER die naar de zorgaanbieder genoemd onder Instelling in het record moet worden verstuurd. Op basis van het recordID kan die zorgaanbieder een raadpleging doen. 
+Het gaat hier om een notificatie als gevolg van een nieuwe registratie in het Indicatieregister van een nieuwe Indicatie. Met deze registratie ontstaat er een nieuwe Indicatie waarvan het zorgkantoor op de hoogte moet worden gesteld. Hiervoor is er de verplichte notificatie: NIEUWE_INDICATIE_ZORGKANTOOR die naar het zorgkantoor onder initieelVerantwoordelijkZorgkantoor in WlzIndicatie gestuurd moet worden. Op basis van het wlzIndicatieID kan dat zorgkantoor een raadpleging doen.
 
-Notificatie:
+Voorbeeld Notificatie Query:
+
+```gql
+mutation zendNotificatie(
+  $afzenderID: String!
+  $afzenderIDType: IDTypeEnum!
+  $eventType: String!
+  $ontvangerID: String!
+  $ontvangerIDType: IDTypeEnum!
+  $timestamp: DateTime!
+  $subjectList: [SubjectEntity!]!
+) {
+  zendNotificatie(
+    notificatieInput: {
+      afzenderID: $afzenderID
+      afzenderIDType: $afzenderIDType
+      eventType: $eventType
+      ontvangerID: $ontvangerID
+      ontvangerIDType: $ontvangerIDType
+      timestamp: $timestamp
+      subjectList: $subjectList
+    }
+  ) {
+    notificatieID
+  }
+}
+```
+
+GrapQL Variabelen:
 
 ```json
 {
-  "timestamp": "2022-09-27T12:07:07.492+1",
-  "afzenderIDType": "UZOVI",
-  "afzenderID": "5505",
-  "ontvangerIDType": "Agbcode",
-  "ontvangerID": "12341234",
-  "ontvangerKenmerk": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "eventType": "NIEUWE_BEMIDDELINGSPECIFICATIE_ZORGAANBIEDER",
+  "afzenderID": "62253778",
+  "afzenderIDType": "KVK",
+  "eventType": "NIEUWE_INDICATIE_ZORGKANTOOR",
+  "ontvangerID": "5151",
+  "ontvangerIDType": "UZOVI",
+  "timestamp": "2024-07-02T00:00:00Z",
   "subjectList": [
     {
-      "subject": "Bemiddeling/da8ebd42-d29b-4508-8604-ae7d2c6bbddd",
-      "recordID": "Bemiddelingspecificatie/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+      "recordID": "WlzIndicatie/ef88ce35-58fa-4e6d-ac7a-6e298dd211d6",
+      "subject": "WlzIndicatie/ef88ce35-58fa-4e6d-ac7a-6e298dd211d6"
     }
   ]
-
 }
 ```
-Succesvol response: 
+
+Succesvol response:
+
 ```http
-HTTP/1.1 204 (No content)
+HTTP/1.1 200
+{
+  "data": {
+    "zendNotificatie": {
+      "notificatieID": "e2d8c3c2-7453-4948-95c8-de86688461e5"
+    }
+  }
+}
 ```
+
 Validatie fout response:
+
 ```http
 HTTP/1.1 400 Bad Request
-{"ErrorCode" : "invalid_request", "Error" :"Validation failed"}
+{
+  "errors": [
+    {
+      "message": "ZendNotificatie mutation: afzender_id is not valid",
+      "extensions": {
+        "code": "GRAPHQL_VALIDATION_FAILED"
+      }
+    }
+  ]
+}
+
 ```
 
-## 4.5 iWlz-notificatie-typen
-Alleen de notificaties die afgesproken zijn tussen een of meerdere ketenpartijen van de iWlz worden hier beschreven. Deze notificaties **moet** een iWlz-bronhouder kunnen vesturen. Of een deelnemer de notificatie ontvangt is afhankelijk van het type. Een ***iWlz-verplichte*** notificatie ontvangt een deelnemer **altijd** wanneer die van toepassing is op die deelnemer. Een ***iWlz-vrijwillige*** notificatie ontvangt een deelnemer wanneer de notificatie van toepassing is op die deelnemer **EN** als die deelnemer is geabonneerd op die notificatie bij de bronhouder.
+## 3.6 Notificatie Responses vanuit OPA
 
-*Het staat een bronhouder en deelnemer vrij om buiten de afgesproken iWlz notificatie een willekeurige notificatie af te spreken en te faciliteren met een deelnemer. Deze ‘ongereguleerde’ notificaties worden verder niet besproken, maar passen in hetzelfde principe van het iWlz-vrijwillige abonnement.*
+Het notificatiesysteem binnen nID is ontworpen om meldingen en notificaties op een consistente en betrouwbare manier te verzenden naar geautoriseerde partijen binnen de iWlz-keten. Dit proces wordt ondersteund door de GraphQL-operaties zendMelding en zendNotificatie, die verantwoordelijk zijn voor het initiëren van respectievelijk meldingen en notificaties.
 
-Er zijn momenteel twee registers in ontwikkeling, het Indicatieregister van het CIZ en het Bemiddelingsregister van de zorgkantoren. Hiervoor zijn er nu de volgende iWlz notificaties gespecificeerd die gerealiseerd zullen worden. 
+De responses van deze GraphQL-operaties bieden een gestandaardiseerde manier om de uitkomst van het verzoek te communiceren. Ze bevatten zowel statusinformatie als foutmeldingen, die essentieel zijn voor het begrijpen en diagnosticeren van het notificatieproces. Dit maakt het mogelijk om problemen in de keten snel te identificeren en te verhelpen.
 
-### 4.5.1 iWlz VERPLICHTE notificaties
+De response codes zijn gebaseerd op gestandaardiseerde HTTP-statuscodes, uitgebreid met specifieke foutberichten en contextuele informatie om de aard van de uitkomst of fout te verduidelijken. Zowel technische als functionele foutscenario's worden behandeld, zodat ontwikkelaars en operators een volledig inzicht krijgen in de verwerking van notificaties.
 
-Zie voor de actuele lijst het [Informatiemodel iWlz](https://informatiemodel.istandaarden.nl/Landing/) bij de registers onder het kopje Notificaties.
+Hieronder wordt een tabel weergegeven met de mogelijke response codes, foutberichten en oorzaken die kunnen optreden bij de uitvoering van de GraphQL-verzoeken zendMelding en zendNotificatie. Deze tabel dient als leidraad voor een correcte interpretatie van de responses en het oplossen van eventuele problemen.
 
+De hieronder beschreven foutcodes ontstaan bij het valideren van de ingezonden GraphQL in nID, onderdeel PDP (zie [4 Referenties](#4-referenties) onderdeel van RFC0014)
 
+Schematisch:
+![notificatie_errors](../plantUMLsrc/rfc0008-04-error-flow.svg "notificatie_errors")
 
-### 4.5.1 iWlz VRIJWILLIGE notificaties
-Zie voor de actuele lijst het [Informatiemodel iWlz](https://informatiemodel.istandaarden.nl/Landing/) bij de registers onder het kopje notificaties.
+<details>
+  <summary>plantUML-source</summary>
 
-> N.B. In de eerste implementatie van notificaties zijn iWlz-VRIJWILLIGE notificaties nog niet beschikbaar, waardoor een abonnementenregistratie voorziening ook niet nodig is. 
-
-## 4.6 Publiceren en raadplegen beschikbare Notificatietype
-Dit onderdeel is beschreven in een afzonderlijke RFC: [RFC0024 - Opslag iWlz Notificatietypen in dienstencatalogus](/RFC/RFC0024%20-%20Opslag%20iWlz%20Notificatietypen%20in%20dienstencatalogus.md)
-
-# 5. Ontvangen iWlz-verplichte notificatie
-Voor het ontvangen van een iWlz-verplichte notificatie hoeft een deelnemer geen extra handelingen te doen dan het kenbaar maken van een notifictie-endpoint waarop de notificatie op kunnen worden ontvangen. De als iWlz-verplichte notificaties worden namelijk op basis van de verantwoordelijkheid binnen de iWlz verstuurd en ontvangen. Zo moet een zorgkantoor op de hoogte gebracht worden van een nieuw Indicatiebesluit wanneer deze van een client is die volgens het BRP geregisteerd is in de regio van dat zorgkantoor. Het CIZ zorgt er daarom voor dat de notificatie wordt verzonden. Het ontvangende zorgkantoor heeft hierin geen keuze.
-
-Zie de bijlage voor een overzicht van de iWlz notificatietypen voor het Indicatie- en Bemiddelingsregister.
-
-
-# 6. Ontvangen (iWlz-) vrijwillige notificatie dmv abonneren
-De beschrijving van de abonnenementenvoorziening is verplaatst naar [RFC0025 - Abonnementenvoorziening](/RFC/RFC0025%20-%20Abonnementenvoorziening%20voor%20(iWlz)%20vrijwillige%20notificaties.md).
+```plantuml
+@startuml rfc0008-04-error-flow
+title notificatie flow incl. nID
+skinparam handwritten false
+skinparam participantpadding 20
+skinparam boxpadding 40
 
 
+box bronhouder #lightblue
+  participant "Resource" as Resource
+  participant "Register- \ndata" as Register
+end box
+
+box "nID"
+    participant "autorisatieserver" as AuthzServer
+    participant "PEP" as PEP
+    participant "PDP" as PDP
+end box
+
+
+box deelnemer #lightyellow
+  participant "Resource-\nServer" as ResServer
+end box
+
+note over PEP #lightgreen: Het autorisatie en validatie-proces \nis beschreven in RFC0014 \nFunctionele uitwerking aanvragen autorisatie \n(oAuth2.0)
+
+Resource -> Register : registratie data
+
+activate Resource
+  activate Register
+  Register -> Register: event trigger
+  Register -> Resource : bepaal notificatietype
+  deactivate Register
+
+  Resource -> Resource: genereer GraphQL notificatie
+
+  Resource -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "../notificaties/notificatie:create"
+    activate AuthzServer #Darkgrey
+        AuthzServer --> Resource --: 200 Response (JWT Access-Token)
+    deactivate AuthzServer
+
+  Resource -> PEP: **GraphQL Request **\nAuthenticatiemiddel + JWT Access-Token + notificatie
+  activate PEP
+
+    PEP -> PEP: Valideer Authenticatie en \nAccess
+    PEP -> PDP: GraphQL met policy valideren
+      activate PEP #LightGray
+        activate PDP
+        PDP -> PDP: Valideer graphql
+        autonumber "<color:red><b>[00]"
+          Resource <-[#red]-X PDP: <color:red> 400 Bad Request
+          Resource <-[#red]-X PDP: <color:red> 400 Bad Request: GRAPHQL_VALIDATION_FAILED
+        autonumber stop
+          PDP -> PEP: Graphql allowed
+        deactivate PDP
+        PEP -> ResServer: **GraphQL Request**
+      deactivate PEP
+
+    activate ResServer
+    ResServer -> ResServer: ontvang notificatie
+    ResServer --> PEP: GraphQL 200 response
+    deactivate ResServer
+    PEP --> Resource: GraphQL 200 response
+
+  note over PDP, ResServer #pink: Er komt een nieuwe RFC voor \nfoutafhandeling door de GraphQL-server
+
+    deactivate PEP
+    Resource --> Resource: verwerk GraphQL 200 response
+
+  @enduml
+```
+
+</details>
+
+| Response Code | Foutbericht                                                          | Oorzaak                                                                               |
+| ------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| 400           | Bad Request                                                          | Het notificatieverzoek bevatte ongeldige of ontbrekende parameters.                   |
+| 400           | Bad Request GRAPHQL_VALIDATION_FAILED instantie_type claim not found | De JWT token bevat geen instantie_type claim                                          |
+| 400           | Bad Request GRAPHQL_VALIDATION_FAILED afzender_type is not valid     | De afzenderIDType komt niet overeen met de instantie_type claim of is niet toegestaan |
+| 400           | Bad Request GRAPHQL_VALIDATION_FAILED event_type is not valid        | Het opgegeven event type komt niet voor in de lijst met toegestane types              |
+| 400           | Bad Request GRAPHQL_VALIDATION_FAILED ontvanger is not valid         | De combinatie van ontvangerIDType en eventType is niet toegestaan                     |
+
+Met deze informatie kunnen deelnemers snel vaststellen wat er gebeurt binnen het notificatieproces en waar mogelijke knelpunten zich bevinden.
+
+# 4 Referenties
+
+| Onderwerp                                   | Verwijzing                                                                                                                                     |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| RFC 0014 - autorisatie oAuth2.0             | https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md |
+| Informatiemodel iWlz - Indicatieregister 2  | https://informatiemodel.istandaarden.nl/iWlz-Indicatie-2/                                                                                      |
+| Informatiemodel iWlz - Bemiddelingsregister | https://informatiemodel.istandaarden.nl/iWlz-Bemiddeling-1/                                                                                    |
+| Koppelvlakspecificatie notificeren          | https://github.com/iStandaarden/iWlz-generiek                                                                                                  |
