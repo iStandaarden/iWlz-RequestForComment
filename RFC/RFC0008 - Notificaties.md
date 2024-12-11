@@ -321,7 +321,7 @@ autonumber stop
 
 </details>
 
-| #   | Beschrijving                 | Toelichting                                                                          | Voorbeeld: Bemiddeling voor zorgaanbieder                                                                                                                        |
+| #   | Beschrijving                 | Toelichting                                                                          | Voorbeeld: Indicatie voor zorgkantoor                                                                                                                        |
 | --- | ---------------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 01  | registratie data             | data vanuit backoffice in register plaatsen                                          | Het CIZ registreert een nieuwe Wlz Indicatie voor een cliënt                                                                                                     |
 | 02  | event trigger                | registratie of wijziging data laat een notificatie trigger afgaan                    | Het zorgkantoor dat verantwoordelijk is voor de regio waar de cliënt volgens het BRP woonachtig is, moet van deze nieuwe indicatie op de hoogte gebracht worden. |
