@@ -1,4 +1,4 @@
-@startuml rfc008-03-notificatie_sequence_error
+@startuml rfc008-03-foutmelden-errors
 title melding sequence-diagram + error
 skinparam handwritten false
 skinparam participantpadding 20
@@ -54,7 +54,7 @@ activate Resource
     ResServer -> ResServer: <b>ontvang \n<b>melding
     ResServer --> PEP: <b>GraphQL 200 response
     deactivate ResServer
-
+    note over PDP, ResServer #pink: Er komt een nieuwe RFC voor \nfoutafhandeling door de GraphQL-server
     PEP --> Resource: GraphQL 200 response
     deactivate PEP 
     Resource --> Resource: verwerk GraphQL 200 response

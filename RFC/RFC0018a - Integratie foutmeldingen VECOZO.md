@@ -1,8 +1,10 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
 # CONCEPT - RFC0018a - Addendum A: Integratie foutmeldingen VECOZO
-  
-Deze Request for Comment is een aanvulling op [RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md) 
+
+> [!CAUTION]
+> Deze RFC is niet bijgewerkt met de laatste versie van RFC0018  
+> Deze Request for Comment is een aanvulling op [RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md) 
 
 <font size="4">**SAMENVATTING**</font>
 
