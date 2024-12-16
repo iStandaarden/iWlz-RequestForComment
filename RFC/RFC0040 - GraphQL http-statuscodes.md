@@ -43,24 +43,26 @@ In de tabel hieronder worden per HTTP-statuscode de beschrijving, de betekenis e
 |--------|--------------|-----------|----------------------------------|
 | _**2xx**_    | _**Correcte status HTTP-server**_  | | |
 | 200    | OK | Geeft aan dat het verzoek is geslaagd. | Bron beschikbaar, Raadpleeg indicatie verzoek ontvangen |
-| 201    | CREATED | Geeft aan dat het verzoek is geslaagd en dat er een nieuwe bron is gemaakt als resultaat. | Abonnement aangemaakt |
-| 202    | ACCEPTED | Geeft aan dat het verzoek is ontvangen maar nog niet is voltooid. | Wordt meestal gebruikt voor langlopende verzoeken en batchverwerking. |
-| 204    | NO CONTENT | De server heeft aan het verzoek voldaan maar hoeft geen responslichaam terug te sturen. | De server kan de bijgewerkte metagegevens retourneren. |
 | _**4xx**_     | _**Probleemstatus bij HTTP-client**_  | | |
 | 400    | BAD REQUEST | Het verzoek kon niet worden begrepen door de server vanwege een onjuiste syntaxis. | Ongeldig Wlz-indicatie-ID |
-| 401    | UNAUTHORIZED | Geeft aan dat het verzoek gebruikersauthenticatie-informatie vereist. | Raadpleging met ontbrekende autorisatie-header |
-| 403    | FORBIDDEN | Ongeautoriseerd verzoek. De client heeft geen toegangsrechten tot de inhoud. | Raadpleging gecombineerd met onvoldoende rechten |
-| 404    | NOT FOUND | De server kan de gevraagde bron niet vinden. | Geen Wlz-indicatie gevonden |
-| 429    | TOO MANY REQUEST | De gebruiker heeft te veel verzoeken verzonden binnen een bepaalde tijd ("rate limiting"). | DDoS-aanval vanuit een gehackte zorgaanbieder |
+gehackte zorgaanbieder |
 | _**5xx**_    | _**Probleemstatus bij HTTP-server**_ | | |
-| 500    | INTERNAL SERVER ERROR | De server heeft een onverwachte voorwaarde aangetroffen die het verhinderde om aan het verzoek te voldoen. | Er is een onverwachte (technische) fout opgetreden in het nID stelsel. |
+
 | 503    | SERVICE UNAVAILABLE | De server is niet gereed om het verzoek te verwerken. | Geretourneerd wanneer een service is uitgeschakeld vanwege bijvoorbeeld onderhoud of overbelasting. |
-| 504    | GATEWAY TIMEOUT | De server, terwijl hij fungeerde als een gateway of proxy, kreeg geen tijdige reactie van de upstream-server die nodig was om het verzoek te voltooien. | In het iWlz-netwerkmodel kunnen datastations alleen met elkaar communiceren via nID (nID = gateway), indien nID geen antwoord binnen de gestelde tijd ontvangt van de bestemmingsretourneert nID een 504. |
+
 
 
 # X. Referenties
 
+Hieronder de verwijzingen naar relevante artikelen.
+
 | Onderwerp                                  |                                                                          |
 | ------------------------------------------ | ------------------------------------------------------------------------ |
 | Overzicht http status codes | https://www.rfc-editor.org/rfc/rfc9110.html#name-status-codes |
-| GraphQL status codes | 
+| GraphQL status codes | https://graphql.github.io/graphql-over-http/draft/#sec-Status-Codes |
+| Foutmeldingen RFC0014 - OAuth 2.0 | https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md#6-foutmeldingen |
+| Http reponses uit OPA op notificatie | https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0008%20-%20Notificaties.md#36-notificatie-responses-vanuit-opa |
+| Http responses uit OPA op melding | https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md#36-response-op-inzenden-foutmelding-vanuit-opa |
+
+
+
