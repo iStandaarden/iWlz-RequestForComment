@@ -24,6 +24,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/12) om de actue
 ---
 ## Inhoudsopgave
 - [1. Inleiding](#1-inleiding)
+  - [1.1 iWlz netwerk opzet](#11-iwlz-netwerk-opzet)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
 - [2. Statuscodes](#2-statuscodes)
 - [X. Referenties](#x-referenties)
@@ -31,7 +32,49 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/12) om de actue
 
 ---
 # 1. Inleiding
-Deze RFC beschrijft de afspraken rondom het gebruik van HTTP-statuscodes in het iWlz-netwerkmodel.
+Deze RFC beschrijft de afspraken rondom het gebruik van HTTP-statuscodes in de response in het iWlz-netwerkmodel en in het bijzonder de afhandeling van ***'bad-results'*** op een **GrapQL Request**. 
+
+## 1.1 iWlz netwerk opzet
+
+```mermaid
+---
+config:
+  theme: neutral
+---
+sequenceDiagram
+autonumber
+  actor Client
+  box lightyellow nID
+  participant authz as oAuth-server
+  participant PEP
+  end
+  box lightgreen Resource
+  participant Resource
+  end
+  Client->>+authz: request authorisation
+  activate Client
+  authz-->>-Client: token
+  deactivate Client
+  Client->>+PEP: GraphQL request + token
+  
+
+  activate Client
+  activate PEP
+  PEP->>Resource: GraphQL request forward
+  
+  activate PEP
+  activate Resource
+
+  Resource-->>PEP: GraphQL response
+  deactivate Resource
+  deactivate PEP
+  PEP-->> Client: GraphQL response forward
+  deactivate PEP
+  deactivate Client
+
+```
+
+
 
 ## 1.1 Uitgangspunten
 >```nog invullen```
