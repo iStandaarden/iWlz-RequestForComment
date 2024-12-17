@@ -1,0 +1,37 @@
+---
+config:
+  theme: neutral
+---
+sequenceDiagram
+autonumber
+  actor Client
+  box lightyellow nID
+  participant authz as oAuth-server
+  participant PEP
+  end
+  box lightgreen Resource
+  participant Resource
+  end
+  Client->>+authz: request authorisation 
+  activate Client
+  authz ->> authz: validatie 1
+  authz-->>-Client: token
+  deactivate Client
+
+  activate Client
+  activate PEP
+  Client->>+PEP: GraphQL request + token
+  PEP ->> PEP: validatie 2 
+  PEP->>Resource: GraphQL request forward
+  
+  activate PEP
+  activate Resource
+
+  Resource-->>PEP: GraphQL response
+  deactivate Resource
+  deactivate PEP
+  PEP-->> Client: GraphQL response forward
+  deactivate PEP
+  deactivate Client
+
+
