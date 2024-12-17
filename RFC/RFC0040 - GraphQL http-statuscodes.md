@@ -1,8 +1,7 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-<font size="7">**RFC0040 - GraphQL HTTP-statuscodes**</font>
+# RFC0040 - GraphQL HTTP-statuscodes
 
----
 
 > [!CAUTION]  
 > **Deze Reqeust for comment is nog onderhanden en inhoud is sterk aan wijzigingen onderhevig**
