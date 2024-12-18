@@ -2,6 +2,9 @@
 
 # RFC0009 - HTTP-statuscodes (vervallen)
 
+> [!WARNING]
+> **Deprecated. Vervangen door [RFC0040 - GraphQL HTTP-statuscodes](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0040%20-%20GraphQL%20http-statuscodes.md)** 
+
 <font size="4">**SAMENVATTING**</font>
 
 **Huidige situatie:**
