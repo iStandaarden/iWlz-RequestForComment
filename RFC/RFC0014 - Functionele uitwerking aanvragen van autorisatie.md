@@ -49,7 +49,7 @@ Inhoudsopgave
     - [\[04\] 403 Invalid Client Certificate](#04-403-invalid-client-certificate)
     - [\[05\] 404 Not Found](#05-404-not-found)
     - [\[06\] 500 Internal Server Error](#06-500-internal-server-error)
-  - [6.2 Foutmeldingen PEP endpoint bij GraphQL request](#62-foutmeldingen-pep-endpoint-bij-graphql-request)
+  - [6.2 Foutmeldingen PEP endpoint op GraphQL request](#62-foutmeldingen-pep-endpoint-op-graphql-request)
     - [\[07\] 400 Invalid Query Syntax](#07-400-invalid-query-syntax)
     - [\[08\] 400 No Operation](#08-400-no-operation)
     - [\[09\] 400 Invalid Scope](#09-400-invalid-scope)
@@ -648,7 +648,7 @@ query Bemiddelingspecificatie(
   Een onverwachte fout is opgetreden op de autorisatieserver. Probeer het later opnieuw of volg het incidentbeheerproces indien nodig.
 
 
-## 6.2 Foutmeldingen PEP endpoint bij GraphQL request
+## 6.2 Foutmeldingen PEP endpoint op GraphQL request
 
 
 ### [07] 400 Invalid Query Syntax
