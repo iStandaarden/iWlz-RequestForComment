@@ -30,10 +30,18 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/19) om de actue
 
 ---
 # 1. Inleiding
-Enerzijds vanuit de behoeften die zullen ontstaan wanneer het netwerkmodel domeinsoverstijgend zal worden ingevuld en er meer toepassingen zullen worden gedefinieerd, en anderszijds vanuit de koers binnen de IZA en NVS op databeschikbaarheid is er ook voor de WLZ-gegevens behoefte aan lokalisatiefunctionaliteit. Dit RfC gaat uit van gebruik van de landelijke lokalisatievoorziening en NEN7519. De RfC schrijft hoe binnen het netwerkmodel zoeken zal werken en welke voorzieningen de deelnemers in hun systemen moeten inbouwen om dit voor de LWZ gegevens integraal mogelijk te maken.
+Op middellange termijn is er voor het delen en (her)gebruiken van WLZ-gegevens behoefte aan een lokalisatiefunctionaliteit: 
+- vanuit de behoeften die zullen ontstaan wanneer het netwerkmodel domeinsoverstijgend wordt ingevuld;
+- wanneer er meer toepassingen worden gedefinieerd "on top of" het reguliere toeleidingsproces;
+- om gevolg te geven aan de (algemene) koers binnen de IZA en NVS op databeschikbaarheid.
+
+Dit RfC beschrijft hoe binnen de deelnemers in het netwerk voorzieningen in hun systemen moeten inbouwen om lokalisatie van de WLZ gegevens mogelijk te maken. Ook beschrijft waar WLZ-gegevens van een client voor primair en secundair gebruik van deze gegevens gevonden kunnen worden. 
 
 ## 1.1. Uitgangspunten
->```nog invullen```
+Voor de lokalisatiefunctie binnen de WLZ kunnen de volgende uitgangspunten worden onderscheiden:
+- Aansluiten op NEN719. NEN 7519 behandelt de generieke functie lokalisatie: het bepalen waar welke gegevens van de patiënt of cliënt zijn. Voor primaire en secundair gebruik van gegevens. NEN 7519 beschrijft de lokalisatiefunctie voor zorgverlening aan een individuele patiënt;
+- Aansluiten op de wijze waarop de generieke functies "lokalisatie" wordt ingevuld;
+- grondslagen op basis waarvan toestemming gegeven kan worden om de clientgegevens te lokaliseren. De AVG in het algemeen en de WLZ in bijzonder fungeren hier als nkade.
 
 ## 1.2 Relatie andere RFC
 Deze RFC heeft een relatie met de volgende RFC(s)
