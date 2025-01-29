@@ -30,7 +30,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/19) om de actue
 
 ---
 # 1. Inleiding
->```nog invullen```
+Enerzijds vanuit de behoeften die zullen ontstaan wanneer het netwerkmodel domeinsoverstijgend zal worden ingevuld en er meer toepassingen zullen worden gedefinieerd, en anderszijds vanuit de koers binnen de IZA en NVS op databeschikbaarheid is er ook voor de WLZ-gegevens behoefte aan lokalisatiefunctionaliteit. Dit RfC gaat uit van gebruik van de landelijke lokalisatievoorziening en NEN7519. De RfC schrijft hoe binnen het netwerkmodel zoeken zal werken en welke voorzieningen de deelnemers in hun systemen moeten inbouwen om dit voor de LWZ gegevens integraal mogelijk te maken.
 
 ## 1.1. Uitgangspunten
 >```nog invullen```
