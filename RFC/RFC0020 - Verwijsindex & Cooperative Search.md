@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0020 - Verwijsindex & Cooperative Search
+# RFC0020 - Verwijsindex & Search met generieke functie lokalisatie
 
 <font size="4">**SAMENVATTING**</font>
 
