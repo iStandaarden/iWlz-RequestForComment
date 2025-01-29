@@ -10,7 +10,9 @@
 
 **Beoogde situatie**
 
->```nog invullen```
+>Vanuit het IZA en de NVS wordt er ingezet op databeschikbaarheid en delen van gezondheidsinformatie. In het verlengde hiervan en van de Wegiz is een aantal generieke functies benoemd die de (verplichte) digitale uitwisseling van gezondheidsgegevens zullen ondersteunen.  Een daarvan is de “lokalisatievoorziening” om te kunnen achterhalen waar gezondheidsgegevens van burgers terug te vinden zijn. 
+Het programma Implementatie generieke functies van het Ministerie van VWS ontwikkelt samen met vertegenwoordigers uit het zorgveld deze generieke functies, waaronder een voor lokalisatie. In de normatieve “Architectuur voor het Gezondheidsinformatiestelsel” die ook voor de iWLZ zal gelden, zal de interactie met de generieke functies worden uitgewerkt. Tenslotte behandelt de NEN 7519 de generieke functie lokalisatie.
+>Dit alles betekent dat ook in het netwerkmodel lokalisatie ingebouwd zal moeten worden. Dit is enerzijds om binnen de Wlz flexibeler, dus buiten het strakke Wlz-proces om, clientgegevens te kunnen zoeken en vinden, en anderzijds om verschillende varianten van secundair datagebruik mogelijk te maken en volledig te kunnen bijdragen aan de doelstelling van databeschikbaarheid van gezondheidinformatie zoals benoemd in het IZA en de NVS.  
 
 
 <font size="4">**Status RFC**</font>
