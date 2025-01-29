@@ -6,7 +6,7 @@
 
 **Huidige situatie:**
 
->```nog invullen```
+>In de eerste releases van de iWLZ is er nog geen behoefte om iWLZ-gegevens te kunnen zoeken (=lokaliseren). In het proces van de WLZ ligt verborgen dat de deelnemers weten bij welke andere deelnemers WLZ-gegevens beschikbaar zijn. Bv via het indicatieregister bij het CIZ kan worden bepaald of een burger voorkomt in de WLZ en via het bemiddelingsregister kan de zorgaanbieder worden gelokaliseerd die zorgleveringsgegevens heeft. Om deze reden zijn er nog geen specifieke lokalisatiefunctie gedefinieerd.
 
 **Beoogde situatie**
 
