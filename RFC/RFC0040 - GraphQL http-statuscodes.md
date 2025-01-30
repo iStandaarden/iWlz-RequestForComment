@@ -1,14 +1,14 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0040 - GraphQL gebruik HTTP statuscodes
+# RFC0040 - GraphQL gebruik HTTP-statuscodes
 
 > [!CAUTION]  
-> **Deze Reqeust for comment is nog onderhanden en inhoud is sterk aan wijzigingen onderhevig**
+> **Deze Reqeust for comment is nog onderhanden en inhoud is nog aan wijzigingen onderhevig**
 
 TODO:
-- [ ] nalopen spelling statuscode of status-code
-- [ ] spelling HTTP-status of HTTP-statuscode
-
+- [ ] Keuze mediatype
+- [ ] Bepalen welke extensions.code er worden gebruikt
+- [ ] Bepalen welke validatiemomenten onderdeel zijn van de GraphQL error structuur
 
 ## Samenvatting
 
@@ -16,17 +16,30 @@ TODO:
 
 Er is in het technische afstemmingsoverleg afgesproken dat het gebruik van HTTP-statuscodes binnen het (iWlz-) netwerk worden gereguleerd en situationeel worden bepaald. Hierom is de eerdere Request for Comment [RFC0009](https://github.com/iStandaarden/iWlz-RequestForComment/issues/12) over dit onderwerp is daarom ook komen te vervallen. Die was te globaal van opzet.
 
-De uitwissel standaard binnen het netwerk is GraphQL. De standaard van GraphQL schrijft ook een wijze van gebruik van HTTP-statuscodes voor en met name het gebruik van _http 200 OK-status_ behoeft in deze contect meer uitleg omdat er bij een GraphQL Response met _HTTP 200 OK-status_ niet automatische vanuit kan gaan dat het beoogde resultaat is bereikt.
+GraphQL is de standaard voor gegevensuitwisseling binnen het iWlz-netwerk. Afhankelijk van het gehanteerde mediatype in de HTTP header is enkel een HTTP 200 OK statuscode toegestaan of mogen er bij fouten ook HTTP 4xx of 5xx statuscodes worden gebruikt.
+
+De HTTP 200 OK-status betekent daarom niet altijd dat een verzoek volledig succesvol is. Een GraphQL-response kan syntactisch correct zijn, maar nog steeds inhoudelijke fouten bevatten.
+
+Een GraphQL-response bevat standaard:
+- data: De opgevraagde gegevens.
+- errors: Een lijst met foutmeldingen, inclusief details zoals locaties en foutcodes.
+
+Er is geen standaard voor de foutcodes, maar hier kunnen wel afspraken over gemaakt worden. 
+
+Tenslotte zijn er in het iWlz netwerk twee momenten waarop een evaluatie van het GraphQL-request plaatsvindt (PEP en Resourceserver). 
+ 
 
 **Beoogde situatie**
 
-Duidelijkheid geven van welke situatie(s) er sprake kan zijn bij een GraphQL-response.
+- Duidelijkheid geven van welke situatie(s) er sprake kan zijn bij een GraphQL-response.
+- Welke mediatype er word gebruikt
+- Welke extension.codes worden gebruikt
 
 ---
 
 ## Inhoudsopgave
 
-- [RFC0040 - GraphQL gebruik HTTP statuscodes](#rfc0040---graphql-gebruik-http-statuscodes)
+- [RFC0040 - GraphQL gebruik HTTP-statuscodes](#rfc0040---graphql-gebruik-http-statuscodes)
   - [Samenvatting](#samenvatting)
   - [Inhoudsopgave](#inhoudsopgave)
 - [1. Inleiding](#1-inleiding)
@@ -41,11 +54,9 @@ Duidelijkheid geven van welke situatie(s) er sprake kan zijn bij een GraphQL-res
     - [2.4.1 Voorbeeld Response met gedeeltelijk data-resultaat](#241-voorbeeld-response-met-gedeeltelijk-data-resultaat)
     - [2.4.2 Voorbeeld  bij een volledige fout](#242-voorbeeld--bij-een-volledige-fout)
   - [2.5 Conclusie](#25-conclusie)
-- [3. iWlz netwerk validatiemomenten](#3-iwlz-netwerk-validatiemomenten)
-  - [3.1 Validaties en responses](#31-validaties-en-responses)
-- [3. GraphQL statuscodes](#3-graphql-statuscodes)
-  - [3.x GraphQL response format](#3x-graphql-response-format)
-  - [3.x GraphQL extension.codes lijst](#3x-graphql-extensioncodes-lijst)
+- [3. GraphQL extensions.code](#3-graphql-extensionscode)
+- [4. iWlz netwerk validatiemomenten](#4-iwlz-netwerk-validatiemomenten)
+  - [4.1 Validaties en responses](#41-validaties-en-responses)
 - [X. Referenties](#x-referenties)
 
 
@@ -66,8 +77,8 @@ Deze RFC beschrijft de richtijnen rondom het gebruik van HTTP-statuscodes op een
 2. Alleen als er sprake is van een GraphQL endpoint (of Resource-server) waar daadwerkelijk sprake is van afhandeling van het GraphQL Request moet er **altijd** gereageerd worden met een HTTP 200 OK-status wanneer de GraphQL correct geinterpreteerd kan worden (zie uitgangspunt 1).
 3. Een HTTP 200 OK-status response vanuit een GraphQL-server (of Resource-server) op een GraphQL Request kan inhoudelijk verwijzingen naar fouten bevatten.
 4. Wanneer er geen sprake is van directe afhandeling van het GraphQL-request, maar bijvoorbeeld sprake is van autorisatie controle van het GraphQL request mag er afgeweken worden van uitgangspunt 1 en 2.
-5. De indeling van HTTP status-codes volgt de internet standaard met betrekking tot HTTP-semantiek beschreven in [RFC9110](https://www.rfc-editor.org/rfc/rfc9110).
-6. De situationele HTTP statuscodes zijn en worden beschreven in afzonderlijke Request For Comment (zie onder referenties).
+5. De indeling van HTTP-statuscodes volgt de internet standaard met betrekking tot HTTP-semantiek beschreven in [RFC9110](https://www.rfc-editor.org/rfc/rfc9110).
+6. De situationele HTTP-statuscodes zijn en worden beschreven in afzonderlijke Request For Comment (zie onder referenties).
 
 ## 1.2 Status RFC
 
@@ -339,7 +350,69 @@ Status: 400 Bad Request
 - Gebruik `application/json` als je backward compatibility nodig hebt of met oudere systemen werkt.
 - Gebruik `application/graphql-response+json` als je een modernere, robuustere aanpak voor foutafhandeling wilt, met duidelijke HTTP-statuscodes.
 
-# 3. iWlz netwerk validatiemomenten
+
+# 3. GraphQL extensions.code
+
+Het standaard GraphQL-response schema biedt ruimte voor gestandaardiseerde fout categorisering. Hiervoor is het element `extensions.code`. 
+
+Voorbeeld uit paragraaf 2.1
+```json
+  {
+    "data": {
+      "userID": "123"
+    },
+    "errors": [
+      {
+        "message": "some message",
+        "locations": [
+          { "line": 2, "column": 3 }
+        ],
+        "path": ["path/to/"],
+        "extensions": {
+          "code": "STANDAARD_FOUTCODE",
+          "timestamp": "2024-11-18T10:15:00Z"
+        }
+      }
+    ]
+  }
+```
+
+Veelvoorkomende extensions.code waarden:
+
+1. **BAD\_USER\_INPUT**  
+   1. **Betekenis:** De invoer van de gebruiker is ongeldig, zoals onjuiste waarden of ontbrekende verplichte velden.  
+   2. **Gebruik:** Bijvoorbeeld bij een validatiefout in een invoerveld.  
+2. **UNAUTHENTICATED**  
+   1. **Betekenis:** De gebruiker is niet geauthenticeerd en de actie vereist authenticatie.  
+   2. **Gebruik:** Wanneer een token ontbreekt of ongeldig is.  
+3. **FORBIDDEN**  
+   1. **Betekenis:** De gebruiker is geauthenticeerd, maar heeft geen toestemming om de actie uit te voeren.  
+   2. **Gebruik:** Bijvoorbeeld bij een poging tot toegang tot een beveiligd veld of actie waarvoor de gebruiker niet de juiste rechten heeft.  
+4. **NOT\_FOUND**  
+   1. **Betekenis:** Het opgevraagde object of resource bestaat niet.  
+   2. **Gebruik:** Bijvoorbeeld bij een query voor een niet-bestaande ID.  
+5. **INTERNAL\_SERVER\_ERROR**  
+   1. **Betekenis:** Een onverwachte fout aan de serverzijde.  
+   2. **Gebruik:** Wanneer een onvoorziene fout optreedt, zoals een bug of een fout in een databaseverbinding.  
+6. **GRAPHQL\_VALIDATION\_FAILED**  
+   1. **Betekenis:** De query voldoet niet aan de GraphQL-validatieregels.  
+   2. **Gebruik:** Bijvoorbeeld bij een onjuist veldtype of syntaxisfout in de query.  
+7. **PERSISTED\_QUERY\_NOT\_FOUND**  
+   1. **Betekenis:** Een bewaarde query (persisted query) kon niet worden gevonden op de server.  
+   2. **Gebruik:** Vaak in caching-omgevingen waarbij een ID van een opgeslagen query niet overeenkomt.  
+8. **PERSISTED\_QUERY\_NOT\_SUPPORTED**  
+   1. **Betekenis:** De server ondersteunt geen bewaarde queries.  
+   2. **Gebruik:** Als een client per ongeluk een persisted query verzendt naar een server die dit niet ondersteunt.  
+9. **RATE\_LIMITED**  
+   1. **Betekenis:** De client heeft de toegestane limiet voor verzoeken overschreden.  
+   2. **Gebruik:** Bij throttling of API-rate-limiting mechanismen.  
+10. **CONFLICT**  
+    1. **Betekenis:** Er is een versieconflict of een andere bewerkingsconflict opgetreden.  
+    2. **Gebruik:** Bij bijvoorbeeld simultane updates van dezelfde resource.
+
+
+
+# 4. iWlz netwerk validatiemomenten
 
 Op dit moment zijn er drie soorten verkeer binnen het iWlz netwerk:
 
@@ -411,7 +484,7 @@ autonumber
 | 7   | Response (GraphQL)         | De resource-server stuurt het GraphQL resultaat terug.                                                                         |
 | 8   | Response (GraphQL) forward | De PEP routeert het resultaat terug aan de client.                                                                             |
 
-## 3.1 Validaties en responses
+## 4.1 Validaties en responses
 
 ```mermaid
 ---
@@ -471,21 +544,15 @@ sequenceDiagram
 
 | Validatiemoment | Doel | GraphQL controle | GraphQL Verwerking |
 |---|---|---|---|
-| Validatiemoment 1: Autorisatieserver | **Doel:** Uitgeven van autorisatie token voor het mogen uitvoeren van een GraphQL request.  <br/><br/>Client kan toestemming vragen voor het uitsturen van een GraphQL-request. Bij het ontvangen van het verzoek en valideren ervan vinden de volgende acties plaats:      <br/>•  De autorisatieserver valideert de client o.b.v. het aangeboden authenticatiemiddel      <br/>•  De autorisatieserver doorloopt voor elke aanvraag (scope) de rule-engine.      <br/>•  In de rule-engine wordt de scope gevalideerd m.b.v. de ingestelde regels voor de aangevraagde scope(s).      <br/><br/>Indien succesvol doorlopen wordt er een access-token wordt gegenereerd, hierin zijn de scopes en de resources verwerkt en auitgedeeld aan de client.     <br/><br/>Bij een fout-situatie worden er reguliere HTTP status-codes teruggegeven in de range 40x en 50x. De specificatie daarvan voor dit moment is te vinden in: [RFC0014 - Functionele uitwerking aanvragen van autorisatie - 6.1 Foutmeldingen Aanvraag van Autorisatie](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md#6-foutmeldingen) | Nee | Nee |
-| Validatiemoment 2: PEP | **Doel:** controleren toegang tot (GraphQL-) Resource-server    <br/><br/>Een “Policy Enforcement Point” (kortweg PEP) regelt toegang tot resource-servers van deelnemers en beschermt deze resource-servers tegen ongeautoriseerde toegang/verzoeken.      <br/>•  PEP: Valideren van de client o.b.v. het aangeboden authenticatiemiddel.    <br/>•  PEP: Valideren van de access-token o.a. op eigenaar en geldigheid.      <br/><br/>Bij een fout-situatie worden er reguliere HTTP status-codes teruggegeven in de range 40x en 50x. De specificatie daarvan voor dit moment is te vinden in: [RFC0014 - Functionele uitwerking aanvragen van autorisatie - 6.2 Foutmeldingen PEP endpoint op GraphQL request](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md#6-foutmeldingen) | Nee | Nee |
-| Validatiemoment 3: PDP | **Doel:** controleren of GraphQL-request is toegestaan voor deelnemer    <br/><br/>Een “Policy Decision Point” (kortweg PDP) is verantwoordelijk voor het nemen van beslissingen over toegangsverzoeken. Het GraphQL-request wordt vanuit de PEP aangeboden aan de PDP om te beoordelen of deelnemer de ingediende query mag uitvoeren en of de verplichte onderdelen aanwezig zijn.    <br/>•  PDP: Bepalen of de query aan de gestelde policy of beleidsregel voldoet.      <br/><br/>Bij een fout-situatie worden er reguliere HTTP status-codes teruggegeven in de range 40x en 50x. De specificatie daarvan voor dit moment is te vinden in: [RFC0014 - Functionele uitwerking aanvragen van autorisatie - 6.2 Foutmeldingen PEP endpoint op GraphQL request](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md#6-foutmeldingen) | Ja (maar nooit {data})| Nee |
-| Validatiemoment 4: (GraphQL) Resource-server | **Doel:** Afhandelen van het GraphQL-request     <br/><br/>De (GraphQL) Resource-server zorgt voor de afhandeling en vewerking van het GraphQL request. Dit kan betekenen dat er bij een query data wordt teruggegeven, dat de er een bevestiging volgt op juiste ontvangst van een notificatie (GraphQL 200 {data}) of foutmelding of dat de verwerking van het request een ongewenst resultaat geeft (bad-result: GraphQL 200 {error}).  <br/><br/>De afspraken hierover volgen in @@@@  <br/><br/>Is de (GraphQL) Resource-server niet bereikbaar of kan de GraphQL niet verwerkt worden, dan worden er reguliere HTTP status-codes teruggegeven in de range 40x en 50x. De specificatie daarvan voor dit moment is te vinden in:   <br/>• [RFC0014 - Functionele uitwerking aanvragen van autorisatie - #6.2](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md#6-foutmeldingen)  <br/>• [RFC0008 - Notificaties - #3.6](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0008%20-%20Notificaties.md#36-notificatie-responses-vanuit-opa) <br/>• [RFC0018 - Foutmeldingen - #3.6](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md#36-response-op-inzenden-foutmelding-vanuit-opa) | Nee | **Ja** (en data) |
+| Validatiemoment 1: Autorisatieserver | **Doel:** Uitgeven van autorisatie token voor het mogen uitvoeren van een GraphQL request.  <br/><br/>Client kan toestemming vragen voor het uitsturen van een GraphQL-request. Bij het ontvangen van het verzoek en valideren ervan vinden de volgende acties plaats:      <br/>•  De autorisatieserver valideert de client o.b.v. het aangeboden authenticatiemiddel      <br/>•  De autorisatieserver doorloopt voor elke aanvraag (scope) de rule-engine.      <br/>•  In de rule-engine wordt de scope gevalideerd m.b.v. de ingestelde regels voor de aangevraagde scope(s).      <br/><br/>Indien succesvol doorlopen wordt er een access-token wordt gegenereerd, hierin zijn de scopes en de resources verwerkt en auitgedeeld aan de client.     <br/><br/>Bij een fout-situatie worden er reguliere HTTP-statuscodes teruggegeven in de range 40x en 50x. De specificatie daarvan voor dit moment is te vinden in: [RFC0014 - Functionele uitwerking aanvragen van autorisatie - 6.1 Foutmeldingen Aanvraag van Autorisatie](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md#6-foutmeldingen) | Nee | Nee |
+| Validatiemoment 2: PEP | **Doel:** controleren toegang tot (GraphQL-) Resource-server    <br/><br/>Een “Policy Enforcement Point” (kortweg PEP) regelt toegang tot resource-servers van deelnemers en beschermt deze resource-servers tegen ongeautoriseerde toegang/verzoeken.      <br/>•  PEP: Valideren van de client o.b.v. het aangeboden authenticatiemiddel.    <br/>•  PEP: Valideren van de access-token o.a. op eigenaar en geldigheid.      <br/><br/>Bij een fout-situatie worden er reguliere HTTP-statuscodes teruggegeven in de range 40x en 50x. De specificatie daarvan voor dit moment is te vinden in: [RFC0014 - Functionele uitwerking aanvragen van autorisatie - 6.2 Foutmeldingen PEP endpoint op GraphQL request](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md#6-foutmeldingen) | Nee | Nee |
+| Validatiemoment 3: PDP | **Doel:** controleren of GraphQL-request is toegestaan voor deelnemer    <br/><br/>Een “Policy Decision Point” (kortweg PDP) is verantwoordelijk voor het nemen van beslissingen over toegangsverzoeken. Het GraphQL-request wordt vanuit de PEP aangeboden aan de PDP om te beoordelen of deelnemer de ingediende query mag uitvoeren en of de verplichte onderdelen aanwezig zijn.    <br/>•  PDP: Bepalen of de query aan de gestelde policy of beleidsregel voldoet.      <br/><br/>Bij een fout-situatie worden er reguliere HTTP-statuscodes teruggegeven in de range 40x en 50x. De specificatie daarvan voor dit moment is te vinden in: [RFC0014 - Functionele uitwerking aanvragen van autorisatie - 6.2 Foutmeldingen PEP endpoint op GraphQL request](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md#6-foutmeldingen) | Ja (maar nooit {data})| Nee |
+| Validatiemoment 4: (GraphQL) Resource-server | **Doel:** Afhandelen van het GraphQL-request     <br/><br/>De (GraphQL) Resource-server zorgt voor de afhandeling en vewerking van het GraphQL request. Dit kan betekenen dat er bij een query data wordt teruggegeven, dat de er een bevestiging volgt op juiste ontvangst van een notificatie (GraphQL 200 {data}) of foutmelding of dat de verwerking van het request een ongewenst resultaat geeft (bad-result: GraphQL 200 {error}).  <br/><br/>De afspraken hierover volgen in @@@@  <br/><br/>Is de (GraphQL) Resource-server niet bereikbaar of kan de GraphQL niet verwerkt worden, dan worden er reguliere HTTP-statuscodes teruggegeven in de range 40x en 50x. De specificatie daarvan voor dit moment is te vinden in:   <br/>• [RFC0014 - Functionele uitwerking aanvragen van autorisatie - #6.2](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md#6-foutmeldingen)  <br/>• [RFC0008 - Notificaties - #3.6](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0008%20-%20Notificaties.md#36-notificatie-responses-vanuit-opa) <br/>• [RFC0018 - Foutmeldingen - #3.6](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md#36-response-op-inzenden-foutmelding-vanuit-opa) | Nee | **Ja** (en data) |
 
 
 
 
 
-# 3. GraphQL statuscodes
-
-
-## 3.x GraphQL response format
-
-## 3.x GraphQL extension.codes lijst
 
 # X. Referenties
 
@@ -493,7 +560,7 @@ Hieronder de verwijzingen naar relevante artikelen.
 
 | Onderwerp                            |                                                                                                                                                                                                          |
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Overzicht HTTP status codes          | https://www.rfc-editor.org/rfc/rfc9110.html#name-status-codes                                                                                                                                            |
+| Overzicht HTTP-statuscodes          | https://www.rfc-editor.org/rfc/rfc9110.html#name-status-codes                                                                                                                                            |
 | GrapQL over HTTP                     | https://graphql.org/learn/serving-over-http/                                                                                                                                                             |
 | GraphQL status codes                 | https://graphql.github.io/graphql-over-http/draft/#sec-Status-Codes                                                                                                                                      |
 | Foutmeldingen RFC0014 - OAuth 2.0    | https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0014%20-%20Functionele%20uitwerking%20aanvragen%20van%20autorisatie.md#6-foutmeldingen                                           |
