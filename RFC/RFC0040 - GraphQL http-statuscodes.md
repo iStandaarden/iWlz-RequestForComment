@@ -7,7 +7,7 @@
 
 TODO:
 - [ ] nalopen spelling statuscode of status-code
-- [ ] spelling HTTP-status of HTTP status
+- [ ] spelling HTTP-status of HTTP-statuscode
 
 
 ## Samenvatting
@@ -16,11 +16,11 @@ TODO:
 
 Er is in het technische afstemmingsoverleg afgesproken dat het gebruik van HTTP-statuscodes binnen het (iWlz-) netwerk worden gereguleerd en situationeel worden bepaald. Hierom is de eerdere Request for Comment [RFC0009](https://github.com/iStandaarden/iWlz-RequestForComment/issues/12) over dit onderwerp is daarom ook komen te vervallen. Die was te globaal van opzet.
 
-De uitwissel standaard binnen het netwerk is GraphQL. De standaard van GraphQL schrijft ook een wijze van gebruik van HTTP statuscodes voor en met name het gebruik van _http 200 OK-status_ behoeft in deze contect meer uitleg omdat er bij een GraphQL Response met _http 200 OK-status_ niet automatische vanuit kan gaan dat het beoogde resultaat is bereikt.
+De uitwissel standaard binnen het netwerk is GraphQL. De standaard van GraphQL schrijft ook een wijze van gebruik van HTTP-statuscodes voor en met name het gebruik van _http 200 OK-status_ behoeft in deze contect meer uitleg omdat er bij een GraphQL Response met _HTTP 200 OK-status_ niet automatische vanuit kan gaan dat het beoogde resultaat is bereikt.
 
 **Beoogde situatie**
 
-Duidelijkheid van welke situatie er sprake is bij een GraphQL 200 OK-status met een **_bad-result_** inhoud.
+Duidelijkheid geven van welke situatie(s) er sprake kan zijn bij een GraphQL-response.
 
 ---
 
@@ -34,48 +34,29 @@ Duidelijkheid van welke situatie er sprake is bij een GraphQL 200 OK-status met 
   - [1.2 Status RFC](#12-status-rfc)
 - [2. GraphQL over HTTP](#2-graphql-over-http)
   - [2.1 Standaard GraphQL response](#21-standaard-graphql-response)
-  - [2.2 `application/json` of `application/graphql-response+json`](#22-applicationjson-of-applicationgraphql-responsejson)
-    - [2.2.1 `application/json`](#221-applicationjson)
-    - [2.2.2. `application/graphql-response+json`](#222-applicationgraphql-responsejson)
-    - [**Response met `application/json`**](#response-met-applicationjson)
-      - [HTTP Header](#http-header)
-      - [Body](#body)
-    - [**Uitleg van het voorbeeld**](#uitleg-van-het-voorbeeld)
-    - [**Alternatief: Volledige fout**](#alternatief-volledige-fout)
-      - [HTTP Header](#http-header-1)
-      - [Body](#body-1)
-    - [**Belangrijk verschil met `application/graphql-response+json`:**](#belangrijk-verschil-met-applicationgraphql-responsejson)
-    - [**Response met `application/graphql-response+json`**](#response-met-applicationgraphql-responsejson)
-      - [HTTP Header](#http-header-2)
-      - [Body](#body-2)
-    - [**Uitleg van het voorbeeld**](#uitleg-van-het-voorbeeld-1)
-    - [**Alternatief voorbeeld bij een volledige fout**](#alternatief-voorbeeld-bij-een-volledige-fout)
-      - [HTTP Header](#http-header-3)
-      - [Body](#body-3)
-    - [**Samenvatting**](#samenvatting-1)
-    - [**Conclusie**](#conclusie)
-    - [**Voorbeeld**](#voorbeeld)
-    - [**Uitleg**](#uitleg)
-    - [**Voorbeeld**](#voorbeeld-1)
-    - [**Uitleg**](#uitleg-1)
-    - [**Wanneer komt dit voor?**](#wanneer-komt-dit-voor)
-    - [**Samenvatting**](#samenvatting-2)
+  - [2.3 Mediatype `application/json`](#23-mediatype-applicationjson)
+    - [2.3.1 Voorbeeld response: gedeeltelijk resultaat](#231-voorbeeld-response-gedeeltelijk-resultaat)
+    - [2.3.2 Voorbeeld Volledige fout](#232-voorbeeld-volledige-fout)
+  - [2.4 Mediatype `application/graphql-response+json`](#24-mediatype-applicationgraphql-responsejson)
+    - [2.4.1 Voorbeeld Response met gedeeltelijk data-resultaat](#241-voorbeeld-response-met-gedeeltelijk-data-resultaat)
+    - [2.4.2 Voorbeeld  bij een volledige fout](#242-voorbeeld--bij-een-volledige-fout)
+  - [2.5 Conclusie](#25-conclusie)
 - [3. iWlz netwerk validatiemomenten](#3-iwlz-netwerk-validatiemomenten)
   - [3.1 Validaties en responses](#31-validaties-en-responses)
-- [3 Error vs bad-result](#3-error-vs-bad-result)
 - [3. GraphQL statuscodes](#3-graphql-statuscodes)
   - [3.x GraphQL response format](#3x-graphql-response-format)
   - [3.x GraphQL extension.codes lijst](#3x-graphql-extensioncodes-lijst)
 - [X. Referenties](#x-referenties)
 
 
+
 ---
 
 # 1. Inleiding
 
-De uitwissel standaard binnen het iWlz netwerk is GraphQL. De standaard van GraphQL beschrijft de wijze van gebruik van HTTP statuscodes voor en met name het gebruik van _http 200 OK-status_ behoeft meer uitleg omdat er bij een GraphQL Response met _HTTP 200 OK statuscode_ niet automatische vanuit kan gaan dat het beoogde resultaat is bereikt.
+De standaard voor gegvevensuitwisseling binnen het iWlz netwerk is GraphQL. De standaard van GraphQL beschrijft de wijze van gebruik van HTTP-statuscodes voor en met name het gebruik van _http 200 OK-status_ behoeft meer uitleg omdat er bij een GraphQL Response met _HTTP 200 OK statuscode_ niet automatische vanuit kan gaan dat het beoogde resultaat is bereikt.
 
-Deze RFC beschrijft de afspraken rondom het gebruik van HTTP-statuscodes op een GraphQL request in de response en gaat in op het onderscheidt tussen **_errors_** en **_'bad-results'_**. Dit is nodig omdat er bij gebruik van GraphQL volgens de standaard sprake kan zijn van beide typen bij een **GrapQL Request**, maar nooit op hetzelfde moment. In het geval dat een GraphQL Request wel een geldige GraphQL response kan opleveren (syntactisch) kan er inhoudelijk nog steeds sprake zijn van een ongewenst resultaat. In dat geval is er sprake van een **_'bad-results'_**
+Deze RFC beschrijft de richtijnen rondom het gebruik van HTTP-statuscodes op een GraphQL request in de response en gaat in op het onderscheidt tussen **_errors_** en **_'bad-results'_**. Dit is nodig omdat er bij gebruik van GraphQL volgens de standaard sprake kan zijn van beide typen bij een **GrapQL Request**, maar nooit op hetzelfde moment. In het geval dat een GraphQL Request wel een geldige GraphQL response kan opleveren (syntactisch) kan er inhoudelijk nog steeds sprake zijn van een ongewenst resultaat. In dat geval is er sprake van een **_'bad-results'_**
 
 ## 1.1 Uitgangspunten
 
@@ -97,11 +78,11 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/40) om de actue
 
 ## 2.1 Standaard GraphQL response
 
-GraphQL responses hebben standaard twee hoofdvelden:
-- **data**: Bevat de gevraagde data als de query succesvol is uitgevoerd.
-- **errors**: Bevat een array van foutmeldingen, indien van toepassing.
+Een GraphQL-response heeft standaard twee hoofdvelden:
+- **data**: Bevat de gevraagde gegevens als de query (gedeeltelijk) succesvol is.
+- **errors**: Bevat een array van foutmeldingen die extra details kunnen bevatten, zoals foutlocaties en foutcodes.
 
-Zelfs bij een 200 OK-status, kan de errors-array worden gebruikt om fouten te communiceren. Hieronder staat een gestandaardiseerde aanpak:
+Ook bij een HTTP 200 OK-status, kan de errors-array worden gebruikt om fouten te communiceren. Hieronder staat een gestandaardiseerde aanpak:
 Responsindeling
 - data:
     - Bevat de data die succesvol is opgehaald.
@@ -135,11 +116,12 @@ Voorbeeld
   }
 ```
 
-## 2.2 `application/json` of `application/graphql-response+json`
-Het verschil tussen `application/json` en `application/graphql-response+json` ligt in hoe de server en de client omgaan met de inhoud en de verwachtingen van de response. Hieronder een overzicht:
+Momenteel zijn er twee mediatypes voor in de HTTP-header bij een GraphQL-responses. Het huidige mediatype `application/json` en het mediatype `application/graphql-response+json` , het nieuwe voorgestelde mediatype voor een fijnmaziger terugkoppeling.
+
+Hieronder de toelichting op de twee typen.
 
 
-### 2.2.1 `application/json`
+## 2.3 Mediatype `application/json`
 - **Algemene JSON-structuur:**  
   - Dit mediatype wordt algemeen gebruikt voor alle soorten JSON-reacties, niet specifiek voor GraphQL.
   - Het kan door verschillende tussenliggende lagen (zoals proxies, API-gateways) worden gewijzigd of gegenereerd.
@@ -158,7 +140,84 @@ Het verschil tussen `application/json` en `application/graphql-response+json` li
   - Foutafhandeling vereist dat de client altijd naar de `errors`-sleutel kijkt.
 
 
-### 2.2.2. `application/graphql-response+json`
+### 2.3.1 Voorbeeld response: gedeeltelijk resultaat
+**HTTP Header**
+```http
+Content-Type: application/json
+Status: 200 OK
+```
+
+**Body**
+```json
+{
+  "data": {
+    "user": {
+      "id": "123",
+      "name": "Alice"
+    },
+    "posts": null
+  },
+  "errors": [
+    {
+      "message": "You do not have permission to access the 'posts' field.",
+      "locations": [
+        {
+          "line": 3,
+          "column": 5
+        }
+      ],
+      "path": ["posts"]
+    }
+  ]
+}
+```
+
+ **Uitleg van het voorbeeld**
+
+1. **HTTP-statuscode 200 OK:**  
+   - Bij `application/json` MOET de server altijd een HTTP-statuscode van **200 OK** retourneren, zelfs als er fouten optreden in de query.
+   - Fouten worden niet gesignaleerd via de HTTP-statuscode, maar via de inhoud van de `errors`-sleutel.
+
+2. **`data`:**  
+   - Bevat de velden die succesvol zijn opgehaald (`user`-object).  
+   - Velden die niet konden worden opgehaald (`posts`) zijn opgenomen met een waarde van `null`.
+
+3. **`errors`:**  
+   - Bevat details over de fout(en):
+     - **`message`:** De foutbeschrijving ("geen toestemming voor 'posts'").
+     - **`locations`:** De locatie in de query waar de fout is opgetreden (regel 3, kolom 5).
+     - **`path`:** Het pad naar het veld dat de fout veroorzaakte (`posts`).
+
+
+### 2.3.2 Voorbeeld Volledige fout
+Als de query volledig faalt (bijvoorbeeld vanwege een syntaxfout), blijft de HTTP-statuscode nog steeds **200 OK** en wordt de fout uitsluitend in de `errors`-sleutel gerapporteerd.
+
+**HTTP Header**
+```http
+Content-Type: application/json
+Status: 200 OK
+```
+
+**Body**
+```json
+{
+  "data": null,
+  "errors": [
+    {
+      "message": "Syntax Error: Unexpected <EOF>.",
+      "locations": [
+        {
+          "line": 1,
+          "column": 7
+        }
+      ]
+    }
+  ]
+}
+```
+
+
+## 2.4 Mediatype `application/graphql-response+json`
 - **GraphQL-specifieke JSON-structuur:**  
   - Dit mediatype is specifiek ontworpen voor GraphQL-responses.
   - Het ondersteunt betere foutafhandeling door zowel de HTTP-statuscode als de inhoud van de GraphQL-respons (`data` en `errors`) te gebruiken.
@@ -182,103 +241,16 @@ Hier is een voorbeeld van een GraphQL-respons met het mediatype `application/gra
 
 Hier is een voorbeeld van een GraphQL-respons met het mediatype `application/json`. Dit voorbeeld illustreert een gedeeltelijk succesvolle uitvoering van een query, waarbij de HTTP-statuscode **altijd 200 OK** is, ongeacht de aanwezigheid van fouten.
 
----
 
-### **Response met `application/json`**
-#### HTTP Header
-```http
-Content-Type: application/json
-Status: 200 OK
-```
+### 2.4.1 Voorbeeld Response met gedeeltelijk data-resultaat
 
-#### Body
-```json
-{
-  "data": {
-    "user": {
-      "id": "123",
-      "name": "Alice"
-    },
-    "posts": null
-  },
-  "errors": [
-    {
-      "message": "You do not have permission to access the 'posts' field.",
-      "locations": [
-        {
-          "line": 3,
-          "column": 5
-        }
-      ],
-      "path": ["posts"]
-    }
-  ]
-}
-```
-
----
-
-### **Uitleg van het voorbeeld**
-
-1. **HTTP-statuscode 200 OK:**  
-   - Bij `application/json` MOET de server altijd een HTTP-statuscode van **200 OK** retourneren, zelfs als er fouten optreden in de query.
-   - Fouten worden niet gesignaleerd via de HTTP-statuscode, maar via de inhoud van de `errors`-sleutel.
-
-2. **`data`:**  
-   - Bevat de velden die succesvol zijn opgehaald (`user`-object).  
-   - Velden die niet konden worden opgehaald (`posts`) zijn opgenomen met een waarde van `null`.
-
-3. **`errors`:**  
-   - Bevat details over de fout(en):
-     - **`message`:** De foutbeschrijving ("geen toestemming voor 'posts'").
-     - **`locations`:** De locatie in de query waar de fout is opgetreden (regel 3, kolom 5).
-     - **`path`:** Het pad naar het veld dat de fout veroorzaakte (`posts`).
-
----
-
-### **Alternatief: Volledige fout**
-Als de query volledig faalt (bijvoorbeeld vanwege een syntaxfout), blijft de HTTP-statuscode nog steeds **200 OK** en wordt de fout uitsluitend in de `errors`-sleutel gerapporteerd.
-
-#### HTTP Header
-```http
-Content-Type: application/json
-Status: 200 OK
-```
-
-#### Body
-```json
-{
-  "data": null,
-  "errors": [
-    {
-      "message": "Syntax Error: Unexpected <EOF>.",
-      "locations": [
-        {
-          "line": 1,
-          "column": 7
-        }
-      ]
-    }
-  ]
-}
-```
-
----
-
-### **Belangrijk verschil met `application/graphql-response+json`:**
-- Bij `application/json` wordt altijd een **200 OK**-statuscode gebruikt, ongeacht de aanwezigheid van fouten.  
-- Dit kan verwarrend zijn voor clients, omdat ze de `errors`-sleutel moeten inspecteren om fouten te herkennen.
-- Bij `application/graphql-response+json` worden 4xx- of 5xx-statuscodes gebruikt om fouten direct te signaleren via de HTTP-respons.
----
-
-### **Response met `application/graphql-response+json`**  
-#### HTTP Header
+> **HTTP Header:**
 ```http
 Content-Type: application/graphql-response+json
 Status: 200 OK
 ```
 
-#### Body
+> **Body:**
 ```json
 {
   "data": {
@@ -303,9 +275,7 @@ Status: 200 OK
 }
 ```
 
----
-
-### **Uitleg van het voorbeeld**  
+**Uitleg van het voorbeeld**  
 1. **HTTP-statuscode 200 OK:**  
    - De server geeft aan dat de query is uitgevoerd, maar mogelijk met fouten.  
    - Dit is een geldige 2xx-respons, omdat er een niet-nulle `data`-sleutel aanwezig is.
@@ -320,18 +290,18 @@ Status: 200 OK
      - **`locations`:** Specificeert waar in de query het probleem zich bevindt (regel 3, kolom 5).  
      - **`path`:** Geeft het exacte veld (`posts`) aan waar de fout is opgetreden.
 
----
 
-### **Alternatief voorbeeld bij een volledige fout**
+
+### 2.4.2 Voorbeeld  bij een volledige fout
 Als de gehele query faalt en er geen `data` kan worden geretourneerd, wordt een andere HTTP-statuscode gebruikt, zoals **400 Bad Request**:
 
-#### HTTP Header
+> **HTTP Header**
 ```http
 Content-Type: application/graphql-response+json
 Status: 400 Bad Request
 ```
 
-#### Body
+> **Body**
 ```json
 {
   "errors": [
@@ -350,113 +320,24 @@ Status: 400 Bad Request
 
 ---
 
-### **Samenvatting**
-Het mediatype `application/graphql-response+json` biedt flexibele foutafhandeling door het gebruik van zowel de HTTP-statuscode als de `data`- en `errors`-sleutels in de respons. Hierdoor kunnen clients beter omgaan met gedeeltelijke en volledige fouten.
+## 2.5 Conclusie
+
+- Bij `application/json` wordt altijd een 200 OK-statuscode gebruikt, ongeacht de aanwezigheid van fouten. Dit kan verwarrend zijn voor clients, omdat ze de `errors`-sleutel moeten inspecteren om fouten te herkennen.
+- Bij `application/graphql-response+json` worden 4xx- of 5xx-statuscodes gebruikt om fouten direct te signaleren via de HTTP-respons. Het biedt flexibele foutafhandeling door het gebruik van zowel de HTTP-statuscode als de `data`- en `errors`-sleutels in de respons. Hierdoor kunnen clients beter omgaan met gedeeltelijke en volledige fouten.
 
 **Samenvatting van de verschillen**
 
 | Kenmerk                        | `application/json`                 | `application/graphql-response+json` |
 |---------------------------------|-------------------------------------|-------------------------------------|
-| **Toepassing**                 | Algemeen JSON-mediate type         | Specifiek voor GraphQL-responses    |
+| **Toepassing**                 | Algemeen JSON-mediatype         | Specifiek voor GraphQL-responses    |
 | **Statuscode bij fouten**      | Altijd **200 OK**                  | 2xx, 4xx, of 5xx afhankelijk van fout |
 | **Foutinformatie**             | Alleen in `errors`-sleutel         | In `errors` én HTTP-statuscode     |
-| **Middleware-interferentie**   | Gevoelig voor tussenliggende lagen | Minder gevoelig voor interferentie |
+| **Transparantie**   | Onduidelijk, altijd inspectie op aanwezigheid errors-key om fouten te herkennen | Vooraf meer duidelijkheid over error duiding mogelijk |
 | **Specifieke GraphQL-support** | Nee                                | Ja                                 |
 
-### **Conclusie**
+ **Keuze:**
 - Gebruik `application/json` als je backward compatibility nodig hebt of met oudere systemen werkt.
 - Gebruik `application/graphql-response+json` als je een modernere, robuustere aanpak voor foutafhandeling wilt, met duidelijke HTTP-statuscodes.
-
-
----
-Deze zin betekent dat:
-
-- Wanneer een geldige GraphQL-operatie **faalt** (bijvoorbeeld doordat bepaalde velden of bewerkingen fouten veroorzaken), kunnen de HTTP-responsstatuscodes variëren afhankelijk van het gebruikte mediatype van de reactie.  
-  - Bijvoorbeeld: `application/json` of `application/graphql-response+json`.
-
-- Echter, **als de GraphQL-reactie een niet-nulle `data`-sleutel bevat**, wordt dit beschouwd als een gedeeltelijke succesvolle uitvoering. Dit betekent dat:
-  - De server zal antwoorden met een **2xx HTTP-statuscode** (meestal 200 OK).
-  - Dit geldt ook als er fouten zijn opgetreden bij specifieke velden in de GraphQL-operatie.  
-
-Kort gezegd: zolang er **iets** (geen `null`) in de `data`-sleutel van de reactie zit, beschouwt de server het als een gedeeltelijke succesreactie en geeft het een **2xx-statuscode**.
-
-Hier is een voorbeeld van een GraphQL-respons met zowel een `data`-sleutel als een `errors`-sleutel, wat typisch is voor een gedeeltelijke reactie:  
-
-### **Voorbeeld**  
-```json
-{
-  "data": {
-    "user": {
-      "id": "123",
-      "name": "Alice"
-    },
-    "posts": null
-  },
-  "errors": [
-    {
-      "message": "You do not have permission to access the 'posts' field.",
-      "locations": [
-        { "line": 3, "column": 5 }
-      ],
-      "path": ["posts"]
-    }
-  ]
-}
-```
-
-### **Uitleg**  
-1. **`data`**:  
-   - Bevat gedeeltelijke gegevens (`user` met `id` en `name`).  
-   - Het `posts`-veld is echter `null` omdat er een fout optrad bij het ophalen van die gegevens.  
-
-2. **`errors`**:  
-   - Geeft een gedetailleerde foutmelding aan waarin wordt uitgelegd waarom het `posts`-veld niet beschikbaar is.  
-   - Bevat context, zoals de locatie in de GraphQL-query (regel en kolom) en het pad naar het veld (`posts`).  
-
-3. **HTTP-statuscode**:  
-   - De server zou in dit geval een **200 OK**-statuscode retourneren, omdat er een niet-nulle `data`-sleutel aanwezig is.  
-   - Dit betekent dat de operatie gedeeltelijk succesvol was, ondanks de fout.  
-
-Hier is een voorbeeld van een GraphQL-respons zonder `data`, wat vaak voorkomt bij een ernstige fout die het uitvoeren van de query volledig verhindert:  
-
-### **Voorbeeld**  
-```json
-{
-  "errors": [
-    {
-      "message": "Syntax Error: Unexpected <EOF>.",
-      "locations": [
-        {
-          "line": 1,
-          "column": 7
-        }
-      ]
-    }
-  ]
-}
-```
-
-### **Uitleg**  
-1. **Geen `data`-sleutel**:  
-   - Dit gebeurt wanneer de server geen gegevens kan retourneren, bijvoorbeeld vanwege een fout in de query (zoals een syntaxfout, validatiefout of een andere grote fout).  
-   - De GraphQL-specificatie schrijft voor dat in dit geval alleen de `errors`-sleutel aanwezig is.
-
-2. **`errors`**:  
-   - De `errors`-sleutel bevat details over wat er misging.  
-   - In dit geval is er een syntaxfout opgetreden (bijvoorbeeld een niet-afgesloten query). De foutmelding bevat de locatie in de query waar het probleem is gevonden.
-
-3. **HTTP-statuscode**:  
-   - De server MOET een 4xx- of 5xx-statuscode retourneren, afhankelijk van het probleem:  
-     - Syntaxfout: **400 Bad Request**  
-     - Validatiefout of niet-machtige toegang: **403 Forbidden** of **401 Unauthorized**  
-
-### **Wanneer komt dit voor?**
-- Syntaxfouten in de query, zoals ontbrekende haakjes of komma’s.  
-- Een volledig ongeldig verzoek, bijvoorbeeld een lege of beschadigde payload.  
-
-### **Samenvatting**  
-Dit is een voorbeeld van een situatie waarin er geen `data`-sleutel in de GraphQL-respons aanwezig is omdat de server geen enkele bruikbare uitvoer kon genereren.
-
 
 # 3. iWlz netwerk validatiemomenten
 
@@ -598,22 +479,6 @@ sequenceDiagram
 
 
 
-# 3 Error vs bad-result
-
-```mermaid
----
-config:
-  theme: base
----
-kanban
-  column1[Errors]
-    task1[Bad Gateway]
-    task2[Server timeout]
-  column2['bad-results']
-    task1[user not found]
-    task2[bad input]
-    task3[invalid structure]
-```
 
 # 3. GraphQL statuscodes
 
