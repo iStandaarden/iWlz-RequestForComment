@@ -2,8 +2,6 @@
 
 # RFC0040 - GraphQL gebruik HTTP-statuscodes
 
-> [!CAUTION]  
-> **Deze Reqeust for comment is nog onderhanden en inhoud is nog aan wijzigingen onderhevig**
 
 TODO:
 - [ ] Keuze mediatype
