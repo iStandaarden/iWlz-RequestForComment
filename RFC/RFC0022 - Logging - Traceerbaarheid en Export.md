@@ -158,8 +158,6 @@ X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124
 
 ### 3.1.4 Validatie en foutafhandeling van TraceId:
 
-Deze validatie bij ontvangst (inclusief foutmelding bij ontbrekende header) is een aanvulling op de OpenTelemetry-specificatie. OpenTelemetry stelt eisen aan de vorm en inhoud van een `TraceId`, maar legt geen gedragsverplichting op voor validatie of afwijzing door ontvangende systemen.
-
 Bij binnenkomst wordt gecontroleerd of een `TraceId` aanwezig is:
 
 - Indien aanwezig, wordt deze gebruikt voor verdere verwerking.
