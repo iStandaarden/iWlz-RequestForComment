@@ -172,11 +172,15 @@ HTTP/1.1 400 Bad Request
 
 > Opmerking: Deze validatie is een aanvulling op de OpenTelemetry-specificatie. Die stelt alleen eisen aan de structuur van een `TraceId`, maar schrijft geen validatiegedrag voor aan ontvangende systemen.
 
+### 3.1.5 Flow Fase 1:
+
+![Flow Fase 1](../plantUMLsrc/rfc0022-01-Fase1_flow.svg "Flow Fase 1")
 
 
-<font color=red>LET OP: Onderstaande schema moet nog correct  worden aangepast.</font>
 
-![voorbeeld_flow](../plantUMLsrc/rfc0022-01-voorbeeld_flow.svg "voorbeeld_flow")
+## 3.2 Fase 2
+> [!IMPORTANT]
+> Under construction
 
 <details>
 <summary>plantUML-source</summary>
@@ -250,10 +254,6 @@ deactivate Client
 
 **Nieuwe versie:**
 ![voorbeeld_flow](../plantUMLsrc/rfc0022-01-voorbeeldflow_v2.svg "voorbeeld_flow")
-
-## 3.2 Fase 2
-> [!IMPORTANT]
-> Under construction
 
 ## 3.3 Fase 3
 > [!IMPORTANT]
