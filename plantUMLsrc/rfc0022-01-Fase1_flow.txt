@@ -1,0 +1,64 @@
+@startuml
+' !pragma teoz true
+ 
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+ 
+box "Deelnemer"
+    participant "Client" as Client
+end box
+ 
+box "nID Netwerkstelsel"
+    participant "autorisatieserver" as AuthzServer
+    participant "PEP" as PEP
+    participant "PDP" as PDP
+end box
+ 
+box "Register"
+    participant "Resource-Server" as ResourceServer
+end box
+ 
+autonumber "<b>[000]"
+activate Client
+    Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n"audience":"{//URL resource-server//}"\n Authenticatiemiddel\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124
+    activate AuthzServer
+        AuthzServer -> AuthzServer: Valideer Authenticatiemiddel
+        AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124
+        activate AuthzServer #LightGray
+            AuthzServer -> AuthzServer: Valideer autorisatie
+            AuthzServer -> AuthzServer: Genereer Access-Token\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124
+            activate AuthzServer #DarkGray
+            deactivate AuthzServer
+        deactivate AuthzServer
+        AuthzServer --> Client --: 200 Response (JWT Access-Token)
+    deactivate AuthzServer
+deactivate Client
+ 
+Client -> PEP: **GraphQL Query**\nAuthenticatiemiddel + JWT Access-Token + Query\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124
+ 
+activate PEP
+note right of PEP: Inline request validation
+activate Client
+PEP -> PEP: Valideer Authenticatiemiddel
+PEP -> PEP: Valideer JWT Access-Token
+PEP -> PDP: Valideer GraphQL request met scope(s)\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124
+activate PEP #LightGray
+    activate PDP
+    PDP -> PDP: Valideer GraphQL
+    PDP -> PDP: Verify context information
+    PDP -> PEP: Query allowed
+    deactivate PDP
+deactivate PEP
+PEP -> ResourceServer: GraphQL Request\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124
+ 
+ 
+activate ResourceServer
+ 
+ResourceServer --> PEP: 200 Response (GraphQL)
+deactivate ResourceServer
+ 
+PEP --> Client: 200 Response (GraphQL)
+deactivate PEP
+ 
+deactivate Client
+@enduml
