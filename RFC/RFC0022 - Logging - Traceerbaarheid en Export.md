@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0022 - Logging - Traceerbaarheid en Export
+# RFC0022 - Event Logging en Traceerbaarheid
 <font size="4">**SAMENVATTING**</font>
 
 **Huidige situatie:**
