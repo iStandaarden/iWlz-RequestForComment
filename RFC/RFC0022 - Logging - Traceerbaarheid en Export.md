@@ -17,6 +17,7 @@ Nieuwe functionaliteit
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actuele status van deze RFC te bekijken.
 
 ---
+
 **Inhoudsopgave**
 - [RFC0022 - Logging - Traceerbaarheid en Export](#rfc0022---logging---traceerbaarheid-en-export)
 - [1. Inleiding](#1-inleiding)
