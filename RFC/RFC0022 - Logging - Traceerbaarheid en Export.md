@@ -1,10 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
 # RFC0022 - Logging - Traceerbaarheid en Export
-
-@todo
-- [ ] ..
-
 <font size="4">**SAMENVATTING**</font>
 
 **Huidige situatie:**
@@ -13,8 +9,8 @@ Nieuwe functionaliteit
 
 **Beoogde situatie**
 
-- Traceerbare loggegevens over verschillende registers heen
-- Mogelijkheid tot het exporteren ervan binnen het netwerkmodel
+- **Traceerbare loggegevens over verschillende registers heen:** Door het implementeren van gestandaardiseerde event logging wordt het mogelijk om gebeurtenissen consistent te volgen en te analyseren binnen het iWlz-netwerkmodel.
+- **Gefaseerde uitbreiding van functionaliteit:** De implementatie van event logging is gepland in drie fasen, waarbij in de eerste fase de focus ligt op het introduceren van TraceID voor basis traceerbaarheid. In latere fasen worden SpanID, ParentSpanID en exportmogelijkheden toegevoegd om de traceerbaarheid en analyse verder te verbeteren.
 
 <font size="4">**Status RFC**</font>
 
@@ -43,29 +39,35 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 ---
 # 1. Inleiding
 
-Om de privacy van burgers te waarborgen is het meer dan ooit noodzakelijk om heldere afspraken te maken over de bescherming van (medische) gegevens tegen onbevoegde inzage en onbevoegd gebruik. De in deze RFC voorgeschreven wijze van logging heeft als doel een transparant beeld te geven van de gebeurtenissen in het netwerkmodel m.b.t. alle elektronische gegevensuitwisselingen en de toegang tot (zorg)informatiesystemen.
+In een gedistribueerd netwerkmodel, zoals dat van iWlz, is het essentieel om gebeurtenissen (events) effectief te kunnen volgen en analyseren. Dit is cruciaal voor het waarborgen van de betrouwbaarheid, prestaties en transparantie van het systeem. Het ontbreken van gestandaardiseerde event logging belemmert momenteel het vermogen om transacties effectief te traceren, wat leidt tot inefficiënties en uitdagingen bij het oplossen van incidenten.​
 
-In deze RFC wordt de nadruk gelegd op het definiëren van een gestructureerde aanpak voor het traceren en exporteren van loggegevens binnen het iWlz netwerkmodel. Dit omvat het vastleggen van de vereisten, procedures en richtlijnen die nodig zijn om traceerbare loggegevens te waarborgen en een robuuste exportfunctionaliteit te implementeren.
+Deze RFC introduceert een gestandaardiseerde aanpak voor event logging binnen het iWlz-netwerkmodel. Het doel is om een uniforme structuur en semantiek te definiëren voor het vastleggen van events, waardoor traceerbaarheid over verschillende systemen en domeinen heen mogelijk wordt. Dit zal bijdragen aan een verbeterde monitoring, foutopsporing en algemene systeemtransparantie.​
 
+De focus van deze RFC ligt uitsluitend op event logging en de bijbehorende traceerbaarheid. Aspecten zoals audit logging en exportmechanismen worden als aparte onderwerpen beschouwd en vallen buiten de scope van dit document.​
 
-## 1.1. Uitgangspunten
-De volgende uitgangspunten vormen de basis voor het ontwerp en de ontwikkeling van RFC0022, waarbij wordt gestreefd naar een robuuste en effectieve traceerbaarheid en exportfunctionaliteit binnen het netwerkmodel
+## 1.1 Uitgangspunten
 
-### 1.1.1. Traceerbaarheid
-"Het is essentieel dat logging traceerbaar is over de registers heen, waarbij loggebeurtenissen nauwkeurig kunnen worden gevolgd en gekoppeld, ook wanneer deze gebeurtenissen zich over verschillende delen van het netwerk verspreiden.
+De implementatie van event logging en traceerbaarheid binnen het iWlz-netwerkmodel is gepland in drie fasen. Deze uitgangspunten zijn gekoppeld aan de respectieve fasen om een duidelijke structuur en focus te bieden tijdens de implementatie:
 
-### 1.1.2. Uniformiteit van Logging:
-Het is essentieel dat logging vanuit verschillende bronnen binnen het netwerkmodel uniform en vergelijkbaar is. Dit zorgt voor consistentie en vereenvoudigt het proces van gegevensanalyse en -interpretatie.
+### 📘 Fase 1: Invoering van TraceID
 
-### 1.1.3. Aanwezigheid van Exportfaciliteit:
-Om traceerbare loggegevens te waarborgen en de mogelijkheid te bieden voor gegevensanalyse buiten het directe netwerkmodel, moet een exportfaciliteit aanwezig zijn. Deze faciliteit stelt gebruikers in staat om loggegevens veilig en efficiënt te exporteren naar externe systemen of opslaglocaties.
+- **Traceerbaarheid over domeinen heen:** Het is essentieel dat logging traceerbaar is over de registers heen, waarbij loggebeurtenissen nauwkeurig kunnen worden gevolgd en gekoppeld, ook wanneer deze gebeurtenissen zich over verschillende delen van het netwerk verspreiden.
 
-### 1.1.4. Standaardisatie van Syntax en Semantiek:
-Bij het ontwikkelen van de exportfaciliteit is het van cruciaal belang om de syntax en semantiek van de export vast te leggen. Dit zorgt ervoor dat loggegevens op een consistente en begrijpelijke manier worden gepresenteerd, ongeacht het doel of de bestemming van de export.
+- **Uniformiteit van logging:** Logging vanuit verschillende bronnen binnen het netwerkmodel moet uniform en vergelijkbaar zijn. Dit zorgt voor consistentie en vereenvoudigt het proces van gegevensanalyse en -interpretatie.
 
-### 1.1.5. Behoud van Integriteit en Beveiliging:
-De exportfaciliteit moet worden ontworpen met het oog op het behoud van de integriteit en beveiliging van loggegevens. Dit omvat maatregelen om de vertrouwelijkheid, beschikbaarheid en authenticiteit van de geëxporteerde gegevens te waarborgen, evenals mechanismen voor het detecteren en voorkomen van manipulatie tijdens het exportproces.
+### 📘 Fase 2: Uitbreiding met SpanID en ParentSpanID
 
+- **Hiërarchische traceerbaarheid:** Door het introduceren van SpanID en ParentSpanID kan een hiërarchische structuur van de trace worden opgebouwd. Dit maakt het mogelijk om de relatie tussen verschillende events binnen een trace te begrijpen en te visualiseren.
+
+### 📘 Fase 3: Exporteren van tracing-data
+
+- **Aanwezigheid van exportfaciliteit:** Om traceerbare loggegevens te waarborgen en de mogelijkheid te bieden voor gegevensanalyse buiten het directe netwerkmodel, moet een exportfaciliteit aanwezig zijn. Deze faciliteit stelt gebruikers in staat om loggegevens veilig en efficiënt te exporteren naar externe systemen of opslaglocaties.
+
+- **Standaardisatie van syntax en semantiek:** Bij het ontwikkelen van de exportfaciliteit is het van cruciaal belang om de syntax en semantiek van de export vast te leggen. Dit zorgt ervoor dat loggegevens op een consistente en begrijpelijke manier worden gepresenteerd, ongeacht het doel of de bestemming van de export.
+
+- **Behoud van integriteit en beveiliging:** De exportfaciliteit moet worden ontworpen met het oog op het behoud van de integriteit en beveiliging van loggegevens. Dit omvat maatregelen om de vertrouwelijkheid, beschikbaarheid en authenticiteit van de geëxporteerde gegevens te waarborgen, evenals mechanismen voor het detecteren en voorkomen van manipulatie tijdens het exportproces.
+
+*Opmerking:* Deze gefaseerde aanpak is in lijn met best practices voor het implementeren van distributed tracing, zoals aanbevolen door o.a. OpenTelemetry. De initiële implementatie met alleen een TraceId biedt al waardevolle traceerbaarheid en legt de basis voor verdere uitbreidingen. In latere fasen kunnen SpanId, ParentSpanId en exportfunctionaliteiten worden toegevoegd om de traceerbaarheid en analyse verder te verbeteren.
 
 ## 1.2 Relatie andere RFC
 Deze RFC heeft een relatie met de volgende RFC(s)
@@ -111,59 +113,65 @@ Opsomming van de in dit document gebruikte termen.
 | Zorgverlener | Een natuurlijke persoon die beroepsmatig zorg verleent |
 
 # 3. Traceerbaarheid
-Traceerbaarheid is de mogelijkheid om gebeurtenissen in de hele of gedeeltelijke keten te traceren. Het traceren geeft:
-- Inzicht in de herkomst en bestemmingen van events.
-- Inzicht in de stadia van verwerking.
-- Inzicht in de opeenvolging van gebeurtenissen.
-- Inzicht in de performance en efficiëntie van de keten.
-- Inzicht in afwijkingen in de keten.
-- Transparantie over informatiedomeinen heen.
+Traceerbaarheid binnen het iWlz-netwerkmodel wordt geïmplementeerd in drie opeenvolgende fasen. Elke fase bouwt voort op de vorige en introduceert aanvullende functionaliteiten om de traceerbaarheid te verbeteren.
 
-## 3.1. TraceContext
+## 3.1 Fase 1: Invoering van TraceID
 
-Om over informatiedomeinen heen events en gebeurtenissen te kunnen traceren is het nodig om met elkaar afspraken te maken waarop informatie met elkaar kan worden gerelateerd. Deze afspraken worden distributed tracing genoemd. In het netwerkmodel gebruiken we de standaard "B3 Propagation", deze is breed toepasbaar en wordt ondersteund vanuit vele programmeertalen en frameworks.
+In de eerste fase wordt een unieke `TraceId` geïntroduceerd voor elke inkomende request. Deze `TraceId` wordt doorgegeven aan alle downstream-services, waardoor gerelateerde logregels kunnen worden gecorreleerd en een globaal overzicht van de requestflow kan worden verkregen.
 
-In het netwerkmodel moet voor alle communicatie deze zogenaamde “B Propagation headers” worden gebruikt. In de gehele keten is het verplicht om de volgende ID headers mee te geven: 
-- X-B3-TraceId 
-- X-B3-SpanId
-- X-B3-ParentSpanId
+### 3.1.1 Standaardisatie van TraceId-generatie via OpenTelemetry:
 
-Notitie: Deze Headers zijn niet case-sensitive
+Om de kans op botsingen in een gedistribueerde omgeving te minimaliseren, moet de generatie plaatsvinden met een mechanisme dat voldoet aan de eisen van randomness en voldoende entropie.
 
-## 3.2. X-B3-TraceId
+Alle partijen dienen gebruik te maken van dezelfde library voor het genereren van `TraceId`-waarden. Daarom wordt voorgeschreven dat alle partijen de [OpenTelemetry SDK](https://opentelemetry.io/docs/) gebruiken voor het genereren van `TraceId`-waarden. Voor vrijwel alle gangbare programmeertalen zijn OpenTelemetry-implementaties beschikbaar.
 
-De X-B3-TraceId is het ID wat door de gehele trace/keten wordt gebruikt om gerelateerde acties/gebeurtenissen en events met elkaar te relateren.
+In de praktijk kan bijvoorbeeld gebruik worden gemaakt van de volgende compliant libraries:
 
-De X-B3-TraceId header wordt gecodeerd als 32 of 16 hexadecimale tekens in kleine letters 
+- `@opentelemetry/api` (JavaScript/Node.js)
+- `io.opentelemetry:opentelemetry-api` (Java)
+- `opentelemetry-api` (Python)
 
-Bijvoorbeeld, een TraceId-header van 128 bits kan er zo uitzien: X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124
+Hiermee wordt gegarandeerd dat alle gegenereerde `TraceId`-waarden voldoen aan de juiste lengte, entropie en formatvereisten.
 
-Indien de X-B3-TraceId Header bij een binnenkomende verbinding niet aanwezeg of leeg is, moet het verzoek worden geweigerd en resulteren in:
-```json
-HTTP/1.1 400 Bad Request
-{"ErrorCode" : "invalid_request", "Error" :"The request is missing header X-B3-TraceId"}
+### 3.1.2 Toevoegen aan uitgaande requests:
+
+De `TraceId` wordt toegevoegd aan de headers van alle uitgaande requests.
+Gebruik de header `X-B3-TraceId` voor consistentie met bestaande standaarden.
+
+> Let op: HTTP-headers zijn niet hoofdlettergevoelig. Conform de B3 Propagation-standaard wordt aanbevolen de header te noteren als `X-B3-TraceId`.
+
+### 3.1.3 Randvoorwaarden voor TraceId:
+
+Een `TraceId` moet:
+
+- Exact 16 bytes groot zijn, wat overeenkomt met 32 hexadecimale tekens (lowercase).
+- Niet uitsluitend uit nullen bestaan (bijv. 00000000000000000000000000000000 is ongeldig).
+- Globaal uniek zijn om botsende traces in verschillende ketens te voorkomen.
+
+**Voorbeeld:**
+
+```http
+X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124
 ```
 
-## 3.3. X-B3-SpanId
+> Voorbeeld van een correct gegenereerde `TraceId`-header zoals gebruikt in een HTTP-request.
 
-De X-B3-SpanId geeft samen met de X-B3-ParentSpanID de positie van de operatie in de trace/keten weer.
+### 3.1.4 Validatie en foutafhandeling van TraceId:
 
-De X-B3-SpanId header wordt gecodeerd als 16 hexadecimale tekens in kleine letters.
+Deze validatie bij ontvangst (inclusief foutmelding bij ontbrekende header) is een aanvulling op de OpenTelemetry-specificatie. OpenTelemetry stelt eisen aan de vorm en inhoud van een `TraceId`, maar legt geen gedragsverplichting op voor validatie of afwijzing door ontvangende systemen.
 
-Bijvoorbeeld: X-B3-SpanId: a2fb4a1d1a96d312.
+Bij binnenkomst wordt gecontroleerd of een `TraceId` aanwezig is:
 
-## 3.4. X-B3-ParentSpanId
+- Indien aanwezig, wordt deze gebruikt voor verdere verwerking.
+- Indien afwezig, wordt het verzoek afgewezen met de volgende foutmelding:
 
-De ParentSpanId is het ID van de operatie die de oorzaak is van het verzoek, Dit is de X-B3-SpanId van een voorgaand verzoek of een scheduled job. ParentSpanId geeft de mogelijkheid om decentrale gebeurtenissen juist op de tijdlijn te plaatsen.
+```http
+HTTP/1.1 400 Bad Request
+{"ErrorCode": "invalid_request", "Error": "The request is missing header X-B3-TraceId"}
+```
 
-De X-B3-ParentSpanId header is aanwezig bij een child span en moet leeg zijn indien het om de root span gaat. De X-B3-ParentSpanId header wordt gecodeerd als 16 hexadecimale tekens in kleine letters.
+> Opmerking: Deze validatie is een aanvulling op de OpenTelemetry-specificatie. Die stelt alleen eisen aan de structuur van een `TraceId`, maar schrijft geen validatiegedrag voor aan ontvangende systemen.
 
-Bijvoorbeeld: X-B3-ParentSpanId: 0020000000000001
-
-## 3.5. Voorbeeld van een flow
-De X-B3-TraceId header wordt hergebruikt in elke request binnen één trace. Zodra er een nieuwe flow ontstaat, moet er een nieuwe X-B3-TraceId worden gebruikt.
-
-Een flow kan bijvoorbeeld een raadpleging zijn naar aanleiding van een notificatie. De ontvangen notificatie heeft een X-B3-TraceId, X-B3-SpanId en eventueel een X-B3-ParentSpanId in de header. In elke opvolgende gerelateerde actie wordt het ontvangen X-B3-TraceId header doorgegeven. Ook bijvoorbeeld bij het opvragen van autorisatie als het onderdeel uitmaakt van deze flow. 
 
 
 <font color=red>LET OP: Onderstaande schema moet nog correct  worden aangepast.</font>
@@ -243,7 +251,18 @@ deactivate Client
 **Nieuwe versie:**
 ![voorbeeld_flow](../plantUMLsrc/rfc0022-01-voorbeeldflow_v2.svg "voorbeeld_flow")
 
+## 3.2 Fase 2
+> [!IMPORTANT]
+> Under construction
+
+## 3.3 Fase 3
+> [!IMPORTANT]
+> Under construction
+
 # 4. Export
+> [!IMPORTANT]
+> Under construction
+
 Een export in de vorm van een *XML-exportfaciliteit* is essentieel, waarbij de syntax en semantiek van de export moeten voldoen aan de richtlijnen uiteengezet in RFC0021.
 
 De *XML-exportfaciliteit* genereert een uitgebreide logging op basis van een opgegeven selectie. Alle velden in dit XML-bestand zijn herleidbaar naar de naar de gegevensvelden zoals beschreven in RFC0021.
