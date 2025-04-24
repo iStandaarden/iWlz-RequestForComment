@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0022 - Event Logging en Traceerbaarheid
+# RFC0022 - tracelogging
 <font size="4">**SAMENVATTING**</font>
 
 **Huidige situatie:**
@@ -40,16 +40,15 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actue
 ---
 # 1. Inleiding
 
-In een gedistribueerd netwerkmodel, zoals dat van iWlz, is het essentieel om gebeurtenissen (events) effectief te kunnen volgen en analyseren. Dit is cruciaal voor het waarborgen van de betrouwbaarheid, prestaties en transparantie van het systeem. Het ontbreken van gestandaardiseerde event logging belemmert momenteel het vermogen om transacties effectief te traceren, wat leidt tot inefficiënties en uitdagingen bij het oplossen van incidenten.​
+In een gedistribueerd netwerkmodel, zoals dat van iWlz, is het essentieel om gebeurtenissen (events) effectief te kunnen volgen en analyseren. Dit is cruciaal voor het waarborgen van de betrouwbaarheid, prestaties en transparantie van het systeem. Het ontbreken van gestandaardiseerde tracelogging belemmert momenteel het vermogen om transacties effectief te traceren, wat leidt tot inefficiënties en uitdagingen bij het oplossen van incidenten.​
 
-Deze RFC introduceert een gestandaardiseerde aanpak voor event logging binnen het iWlz-netwerkmodel. Het doel is om een uniforme structuur en semantiek te definiëren voor het vastleggen van events, waardoor traceerbaarheid over verschillende systemen en domeinen heen mogelijk wordt. Dit zal bijdragen aan een verbeterde monitoring, foutopsporing en algemene systeemtransparantie.​
+Deze RFC introduceert een gestandaardiseerde aanpak voor tracelogging binnen het iWlz-netwerkmodel. Het doel is om een uniforme structuur en semantiek te definiëren voor het vastleggen van events in tracelogs, waardoor traceerbaarheid over verschillende systemen en domeinen heen mogelijk wordt. Dit zal bijdragen aan een verbeterde monitoring, foutopsporing en algemene systeemtransparantie.​
 
-De focus van deze RFC ligt uitsluitend op event logging en de bijbehorende traceerbaarheid. Aspecten zoals audit logging en exportmechanismen worden als aparte onderwerpen beschouwd en vallen buiten de scope van dit document.​
+De focus van deze RFC ligt uitsluitend op tracelogging en de bijbehorende traceerbaarheid. Aspecten zoals auditlogging en exportmechanismen worden als aparte onderwerpen beschouwd en vallen buiten de scope van dit document.​
 
 ## 1.1 Uitgangspunten
 
-De implementatie van event logging en traceerbaarheid binnen het iWlz-netwerkmodel is gepland in drie fasen. Deze uitgangspunten zijn gekoppeld aan de respectieve fasen om een duidelijke structuur en focus te bieden tijdens de implementatie:
-
+De implementatie van tracelogging is gestructureerd in drie fasen, die samen zorgen voor volledige traceerbaarheid binnen het iWlz-netwerkmodel. De uitgangspunten vormen de drie fasen en geven richting aan de verdere uitwerking en implementatie daarvan.
 ### 📘 Fase 1: Invoering van TraceID
 
 - **Traceerbaarheid over domeinen heen:** Het is essentieel dat logging traceerbaar is over de registers heen, waarbij loggebeurtenissen nauwkeurig kunnen worden gevolgd en gekoppeld, ook wanneer deze gebeurtenissen zich over verschillende delen van het netwerk verspreiden.
@@ -60,7 +59,7 @@ De implementatie van event logging en traceerbaarheid binnen het iWlz-netwerkmod
 
 - **Hiërarchische traceerbaarheid:** Door het introduceren van SpanID en ParentSpanID kan een hiërarchische structuur van de trace worden opgebouwd. Dit maakt het mogelijk om de relatie tussen verschillende events binnen een trace te begrijpen en te visualiseren.
 
-### 📘 Fase 3: Exporteren van tracing-data
+### 📘 Fase 3: Beschikbaar stellen van tracing-data
 
 - **Aanwezigheid van exportfaciliteit:** Om traceerbare loggegevens te waarborgen en de mogelijkheid te bieden voor gegevensanalyse buiten het directe netwerkmodel, moet een exportfaciliteit aanwezig zijn. Deze faciliteit stelt gebruikers in staat om loggegevens veilig en efficiënt te exporteren naar externe systemen of opslaglocaties.
 
@@ -147,7 +146,7 @@ Een `TraceId` moet:
 
 - Exact 16 bytes groot zijn, wat overeenkomt met 32 hexadecimale tekens (lowercase).
 - Niet uitsluitend uit nullen bestaan (bijv. 00000000000000000000000000000000 is ongeldig).
-- Globaal uniek zijn om botsende traces in verschillende ketens te voorkomen.
+- Uniek zijn. TraceIds dienen gegenereerd te worden met behulp van een UUID-generator of via de OpenTelemetry SDK om botsende TraceIds te voorkomen.
 
 **Voorbeeld:**
 
@@ -177,7 +176,7 @@ HTTP/1.1 400 Bad Request
 
 
 
-## 3.2 Fase 2
+## 3.2 Fase 2: Uitbreiding met SpanID en ParentSpanID
 > [!IMPORTANT]
 > Under construction
 
@@ -254,7 +253,7 @@ deactivate Client
 **Nieuwe versie:**
 ![voorbeeld_flow](../plantUMLsrc/rfc0022-01-voorbeeldflow_v2.svg "voorbeeld_flow")
 
-## 3.3 Fase 3
+## 3.3 Fase 3: Beschikbaar stellen van tracing-data
 > [!IMPORTANT]
 > Under construction
 
