@@ -17,23 +17,22 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/37) om de actue
 ---
 
 **Inhoudsopgave**
-- [RFC0022 - Logging - Traceerbaarheid en Export](#rfc0022---logging---traceerbaarheid-en-export)
+- [SAMENVATTING](#samenvatting)
 - [1. Inleiding](#1-inleiding)
-  - [1.1. Uitgangspunten](#11-uitgangspunten)
-    - [1.1.1. Traceerbaarheid](#111-traceerbaarheid)
-    - [1.1.2. Uniformiteit van Logging:](#112-uniformiteit-van-logging)
-    - [1.1.3. Aanwezigheid van Exportfaciliteit:](#113-aanwezigheid-van-exportfaciliteit)
-    - [1.1.4. Standaardisatie van Syntax en Semantiek:](#114-standaardisatie-van-syntax-en-semantiek)
-    - [1.1.5. Behoud van Integriteit en Beveiliging:](#115-behoud-van-integriteit-en-beveiliging)
-  - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
+  - [1.1 Uitgangspunten](#11-uitgangspunten)
+    - [📘 Fase 1: Invoering van TraceID](#📘-fase-1-invoering-van-traceid)
+    - [📘 Fase 2: Uitbreiding met SpanID en ParentSpanID](#📘-fase-2-uitbreiding-met-spanid-en-parentspanid)
+    - [📘 Fase 3: Beschikbaar stellen van tracing-data](#📘-fase-3-beschikbaar-stellen-van-tracing-data)
 - [2. Terminologie](#2-terminologie)
 - [3. Traceerbaarheid](#3-traceerbaarheid)
-  - [3.1. TraceContext](#31-tracecontext)
-  - [3.2. X-B3-TraceId](#32-x-b3-traceid)
-  - [3.3. X-B3-SpanId](#33-x-b3-spanid)
-  - [3.4. X-B3-ParentSpanId](#34-x-b3-parentspanid)
-  - [3.5. Voorbeeld van een flow](#35-voorbeeld-van-een-flow)
-- [4. Export](#4-export)
+  - [3.1 Fase 1: Invoering van TraceID](#31-fase-1-invoering-van-traceid)
+    - [3.1.1 Standaardisatie van TraceId-generatie via OpenTelemetry](#311-standaardisatie-van-traceid-generatie-via-opentelemetry)
+    - [3.1.2 Toevoegen aan uitgaande requests](#312-toevoegen-aan-uitgaande-requests)
+    - [3.1.3 Randvoorwaarden voor TraceId](#313-randvoorwaarden-voor-traceid)
+    - [3.1.4 Validatie en foutafhandeling van TraceId](#314-validatie-en-foutafhandeling-van-traceid)
+  - [3.2 Fase 2: Uitbreiding met SpanID en ParentSpanID](#32-fase-2-uitbreiding-met-spanid-en-parentspanid)
+  - [3.3 Fase 3: Beschikbaar stellen van tracing-data](#33-fase-3-beschikbaar-stellen-van-tracing-data)
+
 
 ---
 # 1. Inleiding
