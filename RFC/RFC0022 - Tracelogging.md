@@ -3,8 +3,6 @@
 # RFC0022 - Tracelogging
 <font size="4">**SAMENVATTING**</font>
 
-**Huidige situatie:**
-
 **Huidige situatie:**  
 Binnen het iWlz-netwerkmodel ontbreekt het aan gestandaardiseerde tracelogging, waardoor het lastig is om transacties en gebeurtenissen end-to-end te volgen en analyseren.
 
