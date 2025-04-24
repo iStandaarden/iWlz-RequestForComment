@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0022 - tracelogging
+# RFC0022 - Tracelogging
 <font size="4">**SAMENVATTING**</font>
 
 **Huidige situatie:**
