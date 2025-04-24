@@ -5,16 +5,16 @@
 
 **Huidige situatie:**
 
-Nieuwe functionaliteit
+**Huidige situatie:**  
+Binnen het iWlz-netwerkmodel ontbreekt het aan gestandaardiseerde tracelogging, waardoor het lastig is om transacties en gebeurtenissen end-to-end te volgen en analyseren.
 
-**Beoogde situatie**
-
-- **Traceerbare loggegevens over verschillende registers heen:** Door het implementeren van gestandaardiseerde event logging wordt het mogelijk om gebeurtenissen consistent te volgen en te analyseren binnen het iWlz-netwerkmodel.
-- **Gefaseerde uitbreiding van functionaliteit:** De implementatie van event logging is gepland in drie fasen, waarbij in de eerste fase de focus ligt op het introduceren van TraceID voor basis traceerbaarheid. In latere fasen worden SpanID, ParentSpanID en exportmogelijkheden toegevoegd om de traceerbaarheid en analyse verder te verbeteren.
+**Beoogde situatie:**  
+- **Traceerbare loggegevens over verschillende registers heen:** Door het implementeren van gestandaardiseerde tracelogging wordt het mogelijk om de volledige keten van gebeurtenissen consistent en eenduidig te volgen binnen het iWlz-netwerkmodel.  
+- **Gefaseerde uitbreiding van functionaliteit:** De implementatie van tracelogging is gepland in drie fasen. In de eerste fase ligt de focus op het introduceren van `TraceId` voor basis traceerbaarheid. In latere fasen worden `SpanId`, `ParentSpanId` en mechanismen voor het beschikbaar stellen van loggingdata toegevoegd om de traceerbaarheid en analyse verder te verdiepen.
 
 <font size="4">**Status RFC**</font>
 
-Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/17) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/37) om de actuele status van deze RFC te bekijken.
 
 ---
 
