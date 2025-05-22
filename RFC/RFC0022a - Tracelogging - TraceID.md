@@ -171,7 +171,7 @@ HTTP/1.1 400 Bad Request
 
 ![Flow Fase 1](../plantUMLsrc/rfc0022-01-Fase1_flow.svg "Flow Fase 1")
 
-### 4 Privacyoverwegingen en AVG-toetsing
+# 4. Privacyoverwegingen en AVG-toetsing
 
 Het gebruik van een trace ID binnen deze RFC is uitsluitend bedoeld voor **technische traceerbaarheid van verzoeken over systeemgrenzen heen**. De trace ID is een **willekeurig gegenereerde identificatiecode** die wordt opgenomen in de header van een verzoek en wordt niet opgeslagen in combinatie met identificerende gegevens.
 
