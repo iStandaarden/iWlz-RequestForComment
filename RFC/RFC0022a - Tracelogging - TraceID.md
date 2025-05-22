@@ -32,7 +32,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/37) om de actue
     - [3.1.4 Validatie en foutafhandeling van TraceId](#314-validatie-en-foutafhandeling-van-traceid)
   - [3.2 Fase 2: Uitbreiding met SpanID en ParentSpanID](#32-fase-2-uitbreiding-met-spanid-en-parentspanid)
   - [3.3 Fase 3: Beschikbaar stellen van tracing-data](#33-fase-3-beschikbaar-stellen-van-tracing-data)
-
+- [4. Privacyoverwegingen en AVG-toetsing](#3-privacyoverwegingen-en-avg-toetsing)
 
 ---
 # 1. Inleiding
@@ -171,98 +171,29 @@ HTTP/1.1 400 Bad Request
 
 ![Flow Fase 1](../plantUMLsrc/rfc0022-01-Fase1_flow.svg "Flow Fase 1")
 
+### 4 Privacyoverwegingen en AVG-toetsing
 
+Het gebruik van een trace ID binnen deze RFC is uitsluitend bedoeld voor **technische traceerbaarheid van verzoeken over systeemgrenzen heen**. De trace ID is een **willekeurig gegenereerde identificatiecode** die wordt opgenomen in de header van een verzoek en wordt niet opgeslagen in combinatie met identificerende gegevens.
 
-## 3.2 Fase 2: Uitbreiding met SpanID en ParentSpanID
-> [!IMPORTANT]
-> Under construction
+De berichten waarop de trace ID betrekking heeft bevatten reeds persoonsgegevens, waaronder velden als:
+- `bsn` (Burgerservicenummer),
+- `wlzindicatieID`,
+- `besluitnummer`.
 
-<details>
-<summary>plantUML-source</summary>
+Daarmee is duidelijk dat de verwerking van deze berichten sowieso onder de AVG valt. Het toevoegen van een trace ID **verandert dat juridische kader niet**.
 
-```plantuml
-@startuml rfc0019-01-voorbeeldflow
-' !pragma teoz true
+Hoewel het theoretisch mogelijk is dat een trace ID – in combinatie met andere gegevens – **indirect herleidbaar is tot een persoon**, wordt deze ID **op zichzelf niet beschouwd als een persoonsgegeven** in de zin van de AVG. Deze kwalificatie is gebaseerd op:
+- het willekeurige en niet-identificeerbare karakter van de ID;
+- het ontbreken van enige directe koppeling met natuurlijke personen;
+- het feit dat de ID uitsluitend technisch wordt gebruikt voor tijdelijke keten-traceerbaarheid.
 
-skinparam ParticipantPadding 20
-skinparam BoxPadding 10
+Het gebruik van trace ID’s draagt bij aan **dataminimalisatie**: het maakt het mogelijk om fouten op te sporen of gedrag te analyseren zonder dat identificerende gegevens (zoals BSN of IP) hoeven te worden gelogd. De trace ID wordt bovendien niet centraal opgeslagen of voor profilering ingezet.
 
-box "Deelnemer"
-    participant "Client" as Client
-end box
+Voor fase 1 van deze RFC geldt dat:
+- de trace ID uitsluitend technisch aanwezig is in headers;
+- niet structureel wordt opgeslagen;
+- en niet gekoppeld wordt aan logging van gebruikersinformatie.
 
-box "nID"
-    participant "autorisatieserver" as AuthzServer
-    participant "nID Filter" as Filter
-    participant "Resource-server" as nIDResourceServer
-end box
+De vraag of een trace ID in deze context als persoonsgegeven moet worden beschouwd, is voorgelegd aan juridische experts. Mocht uit nader advies blijken dat aanvullende maatregelen vereist zijn, dan worden deze meegenomen in een volgende release of in een aparte verwerkingsbijlage.
 
-box "Register"
-    participant "Resource" as BEMRegister
-end box
-
-autonumber "<b>[000]"
-activate Client
-    Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>
-    activate AuthzServer
-        AuthzServer -> AuthzServer: Valideer Authenticatiemiddel
-        AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 34cfd3ee730bbe13\n<font color=red>X-B3-ParentSpanId: a2fb4a1d1a96d312
-        activate AuthzServer #LightGray
-            AuthzServer -> AuthzServer: Valideer autorisatie
-            AuthzServer -> AuthzServer: Genereer Access-Token\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 34cfd3ee730bbe13\n<font color=red>X-B3-ParentSpanId: a2fb4a1d1a96d312
-            activate AuthzServer #LightGray
-            deactivate AuthzServer
-        deactivate AuthzServer
-        AuthzServer --> Client --: 200 Response (Access-Token)
-    deactivate AuthzServer
-deactivate Client
-
-Client -> Filter: **GraphQL Query**\nAuthenticatiemiddel + Access-Token\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 2edb09379a27bfb1\n<font color=red>
-
-activate Filter
-note right of Filter: Inline filtering requests
-activate Client
-Filter -> Filter: Valideer Authenticatiemiddel
-Filter -> Filter: Valideer Access-Token
-Filter -> Filter: Valideer GraphQL
-Filter -> Filter: Valideer GraphQL request met scope(s)
-
-
-Filter -> nIDResourceServer
-deactivate Filter
-
-
-activate nIDResourceServer
-nIDResourceServer -> BEMRegister: GraphQL Request\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 75c38117346fa472\n<font color=red>X-B3-ParentSpanId: 2edb09379a27bfb1
-activate BEMRegister
-
-BEMRegister --> nIDResourceServer: 200 Response (GraphQL)
-deactivate BEMRegister
-
-nIDResourceServer --> Client: 200 Response (GraphQL)
-deactivate nIDResourceServer
-
-deactivate Client
-@enduml
-```
-</details>
-
-**Nieuwe versie:**
-![voorbeeld_flow](../plantUMLsrc/rfc0022-01-voorbeeldflow_v2.svg "voorbeeld_flow")
-
-## 3.3 Fase 3: Beschikbaar stellen van tracing-data
-> [!IMPORTANT]
-> Under construction
-
-# 4. Export
-> [!IMPORTANT]
-> Under construction
-
-Een export in de vorm van een *XML-exportfaciliteit* is essentieel, waarbij de syntax en semantiek van de export moeten voldoen aan de richtlijnen uiteengezet in RFC0021.
-
-De *XML-exportfaciliteit* genereert een uitgebreide logging op basis van een opgegeven selectie. Alle velden in dit XML-bestand zijn herleidbaar naar de naar de gegevensvelden zoals beschreven in RFC0021.
-
-
-
->```Voorbeeld export logrecord nID:```
 
