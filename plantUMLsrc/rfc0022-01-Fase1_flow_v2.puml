@@ -1,0 +1,62 @@
+@startuml
+' !pragma teoz true
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+box "Deelnemer"
+    participant "Client" as Client
+end box
+
+box "nID"
+    participant "autorisatieserver" as AuthzServer
+    participant "nID Filter" as Filter
+    participant "Resource-server" as nIDResourceServer
+end box
+
+box "Register"
+    participant "Resource" as BEMRegister
+end box
+
+autonumber "<b>[000]"
+activate Client
+    Client -> AuthzServer: **Aanvragen van autorisatie**\n"scope": "registers/resource:read"\n Authenticatiemiddel\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: a2fb4a1d1a96d312\n<font color=red>
+    activate AuthzServer
+        AuthzServer -> AuthzServer: Valideer Authenticatiemiddel
+        AuthzServer -> AuthzServer: Run Rule-engine o.b.v. scope(s)\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 34cfd3ee730bbe13
+        activate AuthzServer #LightGray
+            AuthzServer -> AuthzServer: Valideer autorisatie
+            AuthzServer -> AuthzServer: Genereer Access-Token\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 34cfd3ee730bbe13
+            activate AuthzServer #LightGray
+            deactivate AuthzServer
+        deactivate AuthzServer
+        AuthzServer --> Client --: 200 Response (Access-Token)
+    deactivate AuthzServer
+deactivate Client
+
+Client -> Filter: **GraphQL Query**\nAuthenticatiemiddel + Access-Token\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 2edb09379a27bfb1\n<font color=red>
+
+activate Filter
+note right of Filter: Inline filtering requests
+activate Client
+Filter -> Filter: Valideer Authenticatiemiddel
+Filter -> Filter: Valideer Access-Token
+Filter -> Filter: Valideer GraphQL
+Filter -> Filter: Valideer GraphQL request met scope(s)
+
+
+Filter -> nIDResourceServer
+deactivate Filter
+
+
+activate nIDResourceServer
+nIDResourceServer -> BEMRegister: GraphQL Request\n<font color=red>X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124\n<font color=red>X-B3-SpanId: 75c38117346fa472
+
+BEMRegister --> nIDResourceServer: 200 Response (GraphQL)
+deactivate BEMRegister
+
+nIDResourceServer --> Client: 200 Response (GraphQL)
+deactivate nIDResourceServer
+
+deactivate Client
+@enduml
