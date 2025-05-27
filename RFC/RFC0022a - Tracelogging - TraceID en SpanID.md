@@ -7,6 +7,7 @@
 Binnen het iWlz-netwerkmodel ontbreekt het aan gestandaardiseerde tracelogging, waardoor het lastig is om transacties en gebeurtenissen end-to-end te volgen en analyseren.
 
 **Beoogde situatie:**  
+
 - **Traceerbare loggegevens over verschillende registers heen:** Door het implementeren van gestandaardiseerde tracelogging wordt het mogelijk om de volledige keten van gebeurtenissen consistent en eenduidig te volgen binnen het iWlz-netwerkmodel.  
 - **Gefaseerde uitbreiding van functionaliteit:** De implementatie van tracelogging is gepland in drie fasen. In de eerste fase ligt de focus op het introduceren van `TraceId` en  `SpanId` voor basis traceerbaarheid. In latere fasen wordt `ParentSpanId` en mechanismen voor het beschikbaar stellen van loggingdata toegevoegd om de traceerbaarheid en analyse verder te verdiepen.
 
@@ -17,24 +18,27 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/37) om de actue
 ---
 
 **Inhoudsopgave**
-- [SAMENVATTING](#samenvatting)
+
+- [RFC0022a - Tracelogging - TraceID en SpanID](#rfc0022a---tracelogging---traceid-en-spanid)
 - [1. Inleiding](#1-inleiding)
   - [1.1 Uitgangspunten](#11-uitgangspunten)
-    - [Fase 1: Invoering van TraceID](#📘-fase-1-invoering-van-traceid)
-    - [Fase 2: Uitbreiding met SpanID en ParentSpanID](#📘-fase-2-uitbreiding-met-spanid-en-parentspanid)
-    - [Fase 3: Beschikbaar stellen van tracing-data](#📘-fase-3-beschikbaar-stellen-van-tracing-data)
+    - [📘 Fase 1: Invoering van TraceID en SpanID](#-fase-1-invoering-van-traceid-en-spanid)
+    - [📘 Fase 2: Uitbreiding met ParentSpanID](#-fase-2-uitbreiding-met-parentspanid)
+    - [📘 Fase 3: Beschikbaar stellen van tracing-data](#-fase-3-beschikbaar-stellen-van-tracing-data)
+  - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
 - [2. Terminologie](#2-terminologie)
 - [3. Traceerbaarheid](#3-traceerbaarheid)
-  - [3.1 Fase 1: Invoering van TraceID](#31-fase-1-invoering-van-traceid)
-    - [3.1.1 Standaardisatie van TraceId-generatie via OpenTelemetry](#311-standaardisatie-van-traceid-generatie-via-opentelemetry)
+  - [3.1 Fase 1: Invoering van TraceID en SpanID](#31-fase-1-invoering-van-traceid-en-spanid)
+    - [3.1.1 Standaardisatie van TraceId- en SpanId-generatie via OpenTelemetry](#311-standaardisatie-van-traceid--en-spanid-generatie-via-opentelemetry)
     - [3.1.2 Toevoegen aan uitgaande requests](#312-toevoegen-aan-uitgaande-requests)
     - [3.1.3 Randvoorwaarden voor TraceId](#313-randvoorwaarden-voor-traceid)
-    - [3.1.4 Validatie en foutafhandeling van TraceId](#314-validatie-en-foutafhandeling-van-traceid)
-  - [3.2 Fase 2: Uitbreiding met SpanID en ParentSpanID](#32-fase-2-uitbreiding-met-spanid-en-parentspanid)
-  - [3.3 Fase 3: Beschikbaar stellen van tracing-data](#33-fase-3-beschikbaar-stellen-van-tracing-data)
-- [4. Privacyoverwegingen en AVG-toetsing](#3-privacyoverwegingen-en-avg-toetsing)
+    - [3.1.4 Randvoorwaarden voor SpanId](#314-randvoorwaarden-voor-spanid)
+    - [3.1.5 Validatie en foutafhandeling van TraceId](#315-validatie-en-foutafhandeling-van-traceid)
+    - [3.1.6 Flow Fase 1](#316-flow-fase-1)
+- [4. Privacyoverwegingen en AVG-toetsing (TraceId en SpanId)](#4-privacyoverwegingen-en-avg-toetsing-traceid-en-spanid)
 
 ---
+
 # 1. Inleiding
 
 In een gedistribueerd netwerkmodel, zoals dat van iWlz, is het essentieel om gebeurtenissen (events) effectief te kunnen volgen en analyseren. Dit is cruciaal voor het waarborgen van de betrouwbaarheid, prestaties en transparantie van het systeem. Het ontbreken van gestandaardiseerde tracelogging belemmert momenteel het vermogen om transacties effectief te traceren, wat leidt tot inefficiënties en uitdagingen bij het oplossen van incidenten.​
@@ -46,6 +50,7 @@ De focus van deze RFC ligt uitsluitend op tracelogging en de bijbehorende tracee
 ## 1.1 Uitgangspunten
 
 De implementatie van tracelogging is gestructureerd in drie fasen, die samen zorgen voor volledige traceerbaarheid binnen het iWlz-netwerkmodel. De uitgangspunten vormen de drie fasen en geven richting aan de verdere uitwerking en implementatie daarvan.
+
 ### 📘 Fase 1: Invoering van TraceID en SpanID
 
 - **Traceerbaarheid over domeinen heen:** Het is essentieel dat logging traceerbaar is over de registers heen, waarbij loggebeurtenissen nauwkeurig kunnen worden gevolgd en gekoppeld, ook wanneer deze gebeurtenissen zich over verschillende delen van het netwerk verspreiden.
@@ -67,6 +72,7 @@ De implementatie van tracelogging is gestructureerd in drie fasen, die samen zor
 *Opmerking:* Deze gefaseerde aanpak is in lijn met best practices voor het implementeren van distributed tracing, zoals aanbevolen door o.a. OpenTelemetry. De initiële implementatie met alleen een TraceId en SpanId biedt al waardevolle traceerbaarheid en legt de basis voor verdere uitbreidingen. In latere fasen kunnen ParentSpanId en exportfunctionaliteiten worden toegevoegd om de traceerbaarheid en analyse verder te verbeteren.
 
 ## 1.2 Relatie andere RFC
+
 Deze RFC heeft een relatie met de volgende RFC(s)
 
 | RFC       | onderwerp                                      | relatie        | toelichting            | issue                                                                 |
@@ -79,6 +85,7 @@ Deze RFC heeft een relatie met de volgende RFC(s)
 
 
 # 2. Terminologie
+
 Opsomming van de in dit document gebruikte termen.
 
 | Terminologie | Omschrijving |
@@ -113,6 +120,7 @@ Opsomming van de in dit document gebruikte termen.
 | Zorgverlener | Een natuurlijke persoon die beroepsmatig zorg verleent |
 
 # 3. Traceerbaarheid
+
 Traceerbaarheid binnen het iWlz-netwerkmodel wordt geïmplementeerd in drie opeenvolgende fasen. Elke fase bouwt voort op de vorige en introduceert aanvullende functionaliteiten om de traceerbaarheid te verbeteren.
 
 ## 3.1 Fase 1: Invoering van TraceID en SpanID
@@ -148,8 +156,7 @@ Gebruik hiervoor de volgende headers, conform de [B3 Propagation-standaard](http
 
 > Let op: HTTP-headers zijn niet hoofdlettergevoelig. Conform de B3-standaard wordt aanbevolen de headers te noteren als `X-B3-TraceId` en `X-B3-SpanId` (in kebab-case met hoofdletters).
 
-
-### 3.1.3 Randvoorwaarden voor TraceId:
+### 3.1.3 Randvoorwaarden voor TraceId
 
 Een `TraceId` moet:
 
@@ -177,7 +184,7 @@ Een `SpanId` moet:
 X-B3-SpanId: 0020000000000001
 ```
 
-### 3.1.5 Validatie en foutafhandeling van TraceId:
+### 3.1.5 Validatie en foutafhandeling van TraceId
 
 Bij binnenkomst wordt gecontroleerd of een `TraceId` aanwezig is:
 
@@ -193,9 +200,9 @@ HTTP/1.1 400 Bad Request
 
 Inkomende `X-B3-SpanId`-headers worden in Fase 1 genegeerd. Elke service genereert bij binnenkomst zelf een nieuwe `SpanId`.
 
-### 3.1.6 Flow Fase 1:
+### 3.1.6 Flow Fase 1
 
-![Flow Fase 1](../plantUMLsrc/rfc0022-02-Fase1_flow.svg "Flow Fase 1")
+![Flow Fase 1](../plantUMLsrc/rfc0022-01-Fase1_flow_v2.svg "Flow Fase 1")
 <details>
 <summary>plantUML-source</summary>
 
@@ -263,14 +270,16 @@ deactivate nIDResourceServer
 deactivate Client
 @enduml
 ```
-</details>
 
+</details>
+<p>
 
 # 4. Privacyoverwegingen en AVG-toetsing (TraceId en SpanId)
 
 Het gebruik van een `TraceId` binnen deze RFC is uitsluitend bedoeld voor **technische traceerbaarheid van verzoeken over systeemgrenzen heen**. De `TraceId` is een **willekeurig gegenereerde identificatiecode** die wordt opgenomen in de header van een verzoek en niet wordt opgeslagen in combinatie met identificerende gegevens.
 
 De berichten waarop de `TraceId` betrekking heeft, bevatten reeds persoonsgegevens, waaronder velden als:
+
 - `bsn` (Burgerservicenummer),
 - `wlzindicatieID`,
 - `besluitnummer`.
@@ -280,6 +289,7 @@ Daarmee is duidelijk dat de verwerking van deze berichten onder de AVG valt. Het
 Hoewel het theoretisch denkbaar is dat een `TraceId` of `SpanId` – in combinatie met andere gegevens – **indirect herleidbaar zou kunnen zijn tot een persoon**, worden deze identifiers **op zichzelf niet als persoonsgegevens aangemerkt** in de zin van de AVG[^1].
 
 Deze kwalificatie is gebaseerd op de volgende overwegingen:
+
 - beide identifiers worden willekeurig gegenereerd en bevatten geen identificeerbare informatie;
 - er is geen directe koppeling met natuurlijke personen;
 - de toepassing is strikt technisch en beperkt tot tijdelijke traceerbaarheid van ketenverzoeken (`TraceId`) of afzonderlijke verwerkingsstappen (`SpanId`);
@@ -288,6 +298,7 @@ Deze kwalificatie is gebaseerd op de volgende overwegingen:
 Het gebruik van `TraceId` draagt bovendien bij aan **dataminimalisatie**: het maakt het mogelijk om fouten te analyseren zonder dat identificerende gegevens, zoals BSN of IP-adressen, hoeven te worden gelogd. De `TraceId` wordt niet centraal opgeslagen, noch gebruikt voor profilering of gedragsanalyse (AVG, art. 4(4)).
 
 Voor fase 1 van deze RFC geldt dat:
+
 - de `TraceId` en `SpanId` uitsluitend technisch aanwezig zijn in headers;
 - zij uitsluitend bedoeld zijn voor tijdelijke technische verwerking, en niet voor centrale of langdurige opslag;
 - zij niet worden gekoppeld aan logging van gebruikersinformatie.
@@ -295,6 +306,3 @@ Voor fase 1 van deze RFC geldt dat:
 De vraag of een `TraceId` in deze context als persoonsgegeven moet worden beschouwd, is voorgelegd aan juridische experts. Mocht uit nader advies blijken dat aanvullende maatregelen vereist zijn, dan worden deze meegenomen in een volgende release of opgenomen in een afzonderlijke verwerkingsbijlage.
 
 [^1]: Zie AVG, artikel 4, lid 1: “Persoonsgegeven: alle informatie over een geïdentificeerde of identificeerbare natuurlijke persoon.” Zie ook EDPB, *Guidelines 4/2019 on the interpretation of personal data in the context of online identifiers*.
-
-
-
