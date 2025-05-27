@@ -154,7 +154,7 @@ Gebruik hiervoor de volgende headers, conform de [B3 Propagation-standaard](http
 Een `TraceId` moet:
 
 - Exact 16 bytes groot zijn, wat overeenkomt met 32 hexadecimale tekens (lowercase).
-- Niet uitsluitend uit nullen bestaan (bijv. 00000000000000000000000000000000 is ongeldig).
+- Niet uitsluitend uit nullen bestaan (bijv. `0000000000000000` is ongeldig).
 - Uniek zijn. TraceIds dienen gegenereerd te worden met behulp van een UUID-generator of via de OpenTelemetry SDK om duplicaten binnen een trace te voorkomen.
 
 **Voorbeeld van een geldig TraceID:**
