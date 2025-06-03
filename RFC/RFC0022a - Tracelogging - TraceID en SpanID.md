@@ -162,7 +162,7 @@ Traceerbaarheid binnen het iWlz-netwerkmodel wordt geïmplementeerd in drie opee
 
 ## 3.1 Fase 1: Invoering van TraceID en SpanID
 
-In de eerste fase wordt een unieke `TraceId` geïntroduceerd voor elke inkomende request. Deze `TraceId` wordt doorgegeven aan alle downstream-services, waardoor gerelateerde logregels kunnen worden gecorreleerd en een globaal overzicht van de requestflow kan worden verkregen.
+In de eerste fase wordt een unieke `TraceId` geïntroduceerd bij het starten van een nieuwe ketenverwerking. Deze `TraceId` wordt vervolgens doorgegeven aan alle opvolgende services, waardoor gerelateerde logregels kunnen worden gecorreleerd en een globaal overzicht van de requestflow kan worden verkregen.
 
 Daarnaast wordt per verwerkingsstap of service-aanroep een unieke `SpanId` gegenereerd. Deze identifier maakt het mogelijk om individuele bewerkingen binnen een trace afzonderlijk te volgen en in context te plaatsen. Hiermee ontstaat meer inzicht in de interne opbouw en timing van een ketenverzoek.
 
@@ -180,7 +180,7 @@ In de praktijk kan bijvoorbeeld gebruik worden gemaakt van de volgende compliant
 
 Hiermee wordt gegarandeerd dat alle gegenereerde `TraceId`- en `SpanId`-waarden voldoen aan de juiste lengte, entropie en formatvereisten.
 
-In Fase 1 wordt bij elk inkomend request op een service een nieuwe `SpanId` gegenereerd. Indien binnen een service onderscheid wordt gemaakt tussen afzonderlijke verwerkingsstappen (zoals authenticatie, validatie of routering), mag hiervoor ook een nieuwe `SpanId` worden aangemaakt.
+In Fase 1 wordt voor elke ontvangen request een nieuwe `SpanId` gegenereerd. Indien een service bestaat uit meerdere verwerkingsstappen (zoals authenticatie, validatie of routering), mag hiervoor per stap ook een aparte `SpanId` worden aangemaakt.
 
 ### 3.1.2 Toevoegen aan uitgaande requests
 
