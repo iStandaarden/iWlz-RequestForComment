@@ -34,7 +34,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/37) om de actue
 - [3. Traceerbaarheid](#3-traceerbaarheid)
   - [3.1 Fase 1: Invoering van TraceID en SpanID](#31-fase-1-invoering-van-traceid-en-spanid)
     - [3.1.1 Standaardisatie van TraceId- en SpanId-generatie via OpenTelemetry](#311-standaardisatie-van-traceid--en-spanid-generatie-via-opentelemetry)
-    - [3.1.2 Toevoegen aan uitgaande requests](#312-toevoegen-aan-uitgaande-requests)
+    - [3.1.2 Toevoegen aan requests](#312-toevoegen-aan-requests)
     - [3.1.3 Randvoorwaarden voor TraceId](#313-randvoorwaarden-voor-traceid)
     - [3.1.4 Randvoorwaarden voor SpanId](#314-randvoorwaarden-voor-spanid)
     - [3.1.5 Validatie en foutafhandeling van TraceId](#315-validatie-en-foutafhandeling-van-traceid)
@@ -182,9 +182,9 @@ Hiermee wordt gegarandeerd dat alle gegenereerde `TraceId`- en `SpanId`-waarden 
 
 In Fase 1 wordt voor elke ontvangen request een nieuwe `SpanId` gegenereerd. Indien een service bestaat uit meerdere verwerkingsstappen (zoals authenticatie, validatie of routering), mag hiervoor per stap ook een aparte `SpanId` worden aangemaakt.
 
-### 3.1.2 Toevoegen aan uitgaande requests
+### 3.1.2 Toevoegen aan requests
 
-Zowel de `TraceId` als de `SpanId` worden toegevoegd aan de headers van alle uitgaande requests.
+Zowel de `TraceId` als de `SpanId` worden toegevoegd aan de headers van elk verzoek dat binnen het netwerkmodel naar een andere dienst wordt verstuurd.
 
 Gebruik hiervoor de volgende headers, conform de [B3 Propagation-standaard](https://github.com/openzipkin/b3-propagation):
 
