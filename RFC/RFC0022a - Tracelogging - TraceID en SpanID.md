@@ -239,6 +239,10 @@ Inkomende `X-B3-SpanId`-headers worden in Fase 1 genegeerd. Elke service generee
 
 ### 3.1.6 Flow Fase 1
 
+> **Voorbeeldimplementatie (niet-normatief)**   
+> Onderstaande flow toont een mogelijke implementatie van traceerbaarheid binnen een ketenverzoek. De flow omvat zowel het aanvragen van autorisatie als het uitvoeren van een gegevensopvraag (GraphQL) en laat zien hoe `TraceId` en `SpanId` zich door de verschillende onderdelen van het netwerkmodel verspreiden.  
+> Dit voorbeeld is afkomstig uit een specifieke context en dient ter illustratie van de werking; de exacte inrichting kan verschillen per ketenpartner of toepassing.
+
 ![Flow Fase 1](../plantUMLsrc/rfc0022-01-Fase1_flow_v2.svg "Flow Fase 1")
 <details>
 <summary>plantUML-source</summary>
