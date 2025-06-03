@@ -21,11 +21,15 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/37) om de actue
 
 - [RFC0022a - Tracelogging - TraceID en SpanID](#rfc0022a---tracelogging---traceid-en-spanid)
 - [1. Inleiding](#1-inleiding)
-  - [1.1 Uitgangspunten](#11-uitgangspunten)
+  - [1.1 Aanleiding](#11-aanleiding)
+  - [1.2 Doelstelling](#12-doelstelling)
+  - [1.3 Scope](#13-scope)
+  - [1.4 Use Cases](#14-use-cases)
+  - [1.5 Gefaseerde aanpak](#15-gefaseerde-aanpak)
     - [📘 Fase 1: Invoering van TraceID en SpanID](#-fase-1-invoering-van-traceid-en-spanid)
     - [📘 Fase 2: Uitbreiding met ParentSpanID](#-fase-2-uitbreiding-met-parentspanid)
     - [📘 Fase 3: Beschikbaar stellen van tracing-data](#-fase-3-beschikbaar-stellen-van-tracing-data)
-  - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
+  - [1.6 Relatie andere RFC](#16-relatie-andere-rfc)
 - [2. Terminologie](#2-terminologie)
 - [3. Traceerbaarheid](#3-traceerbaarheid)
   - [3.1 Fase 1: Invoering van TraceID en SpanID](#31-fase-1-invoering-van-traceid-en-spanid)
@@ -41,19 +45,51 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/37) om de actue
 
 # 1. Inleiding
 
-In een gedistribueerd netwerkmodel, zoals dat van iWlz, is het essentieel om gebeurtenissen (events) effectief te kunnen volgen en analyseren. Dit is cruciaal voor het waarborgen van de betrouwbaarheid, prestaties en transparantie van het systeem. Het ontbreken van gestandaardiseerde tracelogging belemmert momenteel het vermogen om transacties effectief te traceren, wat leidt tot inefficiënties en uitdagingen bij het oplossen van incidenten.​
+## 1.1 Aanleiding
 
-Deze RFC introduceert een gestandaardiseerde aanpak voor tracelogging binnen het iWlz-netwerkmodel. Het doel is om een uniforme structuur en semantiek te definiëren voor het vastleggen van events in tracelogs, waardoor traceerbaarheid over verschillende systemen en domeinen heen mogelijk wordt. Dit zal bijdragen aan een verbeterde monitoring, foutopsporing en algemene systeemtransparantie.​
+In een gedistribueerd netwerkmodel, zoals dat van iWlz, is het volgen en analyseren van gebeurtenissen (events) over domeingrenzen heen een randvoorwaarde om transacties inzichtelijk, controleerbaar en herstelbaar te maken. Dit draagt bij aan:
 
-De focus van deze RFC ligt uitsluitend op tracelogging en de bijbehorende traceerbaarheid. Aspecten zoals auditlogging en exportmechanismen worden als aparte onderwerpen beschouwd en vallen buiten de scope van dit document.​
+- Ondersteuning bij het analyseren, opsporen en oplossen van productie-incidenten in de keten
+- Inzicht in de ketenroute van transacties
 
-## 1.1 Uitgangspunten
+Het ontbreken van gestandaardiseerde tracelogging belemmert momenteel het vermogen om transacties effectief te traceren, wat leidt tot inefficiënties en uitdagingen bij incidentanalyse. Het is nu niet mogelijk om eenduidig vast te stellen hoe een specifieke aanvraag zich heeft verplaatst door het netwerk, wie erbij betrokken was, of waar een fout ontstond.
+
+## 1.2 Doelstelling
+
+Deze RFC introduceert een gestandaardiseerde aanpak voor tracelogging binnen het iWlz-netwerkmodel. Het doel is om:
+
+- Een uniforme structuur en semantiek te definiëren voor het vastleggen van traceergegevens (TraceId en SpanId)
+- Traceerbaarheid over verschillende systemen en domeinen heen mogelijk te maken
+- De basis te leggen voor monitoring, foutopsporing en systeemtransparantie
+
+## 1.3 Scope
+
+Deze RFC bevat een technische uitwerking van `TraceId` en `SpanId` binnen het netwerkmodel. De scope van deze RFC omvat:
+
+- De definitie en toepassing van `TraceId` en `SpanId` binnen het iWlz-netwerkmodel
+- De uniforme opname en doorgifte van deze traceerdata over keteninterfaces heen
+- Technische logging van systeeminteracties, zonder interpretatie van persoonsgegevens of gebruik voor auditdoeleinden
+- De inrichting van traceerbaarheid over domeinen heen en uniforme logging, zoals beschreven in Fase 1 (§1.5)
+
+Buiten scope van deze RFC vallen:
+
+- Juridische toetsing en formele AVG-beoordeling (deze wordt parallel opgepakt en apart verantwoord)
+- Auditlogging (gericht op controleerbaarheid en verantwoording, zoals toegangsregistratie of procesafwijkingen)
+- Uitwerking en verwerking van `ParentSpanId` (onderdeel van Fase 2, beschreven in RFC0022b)
+- Exportfaciliteiten en ontsluiting van traceerdata (onderdeel van Fase 3, beschreven in RFC0022c)
+
+## 1.4 Use Cases
+
+- **Use Case 1:** Een verzoek om bemiddeling verloopt foutloos via het ene register, maar wordt niet goed verwerkt in het andere. Zonder een gedeeld TraceId zijn de loggingregels niet aan elkaar te koppelen.
+- **Use Case 2:** Bij productie-incidenten ontbreekt zicht op waar in de keten de fout is ontstaan, waardoor oplossen vertraging oploopt.
+
+## 1.5 Gefaseerde aanpak
 
 De implementatie van tracelogging is gestructureerd in drie fasen, die samen zorgen voor volledige traceerbaarheid binnen het iWlz-netwerkmodel. De uitgangspunten vormen de drie fasen en geven richting aan de verdere uitwerking en implementatie daarvan.
 
 ### 📘 Fase 1: Invoering van TraceID en SpanID
 
-- **Traceerbaarheid over domeinen heen:** Het is essentieel dat logging traceerbaar is over de registers heen, waarbij loggebeurtenissen nauwkeurig kunnen worden gevolgd en gekoppeld, ook wanneer deze gebeurtenissen zich over verschillende delen van het netwerk verspreiden.
+- **Traceerbaarheid over domeinen heen:** Logging moet traceerbaar zijn over registers heen, waarbij loggebeurtenissen nauwkeurig kunnen worden gevolgd en gekoppeld, ook wanneer deze gebeurtenissen zich over verschillende delen van het netwerk verspreiden.  
 
 - **Uniformiteit van logging:** Logging vanuit verschillende bronnen binnen het netwerkmodel moet uniform en vergelijkbaar zijn. Dit zorgt voor consistentie en vereenvoudigt het proces van gegevensanalyse en -interpretatie.
 
@@ -65,13 +101,14 @@ De implementatie van tracelogging is gestructureerd in drie fasen, die samen zor
 
 - **Aanwezigheid van exportfaciliteit:** Om traceerbare loggegevens te waarborgen en de mogelijkheid te bieden voor gegevensanalyse buiten het directe netwerkmodel, moet een exportfaciliteit aanwezig zijn. Deze faciliteit stelt gebruikers in staat om loggegevens veilig en efficiënt te exporteren naar externe systemen of opslaglocaties.
 
-- **Standaardisatie van syntax en semantiek:** Bij het ontwikkelen van de exportfaciliteit is het van cruciaal belang om de syntax en semantiek van de export vast te leggen. Dit zorgt ervoor dat loggegevens op een consistente en begrijpelijke manier worden gepresenteerd, ongeacht het doel of de bestemming van de export.
+- **Standaardisatie van syntax en semantiek:** Bij het ontwikkelen van de exportfaciliteit is het van belang om de syntax en semantiek van de export vast te leggen. Dit zorgt ervoor dat loggegevens op een consistente en begrijpelijke manier worden gepresenteerd, ongeacht het doel of de bestemming van de export.  
 
 - **Behoud van integriteit en beveiliging:** De exportfaciliteit moet worden ontworpen met het oog op het behoud van de integriteit en beveiliging van loggegevens. Dit omvat maatregelen om de vertrouwelijkheid, beschikbaarheid en authenticiteit van de geëxporteerde gegevens te waarborgen, evenals mechanismen voor het detecteren en voorkomen van manipulatie tijdens het exportproces.
 
 *Opmerking:* Deze gefaseerde aanpak is in lijn met best practices voor het implementeren van distributed tracing, zoals aanbevolen door o.a. OpenTelemetry. De initiële implementatie met alleen een TraceId en SpanId biedt al waardevolle traceerbaarheid en legt de basis voor verdere uitbreidingen. In latere fasen kunnen ParentSpanId en exportfunctionaliteiten worden toegevoegd om de traceerbaarheid en analyse verder te verbeteren.
+De keuze om deze fasen op te splitsen in afzonderlijke RFC’s is bewust gemaakt op basis van eerdere feedback: het combineren van meerdere verantwoordelijkheden in één document bleek nadelig voor de planbaarheid en afstemming. Door de opdeling is iedere stap afzonderlijk te beoordelen en implementeren.
 
-## 1.2 Relatie andere RFC
+## 1.6 Relatie andere RFC
 
 Deze RFC heeft een relatie met de volgende RFC(s)
 
