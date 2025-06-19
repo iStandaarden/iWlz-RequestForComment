@@ -226,14 +226,16 @@ X-B3-SpanId: 0020000000000001
 Bij binnenkomst wordt gecontroleerd of een `TraceId` aanwezig is:
 
 - Indien aanwezig, wordt deze gebruikt voor verdere verwerking.
-- Indien afwezig, wordt het verzoek afgewezen met de volgende foutmelding:
+- ~~Indien afwezig, wordt het verzoek afgewezen met de volgende foutmelding:~~
 
 ```http
 HTTP/1.1 400 Bad Request
 {"ErrorCode": "invalid_request", "Error": "The request is missing header X-B3-TraceId"}
 ```
 
-> Opmerking: Deze validatie is een aanvulling op de OpenTelemetry-specificatie. Die stelt alleen eisen aan de structuur van een `TraceId`, maar schrijft geen validatiegedrag voor aan ontvangende systemen.
+> ~~Opmerking: Deze validatie is een aanvulling op de OpenTelemetry-specificatie. Die stelt alleen eisen aan de structuur van een `TraceId`, maar schrijft geen validatiegedrag voor aan ontvangende systemen.~~
+
+⚠️ In het technisch afstemmingsoverleg van 5-6-2025 is besloten dat de validatie van de `TraceId`-header wordt opgenomen in **Fase 2**. Deze validatie wordt in Fase 1 nog niet afgedwongen.
 
 Inkomende `X-B3-SpanId`-headers worden in Fase 1 genegeerd. Elke service genereert bij binnenkomst zelf een nieuwe `SpanId`.
 
