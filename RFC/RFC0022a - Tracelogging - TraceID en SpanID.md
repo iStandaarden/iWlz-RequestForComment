@@ -237,8 +237,6 @@ HTTP/1.1 400 Bad Request
 
 ⚠️ In het technisch afstemmingsoverleg van 5-6-2025 is besloten dat de validatie van de `TraceId`-header wordt opgenomen in **Fase 2**. Deze validatie wordt in **Fase 1** nog niet afgedwongen.
 
-Inkomende X-B3-SpanId-headers worden in Fase 1 genegeerd. Conform de B3-standaard en de werkwijze van OpenTelemetry genereert elke service bij ontvangst van een request een eigen nieuwe SpanId voor de logging van de eigen verwerking.
-
 ### 3.1.6 Flow Fase 1
 
 > **Voorbeeldimplementatie (niet-normatief)**   
