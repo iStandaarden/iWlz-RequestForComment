@@ -2,8 +2,7 @@
 
 # CONCEPT - RFC0018a - Addendum A: Integratie foutmeldingen VECOZO
 
-> [!CAUTION]
-> Deze RFC is niet bijgewerkt met de laatste versie van RFC0018  
+> [!IMPORTANT]
 > Deze Request for Comment is een aanvulling op [RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md) 
 
 <font size="4">**SAMENVATTING**</font>
@@ -27,12 +26,11 @@ Dit document beschrijft functioneel hoe meldingen en welke meldingen door VECOZO
   - [1.2 Relatie andere RFC's](#12-relatie-andere-rfcs)
   - [1.3 Code](#13-code)
 - [2. Terminologie](#2-terminologie)
-- [3. Melden van berichtfouten door VECOZO](#3-melden-van-berichtfouten-door-vecozo)
-- [4. BRS Meldingen](#4-brs-meldingen)
-  - [4.1 Structuur melding](#41-structuur-melding)
-    - [4.2 Voorbeeld BRS Foutmelding](#42-voorbeeld-brs-foutmelding)
-    - [4.3. Afzender en Ontvanger lijst](#43-afzender-en-ontvanger-lijst)
+- [3. Meldingen](#3-meldingen)
+- [4. Melden van berichtfouten door VECOZO](#4-melden-van-berichtfouten-door-vecozo)
+  - [4.1 Voorbeeld BRS Foutmelding](#41-voorbeeld-brs-foutmelding)
   - [5 BRS foutmeldingen](#5-brs-foutmeldingen)
+
 
 
 ---
@@ -73,9 +71,17 @@ Opsomming van de in dit document gebruikte termen.
 | Silvester | Voorziening die registerdata omzet naar iWlz berichten |
 
 
-# 3. Melden van berichtfouten door VECOZO
+# 3. Meldingen
 
-![melding_notificatie](../plantUMLsrc/rfc0018a-01-meldingflow-Silvester.svg "meldingflow_Silvester")
+De algemene werking van *Meldingen*, de structuur, voorbeelden etc is beschreven in [RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md)
+
+
+
+# 4. Melden van berichtfouten door VECOZO
+
+De flow is gebaseerd op de algemene beschrijving zoals beschreven in [RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md)
+
+![melding_notificatie](/plantUMLsrc/rfc0018-a-01-meldingflow-Silverster.svg "meldingflow_Silvester")
 <details>
 <summary>plantUML-source</summary>
 
@@ -154,121 +160,7 @@ end
 | 13 | iWlz foutmelding | Stuur iWlz-foutmelding naar bronhouder | 
 
 
-
-# 4. BRS Meldingen
-
-## 4.1 Structuur melding
-
-De inhoud is in structuur vergelijkbaar met de notificatie met vergelijkbare gegevens:
-
-| Gegeven          | Algemene beschrijving                                              | Beschrijving                                                                                                                             | V/O<sup>*</sup> | Datatype |
-|------------------|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|----------|
-| timestamp        | Tijdstip waarop de melding is aangemaakt                       |                                                                                                                                          |        V        | Datetime |
-| afzenderIDType   | Kenmerk van het type ID van de verzendende partij                  |                                                                                                                                          |        V        | String     |
-| afzenderID       | Identificatie van de verzender van het bericht                     |                                                                                                                                          |        V        | String      |
-| ontvangerIDType  | Kenmerk van het type ID van de ontvangende partij                  |                                                                                                                                          |        V        | String     |
-| ontvangerID      | Identifictie van de ontvanger van het bericht                      |                                                                                                                                          |        V        | String      |
-| ontvangerKenmerk | Kenmerk voor de ontvanger:                                          | Identificatie van de melder. Meestal gelijk aan de afzender                                                                              |        O        | String   |
-| eventType      | Onderwerptype van het bericht                                      | Identificatie van het type melding. (nu alleen iWlzFoutmelding)                                                                          |        V        | String   |
-| subjectList | Lijst met meldingen | | V | Array |
-| .. / subject          | Onderwerp van het bericht                                          | inhoud van de melding (nu alleen een retourcode of regelcode, maar kan in de toekomst ook een tekstuele suggestie voor verbetering zijn) |        V        | String   |
-| .. / recordID         | Identificatie van het record waar het bericht betrekking op heeft. | Identificatie van het record waar de melding betrekking op heeft.                                                                        |        V        | String   |
-
-<sup>*</sup> V = verplicht / O = Optioneel
-
-![notificatie_erd](../plantUMLsrc/rfc0008-06-message-erd.svg "notificatie_erd")
-
-<details>
-  <summary>plantUML-source</summary>
-
-```plantuml
-@startuml rfc0008-06-message-erd.puml
-
-entity Notification {
-  timestamp : Datetime,
-  afzenderIDType : string,
-  afzenderID : string,
-  ontvangerIDType : string,
-  ontvangerID : string,
-  ontvangerKenmerk : string[0..1],
-  eventType : string,
-}
-entity SubjectList {
-      subject : string
-      recordID : string
-    }
-
-Notification "1" *-- "1..*" SubjectList: contains
-
-@enduml
-```
-</details>
-
-<details>
-  <summary>open json-schema</summary>
-
-```json
-{
-  "title": "message-definition",
-  "description": "json-schema definitie voor iWlz-notificatie en iWlz-melding",
-  "type": "object",
-  "properties": {
-    "timestamp": {
-      "type": "string"
-    },
-    "afzenderIDType": {
-      "type": "string"
-    },
-    "afzenderID": {
-      "type": "string"
-    },
-    "ontvangerIDType": {
-      "type": "string"
-    },
-    "ontvangerID": {
-      "type": "string"
-    },
-    "ontvangerKenmerk": {
-      "type": "string"
-    },
-    "eventType": {
-      "type": "string"
-    },
-    "subjectList": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "subject": {
-            "type": "string"
-          },
-          "recordID": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "subject",
-          "recordID"
-        ]
-      }
-    }
-  },
-  "required": [
-    "timestamp",
-    "afzenderIDType",
-    "afzenderID",
-    "ontvangerIDType",
-    "ontvangerID",
-    "eventType",
-    "subjectList"
-  ]
-}
-```
-</details>
-
-### 4.2 Voorbeeld BRS Foutmelding
-
-Situatie: 
+## 4.1 Voorbeeld BRS Foutmelding
 
 ```json
 {
@@ -289,41 +181,43 @@ Situatie:
 ```
 
 
-### 4.3. Afzender en Ontvanger lijst
-| Code | Omschrijving | Referentie | Toepassing |
-| :-- | :-- | :-- | :-- |
-|  AGB | AGB-code | [AGB-register](https://www.vektis.nl/agb-register/zoeken) | identificatie Zorgaanbieder |
-|  BSN | Burgerservicenummer | | identificatie Burger (nog geen toepassing) |
-|  KVK | Kamer van Koophandel | [KVK-register](https://www.kvk.nl/zoeken/) | identificatie Ondernemer (CIZ bij eerste implementatie<sup>*</sup>) |
-|  OIN | Organisatie Identificatienummer | [OIN-register](https://www.vektis.nl/agb-register/zoeken) | identificatie CIZ (toekomstig<sup>*</sup>) |
-|  UZOVI | Unieke ZorgVerzekeraarsIdentificatie | [UZOVI-register](https://www.vektis.nl/uzovi-register) | identificatie Zorgkantoren |
-
-<sup>*</sup> Op dit moment is het voor VECOZO niet mogelijk om een OIN te verifieren waardoor er geen claim kan worden afgegeven op basis van OIN. Bij de eerste implementatie van meldingen zal voor de identificatie van het CIZ  het KVK-nummer (62253778) worden gebruikt. 
 
 ## 5 BRS foutmeldingen
 
 De onderstaande lijst met BRS-foutcodes is afkomstig van . Per BRS-foutcode is aangegeven of deze door VECOZO wordt teruggemeld als BRS-foutmelding naar de bron van de notificatie. 
 
-| Code   | Omschrijving                                                                                         | Naar Notificatiebron | reden                                                   |
-|--------|------------------------------------------------------------------------------------------------------|----------------------|---------------------------------------------------------|
-| BRS01  | Afzender is niet bekend bij VECOZO                                                                   | nee                  | kan niet voorkomen                                      |
-| BRS02  | Indiener beschikt niet over de juiste rol om voor dit berichttype berichten in te dienen             | ?                    |                                                         |
-| BRS03  | Indiener is niet gemachtigd om namens de afzender het bericht in te dienen                           | ?                    |                                                         |
-| BRS04  | Geadresseerde partij is niet aangesloten bij VECOZO                                                  | ja                   | notificatie naar onbekende ontvanger op basis van data  |
-| BRS05  | Geadresseerde partij beschikt niet over de juiste rol om voor dit berichttype berichten te ontvangen | ja                   | notificatie voor onterechte ontvanger op basis van data |
-| BRS06  | Payload is groter dan toegestaan                                                                     | nee                  | oorzaak Silvester                                       |
-| BRS12  | Virus gedetecteerd in payload                                                                        | nee                  | oorzaak Silvester                                       |
-| BRS13  | Berichtinhoud voldoet niet aan XSD                                                                   | nee                  | oorzaak Silvester                                       |
-| BRS14  | Payload bevat geen well-formed XML                                                                   | nee                  | oorzaak Silvester                                       |
-| BRS15  | Geen geldig ZIP-bestand aangeleverd                                                                  | nee                  | oorzaak Silvester                                       |
-| BRS16  | ZIP-bestand bevat meer bestanden dan toegestaan                                                      | nee                  | oorzaak Silvester                                       |
-| BRS17  | ZIP-bestand bevat wachtwoordbeveiliging                                                              | nee                  | oorzaak Silvester                                       |
-| BRS18  | Bericht bevat persoonsgegevens die niet zijn toegestaan op deze omgeving                             | nee                  | oorzaak Silvester                                       |
-| BRS19  | Bestand in ZIP-bestand is groter dan toegestaan                                                      | nee                  | oorzaak Silvester                                       |
-| BRS20  | Identificatie moet per berichtsoort uniek zijn voor de verzendende partij                            | nee                  | oorzaak Silvester                                       |
-| BRS21  | ZIP-bestand bevat minder bestanden dan toegestaan                                                    | nee                  | oorzaak Silvester                                       |
-| BRS28  | Het bericht is afgekeurd op basis van XSLT-controles                                                 | nee                  | oorzaak Silvester of gaat via retourbericht             |
-| BRS29  | ZIP-bestand bevat mappenstructuur                                                                    | nee                  | oorzaak Silvester                                       |
-| BRS33  | Bericht kan niet afgeleverd worden                                                                   | ja                   | notificatie naar onbekende ontvanger op basis van data  |
-| BRS114 | TraceerID is niet uniek                                                                              | ?                    |                                                         |
-
+|    Code                   | **Omschrijving**                                                                                       | **Naar   Notificatiebron** | **reden**                                                                                |
+|-------------------------------|------------------------------------------------------------------------------------------------------------------|--------------------------------------|----------------------------------------------------------------------------------------------------|
+| **BRS01**           |    Afzender is niet bekend bij VECOZO                                                                        |    nee                           |    kan niet voorkomen                                                                          |
+| **BRS02**           |    Indiener beschikt niet over de juiste rol om   voor dit berichttype berichten in te dienen                |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS03**           |    Indiener is niet gemachtigd om namens de   afzender het bericht in te dienen                              |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS04**           |    Geadresseerde partij is niet aangesloten bij   VECOZO                                                     |    ja                            |    notificatie naar onbekende ontvanger op basis   van data                                    |
+| **BRS05**           |    Geadresseerde partij beschikt niet over de   juiste rol om voor dit berichttype berichten te ontvangen    |    ja                            |    notificatie voor onterechte ontvanger op basis   van data                                   |
+| **BRS06**           |    Payload is groter dan toegestaan                                                                          |    ja                            |    Teveel data in bericht                                                                      |
+| **BRS07 t/m BRS11** |    Verschillende meldingen mbt deelberichten                                                                 |    nee                           |    Nvt: Silvester dient geen deelberichten in                                                  |
+| **BRS12**           |    Virus gedetecteerd in payload                                                                             |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS13**           |    Berichtinhoud voldoet niet aan XSD                                                                        |    ja                            |    foutieve data aangeleverd                                                                   |
+| **BRS14**           |    Payload bevat geen well-formed XML                                                                        |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS15**           |    Geen geldig ZIP-bestand aangeleverd                                                                       |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS16**           |    ZIP-bestand bevat meer bestanden dan   toegestaan                                                         |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS17**           |    ZIP-bestand bevat wachtwoordbeveiliging                                                                   |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS18**           |    Bericht bevat persoonsgegevens die niet zijn   toegestaan op deze omgeving                                |    ja                            |    Er is getest met clienten die niet op de   whitelist staan (komt niet voor op productie)    |
+| **BRS19**           |    Bestand in ZIP-bestand is groter dan   toegestaan                                                         |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS20**           |    Identificatie moet per berichtsoort uniek zijn   voor de verzendende partij                               |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS21**           |    ZIP-bestand bevat minder bestanden dan   toegestaan                                                       |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS22**           |    Bericht afgekeurd o.b.v. bedrijfs- en   controleregels                                                    |    ja                            |    foutieve data aangeleverd                                                                   |
+| **BRS23**           |    Het ingediende bestand is geen EI-bestand                                                                 |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS24**           |    Retourbericht is niet van de verwachtte   berichtstroom                                                   |    nee                           |    Nvt: Silvester dient geen retourberichten in                                                |
+| **BRS25**           |    Bestand bevat geen ondersteunde EI-standaard                                                              |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS26**           |    Afzender in payload is niet gelijk aan   afzender in routeringgegevens                                    |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS27**           |    Bestand voldoet niet aan CSV-standaard                                                                    |    nee                           |    Nvt: silvester dient geen csv bestanden in                                                  |
+| **BRS28**           |    Het bericht is afgekeurd op basis van   XSLT-controles                                                    |    nee                           |    oorzaak Silvester of gaat via retourbericht                                                 |
+| **BRS29**           |    ZIP-bestand bevat mappenstructuur                                                                         |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS30**           |    Geadresseerde ontbreekt                                                                                   |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS31**           |    De bestandsnaam in het ZIP-bestand heeft meer   karakters dan toegestaan                                  |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS32**           |    De bestandsnaam in het ZIP-bestand bevat   ongeldige karakters                                            |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS33**           |    Bericht kan niet afgeleverd worden                                                                        |    ja                            |    notificatie naar onbekende ontvanger op basis   van data                                    |
+| **BRS34**           |    De bestandsnaam in het ZIP-bestand voldoet   niet aan de naamconventie                                    |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS35**           |    Bestand voldoet niet aan JSON-standaard                                                                   |    nee                           |    Nvt: Silvester dient geen json bestanden in                                                 |
+| **BRS36**           |    Bestand is niet opgesteld met de juiste   karaktercodering                                                |    nee                           |    oorzaak Silvester                                                                           |
+| **BRS114**          |    TraceerID is niet uniek                                                                                   |    nee                           |    oorzaak Silvester                                                                           |
