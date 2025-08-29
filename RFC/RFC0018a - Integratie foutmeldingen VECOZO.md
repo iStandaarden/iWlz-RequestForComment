@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# CONCEPT - RFC0018a - Addendum A: Integratie foutmeldingen VECOZO
+# RFC0018a - Addendum A: Integratie foutmeldingen VECOZO
 
 > [!IMPORTANT]
 > Deze Request for Comment is een aanvulling op [RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz](/RFC/RFC0018%20-%20Melden%20van%20fouten%20in%20gegevens%20volgens%20iStandaard%20iWlz.md) 
@@ -17,10 +17,10 @@ Dit document beschrijft functioneel hoe meldingen en welke meldingen door VECOZO
 
 <font size="4">**Status RFC**</font>
 
-@@@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/16) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/16) om de actuele status van deze RFC te bekijken.
 
 **Inhoudsopgave**
-- [CONCEPT - RFC0018a - Addendum A: Integratie foutmeldingen VECOZO](#concept---rfc0018a---addendum-a-integratie-foutmeldingen-vecozo)
+- [RFC0018a - Addendum A: Integratie foutmeldingen VECOZO](#rfc0018a---addendum-a-integratie-foutmeldingen-vecozo)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC's](#12-relatie-andere-rfcs)
@@ -29,7 +29,8 @@ Dit document beschrijft functioneel hoe meldingen en welke meldingen door VECOZO
 - [3. Meldingen](#3-meldingen)
 - [4. Melden van berichtfouten door VECOZO](#4-melden-van-berichtfouten-door-vecozo)
   - [4.1 Voorbeeld BRS Foutmelding](#41-voorbeeld-brs-foutmelding)
-  - [5 BRS foutmeldingen](#5-brs-foutmeldingen)
+- [5 Overzicht BRS-Foutcodes](#5-overzicht-brs-foutcodes)
+
 
 
 
@@ -187,7 +188,7 @@ Toelichting:
 - subject: BRS-foutcode inclusief aanvullende toelichting. 
 
 
-# 5 BRS Foutcodes
+# 5 Overzicht BRS-Foutcodes
 
 De onderstaande lijst met BRS-foutcodes is afkomstig van [VECOZO](https://www.vecozo.nl/berichtloket/lijst-met-foutcodes/). In de tabel is per BRS-foutcode aangegeven of deze door VECOZO wordt teruggemeld als BRS-foutmelding naar de bron van de notificatie. 
 
