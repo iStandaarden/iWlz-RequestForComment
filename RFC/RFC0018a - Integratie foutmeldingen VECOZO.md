@@ -165,26 +165,31 @@ end
 ```json
 {
   "timestamp": "2022-09-27T12:07:07.492Z",
-  "afzenderTypeID": "SILVESTER",
+  "afzenderTypeID": "KVK",
   "afzenderID": "12341234",
   "ontvangerIDType": "Uzovi",
   "ontvangerID": "1234",
   "ontvangerKenmerk": null,
-  "eventType": "BRSFOUTMELDING",
+  "eventType": "IWLZFOUTMELDING",
   "subjectList": [
     {
-      "subject": "BRS01",
-      "recordID": "@@ nog bepalen wat hier moet komen. Verwijzing naar notificatieID?"     
+      "subject": "BRS13 The 'http://www.istandaarden.nl/iwlz/2_4/aw33/schema:Soort' element is invalid - The value '4' is invalid according to its datatype",
+      "recordID": "bemiddeling/bemiddelingspecificatie/5850ad49-7cf4-4711-8215-e160715900e7"     
     }
   ]
 }
 ```
 
+Toelichting:
+- afzenderID: KVK nummer van VECOZO
+- eventType: "IWLZFOUTMELDING"
+- recordID: verwijzing naar bron-type
+- subject: BRS-foutcode inclusief aanvullende toelichting. 
 
 
-## 5 BRS foutmeldingen
+# 5 BRS Foutcodes
 
-De onderstaande lijst met BRS-foutcodes is afkomstig van . Per BRS-foutcode is aangegeven of deze door VECOZO wordt teruggemeld als BRS-foutmelding naar de bron van de notificatie. 
+De onderstaande lijst met BRS-foutcodes is afkomstig van [VECOZO](https://www.vecozo.nl/berichtloket/lijst-met-foutcodes/). In de tabel is per BRS-foutcode aangegeven of deze door VECOZO wordt teruggemeld als BRS-foutmelding naar de bron van de notificatie. 
 
 |    Code                   | **Omschrijving**                                                                                       | **Naar   Notificatiebron** | **reden**                                                                                |
 |-------------------------------|------------------------------------------------------------------------------------------------------------------|--------------------------------------|----------------------------------------------------------------------------------------------------|
