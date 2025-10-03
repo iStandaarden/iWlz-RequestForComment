@@ -382,12 +382,18 @@ Voorbeeld van claims header:
 
 In het netwerkstelsel zijn momenteel onderstaande PEP’s in gebruik.
 
-| Omgeving | URL                                                                                                                     |
-| -------- | ----------------------------------------------------------------------------------------------------------------------- |
-| TST      | [https://tst-api.vecozo.nl/tst/netwerkmodel/v3/resource-server/](https://tst-api.vecozo.nl/tst/netwerkmodel/v2/GraphQL) |
-| PRD      | [https://api.vecozo.nl/netwerkmodel/v3/resource-server](https://api.vecozo.nl/netwerkmodel/v2/GraphQL)/                 |
+**Nieuwe Situatie: per 03-10-2025**
+| Omgeving | URL |
+| :-- | :-- | 
+| TST | https://tst-api.vecozo.nl/tst/netwerkmodel/v3/pep | 
+| PRD | https://api.vecozo.nl/netwerkmodel/v3/pep | 
 
-**_Let op:_** _De URL bevat de term resource-server, dit is incorrect en zal tzt worden vervangen door PEP_
+**Oude situatie**
+| Omgeving | URL |
+| :-- | :-- | 
+| TST | ~https://tst-api.vecozo.nl/tst/netwerkmodel/v3/resource-server/~ | 
+| PRD | ~https://api.vecozo.nl/netwerkmodel/v3/resource-server/~ |              |
+
 
 
 ## 4.3 Policy Decision Point (PDP)
@@ -790,4 +796,5 @@ query Bemiddelingspecificatie(
 | Informatiemodel iWlz - Bemiddelingsregister | https://informatiemodel.istandaarden.nl/iWlz-Bemiddeling-1/             |
 | Koppelvlakspecificatie Bemiddeling         | https://github.com/iStandaarden/iWlz-bemiddeling                        |
 | Audiences (tijdelijk alternatief ZorgAB)   | https://github.com/iStandaarden/iWlz-adresboek                          |
+
 
