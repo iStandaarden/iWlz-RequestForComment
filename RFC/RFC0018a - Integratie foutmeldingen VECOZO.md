@@ -152,7 +152,7 @@ end
 | *ALT* | xml-bericht kan niet worden afgeleverd |  |
 | 07 | xml-bericht niet afgeleverd | Ontvanger kan het xml-bericht niet ontvangen |
 | 08 | bepaal BRS-fout | bepaal de BRS-foutcode |
-| 09 | BRS-melding | Stuur de BRS-melding naar de notificatie bron. Dit is de aanleiding van het osptellen en verzenden van een xml-bericht. Eventuele fouten die hier ontstaan zijn veroorzaakt door die bronhouder. |
+| 09 | BRS-melding | Stuur de BRS-melding naar de notificatie bron. Dit is de aanleiding van het opstellen en verzenden van een xml-bericht. Eventuele fouten die hier ontstaan zijn veroorzaakt door die bronhouder. |
 | | |
 | 10 | valideer xml-bericht | Ontvanger controleert ontvangen xml-bericht op iWlz fouten |
 | 11 | stuur retourbericht | Stuur retourbericht naar Silvester |
