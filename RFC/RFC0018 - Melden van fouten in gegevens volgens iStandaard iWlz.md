@@ -202,8 +202,22 @@ Notification "1" *-- "1..*" SubjectList: contains
 
 </details>
 
+### 3.3.1 Bepalen `subject`-waarde in iWlz netwerkmodel
+De inhoud van het `subject` is zoals hierboven beschreven afhankelijk van de fout die is geconstateerd. Binnen de iWlz zijn er twee typen regels die kunnen leiden tot een foutmeldingen:
+1. Gegevensregels
+2. Restricties
 
-### 3.3.1 Afzender en Ontvanger lijst
+Voor elk register zijn deze te vinden in het [Informatiemodel iStandaarden](https://informatiemodel.istandaarden.nl/index.html), onder het kopje Regels bij de respectievelijke registers. Naast deze twee typen regels zijn er ook *Uitgangspunten, Bedrijfsregels, Invulinstructies en Autorisatieregels*. Deze leiden niet tot een iWlz foutmelding.
+
+Elke *Gegevensregel en Restrictie* is voorafgegaan met een code. Bijvoorbeeld: 
+> - *GGR0001*: Bsn vullen met een nummer dat voldoet aan de 11-proef; 
+> - *RS038*: Vullen met UUID versie 4;
+> - *IRG0012*: DiagnoseSubcodelijst vullen conform opgegeven DiagnoseCodelijst.
+
+In het geval dat een Gegevensregel of Restrictie wordt overtreden, wordt de code van de betreffende regel opgenomen in het `subject`. Dus op basis van de drie voorbeelden, respectievelijk *GGR0001 of RS038 of IRG0012* voor elke constatering.
+
+
+### 3.3.2 Afzender en Ontvanger lijst
 
 | Code  | Omschrijving                         | Referentie                                                | Toepassing                                                           |
 | :---- | :----------------------------------- | :-------------------------------------------------------- | :------------------------------------------------------------------- |
