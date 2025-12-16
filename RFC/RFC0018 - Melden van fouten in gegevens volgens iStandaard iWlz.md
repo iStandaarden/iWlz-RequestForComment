@@ -34,7 +34,8 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/16) om de actue
   - [3.1 Doel melding](#31-doel-melding)
   - [3.2 Typen melding](#32-typen-melding)
   - [3.3 Inhoud iWlz Foutmelding](#33-inhoud-iwlz-foutmelding)
-    - [3.3.1 Afzender en Ontvanger lijst](#331-afzender-en-ontvanger-lijst)
+    - [3.3.1 Implementatie foutmelding binnen het iWlz netwerkmodel](#331-implementatie-foutmelding-binnen-het-iwlz-netwerkmodel) 
+    - [3.3.2 Afzender en Ontvanger lijst](#332-afzender-en-ontvanger-lijst)
   - [3.4 Foutmelden](#34-foutmelden)
   - [3.5 Voorbeeld iWlz Foutmelding](#35-voorbeeld-iwlz-foutmelding)
   - [3.6 Response op inzenden Foutmelding vanuit OPA](#36-response-op-inzenden-foutmelding-vanuit-opa)
@@ -202,19 +203,21 @@ Notification "1" *-- "1..*" SubjectList: contains
 
 </details>
 
-### 3.3.1 Bepalen `subject`-waarde in iWlz netwerkmodel
-De inhoud van het `subject` is zoals hierboven beschreven afhankelijk van de fout die is geconstateerd. Binnen de iWlz zijn er twee typen regels die kunnen leiden tot een foutmeldingen:
+### 3.3.1 Implementatie foutmelding binnen het iWlz netwerkmodel
+Voor het gebruik van de foutmelding binnen het iWlz-netwerkmodel is afgesproken dat de inhoud van het subject gevuld wordt met de foutcode van de regel die is overtreden. Binnen het iWlz-netwerkmodel zijn er twee typen regels die kunnen leiden tot foutmeldingen:
 1. Gegevensregels
 2. Restricties
 
-Voor elk register zijn deze te vinden in het [Informatiemodel iStandaarden](https://informatiemodel.istandaarden.nl/index.html), onder het kopje Regels bij de respectievelijke registers. Naast deze twee typen regels zijn er ook *Uitgangspunten, Bedrijfsregels, Invulinstructies en Autorisatieregels*. Deze leiden niet tot een iWlz foutmelding.
+Voor elk register zijn de regels te vinden in het informatiemodel iStandaarden, onder het kopje Regels bij de betreffende registers. 
 
-Elke *Gegevensregel en Restrictie* is voorafgegaan met een code. Bijvoorbeeld: 
+Elke *Gegevensregel en Restrictie* wordt voorafgegaan met een code. Bijvoorbeeld: 
 > - *GGR0001*: Bsn vullen met een nummer dat voldoet aan de 11-proef; 
 > - *RS038*: Vullen met UUID versie 4;
 > - *IRG0012*: DiagnoseSubcodelijst vullen conform opgegeven DiagnoseCodelijst.
 
-In het geval dat een Gegevensregel of Restrictie wordt overtreden, wordt de code van de betreffende regel opgenomen in het `subject`. Dus op basis van de drie voorbeelden, respectievelijk *GGR0001 of RS038 of IRG0012* voor elke constatering.
+Op basis van de voorbeelden betekent dit dat bij een foutmelding het subject GGR0001, RS038 of IRG0012 bevat.
+
+Naast deze twee typen regels zijn er ook Uitgangspunten, Bedrijfsregels, Invulinstructies en Autorisatieregels. Deze leiden niet tot een iWlz foutmelding.
 
 
 ### 3.3.2 Afzender en Ontvanger lijst
