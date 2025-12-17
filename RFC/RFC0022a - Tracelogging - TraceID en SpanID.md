@@ -15,6 +15,15 @@ Binnen het iWlz-netwerkmodel ontbreekt het aan gestandaardiseerde tracelogging, 
 
 Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/37) om de actuele status van deze RFC te bekijken.
 
+<font size="4">**Changelog**</font>
+
+**16-12-2025**
+
+- 1.3 Scope verduidelijkt: De inhoud en structuur van logging events, zoals eventtype, status en foutcodes, vallen buiten scope
+- 3.1.4 SpanId verduidelijkt: generatie aangescherpt van “UUID-generator of OpenTelemetry SDK” naar “gegenereerd via OpenTelemetry SDK”
+- 3.1.6 toegevoegd: “Start en einde van een trace”
+- 3.1.7 verplaatst: voorbeeldflow uit 3.1.6 opgenomen onder 3.1.7
+
 ---
 
 **Inhoudsopgave**
@@ -37,8 +46,9 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/37) om de actue
     - [3.1.2 Toevoegen aan requests](#312-toevoegen-aan-requests)
     - [3.1.3 Randvoorwaarden voor TraceId](#313-randvoorwaarden-voor-traceid)
     - [3.1.4 Randvoorwaarden voor SpanId](#314-randvoorwaarden-voor-spanid)
-    - [3.1.5 Validatie en foutafhandeling van TraceId](#315-validatie-en-foutafhandeling-van-traceid)
-    - [3.1.6 Flow Fase 1](#316-flow-fase-1)
+    - [3.1.5 Omgang met ontbrekende of ongeldige TraceId](#315-omgang-met-ontbrekende-of-ongeldige-traceid)
+    - [3.1.6 Start en einde van een trace](#316-start-en-einde-van-een-trace)
+    - [3.1.7 Voorbeeldflow (niet-normatief)](#317-voorbeeldflow-niet-normatief)
 - [4. Privacyoverwegingen en AVG-toetsing (TraceId en SpanId)](#4-privacyoverwegingen-en-avg-toetsing-traceid-en-spanid)
 
 ---
@@ -77,6 +87,7 @@ Buiten scope van deze RFC vallen:
 - Auditlogging (gericht op controleerbaarheid en verantwoording, zoals toegangsregistratie of procesafwijkingen)
 - Uitwerking en verwerking van `ParentSpanId` (onderdeel van Fase 2, beschreven in RFC0022b)
 - Exportfaciliteiten en ontsluiting van traceerdata (onderdeel van Fase 3, beschreven in RFC0022c)
+- De inhoud en structuur van logging events, zoals eventtype, status en foutcodes.
 
 ## 1.4 Use Cases
 
@@ -158,7 +169,7 @@ Opsomming van de in dit document gebruikte termen.
 
 # 3. Traceerbaarheid
 
-Traceerbaarheid binnen het iWlz-netwerkmodel wordt geïmplementeerd in drie opeenvolgende fasen. Elke fase bouwt voort op de vorige en introduceert aanvullende functionaliteiten om de traceerbaarheid te verbeteren.
+Traceerbaarheid binnen het iWlz-netwerkmodel wordt geïmplementeerd in opeenvolgende fasen. Elke fase bouwt voort op de vorige en introduceert aanvullende functionaliteiten om de traceerbaarheid te verbeteren.
 
 ## 3.1 Fase 1: Invoering van TraceID en SpanID
 
@@ -207,13 +218,14 @@ Een `TraceId` moet:
 X-B3-TraceId: 463ac35c9f6413ad48485a3953bb6124
 ```
 
+
 ### 3.1.4 Randvoorwaarden voor SpanId
 
 Een `SpanId` moet:
 
 - Exact 8 bytes groot zijn, wat overeenkomt met 16 hexadecimale tekens (lowercase).
 - Niet uitsluitend uit nullen bestaan (bijv. `0000000000000000` is ongeldig).
-- Uniek zijn. SpanIds dienen gegenereerd te worden met behulp van een UUID-generator of via de OpenTelemetry SDK om duplicaten binnen een trace te voorkomen.
+- Uniek zijn. SpanIds worden gegenereerd met behulp van de OpenTelemetry SDK, conform de randvoorwaarden in deze paragraaf, zodat duplicaten binnen een trace worden voorkomen.
 
 **Voorbeeld van een geldig SpanId:**
 
@@ -221,23 +233,23 @@ Een `SpanId` moet:
 X-B3-SpanId: 0020000000000001
 ```
 
-### 3.1.5 Validatie en foutafhandeling van TraceId
+### 3.1.5 Omgang met ontbrekende of ongeldige TraceId
 
-Bij binnenkomst wordt gecontroleerd of een `TraceId` aanwezig is:
+Bij binnenkomst wordt gecontroleerd of een `TraceId` aanwezig is en aan de randvoorwaarden voldoet:
 
-- Indien aanwezig, wordt deze gebruikt voor verdere verwerking.
-- ~~Indien afwezig, wordt het verzoek afgewezen met de volgende foutmelding:~~
+- Indien aanwezig en geldig, wordt de TraceId gebruikt voor verdere verwerking.
+- Indien de TraceId ontbreekt, wordt een nieuwe, geldige TraceId gegenereerd en wordt de verwerking als nieuwe trace voortgezet.
+- Indien een TraceId aanwezig is maar niet aan de randvoorwaarden voldoet, mag deze worden genegeerd en wordt eveneens een nieuwe, geldige TraceId gegenereerd.
 
-```http
-HTTP/1.1 400 Bad Request
-{"ErrorCode": "invalid_request", "Error": "The request is missing header X-B3-TraceId"}
-```
+### 3.1.6 Start en einde van een trace
 
-> ~~Opmerking: Deze validatie is een aanvulling op de OpenTelemetry-specificatie. Die stelt alleen eisen aan de structuur van een `TraceId`, maar schrijft geen validatiegedrag voor aan ontvangende systemen.~~
+**Start van de trace**
+De keten begint daar waar het eerste verzoek in de keten ontstaat. Degene die het eerste request doet, genereert de TraceId. Waar mogelijk is het wenselijk dat een TraceId door de ontvanger wordt overgenomen in de verwerking, maar het is niet de bedoeling om een TraceId te behandelen als persistente data. Bevragingen die niet direct volgen op een notificatie en daarmee buiten dezelfde ketenverwerking vallen, starten een nieuwe trace en krijgen een eigen TraceId.
 
-⚠️ In het technisch afstemmingsoverleg van 5-6-2025 is besloten dat de validatie van de `TraceId`-header wordt opgenomen in **Fase 2**. Deze validatie wordt in **Fase 1** nog niet afgedwongen.
+**Einde van de trace**
+Deze RFC specificeert geen expliciet eindpunt van een trace. In de praktijk stopt een trace zodra een ketenpartij de TraceId niet (meer) verwerkt of opneemt in de logging.
 
-### 3.1.6 Flow Fase 1
+### 3.1.7 Voorbeeldflow (niet-normatief)
 
 > **Voorbeeldimplementatie (niet-normatief)**   
 > Onderstaande flow toont een mogelijke implementatie van traceerbaarheid binnen een ketenverzoek. De flow omvat zowel het aanvragen van autorisatie als het uitvoeren van een gegevensopvraag (GraphQL) en laat zien hoe `TraceId` en `SpanId` zich door de verschillende onderdelen van het netwerkmodel verspreiden.  
@@ -314,6 +326,8 @@ deactivate Client
 
 </details>
 <p>
+
+
 
 # 4. Privacyoverwegingen en AVG-toetsing (TraceId en SpanId)
 
