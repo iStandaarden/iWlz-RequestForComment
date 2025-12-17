@@ -225,7 +225,7 @@ Een `SpanId` moet:
 
 - Exact 8 bytes groot zijn, wat overeenkomt met 16 hexadecimale tekens (lowercase).
 - Niet uitsluitend uit nullen bestaan (bijv. `0000000000000000` is ongeldig).
-- Uniek zijn. SpanIds worden gegenereerd met behulp van de OpenTelemetry SDK, conform de randvoorwaarden in deze paragraaf, zodat duplicaten binnen een trace worden voorkomen.
+- Uniek zijn. SpanIds worden gegenereerd met behulp van de OpenTelemetry SDK, zodat duplicaten binnen een trace worden voorkomen.
 
 **Voorbeeld van een geldig SpanId:**
 
