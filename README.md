@@ -38,7 +38,7 @@ De verklaring van de in de RFC's gebruikte termen zijn te vinden in het Afsprake
 Maak een RFC aan in [markdown-format](https://www.markdownguide.org) en plaats deze in de map /RFC. Neem contact op bij vragen. 
 
 ### Template RFC
-Om de leesbaarheid tussen de verschillende RFC's te bevorderen moet gebruik gemaakt worden van het template [RFC-template.md](/RFC-template.md). Het RFC bevat een aantal 'verplichte' onderdelen.  
+Om de leesbaarheid tussen de verschillende RFC's te bevorderen moet gebruik gemaakt worden van het template [RFC-template.md](/template/RFC%20-%20Template.md). Het RFC bevat een aantal 'verplichte' onderdelen.  
 
 ### PlantUML-diagrammen
 Gebruik je in de RFC PlanUML-diagrammen dan is het voor github eerst noodzakelijk van de plantUML-file (.puml) eerst een svg te laten genereren. Github ondersteund het opnemen van plantuml in Markdown files niet. 
