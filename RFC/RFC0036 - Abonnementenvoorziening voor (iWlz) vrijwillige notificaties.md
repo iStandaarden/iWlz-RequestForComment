@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0025 - Abonnementenvoorziening voor (iWlz) vrijwillige notificaties
+# RFC0036 - Abonnementenvoorziening voor (iWlz) vrijwillige notificaties
 
 <font size="4">**SAMENVATTING**</font>
 
@@ -18,7 +18,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuel
 
 ---
 **Inhoudsopgave**
-- [RFC0025 - Abonnementenvoorziening voor (iWlz) vrijwillige notificaties](#rfc0025---abonnementenvoorziening-voor-iwlz-vrijwillige-notificaties)
+- [RFC0036 - Abonnementenvoorziening voor (iWlz) vrijwillige notificaties](#rfc0036---abonnementenvoorziening-voor-iwlz-vrijwillige-notificaties)
 - [1. Inleiding](#1-inleiding)
   - [1.1. Uitgangspunten](#11-uitgangspunten)
   - [1.2 Relatie andere RFC](#12-relatie-andere-rfc)
@@ -34,6 +34,7 @@ Volg deze [link](https://github.com/iStandaarden/iWlz-RFC/issues/2) om de actuel
     - [3.4.1 request deleteAbonnement en inhoud verwijderen abonnement](#341-request-deleteabonnement-en-inhoud-verwijderen-abonnement)
     - [3.4.2 Validatie](#342-validatie)
     - [3.4.3 Voorbeeld verwijderen abonnement](#343-voorbeeld-verwijderen-abonnement)
+
 
 ---
 # 1. Inleiding
