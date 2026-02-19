@@ -1,6 +1,6 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
-# RFC0042 - Authorisatie standaardisatie
+# RFC0052 - Authorisatie standaardisatie
 
 <font size="4">**SAMENVATTING**</font>
 
