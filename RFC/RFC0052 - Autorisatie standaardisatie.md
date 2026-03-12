@@ -19,20 +19,20 @@ Belangrijk:
 # 1. Inleiding
 
 In de Kamerbrieven over Generieke Functies wordt autorisatie expliciet benoemd als een generieke functie die:
-	•	stelselbreed moet functioneren
-	•	onafhankelijk van individuele applicaties moet zijn
-	•	normeerbaar moet zijn
-	•	interoperabel moet zijn
+- stelselbreed moet functioneren
+- onafhankelijk van individuele applicaties moet zijn
+- normeerbaar moet zijn
+- interoperabel moet zijn
 
 Autorisatie mag daarom niet “hardcoded” in applicaties worden geïmplementeerd. Het moet losgekoppeld, herbruikbaar en toetsbaar zijn.
 
 De inzet van Open Policy Agent (OPA) ondersteunt deze architectuurprincipes door autorisatie los te koppelen van applicaties en te positioneren als zelfstandig Policy Decision Point (PDP).
 
 OPA faciliteert:
-	•	centrale policy-besluitvorming
-	•	scheiding van policy en applicatielogica
-	•	versiebeheer van beleidsregels
-	•	audit en controleerbaarheid van autorisatiebesluiten
+- centrale policy-besluitvorming
+- scheiding van policy en applicatielogica
+-	versiebeheer van beleidsregels
+-	audit en controleerbaarheid van autorisatiebesluiten
 
 Hiermee wordt invulling gegeven aan autorisatie als generieke functie op technisch niveau.
 
@@ -43,10 +43,10 @@ Hiermee wordt invulling gegeven aan autorisatie als generieke functie op technis
 In een situatie met één bronhouder vormt de afwezigheid van een gestandaardiseerd autorisatiebeslismodel doorgaans geen probleem.
 
 Binnen één organisatie zijn:
-	•	semantiek van rollen
-	•	interpretatie van attributen
-	•	governance
-	•	logging
+- semantiek van rollen
+-	interpretatie van attributen
+-	governance
+-	logging
 
 impliciet afgestemd. Een technische PDP-implementatie zoals OPA is in deze context vaak voldoende.
 
