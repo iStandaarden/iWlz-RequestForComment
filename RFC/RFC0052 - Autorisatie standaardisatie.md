@@ -339,8 +339,11 @@ Dit ondersteunt compliance en governance binnen het stelsel.
 
 | ***Term*** | ***Omschrijving*** |
 |---|---|
-| PEP | Policy Enforcement Point |
-| PDP | Policy Decision Point |
+| PEP | Policy Enforcement Point; Handhaving autorisatie (entrypoint) |
+| PAP | Policy Administration Point; Beheer autorisatiebeleeid, publiceert policies  |
+| PRP | Policy Retrieval Point; Stelt policies beschikbaar aan PDP's |
+| PIP | Policy Information Point; Levert attributen en contextinformatie voor autorisatiebesluiten |
+| PDP | Policy Decision Point; Evalueert policies en neemt het autorisatiebesluit |
 | AuthZEN | Authorization API standaard |
 | OPA | Open Policy Agent |
 | TWIIN | Transport, Wisselwerking, Informatie, In Netwerken |
