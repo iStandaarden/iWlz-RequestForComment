@@ -135,25 +135,25 @@ flowchart LR
   PB[Policy bron]
   PD[Policy distributie]
 
-  C -->|GraphQL request met token| G
+  C -->|1 GraphQL request met token| G
 
-  G -->|Valideer token| AS
-  AS -->|Token valid| G
+  G -->|2 Valideer token| AS
+  AS -->|3 Token valid| G
 
-  G -->|AuthZEN Access Evaluation Request| AZ
-  AZ -->|Policy input| PDP
-  PDP -->|Decision| AZ
-  AZ -->|Allow / Deny| G
+  G -->|4 AuthZEN Access Evaluation Request| AZ
+  AZ -->|5 Policy input| PDP
+  PDP -->|6 Decision| AZ
+  AZ -->|7 Allow / Deny| G
 
-  G -->|Forward| RS
-  G -->|Block 403| C
+  G -->|8a Forward| RS
+  G -->|8b Block 403| C
 
-  RS -->|Response| G
-  G -->|Response| C
+  RS -->|9 GraphQL response| G
+  G -->|10 Response| C
 
-  Z --> PB
-  PB --> PD
-  PD --> PDP
+  Z -->|A Beheer autorisatiebeleid| PB
+  PB -->|B Publicatie policies| PD
+  PD -->|C Distributie policies| PDP
 ```
 
 
