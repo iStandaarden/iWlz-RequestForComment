@@ -73,7 +73,7 @@ flowchart LR
 
 ```
 
-Volg deze [link](https://github.com/iStandaarden/..) om de actuele status van deze RFC te bekijken.
+Volg deze [link](https://github.com/iStandaarden/iWlz-RequestForComment/issues/52) om de actuele status van deze RFC te bekijken.
 
 ---
 **Inhoudsopgave**
