@@ -174,7 +174,7 @@ Een autorisatieverzoek bestaat uit vier elementen:
 - resource
 - context
 
-Voorbeeld:
+Conceptueel:
 ```
 {
   "subject": {},
@@ -183,6 +183,42 @@ Voorbeeld:
   "context": {}
 }
 ```
+
+Als voorbeeld kan een autorisatieverzoek voor het inzien van een bemiddelingstatus vanuit zorgkantoor2  naar zorgkantoor1 er volgens Authzen standaarden zo uit zien:
+
+```
+{
+  "subject": {
+    "type": "organization",
+    "id": "zorgkantoor2",
+    "organization_type": "zorgkantoor",
+    "uzovi_code": "5500",
+    "agb_code": "12345678",
+    "role": "bemiddelaar",
+    "region": "Noord"
+  },
+  "action": {
+    "name": "read",
+    "operation": "read_bemiddeling_status",
+    "service": "bemiddelingsregister"
+  },
+  "resource": {
+    "type": "bemiddeling",
+    "id": "BEM-123456",
+    "owner": "zorgkantoor1",
+    "attribute": "status",
+    "region": "Noord"
+  },
+  "context": {
+    "purpose_of_use": "wlz-uitvoering",
+    "legal_basis": "Wet langdurige zorg",
+    "relation": "bemiddelingsproces",
+    "contract_active": true,
+    "requested_at": "2026-03-12T10:30:00Z"
+  }
+}
+```
+
 Deze structuur vormt het gestandaardiseerde autorisatiecontract binnen het stelsel.
 
 # 7. Motivatie voor AuthZEN
