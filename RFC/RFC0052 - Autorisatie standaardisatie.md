@@ -252,7 +252,7 @@ Binnen deze architectuur worden de volgende rollen onderscheiden:
 |---|---|
 |ZINL|beheer van stelselbreed autorisatiebeleid|
 |Bronhouder|uitvoering van autorisatiebesluiten op eigen resources|
-|Applicatie / Gateway|  afdwingen van autorisatiebesluiten (PEP)|
+|PEP Gateway|  afdwingen van autorisatiebesluiten (PEP)|
 |PDP|evaluatie van autorisatiebeleid|
 
 
@@ -270,9 +270,9 @@ Bronhouders
 Bronhouders blijven verantwoordelijk voor de autorisatiebesluiten op hun eigen gegevens en services. Zij implementeren een lokale Policy Decision Point (PDP), bijvoorbeeld met Open Policy Agent (OPA), waarin het door ZINL beheerde autorisatiebeleid wordt geëvalueerd.
 
 
-Applicaties en gateways
+PEP gateway
 
-Applicaties of API gateways fungeren als Policy Enforcement Point (PEP). Zij vragen autorisatiebesluiten op via de gestandaardiseerde AuthZEN-interface en handhaven het besluit op het moment van toegang tot een resource.
+PEP gateways fungeren als Policy Enforcement Point (PEP). Zij vragen autorisatiebesluiten op via de gestandaardiseerde AuthZEN-interface en handhaven het besluit op het moment van toegang tot een resource.
 
 ## 9.2 Beheer van autorisatiebeleid
 
