@@ -184,7 +184,7 @@ Conceptueel:
 }
 ```
 
-Als voorbeeld kan een autorisatieverzoek voor het inzien van een bemiddelingstatus vanuit zorgkantoor2  naar zorgkantoor1 er volgens Authzen standaarden zo uit zien:
+Een autorisatieverzoek voor het inzien van een bemiddelingstatus vanuit zorgkantoor2  naar zorgkantoor1 zou er volgens Authzen standaarden zo uit zien:
 
 ```
 {
