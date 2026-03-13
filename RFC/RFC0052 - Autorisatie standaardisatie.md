@@ -42,6 +42,8 @@ Hiermee wordt invulling gegeven aan autorisatie als generieke functie op technis
 
 # 2. Probleemstelling
 
+![alt text](images/authzen.png)
+
 ## 2.1 Single-bronhoudercontext
 
 In een situatie met één bronhouder vormt de afwezigheid van een gestandaardiseerd autorisatiebeslismodel doorgaans geen probleem.
@@ -390,5 +392,6 @@ Dit ondersteunt compliance en governance binnen het stelsel.
 - Generieke Functie Autoriseren: https://open.overheid.nl/documenten/423d14f1-5228-4dd1-b79f-97a78b58eff5/file
 - [TWIIN] https://www.twiin.nl/twiin-vertrouwensmodel
 - [AUTHZEN] OpenID Foundation Authorization API 1.0:  https://openid.github.io/authzen/
+- [NLGOV_AUTHZEN] OpenID Dutch Government profile: https://logius-standaarden.github.io/authzen-nlgov/
 - [OPA] Open Policy Agent: https://www.openpolicyagent.org/
 - Status RFC: https://github.com/iStandaarden/iWlz-RequestForComment/issues/52
