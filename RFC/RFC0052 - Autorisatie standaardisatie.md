@@ -14,23 +14,23 @@ In de huidige situatie wordt het inkomende API-request (bijvoorbeeld een GraphQL
 Hierdoor wordt de autorisatiebeslissing gebaseerd op een input die sterk afhankelijk is van de technische representatie van het API-request, inclusief querystructuur, variabelen en filters. Dit leidt tot een ongewenste koppeling tussen businesslogica en autorisatielogica.
 
 In dit voorstel wordt een expliciete scheiding aangebracht tussen:
-	•	het businessrequest (de functionele vraag aan de bronhouder), en
-	•	de autorisatievraag (de vraag of deze actie toegestaan is).
+- het businessrequest (de functionele vraag aan de bronhouder), en
+- de autorisatievraag (de vraag of deze actie toegestaan is).
 
 De Policy Enforcement Point (PEP) is verantwoordelijk voor het afleiden van een gestandaardiseerde autorisatievraag uit het inkomende request en het aanbieden daarvan aan de Policy Decision Point (PDP).
 
 Het voorstel is om deze autorisatievraag te standaardiseren volgens de [NLGov AuthZEN Authorization API 1.0](https://www.logius.nl/actueel/publieke-consultatie-nlgov-authzen-authorization-api-v10) specificatie. Hiermee ontstaat een uniform autorisatiecontract tussen applicaties (Policy Enforcement Points) en de autorisatievoorziening (Policy Decision Points).
 
 Dit leidt tot de volgende voordelen:
-	•	Autorisatiebeslissingen worden gebaseerd op een gestandaardiseerd en expliciet model (subject, action, resource, context), in plaats van op implementatie-specifieke requeststructuren.
-	•	De koppeling tussen businesslogica en autorisatielogica wordt verminderd, waardoor bronhouders vrijer zijn in hun keuze voor API-technologieën (zoals GraphQL).
-	•	Autorisatiebeleid wordt beter herbruikbaar, toetsbaar en uitlegbaar binnen het stelsel.
-	•	Interoperabiliteit tussen verschillende partijen en implementaties wordt vergroot.
+- Autorisatiebeslissingen worden gebaseerd op een gestandaardiseerd en expliciet model (subject, action, resource, context), in plaats van op implementatie-specifieke requeststructuren.
+-	De koppeling tussen businesslogica en autorisatielogica wordt verminderd, waardoor bronhouders vrijer zijn in hun keuze voor API-technologieën (zoals GraphQL).
+-	Autorisatiebeleid wordt beter herbruikbaar, toetsbaar en uitlegbaar binnen het stelsel.
+-	Interoperabiliteit tussen verschillende partijen en implementaties wordt vergroot.
 
 Belangrijk is dat:
-	•	NLGov AuthZEN geen vervanging is voor Identity & Access Management (IAM).
-	•	NLGov AuthZEN geen policy engines vervangt.
-	•	NLGov AuthZEN uitsluitend de interface standaardiseert tussen Policy Enforcement Points en Policy Decision Points, en daarmee governance biedt op de uitwisseling van autorisatievragen en -beslissingen.
+-	NLGov AuthZEN geen vervanging is voor Identity & Access Management (IAM).
+-	NLGov AuthZEN geen policy engines vervangt.
+-	NLGov AuthZEN uitsluitend de interface standaardiseert tussen Policy Enforcement Points en Policy Decision Points, en daarmee governance biedt op de uitwisseling van autorisatievragen en -beslissingen.
 
 Een mogelijke implementatiekeuze binnen API-technologieën zoals GraphQL is het gebruik van directives om expliciet aan te geven dat autorisatie moet worden toegepast. Dit is echter een implementatiedetail en valt buiten de scope van deze standaardisatie.
 
