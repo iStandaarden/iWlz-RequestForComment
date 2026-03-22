@@ -139,25 +139,24 @@ flowchart TD
 
     subgraph B[PEP Gateway]
         C[GraphQL Request Handler]
-        D[GraphQL Schema met @authz directive]
+        D[GraphQL Schema / Resolver metadata met @authz]
         E[Authorization Pre-Processor]
         F[Business Logic Handler]
     end
 
     C --> D
     D --> E
-    C --> F
 
-    E --> E1[Lees directive + requestcontext]
-    E1 --> E2[Identificeer subject, action, resource, context]
-    E2 --> G[NLGov AuthZEN Authorization Request]
+    E --> E1[Lees directive metadata en request context]
+    E1 --> E2[Extraheer autorisatierelevante attributen]
+    E2 --> E3[Map business request naar subject, action, resource, context]
+    E3 --> G[Construeer NLGov AuthZEN Authorization Request]
 
     G --> H[PDP bij bronhouder]
     H --> I[Policy Engine / OPA]
     I --> J[Allow / Deny]
 
-    J --> B
-    B --> K{Decision}
+    J --> K{Decision}
     K -->|allow| F
     K -->|deny| L[Toegang geweigerd]
 
@@ -166,56 +165,74 @@ flowchart TD
     L --> N
 ```
 
-## 5.2 Doelarchitectuur andere API
+## 5.2 Doelarchitectuur overige APIs
 
 ```mermaid
 flowchart TD
     A[Client] --> B[PEP Gateway]
 
     subgraph B[PEP Gateway]
-        C[API Request Handler<br/>REST / GraphQL / gRPC]
-        D[Mapping / Configuratie / Contract]
-        E[Authorization Pre-Processor]
-        F[Business Logic Handler]
+        C[Request Entry Point]
+        D[Authorization Pre-Processor]
+        E[Business Logic Handler]
+        T[Mapping tabel / profielmatrix]
     end
 
     C --> D
-    D --> E
-    C --> F
+    T --> D
 
-    E --> E1[Interpreteer endpoint, methode,<br/>operatie en requestcontext]
-    E1 --> E2[Identificeer subject, action, resource, context]
-    E2 --> G[NLGov AuthZEN Authorization Request]
+    D --> D1[Lees request context]
+    D1 --> D2[Bepaal service en operation]
+    D2 --> D3[Zoek mapping in tabel]
+    D3 --> D4[Extraheer autorisatierelevante attributen]
+    D4 --> D5[Construeer subject, action, resource, context]
+    D5 --> G[NLGov AuthZEN Authorization Request]
 
     G --> H[PDP bij bronhouder]
     H --> I[Policy Engine / OPA]
     I --> J[Allow / Deny]
 
-    J --> B
-    B --> K{Decision}
-    K -->|allow| F
+    J --> K{Decision}
+    K -->|allow| E
     K -->|deny| L[Toegang geweigerd]
 
-    F --> M[Business request naar bron]
+    E --> M[Business request naar bron]
     M --> N[Response]
     L --> N
 ```
-
-
 # 6. Autorisatiecontract (AuthZEN)
 
+Dit hoofdstuk beschrijft het autorisatiecontract tussen de Policy Enforcement Point (PEP) en de Policy Decision Point (PDP).
 
-## 6.1 OpenID Authzen 1.0
+Het doel van dit autorisatiecontract is om autorisatieverzoeken op een gestandaardiseerde, expliciete en technologie-onafhankelijke wijze uit te wisselen. Hiermee wordt voorkomen dat autorisatiebeslissingen afhankelijk zijn van implementatiespecifieke requeststructuren, zoals GraphQL-query’s, REST-endpoints of andere technische representaties van een businessrequest.
 
-De OpenID Authzen speficatie stelt dat een autorisatieverzoek uit vier elementen moet bestaan:
+Het autorisatiecontract is gebaseerd op de OpenID AuthZEN Authorization API 1.0 specificatie en wordt in dit document verder geprofileerd op basis van de NLGov AuthZEN Authorization API 1.0 specificatie en de functionele behoeften van het iWlz-stelsel.
 
-- subject
-- action
-- resource
-- context
+De opbouw is als volgt:
 
-Conceptueel:
-```
+- **6.1 OpenID AuthZEN 1.0**  
+  Beschrijft het generieke model voor autorisatieverzoeken.
+- **6.2 NLGov AuthZEN 1.0**  
+  Beschrijft de Nederlandse profilering van dit model.
+- **6.3 Voorbeeld**  
+  Toont een concreet voorbeeld van een iWlz-conform autorisatieverzoek.
+
+---
+
+## 6.1 OpenID AuthZEN 1.0
+
+De [OpenID AuthZEN Authorization API 1.0 specificatie](https://openid.net/wg/authzen/specifications/) definieert een generiek model voor het uitwisselen van autorisatieverzoeken tussen een Policy Enforcement Point (PEP) en een Policy Decision Point (PDP).
+
+Binnen deze specificatie bestaat een autorisatieverzoek conceptueel uit vier elementen:
+
+- `subject`
+- `action`
+- `resource`
+- `context`
+
+Conceptueel ziet dit model er als volgt uit:
+
+```json
 {
   "subject": {},
   "action": {},
@@ -224,23 +241,31 @@ Conceptueel:
 }
 ```
 
-Dit is dus erg vrij en flexibel, er wordt geen symantiek of verplichte attributen afgedwongen.
-Het bevat geen sector afsrpaken en is echt meer een transport standaard.
+| Element | Betekenis |
+|---|---|
+| `subject` | De actor die toegang vraagt |
+| `action` | De handeling die de actor wil uitvoeren |
+| `resource` | Het object of de gegevens waarop de handeling betrekking heeft |
+| `context` | Aanvullende omstandigheden waaronder het verzoek plaatsvindt |
+
+De OpenID AuthZEN specificatie is bewust generiek opgezet. De specificatie definieert de structuur van een autorisatieverzoek, maar schrijft geen domeinspecifieke attributen, sectorale semantiek of verplichte codelijsten voor. Aanvullende profilering is daarom noodzakelijk om binnen een specifiek domein, zoals het iWlz-stelsel, tot interoperabele en toetsbare implementaties te komen.
 
 ## 6.2 NLGov AuthZEN 1.0
 
-De [NLGov AuthZEN Authorization API 1.0 specificatie](https://www.logius.nl/actueel/publieke-consultatie-nlgov-authzen-authorization-api-v10) is een verfijning (profiel) van de [OpenID AuthZEN Authorization 1.0 specificatie](https://openid.net/wg/authzen/specifications/), specifiek voor Nederlandse overheidsinstellingen.
+De [NLGov AuthZEN Authorization API 1.0 specificatie](https://www.logius.nl/actueel/publieke-consultatie-nlgov-authzen-authorization-api-v10) is een profiel op de [OpenID AuthZEN Authorization 1.0 specificatie](https://openid.net/wg/authzen/specifications/), specifiek voor Nederlandse overheidsinstellingen.
 
-Deze specificatie voegt de volgende elementen toe:
+De OpenID AuthZEN specificatie definieert een generiek model voor autorisatieverzoeken bestaande uit `subject`, `action`, `resource` en `context`, maar legt geen semantiek of verplichte attributen vast.
 
-- Structuur: requests moeten voldoen aan een vastgesteld profiel
+De NLGov AuthZEN specificatie profileert dit model door:
+
+- Structuur: autorisatieverzoeken MUST voldoen aan een vastgesteld profiel
 - Subject: gestandaardiseerde identity-attributen
-- Action: beperkte, afgesproken set van acties
-- Resource: domeinspecifieke structuur verplicht
+- Action: een beperkte, afgesproken set van acties
+- Resource: domeinspecifieke structuur
 - Context: verplicht en semantisch ingevuld
 - Governance: stelselafspraken (Logius)
 
-De onderstaande specificaties zijn gebaseerd op de huidige REGO policies binnen de iWlz-sector.
+De onderstaande specificaties vormen een **iWlz-profiel op NLGov AuthZEN**, gebaseerd op de huidige REGO policies binnen de iWlz-sector.
 
 ---
 
@@ -250,12 +275,12 @@ Het `subject` object beschrijft de actor die toegang vraagt.
 
 | Attribuut | Verplicht | Bron | Opmerking |
 |---|---|---|---|
-| id | Ja | token.sub | Unieke identificatie van de actor |
-| organization_type | Ja | token | ZORGKANTOOR, ZORGAANBIEDER, CIZ, VECOZO, BURGER, TOEZICHTHOUDER, KETENPARTNER, SYSTEEM |
-| roles | Ja | token | BEMIDDELAAR, INDICATIESTELLER, ZORGVERLENER, UITVOERDER, REGIEVOERDER, AANVRAGER, RAADPLEGER, MUTATOR, BESLISSER, GOEDKEURDER, CONTROLEUR, AUDITOR, TOEZICHTHOUDER |
-| identifiers.uzovi_code | Conditioneel | token | Verplicht indien organization_type = ZORGKANTOOR |
-| identifiers.agb_code | Conditioneel | token | Verplicht indien organization_type = ZORGAANBIEDER |
-| region | Ja | token | NOORD, GRONINGEN, FRIESLAND, DRENTHE, TWENTE, ACHTERHOEK, MIDDEN_IJSSEL, ARNHEM, NIJMEGEN, UTRECHT, NOORD_HOLLAND, ZUID_HOLLAND, ZEELAND, BRABANT, LIMBURG |
+| id | MUST | token.sub | Unieke identificatie van de actor |
+| organization_type | MUST | token | ZORGKANTOOR, ZORGAANBIEDER, CIZ, VECOZO, BURGER, TOEZICHTHOUDER, KETENPARTNER, SYSTEEM |
+| roles | MUST | token | BEMIDDELAAR, INDICATIESTELLER, ZORGVERLENER, UITVOERDER, REGIEVOERDER, AANVRAGER, RAADPLEGER, MUTATOR, BESLISSER, GOEDKEURDER, CONTROLEUR, AUDITOR, TOEZICHTHOUDER |
+| identifiers.uzovi_code | CONDITIONAL | token | MUST aanwezig zijn indien organization_type = ZORGKANTOOR |
+| identifiers.agb_code | CONDITIONAL | token | MUST aanwezig zijn indien organization_type = ZORGAANBIEDER |
+| region | MUST | token / PIP | NOORD, GRONINGEN, FRIESLAND, DRENTHE, TWENTE, ACHTERHOEK, MIDDEN_IJSSEL, ARNHEM, NIJMEGEN, UTRECHT, NOORD_HOLLAND, ZUID_HOLLAND, ZEELAND, BRABANT, LIMBURG |
 
 ---
 
@@ -270,6 +295,8 @@ Het `action` veld beschrijft de gewenste handeling.
 | execute | Procesactie |
 | approve | Besluitvorming |
 
+Het veld `action` MUST één van bovenstaande waarden bevatten.
+
 ---
 
 ## 6.2.3 Resource
@@ -278,13 +305,13 @@ Het `resource` object beschrijft het object waarop de actie wordt uitgevoerd.
 
 | Attribuut | Verplicht | Waarden / Voorbeeld | Opmerking |
 |---|---|---|---|
-| type | Ja | WLZ_INDICATIE, BEMIDDELING, CLIENT, etc. | Type resource |
-| id | Conditioneel | "123" | Verplicht bij specifieke raadpleging |
-| owner | Ja | CIZ, zorgkantoor1 | Eigenaar van resource |
-| region | Ja | zie codelijst regio | Regionale context |
-| sensitivity | Ja | LOW, NORMAL, HIGH | Gevoeligheid |
-| path | Nee | /graphql | Technisch endpoint |
-| method | Nee | POST | HTTP methode |
+| type | MUST | WLZ_INDICATIE, BEMIDDELING, CLIENT, etc. | Type resource |
+| id | CONDITIONAL | "123" | MUST aanwezig zijn bij specifieke raadpleging |
+| owner | SHOULD | CIZ, zorgkantoor1 | Eigenaar van resource (indien relevant) |
+| region | MUST | zie codelijst regio | Regionale context |
+| sensitivity | MUST | LOW, NORMAL, HIGH | Gevoeligheid |
+| path | OPTIONAL | /graphql | Technisch endpoint |
+| method | OPTIONAL | POST | HTTP methode |
 
 ---
 
@@ -294,18 +321,18 @@ Het `context` object beschrijft de omstandigheden en het doel van het verzoek.
 
 | Attribuut | Verplicht | Waarden | Opmerking |
 |---|---|---|---|
-| purpose_of_use | Ja | WLZ_UITVOERING, INDICATIESTELLING, ZORGTOEWIJZING, BEMIDDELING, DECLARATIE, CONTROLE, TOEZICHT, ADMINISTRATIE, RAPPORTAGE, AUDIT, TEST | Doelbinding (AVG) |
-| service | Ja | INDICATIEREGISTER, BEMIDDELINGSREGISTER, etc. | Functionele dienst |
-| operation | Ja | raadpleegIndicatie, etc. | Business-operatie |
-| relation | Ja | WLZ_EXECUTION | Ketenrelatie |
-| contract_active | Ja | true/false | Contractstatus |
-| requested_at | Ja | ISO timestamp | Tijdstip van verzoek |
+| purpose_of_use | MUST | WLZ_UITVOERING, INDICATIESTELLING, ZORGTOEWIJZING, BEMIDDELING, DECLARATIE, CONTROLE, TOEZICHT, ADMINISTRATIE, RAPPORTAGE, AUDIT, TEST | Doelbinding (AVG) |
+| service | MUST | zie service codelijst | Functionele dienst |
+| operation | MUST | zie operation codelijst | Business-operatie |
+| relation | MUST | WLZ_EXECUTION | Ketenrelatie |
+| contract_active | MUST | true/false | Contractstatus |
+| requested_at | MUST | ISO 8601 timestamp | Tijdstip van verzoek |
 
 ---
 
 ### 6.2.5 Service (codelijst)
 
-Het veld `context.service` identificeert de functionele dienst (register/API) waarop het verzoek betrekking heeft.
+Het veld `context.service` identificeert de functionele dienst waarop het verzoek betrekking heeft.
 
 | Waarde | Betekenis |
 |---|---|
@@ -317,6 +344,8 @@ Het veld `context.service` identificeert de functionele dienst (register/API) wa
 | CONTRACTREGISTER | Contractuele relaties tussen partijen |
 | RELATIEREGISTER | Relaties tussen organisaties |
 | TOEZICHTSERVICE | Toezicht en controleprocessen |
+
+Het veld `service` MUST één van bovenstaande waarden bevatten.
 
 ---
 
@@ -401,10 +430,13 @@ Het veld `context.operation` identificeert de specifieke business-operatie binne
 
 ## 6.2.7 Normatieve regels voor service en operation
 
-- Het veld `context.service` MUST één van de waarden uit de service-codelijst bevatten
-- Het veld `context.operation` MUST één van de waarden bevatten die behoort bij de gekozen service
-- De combinatie `service + operation` MUST geldig zijn volgens bovenstaande mapping
-- Een operation MUST niet gebruikt worden buiten de bijbehorende service
+- `context.service` MUST een waarde uit de service-codelijst bevatten  
+- `context.operation` MUST behoren tot de set van operations binnen de gekozen service  
+- De combinatie `service + operation` MUST geldig zijn volgens deze specificatie  
+- Een operation MUST NOT gebruikt worden buiten de bijbehorende service  
+- Requests met ongeldige combinaties MUST worden afgewezen (default deny)
+
+---
 
 ## 6.3 Voorbeeld
 
@@ -440,12 +472,13 @@ Onderstaand voorbeeld toont een AuthZEN-conform verzoek waarbij een zorgkantoor 
 }
 ```
 
+
 # 7. Terminologie
 
 | ***Term*** | ***Omschrijving*** |
 |---|---|
 | PEP | Policy Enforcement Point; Handhaving autorisatie (entrypoint) |
-| PAP | Policy Administration Point; Beheer autorisatiebeleeid, publiceert policies  |
+| PAP | Policy Administration Point; Beheer autorisatiebeleid, publiceert policies  |
 | PRP | Policy Retrieval Point; Stelt policies beschikbaar aan PDP's |
 | PIP | Policy Information Point; Levert attributen en contextinformatie voor autorisatiebesluiten |
 | PDP | Policy Decision Point; Evalueert policies en neemt het autorisatiebesluit |
@@ -456,9 +489,11 @@ Onderstaand voorbeeld toont een AuthZEN-conform verzoek waarbij een zorgkantoor 
 
 # 8. Referenties
 
-- Generieke Functie Autoriseren: https://open.overheid.nl/documenten/423d14f1-5228-4dd1-b79f-97a78b58eff5/file
-- [TWIIN] https://www.twiin.nl/twiin-vertrouwensmodel
-- [AUTHZEN] OpenID Foundation Authorization API 1.0:  https://openid.github.io/authzen/
-- [NLGOV_AUTHZEN] OpenID Dutch Government profile: https://logius-standaarden.github.io/authzen-nlgov/
+- [GEN_FUNC_AUTORISEREN] Ist en soll - onderzoek voor de generieke functie Autoriseren, Open Overheid: https://open.overheid.nl/documenten/423d14f1-5228-4dd1-b79f-97a78b58eff5/file
+- [TWIIN_VERTRAUWENSMODEL] Twiin Vertrouwensmodel: https://www.twiin.nl/twiin-vertrouwensmodel
+- [TWIIN_BEGRIP_VERTRAUWENSMODEL] Begrip: Twiin Vertrouwensmodel, Twiin Afsprakenstelsel: https://afsprakenstelsel.twiin.nl/normatief/ta140/begrip-twiin-vertrouwensmodel
+- [AUTHZEN_FINAL] OpenID Authorization API 1.0 Final Specification: https://openid.net/specs/authorization-api-1_0.html
+- [AUTHZEN_FINAL_APPROVAL] OpenID Authorization API 1.0 Final Specification Approved: https://openid.net/authorization-api-1-0-final-specification-approved/
+- [NLGOV_AUTHZEN] NLGov Profile for OpenID AuthZEN Authorization API: https://logius-standaarden.github.io/authzen-nlgov/
 - [OPA] Open Policy Agent: https://www.openpolicyagent.org/
-- Status RFC: https://github.com/iStandaarden/iWlz-RequestForComment/issues/52
+- [RFC_STATUS] Status RFC: https://github.com/iStandaarden/iWlz-RequestForComment/issues/52
