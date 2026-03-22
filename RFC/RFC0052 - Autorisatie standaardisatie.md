@@ -2,174 +2,212 @@
 
 # Samenvatting
 
-Autorisatie is binnen het landelijke zorgstelsel gepositioneerd als een generieke functie. Zij moet stelselbreed functioneren, onafhankelijk zijn van individuele applicaties, normeerbaar zijn en interoperabel toegepast kunnen worden. Deze uitgangspunten komen terug in beleidskaders rond generieke functies en in het Twiin Vertrouwensmodel.
 
-Binnen het iWlz-stelsel opereren meerdere bronhouders onder een gezamenlijk beleidskader. Hierdoor ontstaat een situatie waarin impliciete interpretatie van autorisatie-attributen niet langer voldoende is en uiteenlopende implementaties kunnen ontstaan.
+Autorisatie is binnen het landelijke zorgstelsel gepositioneerd als een generieke functie. Deze functie dient stelselbreed te functioneren, onafhankelijk te zijn van individuele applicaties, normeerbaar te zijn en interoperabel toegepast te kunnen worden. Deze uitgangspunten zijn vastgelegd in beleidskaders rondom generieke functies en komen tevens terug in het Twiin Vertrouwensmodel.
 
-Deze RFC stelt voor om autorisatieverzoeken te standaardiseren via de OpenID AuthZEN Authorization API 1.0. Hierdoor ontstaat een uniform autorisatiecontract tussen applicaties (Policy Enforcement Points) en de autorisatievoorziening (Policy Decision Point).
+Binnen het iWlz-stelsel opereren meerdere bronhouders onder een gezamenlijk beleidskader. In deze context is impliciete of implementatie-specifieke interpretatie van autorisatie-attributen niet langer toereikend. Zonder standaardisatie ontstaat het risico op uiteenlopende implementaties van autorisatie, wat de interoperabiliteit en toetsbaarheid negatief beïnvloedt.
 
-In de voorgestelde architectuur vindt policy-evaluatie plaats bij de bronhouder, terwijl de bron en governance van het autorisatiebeleid centraal wordt beheerd door ZINL. Hierdoor ontstaat een federatief model waarin bronhouders verantwoordelijk blijven voor autorisatiebesluiten op hun eigen resources, terwijl stelselbrede beleidsconsistentie wordt geborgd.
+De policy-evaluatie vindt plaats bij de bronhouder (Policy Decision Point), terwijl de governance en herkomst van het autorisatiebeleid centraal worden beheerd door ZINL, conform de bestaande RFC [verwijzing].
 
-De Open Policy Agent (OPA) kan in deze architectuur fungeren als uitvoerende policy-engine, terwijl AuthZEN de gestandaardiseerde autorisatie-interface definieert.
+In de huidige situatie wordt het inkomende API-request (bijvoorbeeld een GraphQL-request) als één geheel verwerkt, waarbij businesslogica (de functionele aanvraag aan de bronhouder) en autorisatielogica (de beoordeling of deze aanvraag is toegestaan) met elkaar verweven zijn. Dit gecombineerde request wordt vervolgens als één JSON-document aangeboden aan de policy engine voor evaluatie.
 
-Belangrijk:
+Hierdoor wordt de autorisatiebeslissing gebaseerd op een input die sterk afhankelijk is van de technische representatie van het API-request, inclusief querystructuur, variabelen en filters. Dit leidt tot een ongewenste koppeling tussen businesslogica en autorisatielogica.
 
-- AuthZEN vervangt geen IAM.
-- AuthZEN vervangt geen policy engines.
-- AuthZEN standaardiseert uitsluitend de interface tussen Policy Enforcement Points en Policy Decision Points.
+In dit voorstel wordt een expliciete scheiding aangebracht tussen:
+	•	het businessrequest (de functionele vraag aan de bronhouder), en
+	•	de autorisatievraag (de vraag of deze actie toegestaan is).
+
+De Policy Enforcement Point (PEP) is verantwoordelijk voor het afleiden van een gestandaardiseerde autorisatievraag uit het inkomende request en het aanbieden daarvan aan de Policy Decision Point (PDP).
+
+Het voorstel is om deze autorisatievraag te standaardiseren volgens de [NLGov AuthZEN Authorization API 1.0](https://www.logius.nl/actueel/publieke-consultatie-nlgov-authzen-authorization-api-v10) specificatie. Hiermee ontstaat een uniform autorisatiecontract tussen applicaties (Policy Enforcement Points) en de autorisatievoorziening (Policy Decision Points).
+
+Dit leidt tot de volgende voordelen:
+	•	Autorisatiebeslissingen worden gebaseerd op een gestandaardiseerd en expliciet model (subject, action, resource, context), in plaats van op implementatie-specifieke requeststructuren.
+	•	De koppeling tussen businesslogica en autorisatielogica wordt verminderd, waardoor bronhouders vrijer zijn in hun keuze voor API-technologieën (zoals GraphQL).
+	•	Autorisatiebeleid wordt beter herbruikbaar, toetsbaar en uitlegbaar binnen het stelsel.
+	•	Interoperabiliteit tussen verschillende partijen en implementaties wordt vergroot.
+
+Belangrijk is dat:
+	•	NLGov AuthZEN geen vervanging is voor Identity & Access Management (IAM).
+	•	NLGov AuthZEN geen policy engines vervangt.
+	•	NLGov AuthZEN uitsluitend de interface standaardiseert tussen Policy Enforcement Points en Policy Decision Points, en daarmee governance biedt op de uitwisseling van autorisatievragen en -beslissingen.
+
+Een mogelijke implementatiekeuze binnen API-technologieën zoals GraphQL is het gebruik van directives om expliciet aan te geven dat autorisatie moet worden toegepast. Dit is echter een implementatiedetail en valt buiten de scope van deze standaardisatie.
+
 
 ---
 
 # 1. Inleiding
 
-In de Kamerbrieven over Generieke Functies wordt autorisatie expliciet benoemd als een generieke functie die:
-- stelselbreed moet functioneren
-- onafhankelijk van individuele applicaties moet zijn
-- normeerbaar moet zijn
-- interoperabel moet zijn
+Autorisatie is binnen het landelijke zorgstelsel gepositioneerd als een generieke functie. Deze functie dient stelselbreed te functioneren, onafhankelijk te zijn van individuele applicaties, normeerbaar te zijn en interoperabel toegepast te kunnen worden. Deze uitgangspunten zijn verankerd in beleidskaders rondom generieke functies en worden onder meer bevestigd in het Twiin Vertrouwensmodel.
 
-Autorisatie mag daarom niet “hardcoded” in applicaties worden geïmplementeerd. Het moet losgekoppeld, herbruikbaar en toetsbaar zijn.
+Binnen het iWlz-stelsel opereren meerdere bronhouders onder een gezamenlijk beleidskader. In deze context is het noodzakelijk dat autorisatie op een consistente en eenduidige wijze wordt toegepast. Wanneer autorisatie afhankelijk is van impliciete interpretaties of implementatie-specifieke invullingen, ontstaat het risico op uiteenlopende interpretaties van autorisatie-attributen. Dit kan leiden tot inconsistent gedrag, verminderde interoperabiliteit en beperkte toetsbaarheid van autorisatiebeslissingen binnen het stelsel.
 
-De inzet van Open Policy Agent (OPA) ondersteunt deze architectuurprincipes door autorisatie los te koppelen van applicaties en te positioneren als zelfstandig Policy Decision Point (PDP).
+In de huidige situatie wordt een inkomend API-request (bijvoorbeeld een GraphQL-request) als één geheel verwerkt, waarbij businesslogica (de functionele aanvraag aan een bronhouder) en autorisatielogica (de beoordeling of deze aanvraag is toegestaan) met elkaar verweven zijn. Dit gecombineerde request wordt vervolgens als input gebruikt voor policy-evaluatie. Hierdoor is de autorisatiebeslissing afhankelijk van de technische representatie van het request, zoals querystructuur, variabelen en filters, wat leidt tot een ongewenste koppeling tussen businesslogica en autorisatie.
 
-OPA faciliteert:
-- centrale policy-besluitvorming
-- scheiding van policy en applicatielogica
--	versiebeheer van beleidsregels
--	audit en controleerbaarheid van autorisatiebesluiten
+Deze situatie staat haaks op het uitgangspunt dat autorisatie als generieke functie losgekoppeld moet zijn van individuele applicaties en implementaties. Om autorisatie stelselbreed consistent, herbruikbaar en toetsbaar te maken, is een expliciete scheiding nodig tussen de businessvraag en de autorisatievraag.
 
-Hiermee wordt invulling gegeven aan autorisatie als generieke functie op technisch niveau.
+Dit document beschrijft een voorstel om deze scheiding te realiseren door de autorisatievraag te standaardiseren. De Policy Enforcement Point (PEP) is hierbij verantwoordelijk voor het afleiden van een gestandaardiseerde autorisatievraag uit het inkomende request, terwijl de Policy Decision Point (PDP) deze vraag evalueert op basis van centraal beheerd autorisatiebeleid.
+
+Voor de standaardisatie van deze autorisatievraag wordt aansluiting gezocht bij de NLGov AuthZEN Authorization API 1.0 specificatie. Deze standaard definieert een uniform autorisatiecontract tussen PEP en PDP, gebaseerd op een expliciet model van subject, action, resource en context. Door deze standaard toe te passen wordt de koppeling tussen businesslogica en autorisatielogica verminderd en ontstaat een consistente en interoperabele manier om autorisatiebeslissingen binnen het stelsel te realiseren.
 
 # 2. Probleemstelling
 
-![alt text](images/authzen.png)
 
-## 2.1 Single-bronhoudercontext
+Binnen het iWlz-stelsel wordt autorisatie toegepast in een context waarin meerdere bronhouders opereren onder een gezamenlijk beleidskader. Hoewel autorisatie als generieke functie stelselbreed consistent en onafhankelijk van applicaties moet functioneren, blijkt in de huidige situatie dat de implementatie van autorisatie sterk verweven is met de technische invulling van individuele API’s.
 
-In een situatie met één bronhouder vormt de afwezigheid van een gestandaardiseerd autorisatiebeslismodel doorgaans geen probleem.
+Concreet wordt een inkomend API-request (bijvoorbeeld een GraphQL-request) momenteel als één gecombineerd geheel verwerkt, waarin zowel businesslogica (de functionele vraag aan de bronhouder) als autorisatielogica (de beoordeling of deze vraag is toegestaan) zijn opgenomen. Dit gecombineerde request wordt als input aangeboden aan de policy engine voor evaluatie.
 
-Binnen één organisatie zijn:
-- semantiek van rollen
--	interpretatie van attributen
--	governance
--	logging
+Hierdoor ontstaan de volgende knelpunten:
 
-impliciet afgestemd. Een technische PDP-implementatie zoals OPA is in deze context vaak voldoende.
+- Verwevenheid van business- en autorisatielogica; Autorisatiebeslissingen zijn direct afhankelijk van de structuur en inhoud van het API-request, zoals query-opbouw, variabelen en filters. Hierdoor ontstaat een ongewenste koppeling tussen businesslogica en autorisatielogica.
+- Gebrek aan standaardisatie van de autorisatievraag; Er is geen uniform model voor de autorisatievraag tussen Policy Enforcement Points (PEP) en Policy Decision Points (PDP). Iedere implementatie bepaalt zelf hoe autorisatie-attributen worden afgeleid en aangeboden, wat leidt tot inconsistente interpretaties.
+- Beperkte interoperabiliteit tussen bronhouders; Door het ontbreken van een gestandaardiseerd autorisatiecontract kunnen verschillende bronhouders autorisatie op uiteenlopende wijze implementeren, wat de stelselbrede interoperabiliteit belemmert.
+- Beperkte herbruikbaarheid en toetsbaarheid van beleid; Autorisatiebeleid is gekoppeld aan specifieke API-structuren en daardoor moeilijk herbruikbaar. Daarnaast wordt het lastiger om autorisatiebeslissingen consistent te toetsen en te verantwoorden.
+- Afhankelijkheid van technische implementatiedetails; De policy-evaluatie is afhankelijk van implementatiespecifieke requestrepresentaties (zoals GraphQL-structuren), in plaats van een expliciet en technologie-onafhankelijk autorisatiemodel.
 
-## 2.2 Multi-bronhoudercontext
-
-Binnen het iWlz-stelsel opereren echter meerdere bronhouders onder een gezamenlijk beleidskader.
-
-In deze situatie:
--	ontstaan verschillende interpretaties van autorisatie-attributen
--	kunnen implementaties uiteenlopen
--	wordt hergebruik van policies beperkt
-
-Een loutere inzet van OPA — waarbij een generiek JSON-document wordt geëvalueerd — is daarom onvoldoende om uniforme autorisatiebesluiten te garanderen.
-
-## 2.3 Gevolg
-
-Zonder expliciet vastgelegd autorisatiecontract ontstaat variatie in:
--	attributenstructuur
--	semantische interpretatie
--	besluitvorming
-
-Dit belemmert:
--	interoperabiliteit
--	governance
--	audit
+Deze situatie staat haaks op het uitgangspunt dat autorisatie als generieke functie losgekoppeld, normeerbaar en interoperabel moet zijn. Zonder een expliciete scheiding tussen businesslogica en autorisatielogica en zonder standaardisatie van de autorisatievraag blijft het risico bestaan op fragmentatie van autorisatie-implementaties binnen het stelsel.
 
 
 # 3. Architectuurprincipes
 
-Autorisatie binnen het iWlz-stelsel moet voldoen aan de volgende principes:
+Autorisatie binnen het iWlz-stelsel moet voldoen aan de volgende architectuurprincipes:
 
-1.	Scheiding van verantwoordelijkheden; PEP → enforcement (bij applicatie of gateway), PDP → policy decision (bij bronhouder), Policy governance → centraal bij ZINL
-1.	Standaardisatie van autorisatieverzoeken; Applicaties moeten een autorisatiebesluit opvragen via een uniforme interface.
-1.	Loskoppeling van policy-engine; De implementatie van het PDP moet verwisselbaar zijn.
-1.	Stelselbrede interoperabiliteit; Bronhouders moeten dezelfde autorisatie-interface gebruiken.
+- **Scheiding van verantwoordelijkheden**; De verantwoordelijkheid voor policy enforcement, policy decision en policy governance moet expliciet zijn gescheiden. Het Policy Enforcement Point (PEP) is verantwoordelijk voor het afdwingen van autorisatiebesluiten bij de applicatie of gateway. Het Policy Decision Point (PDP) is verantwoordelijk voor het nemen van autorisatiebesluiten. De governance op het autorisatiebeleid is centraal belegd bij ZINL.
+- **Standaardisatie van autorisatieverzoeken**; Autorisatieverzoeken tussen PEP en PDP moeten via een uniforme en gestandaardiseerde interface verlopen, zodat autorisatiebesluiten op consistente wijze kunnen worden aangevraagd en verwerkt.
+- **Loskoppeling van policy-engine en interface**; De interface tussen PEP en PDP moet onafhankelijk zijn van de onderliggende policy-engine. De implementatie van het PDP moet verwisselbaar zijn, zonder dat dit impact heeft op de applicaties of gateways die autorisatiebesluiten opvragen.
+- **Stelselbrede interoperabiliteit**; Bronhouders en andere stelselpartijen moeten dezelfde autorisatie-interface en semantiek hanteren, zodat autorisatie stelselbreed consistent, uitlegbaar en interoperabel kan worden toegepast.
+
 
 # 4. Huidige situatie
 
-In de huidige situatie wordt autorisatie per applicatie geïmplementeerd.
+De huidige situatie is gebaseerd op één GraphQL-request, waarbij de input voor de policy-evaluatie direct wordt afgeleid van het volledige request en als JSON-document wordt aangeboden aan de Open Policy Agent (OPA).
+
+OPA evalueert deze input op basis van de in de policy bundle gedefinieerde Rego-policies en de bijbehorende policy-structuur. Hierbij worden zowel requestattributen als elementen uit de GraphQL-query, zoals variabelen en filters, betrokken in de autorisatiebeslissing.
+
+In deze opzet is geen expliciete scheiding aanwezig tussen businesslogica en autorisatielogica. Beide zijn impliciet verweven in de input voor de policy-evaluatie, waardoor autorisatiebeslissingen afhankelijk zijn van de technische representatie van het API-request.
+
+OPA fungeert in deze architectuur als Policy Decision Point (PDP).
+
 
 ```mermaid
-flowchart LR
-  C[Client]
-  PEP[PEP / Resource]
-  V[Token validatie]
-  PDP[OPA PDP]
-  RS[GraphQL Resource Server]
+flowchart TD
+    A[Client] --> B[GraphQL App / PEP gateway]
 
-  C -->|1 GraphQL request met token| PEP
+    B --> C[Verwerkt GraphQL request<br/>business + autorisatie verweven]
 
-  PEP -->|2 Valideer token| V
-  V -->|3 OK| PEP
+    C --> D[OPA input direct afgeleid van request<br/>parsed_body + attributes]
 
-  PEP -->|4 Policy input naar OPA| PDP
-  PDP -->|5 Allow / Deny| PEP
+    D --> E[OPA / PDP]
+    E --> F[Rego policies<br/>parsen GraphQL query + variables]
 
-  PEP -->|6a Forward| RS
-  PEP -->|6b Block 403| C
+    F --> G[Allow / Deny]
 
-  RS -->|7 GraphQL response| PEP
-  PEP -->|8 Response| C
+    G --> B
+    B --> H{Decision}
+    H -->|allow| I[Business uitvoeren]
+    H -->|deny| J[Weigeren]
+
+    I --> K[Response]
+    J --> K
 ```
-
-In deze situatie bestaat geen gestandaardiseerd autorisatiecontract.
 
 # 5. Doelarchitectuur
 
-De doelarchitectuur introduceert een gestandaardiseerde autorisatie-interface tussen applicaties en de autorisatievoorziening.
+Het is wenselijk om een expliciete scheiding aan te brengen tussen businesslogica en autorisatielogica.
+Daartoe wordt voorgesteld dat de implementerende partij binnen de Policy Enforcement Point (PEP)-gateway voorziet in een pre-processing functie.
 
-De policy-evaluatie vindt plaats bij de bronhouder, terwijl de bron van het autorisatiebeleid en de governance daarop centraal wordt beheerd door ZINL.
+Deze pre-processing functie is verantwoordelijk voor het onderscheiden van het businessrequest (de functionele aanvraag aan de bronhouder) en de daaruit af te leiden autorisatievraag.
+
+De implementerende partij is vrij in de keuze van technologie voor deze functionaliteit, mits wordt voldaan aan de volgende uitgangspunten:
+- Er wordt een duidelijke scheiding gerealiseerd tussen businesslogica en autorisatielogica.
+-	De autorisatievraag wordt opgebouwd conform de [NLGov AuthZEN Authorization API 1.0￼ specificatie](https://www.logius.nl/actueel/publieke-consultatie-nlgov-authzen-authorization-api-v10).
+
+In het kader van stelselbrede interoperabiliteit dient de oplossing niet beperkt te zijn tot één specifieke API-technologie. Naast GraphQL-requests moeten ook andere API-stijlen ondersteund kunnen worden.
+
+De pre-processing functie moet daarom in staat zijn om, onafhankelijk van de gebruikte API-technologie, een onderscheid te maken tussen businesslogica en autorisatielogica. Hierbij geldt:
+-	Voor GraphQL kan gebruik worden gemaakt van expliciete autorisatie-aanduidingen, zoals directives, om te signaleren dat voor een bepaalde operatie een autorisatiebesluit vereist is conform de NLGov AuthZEN-specificatie.
+-	Voor andere API-stijlen (zoals REST of gRPC) wordt deze informatie afgeleid uit bijvoorbeeld endpoints, methoden, metadata of configuratie, waarbij een mappingmechanisme wordt toegepast dat aansluit bij het autorisatiemodel van de NLGov AuthZEN Authorization API 1.0.
+
+De wijze waarop de pre-processing functie deze informatie herkent en interpreteert is een implementatiedetail. De standaardisatie richt zich uitsluitend op de autorisatievraag die door de PEP aan de Policy Decision Point (PDP) wordt aangeboden.
+
+## 5.1 Doelarchitectuur GraphQL 
 
 ```mermaid
-flowchart LR
-  C[Client]
-  G[PEP Gateway]
-  AS[nID Autorisatieserver]
-  AZ[AuthZEN Authorization API]
-  PDP[OPA PDP<br/>bij bronhouder]
-  RS[Resource Server<br/>bij bronhouder]
+flowchart TD
+    A[Client] --> B[PEP Gateway]
 
-  Z[ZINL<br/>Policy governance]
-  PB[Policy bron]
-  PD[Policy distributie]
+    subgraph B[PEP Gateway]
+        C[GraphQL Request Handler]
+        D[GraphQL Schema met @authz directive]
+        E[Authorization Pre-Processor]
+        F[Business Logic Handler]
+    end
 
-  C -->|1 GraphQL request met token| G
+    C --> D
+    D --> E
+    C --> F
 
-  G -->|2 Valideer token| AS
-  AS -->|3 Token valid| G
+    E --> E1[Lees directive + requestcontext]
+    E1 --> E2[Identificeer subject, action, resource, context]
+    E2 --> G[NLGov AuthZEN Authorization Request]
 
-  G -->|4 AuthZEN Access Evaluation Request| AZ
-  AZ -->|5 Policy input| PDP
-  PDP -->|6 Decision| AZ
-  AZ -->|7 Allow / Deny| G
+    G --> H[PDP bij bronhouder]
+    H --> I[Policy Engine / OPA]
+    I --> J[Allow / Deny]
 
-  G -->|8a Forward| RS
-  G -->|8b Block 403| C
+    J --> B
+    B --> K{Decision}
+    K -->|allow| F
+    K -->|deny| L[Toegang geweigerd]
 
-  RS -->|9 GraphQL response| G
-  G -->|10 Response| C
-
-  Z -->|A Beheer autorisatiebeleid| PB
-  PB -->|B Publicatie policies| PD
-  PD -->|C Distributie policies| PDP
+    F --> M[Business request naar bron]
+    M --> N[Response]
+    L --> N
 ```
 
+## 5.2 Doelarchitectuur andere API
 
-De PEP-gateway construeert via een request builder een AuthZEN Access Evaluation Request conform de AuthZEN Authorization API specificatie.
+```mermaid
+flowchart TD
+    A[Client] --> B[PEP Gateway]
+
+    subgraph B[PEP Gateway]
+        C[API Request Handler<br/>REST / GraphQL / gRPC]
+        D[Mapping / Configuratie / Contract]
+        E[Authorization Pre-Processor]
+        F[Business Logic Handler]
+    end
+
+    C --> D
+    D --> E
+    C --> F
+
+    E --> E1[Interpreteer endpoint, methode,<br/>operatie en requestcontext]
+    E1 --> E2[Identificeer subject, action, resource, context]
+    E2 --> G[NLGov AuthZEN Authorization Request]
+
+    G --> H[PDP bij bronhouder]
+    H --> I[Policy Engine / OPA]
+    I --> J[Allow / Deny]
+
+    J --> B
+    B --> K{Decision}
+    K -->|allow| F
+    K -->|deny| L[Toegang geweigerd]
+
+    F --> M[Business request naar bron]
+    M --> N[Response]
+    L --> N
+```
 
 
 # 6. Autorisatiecontract (AuthZEN)
 
-De OpenID AuthZEN Authorization API 1.0 definieert een gestandaardiseerde interface tussen:
 
-- Policy Enforcement Point (PEP)
-- Policy Decision Point (PDP)
+## 6.1 OpenID Authzen 1.0
 
-Een autorisatieverzoek bestaat uit vier elementen:
+De OpenID Authzen speficatie stelt dat een autorisatieverzoek uit vier elementen moet bestaan:
 
 - subject
 - action
@@ -186,194 +224,223 @@ Conceptueel:
 }
 ```
 
-Een autorisatieverzoek voor het inzien van een bemiddelingstatus vanuit zorgkantoor2  naar zorgkantoor1 zou er volgens Authzen standaarden zo uit zien:
+Dit is dus erg vrij en flexibel, er wordt geen symantiek of verplichte attributen afgedwongen.
+Het bevat geen sector afsrpaken en is echt meer een transport standaard.
 
-```
+## 6.2 NLGov AuthZEN 1.0
+
+De [NLGov AuthZEN Authorization API 1.0 specificatie](https://www.logius.nl/actueel/publieke-consultatie-nlgov-authzen-authorization-api-v10) is een verfijning (profiel) van de [OpenID AuthZEN Authorization 1.0 specificatie](https://openid.net/wg/authzen/specifications/), specifiek voor Nederlandse overheidsinstellingen.
+
+Deze specificatie voegt de volgende elementen toe:
+
+- Structuur: requests moeten voldoen aan een vastgesteld profiel
+- Subject: gestandaardiseerde identity-attributen
+- Action: beperkte, afgesproken set van acties
+- Resource: domeinspecifieke structuur verplicht
+- Context: verplicht en semantisch ingevuld
+- Governance: stelselafspraken (Logius)
+
+De onderstaande specificaties zijn gebaseerd op de huidige REGO policies binnen de iWlz-sector.
+
+---
+
+## 6.2.1 Subject
+
+Het `subject` object beschrijft de actor die toegang vraagt.
+
+| Attribuut | Verplicht | Bron | Opmerking |
+|---|---|---|---|
+| id | Ja | token.sub | Unieke identificatie van de actor |
+| organization_type | Ja | token | ZORGKANTOOR, ZORGAANBIEDER, CIZ, VECOZO, BURGER, TOEZICHTHOUDER, KETENPARTNER, SYSTEEM |
+| roles | Ja | token | BEMIDDELAAR, INDICATIESTELLER, ZORGVERLENER, UITVOERDER, REGIEVOERDER, AANVRAGER, RAADPLEGER, MUTATOR, BESLISSER, GOEDKEURDER, CONTROLEUR, AUDITOR, TOEZICHTHOUDER |
+| identifiers.uzovi_code | Conditioneel | token | Verplicht indien organization_type = ZORGKANTOOR |
+| identifiers.agb_code | Conditioneel | token | Verplicht indien organization_type = ZORGAANBIEDER |
+| region | Ja | token | NOORD, GRONINGEN, FRIESLAND, DRENTHE, TWENTE, ACHTERHOEK, MIDDEN_IJSSEL, ARNHEM, NIJMEGEN, UTRECHT, NOORD_HOLLAND, ZUID_HOLLAND, ZEELAND, BRABANT, LIMBURG |
+
+---
+
+## 6.2.2 Action
+
+Het `action` veld beschrijft de gewenste handeling.
+
+| Waarde | Betekenis |
+|---|---|
+| read | Raadplegen |
+| write | Muteren |
+| execute | Procesactie |
+| approve | Besluitvorming |
+
+---
+
+## 6.2.3 Resource
+
+Het `resource` object beschrijft het object waarop de actie wordt uitgevoerd.
+
+| Attribuut | Verplicht | Waarden / Voorbeeld | Opmerking |
+|---|---|---|---|
+| type | Ja | WLZ_INDICATIE, BEMIDDELING, CLIENT, etc. | Type resource |
+| id | Conditioneel | "123" | Verplicht bij specifieke raadpleging |
+| owner | Ja | CIZ, zorgkantoor1 | Eigenaar van resource |
+| region | Ja | zie codelijst regio | Regionale context |
+| sensitivity | Ja | LOW, NORMAL, HIGH | Gevoeligheid |
+| path | Nee | /graphql | Technisch endpoint |
+| method | Nee | POST | HTTP methode |
+
+---
+
+## 6.2.4 Context
+
+Het `context` object beschrijft de omstandigheden en het doel van het verzoek.
+
+| Attribuut | Verplicht | Waarden | Opmerking |
+|---|---|---|---|
+| purpose_of_use | Ja | WLZ_UITVOERING, INDICATIESTELLING, ZORGTOEWIJZING, BEMIDDELING, DECLARATIE, CONTROLE, TOEZICHT, ADMINISTRATIE, RAPPORTAGE, AUDIT, TEST | Doelbinding (AVG) |
+| service | Ja | INDICATIEREGISTER, BEMIDDELINGSREGISTER, etc. | Functionele dienst |
+| operation | Ja | raadpleegIndicatie, etc. | Business-operatie |
+| relation | Ja | WLZ_EXECUTION | Ketenrelatie |
+| contract_active | Ja | true/false | Contractstatus |
+| requested_at | Ja | ISO timestamp | Tijdstip van verzoek |
+
+---
+
+### 6.2.5 Service (codelijst)
+
+Het veld `context.service` identificeert de functionele dienst (register/API) waarop het verzoek betrekking heeft.
+
+| Waarde | Betekenis |
+|---|---|
+| INDICATIEREGISTER | Raadplegen en beheren van WLZ indicaties |
+| BEMIDDELINGSREGISTER | Bemiddelingsinformatie tussen partijen |
+| CLIENTREGISTER | Cliëntgegevens binnen WLZ |
+| ZORGTOEWIJZINGSSERVICE | Toewijzen van zorg aan cliënten |
+| DECLARATIEREGISTER | Declaraties en financiële afhandeling |
+| CONTRACTREGISTER | Contractuele relaties tussen partijen |
+| RELATIEREGISTER | Relaties tussen organisaties |
+| TOEZICHTSERVICE | Toezicht en controleprocessen |
+
+---
+
+## 6.2.6 Operation (codelijst)
+
+Het veld `context.operation` identificeert de specifieke business-operatie binnen een service.
+
+### INDICATIEREGISTER
+
+| Waarde | Betekenis |
+|---|---|
+| raadpleegIndicatie | Opvragen van een specifieke indicatie |
+| zoekIndicaties | Zoeken naar indicaties |
+| controleerIndicatieStatus | Controleren status van indicatie |
+
+---
+
+### BEMIDDELINGSREGISTER
+
+| Waarde | Betekenis |
+|---|---|
+| raadpleegBemiddeling | Opvragen bemiddelingsgegevens |
+| wijzigBemiddeling | Wijzigen bemiddeling |
+| startBemiddeling | Starten bemiddeling |
+
+---
+
+### CLIENTREGISTER
+
+| Waarde | Betekenis |
+|---|---|
+| raadpleegClient | Opvragen cliëntgegevens |
+| wijzigClient | Wijzigen cliëntgegevens |
+
+---
+
+### ZORGTOEWIJZINGSSERVICE
+
+| Waarde | Betekenis |
+|---|---|
+| raadpleegToewijzing | Opvragen zorgtoewijzing |
+| wijzigToewijzing | Aanpassen zorgtoewijzing |
+
+---
+
+### DECLARATIEREGISTER
+
+| Waarde | Betekenis |
+|---|---|
+| indienDeclaratie | Indienen declaratie |
+| raadpleegDeclaratie | Opvragen declaratie |
+| controleerDeclaratie | Controleren declaratie |
+
+---
+
+### CONTRACTREGISTER
+
+| Waarde | Betekenis |
+|---|---|
+| raadpleegContract | Opvragen contract |
+| wijzigContract | Wijzigen contract |
+
+---
+
+### RELATIEREGISTER
+
+| Waarde | Betekenis |
+|---|---|
+| raadpleegRelatie | Opvragen relatie |
+| wijzigRelatie | Wijzigen relatie |
+
+---
+
+### TOEZICHTSERVICE
+
+| Waarde | Betekenis |
+|---|---|
+| voerControleUit | Uitvoeren controle |
+| raadpleegAudit | Opvragen auditinformatie |
+
+---
+
+## 6.2.7 Normatieve regels voor service en operation
+
+- Het veld `context.service` MUST één van de waarden uit de service-codelijst bevatten
+- Het veld `context.operation` MUST één van de waarden bevatten die behoort bij de gekozen service
+- De combinatie `service + operation` MUST geldig zijn volgens bovenstaande mapping
+- Een operation MUST niet gebruikt worden buiten de bijbehorende service
+
+## 6.3 Voorbeeld
+
+Onderstaand voorbeeld toont een AuthZEN-conform verzoek waarbij een zorgkantoor een CIZ-indicatie raadpleegt.
+
+```json
 {
   "subject": {
-    "type": "organization",
     "id": "zorgkantoor2",
-    "organization_type": "zorgkantoor",
-    "uzovi_code": "5500",
-    "agb_code": "12345678",
-    "role": "bemiddelaar",
-    "region": "Noord"
+    "organization_type": "ZORGKANTOOR",
+    "roles": ["RAADPLEGER"],
+    "identifiers": {
+      "uzovi_code": "5500"
+    },
+    "region": "UTRECHT"
   },
-  "action": {
-    "name": "read",
-    "operation": "read_bemiddeling_status",
-    "service": "bemiddelingsregister"
-  },
+  "action": "read",
   "resource": {
-    "type": "bemiddeling",
-    "id": "BEM-123456",
-    "owner": "zorgkantoor1",
-    "attribute": "status",
-    "region": "Noord"
+    "type": "WLZ_INDICATIE",
+    "id": "indicatie-987654",
+    "owner": "CIZ",
+    "region": "UTRECHT",
+    "sensitivity": "HIGH"
   },
   "context": {
-    "purpose_of_use": "wlz-uitvoering",
-    "legal_basis": "Wet langdurige zorg",
-    "relation": "bemiddelingsproces",
+    "purpose_of_use": "WLZ_UITVOERING",
+    "service": "INDICATIEREGISTER",
+    "operation": "raadpleegIndicatie",
+    "relation": "WLZ_EXECUTION",
     "contract_active": true,
-    "requested_at": "2026-03-12T10:30:00Z"
+    "requested_at": "2026-03-22T10:00:00Z"
   }
 }
 ```
 
-Deze structuur vormt het gestandaardiseerde autorisatiecontract binnen het stelsel.
-
-# 7. Motivatie voor AuthZEN
-
-Het gebruik van AuthZEN biedt de volgende voordelen:
-
-1. Standaardisatie van autorisatieverzoeken; Applicaties gebruiken een uniforme structuur voor autorisatievragen.
-1. Scheiding tussen applicatie en policy; Autorisatiebeleid wordt centraal geëvalueerd.
-1. Interoperabiliteit; Alle diensten binnen het stelsel gebruiken dezelfde autorisatie-interface.
-1. Flexibele policy-implementatie; De PDP kan worden gerealiseerd met technologieën zoals OPA.
-1. Moderne API-architectuur; AuthZEN is JSON-gebaseerd en past bij moderne API-architecturen.
-
-# 8. Architectuurcontext (Identity – Authorization – Policy)
-
-Onderstaand diagram laat zien waar AuthZEN zich positioneert binnen de architectuur.
-
-```mermaid
-flowchart LR
-    C[Client]
-
-    ID[Identity Layer<br/>nID Autorisatieserver]
-
-    TOK[Access Token<br/>JWT]
-
-    AZ[Authorization Layer<br/>AuthZEN Authorization API]
-
-    PDP[Policy Layer<br/>OPA PDP<br/>bij bronhouder]
-
-    RS[Resource Layer<br/>Resource Server<br/>bij bronhouder]
-
-    Z[ZINL<br/>Policy governance]
-
-    C -->|Authenticate| ID
-    ID -->|Issue token| TOK
-    TOK -->|API request met token| AZ
-
-    AZ -->|Access Evaluation Request| PDP
-    PDP -->|Policy decision| AZ
-
-    AZ -->|Enforce allow / deny| RS
-    RS -->|Resource response| C
-
-    Z -->|Beheer autorisatiebeleid| PDP
-```
-Hieruit blijkt dat:
-- Identity verzorgt authenticatie
-- AuthZEN verzorgt autorisatie-interface
-- OPA verzorgt policy-evaluatie
--	ZINL beheert het stelselbrede autorisatiebeleid
-
-# 9. Governance van autorisatiebeleid binnen het iWlz-stelsel
-
-Binnen de voorgestelde architectuur wordt autorisatie gerealiseerd volgens een federatief model. In dit model vindt de uitvoering van autorisatiebesluiten plaats bij de bronhouder, terwijl de bron en governance van het autorisatiebeleid centraal worden beheerd.
-
-Het doel van deze governance is:
--	uniforme interpretatie van autorisatie-attributen binnen het stelsel
--	consistentie van beleidsregels tussen bronhouders
--	hergebruik van autorisatiebeleid
--	auditbaarheid en transparantie van autorisatiebesluiten
-
-
-## 9.1 Rollen en verantwoordelijkheden
-
-Binnen deze architectuur worden de volgende rollen onderscheiden:
-
-| ***Rol*** | ***Verantwoordelijkheid*** |
-|---|---|
-|ZINL|beheer van stelselbreed autorisatiebeleid|
-|Bronhouder|uitvoering van autorisatiebesluiten op eigen resources|
-|PEP Gateway|  afdwingen van autorisatiebesluiten (PEP)|
-|PDP|evaluatie van autorisatiebeleid|
-
-
-ZINL
-
-ZINL fungeert als beheerder van het stelselbrede autorisatiebeleid. Deze rol omvat onder andere:
--	vaststellen van autorisatiebeleid
--	definiëren van autorisatie-attributen
--	beheer van het autorisatiecontract
--	versiebeheer van policies
--	distributie van policies naar bronhouders
-
-Bronhouders
-
-Bronhouders blijven verantwoordelijk voor de autorisatiebesluiten op hun eigen gegevens en services. Zij implementeren een lokale Policy Decision Point (PDP), bijvoorbeeld met Open Policy Agent (OPA), waarin het door ZINL beheerde autorisatiebeleid wordt geëvalueerd.
-
-
-PEP gateway
-
-PEP gateways fungeren als Policy Enforcement Point (PEP). Zij vragen autorisatiebesluiten op via de gestandaardiseerde AuthZEN-interface en handhaven het besluit op het moment van toegang tot een resource.
-
-## 9.2 Beheer van autorisatiebeleid
-
-Het autorisatiebeleid bestaat uit beleidsregels die beschrijven onder welke voorwaarden toegang tot gegevens of functionaliteit wordt toegestaan.
-
-Deze beleidsregels bevatten onder andere:
--	toegestane rollen
--	organisatiecontext
--	behandelrelaties
--	doelbinding
--	resource-attributen
--	contextuele voorwaarden
-
-Het beleid wordt vastgelegd in een formele policystructuur die door de PDP kan worden geëvalueerd.
-
-## 9.3 Policy distributie
-
-Het door ZINL beheerde autorisatiebeleid wordt beschikbaar gesteld aan bronhouders via een policy distributiemechanisme.
-
-Dit kan bijvoorbeeld worden gerealiseerd via:
-- policy repositories
-- policy bundles
-- versiebeheer via Git
-- policy distributie via CI/CD
-
-Bronhouders synchroniseren periodiek hun lokale PDP met de actuele versie van het stelselbeleid.
-
-Hierdoor ontstaat een model waarin:
-
-- beleid centraal wordt beheerd
-- maar lokaal wordt geëvalueerd
-
-## 9.4 Versiebeheer en wijzigingsbeheer
-
-Autorisatiebeleid is onderhevig aan wijzigingen als gevolg van:
--	nieuwe wet- en regelgeving
--	aanpassingen in zorgprocessen
--	wijzigingen in stelselafspraken
-
-Daarom wordt versiebeheer toegepast op autorisatiebeleid.
-
-Elke policyversie bevat minimaal:
--	een versie-identificatie
--	ingangsdatum
--	beschrijving van wijzigingen
-
-Bronhouders implementeren procedures om nieuwe policyversies gecontroleerd in gebruik te nemen.
-
-## 9.5 Audit en controleerbaarheid
-
-Het federatieve model ondersteunt audit en controle doordat:
-- autorisatiebesluiten lokaal worden gelogd
-- policyversies centraal worden beheerd
-- autorisatieverzoeken gestandaardiseerd zijn via AuthZEN
-
-Hierdoor kan achteraf worden vastgesteld:
-- welke policyversie is toegepast
-- welke attributen zijn gebruikt
-- welk autorisatiebesluit is genomen
-
-Dit ondersteunt compliance en governance binnen het stelsel.
-
-# 10. Terminologie
+# 7. Terminologie
 
 | ***Term*** | ***Omschrijving*** |
 |---|---|
@@ -387,7 +454,7 @@ Dit ondersteunt compliance en governance binnen het stelsel.
 | TWIIN | Transport, Wisselwerking, Informatie, In Netwerken |
 
 
-# 10. Referenties
+# 8. Referenties
 
 - Generieke Functie Autoriseren: https://open.overheid.nl/documenten/423d14f1-5228-4dd1-b79f-97a78b58eff5/file
 - [TWIIN] https://www.twiin.nl/twiin-vertrouwensmodel
