@@ -7,7 +7,7 @@ Autorisatie is binnen het landelijke zorgstelsel gepositioneerd als een generiek
 
 Binnen het iWlz-stelsel opereren meerdere bronhouders onder een gezamenlijk beleidskader. In deze context is impliciete of implementatie-specifieke interpretatie van autorisatie-attributen niet langer toereikend. Zonder standaardisatie ontstaat het risico op uiteenlopende implementaties van autorisatie, wat de interoperabiliteit en toetsbaarheid negatief beïnvloedt.
 
-De policy-evaluatie vindt plaats bij de bronhouder (Policy Decision Point), terwijl de governance en herkomst van het autorisatiebeleid centraal worden beheerd door ZINL, conform de bestaande RFC [verwijzing].
+De policy-evaluatie vindt plaats bij de bronhouder (Policy Decision Point), terwijl de governance en herkomst van het autorisatiebeleid centraal worden beheerd door ZINL, conform de [deze](https://github.com/orgs/iStandaarden/projects/5/views/1?pane=issue&itemId=158015608&issue=iStandaarden%7CiWlz-RequestForComment%7C51)  RFC.
 
 In de huidige situatie wordt het inkomende API-request (bijvoorbeeld een GraphQL-request) als één geheel verwerkt, waarbij businesslogica (de functionele aanvraag aan de bronhouder) en autorisatielogica (de beoordeling of deze aanvraag is toegestaan) met elkaar verweven zijn. Dit gecombineerde request wordt vervolgens als één JSON-document aangeboden aan de policy engine voor evaluatie.
 
