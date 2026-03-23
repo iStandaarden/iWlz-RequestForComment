@@ -121,13 +121,13 @@ Deze pre-processing functie is verantwoordelijk voor het onderscheiden van het b
 
 De implementerende partij is vrij in de keuze van technologie voor deze functionaliteit, mits wordt voldaan aan de volgende uitgangspunten:
 - Er wordt een duidelijke scheiding gerealiseerd tussen businesslogica en autorisatielogica.
--	De autorisatievraag wordt opgebouwd conform de [NLGov AuthZEN Authorization API 1.0￼ specificatie](https://www.logius.nl/actueel/publieke-consultatie-nlgov-authzen-authorization-api-v10).
+-	De autorisatievraag wordt opgebouwd conform de [NLGov AuthZEN Authorization API 1.0￼ specificatie](https://www.logius.nl/actueel/publieke-consultatie-nlgov-authzen-authorization-api-v10) zoals in Hoofdstuk 6 omschreven.
 
-In het kader van stelselbrede interoperabiliteit dient de oplossing niet beperkt te zijn tot één specifieke API-technologie. Naast GraphQL-requests moeten ook andere API-stijlen ondersteund kunnen worden.
+In het kader van stelselbrede interoperabiliteit dient de oplossing niet beperkt te zijn tot één specifieke API-technologie. Naast GraphQL-requests moeten ook andere API-protocollen ondersteund kunnen worden.
 
-De pre-processing functie moet daarom in staat zijn om, onafhankelijk van de gebruikte API-technologie, een onderscheid te maken tussen businesslogica en autorisatielogica. Hierbij geldt:
--	Voor GraphQL kan gebruik worden gemaakt van expliciete autorisatie-aanduidingen, zoals directives, om te signaleren dat voor een bepaalde operatie een autorisatiebesluit vereist is conform de NLGov AuthZEN-specificatie.
--	Voor andere API-stijlen (zoals REST of gRPC) wordt deze informatie afgeleid uit bijvoorbeeld endpoints, methoden, metadata of configuratie, waarbij een mappingmechanisme wordt toegepast dat aansluit bij het autorisatiemodel van de NLGov AuthZEN Authorization API 1.0.
+Hierbij geldt:
+-	Voor GraphQL kan gebruik worden gemaakt van expliciete autorisatie-aanduidingen, zoals directives, om te signaleren dat voor een bepaalde operatie een autorisatiebesluit vereist is conform de NLGov AuthZEN-specificatie zoals in Hoofdstuk 6 omschreven.
+-	Voor andere API-protocollen (zoals REST of gRPC) wordt deze informatie afgeleid uit bijvoorbeeld endpoints, methoden, metadata of configuratie, waarbij een mappingmechanisme wordt toegepast dat aansluit bij het autorisatiemodel van de NLGov AuthZEN Authorization API 1.0 zoals in Hoofdstuk 6 omschreven.
 
 De wijze waarop de pre-processing functie deze informatie herkent en interpreteert is een implementatiedetail. De standaardisatie richt zich uitsluitend op de autorisatievraag die door de PEP aan de Policy Decision Point (PDP) wordt aangeboden.
 
