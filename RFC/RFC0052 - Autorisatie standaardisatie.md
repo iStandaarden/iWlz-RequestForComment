@@ -131,75 +131,53 @@ Hierbij geldt:
 
 De wijze waarop de pre-processing functie deze informatie herkent en interpreteert is een implementatiedetail. De standaardisatie richt zich uitsluitend op de autorisatievraag die door de PEP aan de Policy Decision Point (PDP) wordt aangeboden.
 
-## 5.1 Doelarchitectuur GraphQL 
+## 5.1 Doelarchitectuur 
 
 ```mermaid
 flowchart TD
-    A[Client] --> B[PEP Gateway]
-
-    subgraph B[PEP Gateway]
-        C[GraphQL Request Handler]
-        D[GraphQL Schema / Resolver metadata met @authz]
-        E[Authorization Pre-Processor]
-        F[Business Logic Handler]
-    end
-
-    C --> D
-    D --> E
-
-    E --> E1[Lees directive metadata en request context]
-    E1 --> E2[Extraheer autorisatierelevante attributen]
-    E2 --> E3[Map business request naar subject, action, resource, context]
-    E3 --> G[Construeer NLGov AuthZEN Authorization Request]
-
-    G --> H[PDP bij bronhouder]
-    H --> I[Policy Engine / OPA]
-    I --> J[Allow / Deny]
-
-    J --> K{Decision}
-    K -->|allow| F
-    K -->|deny| L[Toegang geweigerd]
-
-    F --> M[Business request naar bron]
-    M --> N[Response]
-    L --> N
-```
-
-## 5.2 Doelarchitectuur overige APIs
-
-```mermaid
-flowchart TD
-    A[Client] --> B[PEP Gateway]
-
+    A[Client]
     subgraph B[PEP Gateway]
         C[Request Entry Point]
-        D[Authorization Pre-Processor]
-        E[Business Logic Handler]
+        C --> C1[Access-token validation]
+        subgraph P[Authorization pre-Processor]
+            D[Lees request context]
+            D --> D2[Bepaal service en operation]
+            D2 --> D3[Zoek mapping in tabel]
+            D3 --> D4[Extraheer autorisatierelevante attributen]
+            D4 --> D5[Construeer subject, action, resource, context]
+            T[Mapping tabel / profielmatrix]
+        end
+
+        D5 --> G[NLGov AuthZEN Authorization Request]
+        K
+        E[Request naar bronregister]
         T[Mapping tabel / profielmatrix]
+    K -->|deny| L[Toegang geweigerd]
     end
 
-    C --> D
+    A --> C
+    C1 --> D
     T --> D
 
-    D --> D1[Lees request context]
-    D1 --> D2[Bepaal service en operation]
-    D2 --> D3[Zoek mapping in tabel]
-    D3 --> D4[Extraheer autorisatierelevante attributen]
-    D4 --> D5[Construeer subject, action, resource, context]
-    D5 --> G[NLGov AuthZEN Authorization Request]
 
-    G --> H[PDP bij bronhouder]
-    H --> I[Policy Engine / OPA]
+
+    subgraph O[PDP]
+    G --> H[Policy Engine / OPA]
+    H --> I[Authorization rules evaluation]
     I --> J[Allow / Deny]
+    end
 
     J --> K{Decision}
     K -->|allow| E
-    K -->|deny| L[Toegang geweigerd]
 
     E --> M[Business request naar bron]
     M --> N[Response]
     L --> N
 ```
+
+![rego tree](./images/rfc0052-rego.png.png)
+
+
 # 6. Autorisatiecontract (AuthZEN)
 
 Dit hoofdstuk beschrijft het autorisatiecontract tussen de Policy Enforcement Point (PEP) en de Policy Decision Point (PDP).
