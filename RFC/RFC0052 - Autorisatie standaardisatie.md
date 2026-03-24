@@ -175,7 +175,7 @@ flowchart TD
     L --> N
 ```
 
-![rego tree](./images/rfc0052-rego.png.png)
+![rego tree](./images/rfc0052-rego.png)
 
 
 # 6. Autorisatiecontract (AuthZEN)
