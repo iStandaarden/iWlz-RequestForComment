@@ -49,20 +49,39 @@ Opsomming van de in dit document gebruikte termen.
 | :-------- | :-------- | 
 | *term* | *beschrijving/uitleg* | 
 
-# plant-uml embedding
-Neem een verwijzing op naar het gegenereerde diagram
- ```
-    ![notificatie_melding](../plantUMLsrc/rfc008-01-notificatie_melding.svg "notificatie_melding")
+
+---
+## Diagram of schema opnemen in RFC
+Maak gebruik van de mogelijkheden van [Mermaid](https://mermaid.js.org/).  GitHub heeft standaard ondersteuning voor de schema's en diagrammen van Mermaid. Hoe dat moet staat beschreven in de documentatie van GitHub: [Writing on Github > creating diagrams](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)
+
+Voor meer informatie over de mogelijkheden van Mermaid ga naar: https://mermaid.js.org/
+
+In het kort werkt het op de volgende manier: 
+
+### Creating Mermaid diagrams
+
+Mermaid is a Markdown-inspired tool that renders text into diagrams. For example, Mermaid can render flow charts, sequence diagrams, pie charts and more. For more information, see the [Mermaid documentation](https://mermaid-js.github.io/mermaid/#/).
+
+To create a Mermaid diagram, add Mermaid syntax inside a fenced code block with the `mermaid` language identifier. For more information about creating code blocks, see [Creating and highlighting code blocks](/en/get-started/writing-on-github/working-with-advanced-formatting/creating-and-highlighting-code-blocks).
+
+For example, you can create a flow chart by specifying values and arrows.
+
+````text
+Here is a simple flow chart:
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
 ```
+````
 
-verberg de plant-Uml source tussen de tags: 
-
-    <details>
-     <summary>plantUML-source</summary>
-    
-     ```plantuml
-     @startuml rfc008-01-notificatie_melding
-     <plant-uml-source> 
-     
-    ```
-     </details>
+Gegenereerde flow: 
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+```    
