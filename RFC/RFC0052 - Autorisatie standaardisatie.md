@@ -2,36 +2,55 @@
 
 # Samenvatting
 
+```mermaid
+flowchart TD
+    A[Doel van de RFC] --> B[Autorisatie standaardiseren]
+    A --> C[Autorisatie-attributen extraheren uit het binnenkomende verzoek]
 
-Autorisatie is binnen het landelijke zorgstelsel gepositioneerd als een generieke functie. Deze functie dient stelselbreed te functioneren, onafhankelijk te zijn van individuele bronnen (registers), normeerbaar te zijn en interoperabel toegepast te kunnen worden. Deze uitgangspunten zijn vastgelegd in beleidskaders rondom generieke functies en komen tevens terug in het Twiin Vertrouwensmodel.
+    B --> G[Autorisatieverzoek conform NLGov AuthZEN]
+    G --> H[Uniform requestmodel: subject, action, resource, context]
+    G --> I[Normeerbare en interoperabele autorisatie tussen partijen]
 
-Binnen het iWlz-stelsel opereren meerdere bronhouders onder een gezamenlijk beleidskader. In deze context is impliciete of implementatie-specifieke interpretatie van autorisatie-attributen niet langer toereikend. Zonder standaardisatie ontstaat het risico op uiteenlopende implementaties van autorisatie, wat de interoperabiliteit en toetsbaarheid negatief beïnvloedt.
+    subgraph PEP[PEP Gateway]
+        D[Preprocessor]
+        E[Verzoek analyseren]
+        F[Businessgegevens en context ophalen]
+        F1[Autorisatie-attributen extraheren]
+        F2[Gestandaardiseerd autorisatieverzoek opstellen]
+        K[Autorisatiebesluit ontvangen]
+        L[Besluit handhaven op het oorspronkelijke verzoek]
 
-De policy-evaluatie vindt (minimaal) plaats bij de bronhouder (Policy Decision Point), terwijl de governance en herkomst van het autorisatiebeleid centraal worden beheerd door ZINL, conform de [deze](https://github.com/orgs/iStandaarden/projects/5/views/1?pane=issue&itemId=158015608&issue=iStandaarden%7CiWlz-RequestForComment%7C51)  RFC.
+        D --> E
+        E --> F
+        E --> F1
+        F --> F2
+        F1 --> F2
+        K --> L
+    end
 
-In de huidige situatie wordt het inkomende API-request (GraphQL-request en Token) als één geheel in één JSON-document aangeboden aan de policy engine voor evaluatie.
+    C --> D
+    F2 --> J[PDP / Autorisatieservice]
+    H --> J
+    I --> J
+    J --> K
 
-Hierdoor wordt de autorisatiebeslissing gebaseerd op een input die sterk afhankelijk is van de technische representatie van het API-request, inclusief querystructuur, variabelen,filters en het token. Dit leidt tot een ongewenste koppeling tussen het request (techniek) en autorisatielogica.
+```
 
-In dit voorstel wordt een expliciete scheiding aangebracht tussen:
-- de technische representatie van het API-request, en
-- de autorisatievraag (de vraag of deze actie toegestaan is).
+Autorisatie is binnen het landelijke zorgstelsel gepositioneerd als een generieke functie die stelselbreed, normeerbaar en interoperabel moet functioneren, conform de beleidskaders voor generieke functies en het Twiin Vertrouwensmodel.
 
-De Policy Enforcement Point (PEP) is verantwoordelijk voor het afleiden van een gestandaardiseerde autorisatievraag uit het inkomende request en het aanbieden daarvan aan de Policy Decision Point (PDP).
+Binnen het iWlz-stelsel, waarin meerdere bronhouders opereren, is een implementatie-afhankelijke interpretatie van autorisatie niet langer toereikend. In de huidige situatie wordt het volledige API-request (inclusief querystructuur en token) direct als input gebruikt voor policy-evaluatie, waardoor een ongewenste koppeling ontstaat tussen technische requeststructuur en autorisatielogica.
 
-Het voorstel is om deze autorisatievraag te standaardiseren volgens de [NLGov AuthZEN Authorization API 1.0](https://www.logius.nl/actueel/publieke-consultatie-nlgov-authzen-authorization-api-v10) specificatie. Hiermee ontstaat een uniform autorisatiecontract tussen API Gateway (Policy Enforcement Points) en de autorisatievoorziening (Policy Decision Points).
+Deze RFC stelt voor om autorisatielogica te extraheren uit het binnenkomende verzoek door middel van een preprocessor in de PEP Gateway. Deze preprocessor analyseert het verzoek en vertaalt relevante attributen naar een gestandaardiseerd autorisatieverzoek.
 
-Dit leidt tot de volgende voordelen:
-- Autorisatiebeslissingen worden gebaseerd op een gestandaardiseerd en expliciet model (subject, action, resource, context), in plaats van op implementatie-specifieke requeststructuren.
--	De koppeling tussen techniek en autorisatielogica wordt verminderd.
--	
--	Autorisatiebeleid wordt beter herbruikbaar, toetsbaar en uitlegbaar binnen het stelsel.
--	Interoperabiliteit tussen verschillende leveranciers en implementaties wordt vergroot.
+Dit autorisatieverzoek wordt opgebouwd volgens de NLGov AuthZEN Authorization API 1.0, waarbij een uniform model wordt gehanteerd op basis van subject, action, resource en context. De Policy Decision Point (PDP) evalueert dit gestandaardiseerde verzoek, waarna de PEP Gateway het besluit handhaaft op het oorspronkelijke request.
 
-Belangrijk is dat:
--	NLGov AuthZEN geen vervanging is voor Identity & Access Management (IAM).
--	NLGov AuthZEN geen policy engines vervangt.
--	NLGov AuthZEN uitsluitend de interface standaardiseert tussen Policy Enforcement Points en Policy Decision Points, en daarmee governance biedt op de uitwisseling van autorisatievragen en -beslissingen.
+Hiermee wordt:
+- de afhankelijkheid van technische requeststructuren doorbroken;
+- autorisatie gebaseerd op een expliciet en gestandaardiseerd model;
+- interoperabiliteit tussen bronhouders en implementaties vergroot;
+- autorisatiebeleid wordt beter toetsbaar en herbruikbaar gemaakt.
+
+NLGov AuthZEN standaardiseert hierbij uitsluitend de interface tussen PEP en PDP, en vervangt geen IAM-functionaliteit of policy engines.
 
 ---
 
