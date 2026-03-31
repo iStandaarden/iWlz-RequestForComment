@@ -2,34 +2,47 @@
 
 # Samenvatting
 
+Binnen het iWlz-stelsel is autorisatie momenteel afhankelijk van de technische structuur van API-requests, wat leidt tot inconsistentie en beperkte interoperabiliteit.  
+
+Deze RFC stelt voor om autorisatie-attributen expliciet te extraheren in de PEP Gateway en te vertalen naar een gestandaardiseerd autorisatieverzoek conform NLGov AuthZEN.  
+
+Hiermee wordt autorisatie losgekoppeld van implementatiedetails en gebaseerd op een uniform, expliciet model.  
+
+Dit maakt autorisatie stelselbreed normeerbaar, interoperabel en beter toetsbaar.
+
+
 ```mermaid
 flowchart TD
     A[Doel van de RFC] --> B[Autorisatie standaardiseren]
     A --> C[Autorisatie-attributen extraheren uit het binnenkomende verzoek]
 
-    B --> G[Autorisatieverzoek conform NLGov AuthZEN]
-
-
-
+    C --> D[PEP Gateway preprocessor]
+    D --> G[Autorisatieverzoek conform NLGov AuthZEN]
 ```
+
 Probleem:
 
 De autorisatiebeslissing wordt momenteel gebaseerd op het volledige inkomende API-request, inclusief GraphQL-querystructuur, variabelen en token. Hierdoor ontstaat een sterke afhankelijkheid tussen de technische representatie van het verzoek en de autorisatielogica.
 
-In deze RFC wordt voorgesteld om de PEP gateway te implementeren volgens het bovenstaande schema:
+In deze RFC wordt voorgesteld om de PEP Gateway te implementeren conform het bovenstaande schema:
 
-- Autorisatielogica wordt geextraheerd uit het binnenkomende verzoek door middel van een preprocessor in de PEP Gateway
-- De Autorisatielogica wordt samengesteld een volgens NLGov Authzen standaard die specifiek voor iWLZ is en in dit document staat gedocumenteerd
-
-Beide punten zijn voorwaardelijk want de scheiding van Business en Autorisatielogica kan alleen als de Autorisatielogica  herkenbaar is. In het request moet een element zitten dat aan de NLGov Authzen standaarden voldoet. 
+- Autorisatielogica wordt geëxtraheerd uit het binnenkomende verzoek door middel van een preprocessor in de PEP Gateway;
+- De preprocessor construeert een gestandaardiseerd autorisatieverzoek conform de NLGov AuthZEN-standaard, zoals in dit document gespecificeerd.
+- In de huidige situatie ontbreekt traceability van businessregels naar autorisatiebesluiten en onderliggende policies.
 
 Hiermee wordt:
 - de afhankelijkheid van technische requeststructuren doorbroken;
 - autorisatie gebaseerd op een expliciet en gestandaardiseerd model;
 - interoperabiliteit tussen bronhouders en implementaties vergroot;
-- autorisatiebeleid wordt beter toetsbaar en herbruikbaar gemaakt.
+- autorisatiebeleid beter toetsbaar en herbruikbaar gemaakt.
 
-NLGov AuthZEN standaardiseert hierbij uitsluitend de interface tussen PEP en PDP, en vervangt geen IAM-functionaliteit of policy engines.
+Voor implementerende partijen betekent dit:
+- Implementatie van een preprocessor in de PEP Gateway;
+- Gebruik van het gestandaardiseerde AuthZEN autorisatieverzoek;
+- Inrichting van een mappingmechanisme (service + operation → policy);
+- Aanpassing van bestaande autorisatie-implementaties naar het nieuwe model.
+
+De NLGov AuthZEN-standaard standaardiseert uitsluitend de interface tussen PEP en PDP en vervangt geen IAM-functionaliteit of policy engines.
 
 ---
 
@@ -133,6 +146,7 @@ De wijze waarop de pre-processing functie deze informatie herkent en interpretee
 ## 5.1 Doelarchitectuur 
 
 ```mermaid
+
 flowchart TD
     A[Client]
     subgraph B[PEP Gateway]
@@ -179,6 +193,33 @@ Dit houdt in:
 - Implementatie van Authorization Pre Processor
 - Binnen de Pre Processor wordt de Authorisatielogica geextraheerd
 - De Pre Processor zorgt ervoor dat deze Authorisatiedata die wordt aangeboden aan de PDP volgens de structuur en standaarden voldoet zoals omschreven in Hoofdstuk 6.2.
+
+Tevens geldt het volgende:
+
+```mermaid
+
+flowchart TD
+    A[AuthZEN Authorization Request]
+
+    subgraph PEP[PEP Gateway - Preprocessor]
+        B[Context]
+        B --> C[service]
+        B --> D[operation]
+
+        C --> E[Mapping tabel]
+        D --> E
+
+        E --> F[Selecteer Rego policy]
+    end
+
+    F --> G[OPA / PDP]
+    G --> H[Allow / Deny]
+```
+
+Door binnen de context een mapping te maken van service en operation naar Rego policies, wordt het mogelijk businessregels explicieter te koppelen aan onderliggende OPA-policies.
+
+Hiermee wordt Autorisatie niet bepaald door het API-request,
+maar door een expliciete mapping van service + operation naar policies
 
 
 # 6. Autorisatiecontract (AuthZEN)
