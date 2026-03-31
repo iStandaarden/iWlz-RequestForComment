@@ -8,41 +8,20 @@ flowchart TD
     A --> C[Autorisatie-attributen extraheren uit het binnenkomende verzoek]
 
     B --> G[Autorisatieverzoek conform NLGov AuthZEN]
-    G --> H[Uniform requestmodel: subject, action, resource, context]
-    G --> I[Normeerbare en interoperabele autorisatie tussen partijen]
 
-    subgraph PEP[PEP Gateway]
-        D[Preprocessor]
-        E[Verzoek analyseren]
-        F[Businessgegevens en context ophalen]
-        F1[Autorisatie-attributen extraheren]
-        F2[Gestandaardiseerd autorisatieverzoek opstellen]
-        K[Autorisatiebesluit ontvangen]
-        L[Besluit handhaven op het oorspronkelijke verzoek]
 
-        D --> E
-        E --> F
-        E --> F1
-        F --> F2
-        F1 --> F2
-        K --> L
-    end
-
-    C --> D
-    F2 --> J[PDP / Autorisatieservice]
-    H --> J
-    I --> J
-    J --> K
 
 ```
+Probleem:
 
-Autorisatie is binnen het landelijke zorgstelsel gepositioneerd als een generieke functie die stelselbreed, normeerbaar en interoperabel moet functioneren, conform de beleidskaders voor generieke functies en het Twiin Vertrouwensmodel.
+De autorisatiebeslissing wordt momenteel gebaseerd op het volledige inkomende API-request, inclusief GraphQL-querystructuur, variabelen en token. Hierdoor ontstaat een sterke afhankelijkheid tussen de technische representatie van het verzoek en de autorisatielogica.
 
-Binnen het iWlz-stelsel, waarin meerdere bronhouders opereren, is een implementatie-afhankelijke interpretatie van autorisatie niet langer toereikend. In de huidige situatie wordt het volledige API-request (inclusief querystructuur en token) direct als input gebruikt voor policy-evaluatie, waardoor een ongewenste koppeling ontstaat tussen technische requeststructuur en autorisatielogica.
+In deze RFC wordt voorgesteld om de PEP gateway te implementeren volgens het bovenstaande schema:
 
-Deze RFC stelt voor om autorisatielogica te extraheren uit het binnenkomende verzoek door middel van een preprocessor in de PEP Gateway. Deze preprocessor analyseert het verzoek en vertaalt relevante attributen naar een gestandaardiseerd autorisatieverzoek.
+- Autorisatielogica wordt geextraheerd uit het binnenkomende verzoek door middel van een preprocessor in de PEP Gateway
+- De Autorisatielogica wordt samengesteld een volgens NLGov Authzen standaard die specifiek voor iWLZ is en in dit document staat gedocumenteerd
 
-Dit autorisatieverzoek wordt opgebouwd volgens de NLGov AuthZEN Authorization API 1.0, waarbij een uniform model wordt gehanteerd op basis van subject, action, resource en context. De Policy Decision Point (PDP) evalueert dit gestandaardiseerde verzoek, waarna de PEP Gateway het besluit handhaaft op het oorspronkelijke request.
+Beide punten zijn voorwaardelijk want de scheiding van Business en Autorisatielogica kan alleen als de Autorisatielogica  herkenbaar is. In het request moet een element zitten dat aan de NLGov Authzen standaarden voldoet. 
 
 Hiermee wordt:
 - de afhankelijkheid van technische requeststructuren doorbroken;
@@ -65,8 +44,6 @@ In de huidige situatie wordt het inkomende API-request (GraphQL-request en Token
 Deze situatie staat haaks op het uitgangspunt dat autorisatie als generieke functie losgekoppeld moet zijn van individuele bronnen en implementaties. Om autorisatie stelselbreed consistent, herbruikbaar en toetsbaar te maken, is een expliciete scheiding nodig tussen de businessvraag (API-request) en de autorisatievraag.
 
 Dit document beschrijft een voorstel om deze scheiding te realiseren door de autorisatievraag te standaardiseren. De Policy Enforcement Point (PEP) is hierbij verantwoordelijk voor het afleiden van een gestandaardiseerde autorisatievraag uit het inkomende request, terwijl de Policy Decision Point (PDP) deze vraag evalueert op basis van centraal beheerd autorisatiebeleid.
-
-Voor de standaardisatie van deze autorisatievraag wordt aansluiting gezocht bij de NLGov AuthZEN Authorization API 1.0 specificatie. Deze standaard definieert een uniform autorisatiecontract tussen PEP en PDP, gebaseerd op een expliciet model van subject, action, resource en context. Door deze standaard toe te passen wordt de koppeling tussen businesslogica en autorisatielogica verminderd en ontstaat een consistente en interoperabele manier om autorisatiebeslissingen binnen het stelsel te realiseren.
 
 # 2. Probleemstelling
 
@@ -109,25 +86,30 @@ OPA fungeert in deze architectuur als Policy Decision Point (PDP).
 
 ```mermaid
 flowchart TD
-    A[Client] --> B[GraphQL App / PEP gateway]
+    A[1. Client] --> B[2. GraphQL App / PEP gateway]
 
-    B --> C[Verwerkt GraphQL request<br/>business + autorisatie verweven]
+    B --> C[3. Verwerkt GraphQL request<br/>business + autorisatie verweven]
 
-    C --> D[OPA input direct afgeleid van request<br/>parsed_body + attributes]
+    C --> D[4. OPA input direct afgeleid van request<br/>parsed_body + attributes]
 
-    D --> E[OPA / PDP]
-    E --> F[Rego policies<br/>parsen GraphQL query + variables]
+    D --> E[5. OPA / PDP]
+    E --> F[6. Rego policies<br/>parsen GraphQL query + variables]
 
-    F --> G[Allow / Deny]
+    F --> G[7. Allow / Deny]
 
     G --> B
-    B --> H{Decision}
-    H -->|allow| I[Business uitvoeren]
-    H -->|deny| J[Weigeren]
+    B --> H{8. Decision}
+    H -->|allow| I[9. Business uitvoeren]
+    H -->|deny| J[10. Weigeren]
 
-    I --> K[Response]
+    I --> K[11. Response]
     J --> K
 ```
+
+- (1-2) Het verzoek komt binnen via de GraphQL applicatie / PEP gateway  
+- (3-4) Het request wordt als geheel gebruikt als input voor autorisatie  
+- (5-7) De PDP evalueert dit via Rego policies  
+- (8-11) Op basis van de beslissing wordt de businesslogica uitgevoerd of geweigerd
 
 # 5. Doelarchitectuur
 
@@ -192,14 +174,18 @@ flowchart TD
     L --> N
 ```
 
-![rego tree](./images/rfc0052-rego.png)
+Dit houdt in:
+
+- Implementatie van Authorization Pre Processor
+- Binnen de Pre Processor wordt de Authorisatielogica geextraheerd
+- De Pre Processor zorgt ervoor dat deze Authorisatiedata die wordt aangeboden aan de PDP volgens de structuur en standaarden voldoet zoals omschreven in Hoofdstuk 6.2.
 
 
 # 6. Autorisatiecontract (AuthZEN)
 
 Dit hoofdstuk beschrijft het autorisatiecontract tussen de Policy Enforcement Point (PEP) en de Policy Decision Point (PDP).
 
-Het doel van dit autorisatiecontract is om autorisatieverzoeken op een gestandaardiseerde, expliciete en technologie-onafhankelijke wijze uit te wisselen. Hiermee wordt voorkomen dat autorisatiebeslissingen afhankelijk zijn van implementatiespecifieke requeststructuren, zoals GraphQL-query’s, REST-endpoints of andere technische representaties van een businessrequest.
+Het doel van dit autorisatiecontract is om autorisatieverzoeken op een gestandaardiseerde, expliciete en technologie-onafhankelijke wijze uit te wisselen. 
 
 Het autorisatiecontract is gebaseerd op de OpenID AuthZEN Authorization API 1.0 specificatie en wordt in dit document verder geprofileerd op basis van de NLGov AuthZEN Authorization API 1.0 specificatie en de functionele behoeften van het iWlz-stelsel.
 
