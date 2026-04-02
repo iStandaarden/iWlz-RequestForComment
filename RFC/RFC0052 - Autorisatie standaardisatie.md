@@ -230,6 +230,8 @@ Het doel van dit autorisatiecontract is om autorisatieverzoeken op een gestandaa
 
 Het autorisatiecontract is gebaseerd op de OpenID AuthZEN Authorization API 1.0 specificatie en wordt in dit document verder geprofileerd op basis van de NLGov AuthZEN Authorization API 1.0 specificatie en de functionele behoeften van het iWlz-stelsel.
 
+Het AuthZEN-verzoek vormt een gestandaardiseerd contract tussen de Policy Enforcement Point (PEP) en de Policy Decision Point (PDP).
+
 De opbouw is als volgt:
 
 - **6.1 OpenID AuthZEN 1.0**  
@@ -256,10 +258,38 @@ Conceptueel ziet dit model er als volgt uit:
 
 ```json
 {
-  "subject": {},
-  "action": {},
-  "resource": {},
-  "context": {}
+  "subject": {
+    "type": "organization",
+    "id": "zorgkantoor2",
+    "properties": {
+      "organization_type": "ZORGKANTOOR",
+      "roles": ["RAADPLEGER"],
+      "identifiers": {
+        "uzovi_code": "5500"
+      },
+      "region": "UTRECHT"
+    }
+  },
+  "action": {
+    "name": "read"
+  },
+  "resource": {
+    "type": "WLZ_INDICATIE",
+    "id": "indicatie-987654",
+    "properties": {
+      "owner": "CIZ",
+      "region": "UTRECHT",
+      "sensitivity": "HIGH"
+    }
+  },
+  "context": {
+    "purpose_of_use": "WLZ_UITVOERING",
+    "service": "INDICATIEREGISTER",
+    "operation": "raadpleegIndicatie",
+    "relation": "WLZ_EXECUTION",
+    "contract_active": true,
+    "time": "2026-03-22T10:00:00Z"
+  }
 }
 ```
 
@@ -295,20 +325,42 @@ De onderstaande specificaties vormen een **iWlz-profiel op NLGov AuthZEN**, geba
 
 Het `subject` object beschrijft de actor die toegang vraagt.
 
+Het `subject` object MUST voldoen aan de volgende structuur:
+
+- `type` (REQUIRED)
+- `id` (REQUIRED)
+- `properties` (OPTIONAL)
+
+Alle domeinspecifieke attributen MUST onder `properties` worden geplaatst.
+
 | Attribuut | Verplicht | Bron | Opmerking |
 |---|---|---|---|
+| type | MUST | vast | Bijvoorbeeld `organization` |
 | id | MUST | token.sub | Unieke identificatie van de actor |
-| organization_type | MUST | token | ZORGKANTOOR, ZORGAANBIEDER, CIZ, VECOZO, BURGER, TOEZICHTHOUDER, KETENPARTNER, SYSTEEM |
-| roles | MUST | token | BEMIDDELAAR, INDICATIESTELLER, ZORGVERLENER, UITVOERDER, REGIEVOERDER, AANVRAGER, RAADPLEGER, MUTATOR, BESLISSER, GOEDKEURDER, CONTROLEUR, AUDITOR, TOEZICHTHOUDER |
-| identifiers.uzovi_code | CONDITIONAL | token | MUST aanwezig zijn indien organization_type = ZORGKANTOOR |
-| identifiers.agb_code | CONDITIONAL | token | MUST aanwezig zijn indien organization_type = ZORGAANBIEDER |
-| region | MUST | token / PIP | NOORD, GRONINGEN, FRIESLAND, DRENTHE, TWENTE, ACHTERHOEK, MIDDEN_IJSSEL, ARNHEM, NIJMEGEN, UTRECHT, NOORD_HOLLAND, ZUID_HOLLAND, ZEELAND, BRABANT, LIMBURG |
+| properties.organization_type | MUST | token | ZORGKANTOOR, ZORGAANBIEDER, CIZ, VECOZO, BURGER, TOEZICHTHOUDER, KETENPARTNER, SYSTEEM |
+| properties.roles | MUST | token | BEMIDDELAAR, INDICATIESTELLER, ZORGVERLENER, UITVOERDER, REGIEVOERDER, AANVRAGER, RAADPLEGER, MUTATOR, BESLISSER, GOEDKEURDER, CONTROLEUR, AUDITOR, TOEZICHTHOUDER |
+| properties.identifiers.uzovi_code | CONDITIONAL | token | MUST aanwezig zijn indien organization_type = ZORGKANTOOR |
+| properties.identifiers.agb_code | CONDITIONAL | token | MUST aanwezig zijn indien organization_type = ZORGAANBIEDER |
+| properties.region | MUST | token / PIP | NOORD, GRONINGEN, FRIESLAND, DRENTHE, TWENTE, ACHTERHOEK, MIDDEN_IJSSEL, ARNHEM, NIJMEGEN, UTRECHT, NOORD_HOLLAND, ZUID_HOLLAND, ZEELAND, BRABANT, LIMBURG |
 
 ---
 
+
 ## 6.2.2 Action
 
-Het `action` veld beschrijft de gewenste handeling.
+Het `action` object beschrijft de gewenste handeling.
+
+Het `action` object MUST de volgende structuur hebben:
+
+```json
+{
+  "action": {
+    "name": "<action-name>"
+  }
+}
+```
+
+Het gebruik van een stringrepresentatie (bijvoorbeeld `"action": "read"`) MUST NOT worden toegepast.
 
 | Waarde | Betekenis |
 |---|---|
@@ -317,25 +369,35 @@ Het `action` veld beschrijft de gewenste handeling.
 | execute | Procesactie |
 | approve | Besluitvorming |
 
-Het veld `action` MUST één van bovenstaande waarden bevatten.
+Het veld `action.name` MUST één van bovenstaande waarden bevatten.
 
 ---
+
 
 ## 6.2.3 Resource
 
 Het `resource` object beschrijft het object waarop de actie wordt uitgevoerd.
 
+Het `resource` object MUST voldoen aan de volgende structuur:
+
+- `type` (REQUIRED)
+- `id` (REQUIRED)
+- `properties` (OPTIONAL)
+
+Alle domeinspecifieke attributen MUST onder `properties` worden geplaatst.
+
 | Attribuut | Verplicht | Waarden / Voorbeeld | Opmerking |
 |---|---|---|---|
 | type | MUST | WLZ_INDICATIE, BEMIDDELING, CLIENT, etc. | Type resource |
 | id | CONDITIONAL | "123" | MUST aanwezig zijn bij specifieke raadpleging |
-| owner | SHOULD | CIZ, zorgkantoor1 | Eigenaar van resource (indien relevant) |
-| region | MUST | zie codelijst regio | Regionale context |
-| sensitivity | MUST | LOW, NORMAL, HIGH | Gevoeligheid |
-| path | OPTIONAL | /graphql | Technisch endpoint |
-| method | OPTIONAL | POST | HTTP methode |
+| properties.owner | SHOULD | CIZ, zorgkantoor1 | Eigenaar van resource (indien relevant) |
+| properties.region | MUST | zie codelijst regio | Regionale context |
+| properties.sensitivity | MUST | LOW, NORMAL, HIGH | Gevoeligheid |
+| properties.path | OPTIONAL | /graphql | Technisch endpoint |
+| properties.method | OPTIONAL | POST | HTTP methode |
 
 ---
+
 
 ## 6.2.4 Context
 
@@ -348,7 +410,7 @@ Het `context` object beschrijft de omstandigheden en het doel van het verzoek.
 | operation | MUST | zie operation codelijst | Business-operatie |
 | relation | MUST | WLZ_EXECUTION | Ketenrelatie |
 | contract_active | MUST | true/false | Contractstatus |
-| requested_at | MUST | ISO 8601 timestamp | Tijdstip van verzoek |
+| time | MUST | ISO 8601 timestamp | Tijdstip van verzoek |
 
 ---
 
@@ -457,6 +519,21 @@ Het veld `context.operation` identificeert de specifieke business-operatie binne
 - De combinatie `service + operation` MUST geldig zijn volgens deze specificatie  
 - Een operation MUST NOT gebruikt worden buiten de bijbehorende service  
 - Requests met ongeldige combinaties MUST worden afgewezen (default deny)
+
+---
+
+### 6.2.8 Conformance regels
+
+Autorisatieverzoeken MUST voldoen aan de structuur zoals gedefinieerd in de OpenID AuthZEN en NLGov AuthZEN specificaties.
+
+Specifiek geldt:
+
+- `subject` MUST `type`, `id` en optioneel `properties` bevatten
+- `resource` MUST `type`, `id` en optioneel `properties` bevatten
+- domeinspecifieke attributen MUST onder `properties` worden geplaatst
+- `action` MUST een object zijn met een `name` attribuut
+- `context.time` MUST worden gebruikt als timestamp attribuut
+- afwijkingen van deze structuur MUST NOT worden toegepast
 
 ---
 
