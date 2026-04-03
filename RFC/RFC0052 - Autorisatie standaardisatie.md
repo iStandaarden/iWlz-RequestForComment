@@ -63,7 +63,7 @@ Voor implementerende partijen betekent dit:
 
 De NLGov AuthZEN-standaard standaardiseert uitsluitend de interface tussen PEP en PDP en vervangt geen IAM-functionaliteit en geen policy-engine.
 
-Ter illustratie is een [demo](./RFC0052-example-updated-query-filter.html) beschikbaar die laat zien hoe een AuthZEN-verzoek eruit kan zien volgens de standaard en profilering uit dit document. Daarnaast is een [JSON Schema](./RFC0052-schema.json) beschikbaar waarmee dit autorisatieverzoek machine-valideerbaar wordt gemaakt.
+Ter illustratie is een [demo](https://cloudblox.github.io/graphql-opa-demo/RFC0052-example.html) beschikbaar die laat zien hoe een AuthZEN-verzoek eruit kan zien volgens de standaard en profilering uit dit document. Daarnaast is een [JSON Schema](./RFC0052-schema.json) beschikbaar waarmee dit autorisatieverzoek machine-valideerbaar wordt gemaakt.
 
 # 1. Inleiding
 
