@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuthZ Operation Explorer</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-2: #111827;
+      --panel: #1e293b;
+      --border: #334155;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --active: #22c55e;
+      --button: #2563eb;
+      --button-hover: #1d4ed8;
+      --code-bg: #020617;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: var(--bg); color: var(--text); }
+    header { padding: 24px; background: #0b1220; border-bottom: 1px solid var(--border); }
+    header h1 { margin: 0 0 8px; font-size: 28px; }
+    header p { margin: 0; color: var(--muted); line-height: 1.5; }
+    .topbar { padding: 16px 24px 8px; color: var(--muted); font-size: 14px; }
+    .toolbar {
+      padding: 8px 24px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .toolbar-group {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .toolbar-group h3 { margin: 0 0 12px; font-size: 16px; color: var(--accent); }
+    .button-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+    button {
+      background: var(--button);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+    button:hover { background: var(--button-hover); }
+    button.dimmed { opacity: 0.35; filter: grayscale(70%); }
+    button.active-op { outline: 2px solid var(--active); background: #14532d !important; }
+    .execution-controls {
+      padding: 0 24px 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .execution-controls button { background: #334155; }
+    .execution-controls button.primary { background: #2563eb; }
+    .execution-status {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 0 24px 12px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      padding: 0 24px 24px;
+    }
+    .panel {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .panel h2 { margin: 0 0 12px; font-size: 18px; }
+    .stack, .flow, .branches, .files { display: flex; flex-direction: column; gap: 8px; }
+    .item {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      transition: all 0.2s ease;
+      word-break: break-word;
+    }
+    .item.dimmed { opacity: 0.3; filter: grayscale(60%); }
+    .item.executing {
+      background: #1d4ed8;
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 1px rgba(96,165,250,0.35) inset;
+    }
+    .item.executed {
+      background: #14532d;
+      border-color: var(--active);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.25) inset;
+    }
+    .viewer, .graphql-panel { grid-column: 1 / span 3; }
+    .viewer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .badge {
+      background: #1d4ed8;
+      color: white;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+    .file-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .file-tab {
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .file-tab.active {
+      background: #14532d;
+      border-color: var(--active);
+    }
+    pre {
+      margin: 0;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      color: var(--accent);
+      white-space: pre-wrap;
+      overflow-x: auto;
+      min-height: 280px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .graphql-pre { min-height: 240px; }
+    .effective {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      color: var(--accent);
+      white-space: pre-wrap;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      min-height: 150px;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .source-path {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 10px;
+      word-break: break-word;
+    }
+    
+    details.foldable {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-2);
+      padding: 0;
+      overflow: hidden;
+    }
+
+    details.foldable summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      font-weight: bold;
+      color: var(--text);
+      background: #0b1220;
+      border-bottom: 1px solid var(--border);
+      user-select: none;
+    }
+
+    details.foldable summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.foldable summary::after {
+      content: "▸";
+      float: right;
+      color: var(--muted);
+      transition: transform 0.2s ease;
+    }
+
+    details.foldable[open] summary::after {
+      transform: rotate(90deg);
+    }
+
+    .foldable-body {
+      padding: 16px;
+    }
+
+
+    .graphql-shell {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .graphql-help {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .graphql-rendered {
+      margin: 0;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      color: var(--accent);
+      white-space: pre-wrap;
+      overflow-x: auto;
+      min-height: 240px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .gql-hit {
+      background: rgba(56, 189, 248, 0.28);
+      border-bottom: 2px solid #38bdf8;
+      border-radius: 3px;
+      padding: 0 1px;
+    }
+
+    .gql-hit-strong {
+      background: rgba(34, 197, 94, 0.25);
+      border-bottom: 2px solid #22c55e;
+      border-radius: 3px;
+      padding: 0 1px;
+    }
+
+    .rule-map-title {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 8px 0 6px;
+    }
+
+    .rule-chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .rule-chip {
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .rule-chip.active {
+      background: #14532d;
+      border-color: var(--active);
+    }
+
+
+    .triple-stack {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .authzen-help {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .authzen-panel-accent {
+      border-left: 4px solid #22c55e;
+      padding-left: 12px;
+      margin-bottom: 8px;
+    }
+
+    .authzen-rendered {
+      margin: 0;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      color: #a7f3d0;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      min-height: 240px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .viewer, .graphql-panel { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AuthZ Operation-Centric Rego Explorer + GraphQL/AuthZEN Query Filter View</h1>
+    <p>
+      Grouped by register for navigation, rendered per operation, expanded with GraphQL examples from your queries tar,
+      and aligned to the latest AuthZEN profile, including resource.properties.query_filter derived from the GraphQL where clause.
+    </p>
+  </header>
+
+  <div class="topbar">
+    Select an operation. The page shows the routing path, effective policy stack, participating Rego files, a real GraphQL example, and an AuthZEN request aligned to the latest JSON schema, including query_filter when the GraphQL request contains a where clause.
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-group">
+      <h3>Bemiddelingsregister</h3>
+      <div class="button-wrap">
+        <button onclick="runOperation('bemiddeling')">bemiddeling</button>
+        <button onclick="runOperation('bemiddelingspecificatie')">bemiddelingspecificatie</button>
+        <button onclick="runOperation('client')">client</button>
+        <button onclick="runOperation('regiehouder')">regiehouder</button>
+        <button onclick="runOperation('overdracht')">overdracht</button>
+      </div>
+    </div>
+    <div class="toolbar-group">
+      <h3>Indicatieregister</h3>
+      <div class="button-wrap">
+        <button onclick="runOperation('wlzIndicatie')">wlzIndicatie</button>
+      </div>
+    </div>
+    <div class="toolbar-group">
+      <h3>Notificaties</h3>
+      <div class="button-wrap">
+        <button onclick="runOperation('zendMelding')">zendMelding</button>
+        <button onclick="runOperation('zendNotificatie')">zendNotificatie</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="execution-controls">
+    <button class="primary" onclick="playExecution()">Play execution</button>
+    <button onclick="stepExecution()">Next step</button>
+    <button onclick="resetExecution()">Reset execution</button>
+  </div>
+
+  <div id="executionStatus" class="execution-status">
+    No operation selected.
+  </div>
+
+  <div class="layout">
+    <section class="panel">
+      <h2>Routing Flow</h2>
+      <div id="flow" class="flow"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Applicable Policy Stack</h2>
+      <div id="stack" class="stack"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Operation Metadata</h2>
+      <div id="metadata" class="meta">No operation selected yet.</div>
+    </section>
+
+    <section class="panel">
+      <h2>Active Branches</h2>
+      <div id="branches" class="branches"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Participating Rego Files</h2>
+      <div id="files" class="files"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Effective Policy</h2>
+      <div id="effectivePolicy" class="effective">// click an operation</div>
+    </section>
+
+    
+    <section class="panel viewer">
+      <details class="foldable" open>
+        <summary>Rego Viewer</summary>
+        <div class="foldable-body">
+          <div class="viewer-top">
+            <h2 style="margin:0;">Rego Viewer</h2>
+            <span id="viewerBadge" class="badge">No file selected</span>
+          </div>
+          <div id="fileTabs" class="file-tabs"></div>
+          <pre id="regoViewer">// click an operation to inspect the involved files</pre>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel graphql-panel">
+      <details class="foldable" open>
+        <summary>GraphQL Example</summary>
+        <div class="foldable-body">
+          <div class="viewer-top">
+            <h2 style="margin:0;">GraphQL Example</h2>
+            <span id="graphqlBadge" class="badge">No operation selected</span>
+          </div>
+          <div class="graphql-shell">
+            <div class="graphql-help">Click a rule chip to highlight the GraphQL elements that rule appears to inspect. This mapping is strongest for AST-driven rules such as operation names and required filters.</div>
+            <div class="rule-map-title">Rule-to-GraphQL highlight map</div>
+            <div id="ruleChips" class="rule-chip-wrap"></div>
+            <div id="graphqlViewer" class="graphql-rendered graphql-pre">// click an operation to inspect the example GraphQL request</div>
+            <div id="graphqlSource" class="source-path"></div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel graphql-panel">
+      <details class="foldable" open>
+        <summary>AuthZEN-style Request</summary>
+        <div class="foldable-body">
+          <div class="viewer-top">
+            <h2 style="margin:0;">AuthZEN-style Request</h2>
+            <span id="authzenBadge" class="badge">No operation selected</span>
+          </div>
+          <div class="triple-stack authzen-panel-accent">
+            <div class="authzen-help">This section shows how the selected GraphQL request could be normalized into an AuthZEN request aligned to the latest JSON schema. It now models GraphQL filter logic under resource.properties.query_filter when a where clause is present.</div>
+            <pre id="authzenViewer" class="authzen-rendered">// click an operation to inspect the AuthZEN-style request</pre>
+            <div id="authzenSource" class="source-path"></div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+  </div>
+
+  <script>
+    const graphqlExamples = {"bemiddeling": {"source": "queries.tar -> policies/registers/tests/queries/bemiddelingsregister/bemiddeling/POL111/POL111.graphql", "content": "query Bemiddeling($verantwoordelijkZorgkantoor: String!) {\n  bemiddeling(\n    where:  {\n      bemiddeling: {\n        some: {\n          verantwoordelijkZorgkantoor: { eq: $verantwoordelijkZorgkantoor }\n        }\n      }\n    }\n  ) {\n    bemiddelingID\n    wlzIndicatieID\n    verantwoordelijkheidIngangsdatum\n    verantwoordelijkheidEinddatum\n    bemiddelingspecificatie {\n      bemiddelingspecificatieID\n      leveringsvorm\n      zzpCode\n      toewijzingIngangsdatum\n      toewijzingEinddatum\n      instelling\n      uitvoerendZorgkantoor\n      vaststellingMoment\n      percentage\n      opname\n      redenIntrekking\n      etmalen\n      instellingBestemming\n      soortToewijzing\n    }\n    client {\n      clientID\n      verantwoordelijkZorgkantoor\n      bsn\n      leefeenheid\n      huisarts\n      communicatievorm\n      taal\n      contactpersoon {\n        contactpersoonID\n        relatienummer\n        volgorde\n        soortRelatie\n        rol\n        relatie\n        geslachtsnaam\n        voorvoegselGeslachtsnaam\n        partnernaam\n        voorvoegselPartnernaam\n        voornamen\n        voorletters\n        roepnaam\n        naamgebruik\n        geslacht\n        geboortedatum\n        geboortedatumgebruik\n        ingangsdatum\n        einddatum\n        contactgegevens {\n          contactpersoonContactgegevensID\n          adresSoort\n          straatnaam\n          huisnummer\n          huisletter\n          huisnummerToevoeging\n          postcode\n          plaatsnaam\n          land\n          aanduidingWoonadres\n          emailadres\n          telefoonnummer01\n          landnummer01\n          telefoonnummer02\n          landnummer02\n          ingangsdatum\n          einddatum\n        }\n      }\n      contactgegevens {\n        clientContactgegevensID\n        adresSoort\n        straatnaam\n        huisnummer\n        huisletter\n        huisnummerToevoeging\n        postcode\n        plaatsnaam\n        land\n        aanduidingWoonadres\n        emailadres\n        telefoonnummer01\n        landnummer01\n        telefoonnummer02\n        landnummer02\n        ingangsdatum\n        einddatum\n      }\n    }\n    overdracht {\n      overdrachtID\n      verantwoordelijkZorgkantoor\n      overdrachtDatum\n      verhuisDatum\n      vaststellingMoment\n      overdrachtspecificatie {\n        overdrachtspecificatieID\n        leveringsstatus\n        leveringsstatusClassificatie\n        oorspronkelijkeToewijzingEinddatum\n      }\n    }\n  }\n}\n"}, "bemiddelingspecificatie": {"source": "queries.tar -> policies/registers/tests/queries/bemiddelingsregister/bemiddelingspecificatie/POL106/POL106.graphql", "content": "query Bemiddelingspecificatie(\n    $BemiddelingspecificatieID: UUID!\n    $UitvoerendZorgkantoor: String!\n    $ToewijzingIngangsdatum: Date!\n    $ToewijzingEinddatum: Date!\n    $VaststellingMoment: DateTime!\n    $DagVaststellingMoment: Date!\n) {\n  bemiddelingspecificatie(\n    where: {\n      bemiddelingspecificatieID: { eq: $BemiddelingspecificatieID }\n      uitvoerendZorgkantoor: { eq: $UitvoerendZorgkantoor }\n      toewijzingIngangsdatum: { eq: $ToewijzingIngangsdatum }\n      toewijzingEinddatum: { eq: $ToewijzingEinddatum }\n      vaststellingMoment: { eq: $VaststellingMoment }\n    }\n  ) {\n    bemiddelingspecificatieID\n    leveringsvorm\n    zzpCode\n    toewijzingIngangsdatum\n    toewijzingEinddatum\n    instelling\n    uitvoerendZorgkantoor\n    vaststellingMoment\n    percentage\n    opname\n    redenIntrekking\n    etmalen\n    instellingBestemming\n    soortToewijzing\n    bemiddeling {\n      bemiddelingID\n      wlzIndicatieID\n      verantwoordelijkZorgkantoor\n      verantwoordelijkheidIngangsdatum\n      verantwoordelijkheidEinddatum\n      client {\n        bsn\n        contactpersoon(\n          where: {\n            and: [\n              {\n                or: [\n                  { einddatum: { eq: null } }\n                  { einddatum: { gte: $ToewijzingIngangsdatum } }\n                  { einddatum: { gte: $DagVaststellingMoment } }\n                ]\n              }\n              { ingangsdatum: { ngt: $ToewijzingEinddatum } }\n            ]\n          }\n        ) {\n          contactpersoonID\n          relatienummer\n          volgorde\n          soortRelatie\n          rol\n          relatie\n          geslachtsnaam\n          voorvoegselGeslachtsnaam\n          partnernaam\n          voorvoegselPartnernaam\n          voornamen\n          voorletters\n          roepnaam\n          naamgebruik\n          geslacht\n          geboortedatum\n          geboortedatumgebruik\n          ingangsdatum\n          einddatum\n          contactgegevens(\n            where: {\n              and: [\n                {\n                  or: [\n                    { einddatum: { eq: null } }\n                    { einddatum: { gte: $ToewijzingIngangsdatum } }\n                    { einddatum: { gte: $DagVaststellingMoment } }\n                  ]\n                }\n                { ingangsdatum: { ngt: $ToewijzingEinddatum } }\n              ]\n            }\n          ) {\n            contactpersoonContactgegevensID\n            adressoort\n            straatnaam\n            huisnummer\n            huisletter\n            huisnummertoevoeging\n            postcode\n            plaatsnaam\n            land\n            aanduidingWoonadres\n            emailadres\n            telefoonnummer01\n            landnummer01\n            telefoonnummer02\n            landnummer02\n            ingangsdatum\n            einddatum\n          }\n        }\n        leefeenheid\n        huisarts\n        communicatievorm\n        taal\n        contactgegevens(\n          where: {\n            and: [\n              {\n                or: [\n                  { einddatum: { eq: null } }\n                  { einddatum: { gte: $ToewijzingIngangsdatum } }\n                  { einddatum: { gte: $DagVaststellingMoment } }\n                ]\n              }\n              { ingangsdatum: { ngt: $ToewijzingEinddatum } }\n            ]\n          }\n        ) {\n          clientContactgegevensID\n          adressoort\n          straatnaam\n          huisnummer\n          huisletter\n          huisnummertoevoeging\n          postcode\n          plaatsnaam\n          land\n          aanduidingWoonadres\n          emailadres\n          telefoonnummer01\n          landnummer01\n          telefoonnummer02\n          landnummer02\n          ingangsdatum\n          einddatum\n        }\n        clientID\n      }\n      bemiddelingspecificatie(\n        where: {\n          and: [\n            {\n              or: [\n                { toewijzingEinddatum: { eq: null } }\n                { toewijzingEinddatum: { gte: $ToewijzingIngangsdatum } }\n                { toewijzingEinddatum: { gte: $DagVaststellingMoment } }\n              ]\n            }\n            { toewijzingIngangsdatum: { ngt: $ToewijzingEinddatum } }\n          ]\n        }\n      ) {\n        bemiddelingspecificatieID\n        leveringsvorm\n        zzpCode\n        toewijzingIngangsdatum\n        toewijzingEinddatum\n        instelling\n        uitvoerendZorgkantoor\n        vaststellingMoment\n        percentage\n        opname\n        redenIntrekking\n        etmalen\n        instellingBestemming\n        soortToewijzing\n      }\n      regiehouder(\n          where: {\n            and: [\n              {\n                or: [\n                  { einddatum: { eq: null } }\n                  { einddatum: { gte: $ToewijzingIngangsdatum } }\n                  { einddatum: { gte: $DagVaststellingMoment } }\n                ]\n              }\n              { ingangsdatum: { ngt: $ToewijzingEinddatum } }\n            ]\n          }\n        ) {\n          regiehouderID\n          instelling\n          ingangsdatum\n          einddatum\n          regierol\n        }\n      }\n    }\n  }"}, "client": {"source": "queries.tar -> policies/registers/tests/queries/bemiddelingsregister/client/POL110/POL110.graphql", "content": "query Client($verantwoordelijkZorgkantoor: String!) {\n  client(\n    where: {\n      bemiddeling: {\n        some: {\n          verantwoordelijkZorgkantoor: { eq: $verantwoordelijkZorgkantoor }\n        }\n      }\n    }\n  ) {\n    clientID\n    bsn\n    leefeenheid\n    huisarts\n    communicatievorm\n    taal\n    contactpersoon {\n      contactpersoonID\n      relatienummer\n      volgorde\n      soortRelatie\n      rol\n      relatie\n      geslachtsnaam\n      voorvoegselGeslachtsnaam\n      partnernaam\n      voorvoegselPartnernaam\n      voornamen\n      voorletters\n      roepnaam\n      naamgebruik\n      geslacht\n      geboortedatum\n      geboortedatumgebruik\n      ingangsdatum\n      einddatum\n      contactgegevens {\n        contactpersoonContactgegevensID\n        adresSoort\n        straatnaam\n        huisnummer\n        huisletter\n        huisnummerToevoeging\n        postcode\n        plaatsnaam\n        land\n        aanduidingWoonadres\n        emailadres\n        telefoonnummer01\n        landnummer01\n        telefoonnummer02\n        landnummer02\n        ingangsdatum\n        einddatum\n      }\n    }\n    contactgegevens {\n      clientContactgegevensID\n      adresSoort\n      straatnaam\n      huisnummer\n      huisletter\n      huisnummerToevoeging\n      postcode\n      plaatsnaam\n      land\n      aanduidingWoonadres\n      emailadres\n      telefoonnummer01\n      landnummer01\n      telefoonnummer02\n      landnummer02\n      ingangsdatum\n      einddatum\n    }\n    bemiddeling {\n      bemiddelingID\n      wlzIndicatieID\n      verantwoordelijkZorgkantoor\n      verantwoordelijkheidIngangsdatum\n      verantwoordelijkheidEinddatum\n      bemiddelingspecificatie {\n        bemiddelingspecificatieID\n        leveringsvorm\n        zzpCode\n        toewijzingIngangsdatum\n        toewijzingEinddatum\n        instelling\n        uitvoerendZorgkantoor\n        vaststellingMoment\n        percentage\n        opname\n        redenIntrekking\n        etmalen\n        instellingBestemming\n        soortToewijzing\n      }\n    }\n  }\n}\n"}, "regiehouder": {"source": "queries.tar -> policies/registers/tests/queries/bemiddelingsregister/regiehouder/POL100/POL100.graphql", "content": "query Regiehouder(\n  $regiehouderID: UUID!\n  $Instelling: String!\n) {\n  regiehouder(\n    where: {\n      regiehouderID: { eq: $regiehouderID }\n      instelling: { eq: $Instelling }\n    }\n  ) {\n    regiehouderID\n    instelling\n    ingangsdatum\n    einddatum\n    regierol\n    bemiddeling {\n      bemiddelingID\n      wlzIndicatieID\n      verantwoordelijkZorgkantoor\n      verantwoordelijkheidIngangsdatum\n      verantwoordelijkheidEinddatum\n      client {\n        bsn\n        clientID\n        taal\n        communicatievorm\n        huisarts\n        leefeenheid\n      }\n    }\n  }\n}"}, "overdracht": {"source": "queries.tar -> policies/registers/tests/queries/bemiddelingsregister/overdracht/POL109/POL109.graphql", "content": "query Overdracht(\n    $overdrachtID: UUID!,\n    $VerantwoordelijkZorgkantoor: String!\n) {\n  overdracht(\n    where: {\n      overdrachtID: { eq:  $overdrachtID }\n      verantwoordelijkZorgkantoor: { eq: $VerantwoordelijkZorgkantoor }\n    }\n  ) {\n    overdrachtID\n    verantwoordelijkZorgkantoor\n    overdrachtDatum\n    verhuisDatum\n    vaststellingMoment\n    bemiddeling {\n      bemiddelingID\n      wlzIndicatieID\n      verantwoordelijkZorgkantoor\n      verantwoordelijkheidIngangsdatum\n      verantwoordelijkheidEinddatum\n      client {\n        clientID\n        bsn\n        leefeenheid\n        huisarts\n        communicatievorm\n        taal\n      }\n    }\n    overdrachtspecificatie {\n      overdrachtspecificatieID\n      leveringsstatus\n      leveringsstatusClassificatie\n      oorspronkelijkeToewijzingEinddatum\n      bemiddelingspecificatie {\n        bemiddelingspecificatieID\n        leveringsvorm\n        zzpCode\n        toewijzingIngangsdatum\n        toewijzingEinddatum\n        instelling\n        uitvoerendZorgkantoor\n        vaststellingMoment\n        percentage\n        opname\n        redenIntrekking\n        etmalen\n        instellingBestemming\n        soortToewijzing\n      }\n    }\n  }\n}"}, "wlzIndicatie": {"source": "queries.tar -> policies/registers/tests/queries/indicatieregister/wlzindicatie/POL108/POL108.graphql", "content": "# QIR-0001-ZKi.graphql\n# Query voor initieel Verantwoordelijk Zorgkantoor op Indicatieregister\n# Verplichte input:\n#   - wlzIndicatieID = te raadplegen WlzIndicatie\n#   - uzovicode zorgkantoor = eigen uzovicode raadpleger\n# versie 1.0.0 - 2024-10-04\n\nquery WlzIndicatie(\n    $wlzIndicatieID: UUID!\n    $initieelVerantwoordelijkZorgkantoor: String!\n) {\n    wlzIndicatie(\n        where: {\n            wlzindicatieID: {eq: $wlzIndicatieID}\n            initieelVerantwoordelijkZorgkantoor: {eq: $initieelVerantwoordelijkZorgkantoor}\n        }\n    ) {\n        wlzindicatieID\n        bsn\n        besluitnummer\n        soortWlzindicatie\n        afgiftedatum\n        ingangsdatum\n        einddatum\n        meerzorg\n        initieelVerantwoordelijkZorgkantoor\n        vervaldatum\n        commentaar\n        grondslag {\n            grondslagID\n            grondslag\n            volgorde\n        }\n        geindiceerdZorgzwaartepakket {\n            geindiceerdZorgzwaartepakketID\n            zzpCode\n            ingangsdatum\n            einddatum\n            voorkeurClient\n            instellingVoorkeur\n            financiering\n            commentaar\n        }\n        beperking {\n            beperkingID\n            categorie\n            duur\n            commentaar\n            beperkingScore {\n                beperkingScoreID\n                beperkingVraag\n                beperkingScore\n                commentaar\n            }\n        }\n        stoornis {\n            stoornisID\n            grondslag\n            diagnoseCodelijst\n            diagnoseSubCodelijst\n            ziektebeeldStoornis\n            prognose\n            commentaar\n        }\n        stoornisScore {\n            stoornisScoreID\n            stoornisVraag\n            stoornisScore\n            commentaar\n        }\n        wzd {\n            wzdID\n            wzdVerklaring\n            ingangsdatum\n            einddatum\n        }\n        client {\n            clientID\n            bsn\n            geheimeClient\n            geboorteDatum\n            geboortedatumGebruik\n            geslacht\n            burgerlijkeStaat\n            geslachtsnaam\n            voorvoegselGeslachtsnaam\n            partnernaam\n            voorvoegselPartnernaam\n            voornamen\n            roepnaam\n            voorletters\n            naamGebruik\n            leefeenheid\n            agbcodeHuisarts\n            communicatieVorm\n            taal\n            commentaar\n            contactGegevens {\n                contactGegevensID\n                adres {\n                    adresID\n                    adresSoort\n                    straatnaam\n                    huisnummer\n                    huisnummerToevoeging\n                    postcode\n                    plaatsnaam\n                    landCode\n                    aanduidingWoonadres\n                    ingangsdatum\n                    einddatum\n                }\n                email {\n                    emailID\n                    emailadres\n                    ingangsdatum\n                    einddatum\n                }\n                telefoon {\n                    telefoonID\n                    telefoonnummer\n                    landnummer\n                    ingangsdatum\n                    einddatum\n                }\n            }\n            contactPersoon {\n                contactPersoonID\n                relatieNummer\n                volgorde\n                soortRelatie\n                rol\n                relatie\n                voornamen\n                roepnaam\n                voorletters\n                geslachtsnaam\n                voorvoegselGeslachtsnaam\n                partnernaam\n                voorvoegselPartnernaam\n                naamGebruik\n                geslacht\n                geboorteDatum\n                geboortedatumGebruik\n                ingangsdatum\n                einddatum\n                contactGegevens {\n                    contactGegevensID\n                    adres {\n                        adresID\n                        adresSoort\n                        straatnaam\n                        huisnummer\n                        huisnummerToevoeging\n                        postcode\n                        plaatsnaam\n                        landCode\n                        aanduidingWoonadres\n                        ingangsdatum\n                        einddatum\n                    }\n                    email {\n                        emailID\n                        emailadres\n                        ingangsdatum\n                        einddatum\n                    }\n                    telefoon {\n                        telefoonID\n                        telefoonnummer\n                        landnummer\n                        ingangsdatum\n                        einddatum\n                    }\n                }\n            }\n        }\n    }\n}\n"}, "zendMelding": {"source": "queries.tar -> policies/registers/tests/queries/notificaties/zendmelding.graphql", "content": "mutation ZendMelding($meldingInput: MeldingInput!) {\n    zendMelding(meldingInput: $meldingInput) {\n        afzenderID\n        afzenderIDType\n        eventType\n        ontvangerID\n        ontvangerIDType\n        ontvangerKenmerk\n        timestamp\n        subjectList {\n            recordID\n            subject\n        }\n    }\n}\n"}, "zendNotificatie": {"source": "queries.tar -> policies/registers/tests/queries/notificaties/zendnotificatie.graphql", "content": "mutation ZendNotificatie($notificatieInput: NotificatieInput!) {\n    zendNotificatie(notificatieInput: $notificatieInput) {\n        afzenderID\n        afzenderIDType\n        eventType\n        ontvangerID\n        ontvangerIDType\n        ontvangerKenmerk\n        timestamp\n        subjectList {\n            recordID\n            subject\n        }\n    }\n}\n"}};
+    const operations = {"bemiddeling": {"register": "bemiddelingsregister", "package": "bemiddelingsregister.bemiddeling", "route": ["Incoming GraphQL request", "authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "bemiddelingsregister/bemiddeling/config/config.rego", "bemiddelingsregister/bemiddeling/main.rego", "bemiddelingsregister/bemiddeling/rules/*.rego", "Decision"], "stack": ["authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "bemiddelingsregister/bemiddeling/config/config.rego", "bemiddelingsregister/bemiddeling/main.rego", "bemiddelingsregister/bemiddeling/rules/verantwoordelijkzorgkantoor_uzovi_claim_is_required.rego", "bemiddelingsregister/bemiddeling/rules/verantwoordelijkzorgkantoor_is_required.rego", "bemiddelingsregister/bemiddeling/rules/verantwoordelijkzorgkantoor_has_valid_uzovi.rego"], "branches": [{"name": "standard_bemiddeling_path", "active": true}, {"name": "pip_instelling_path", "active": false}, {"name": "pip_zorgkantoor_path", "active": false}], "effectivePolicy": "allow if\n  token_valid\n  and count(global.error_messages) == 0\n  and router selects bemiddelingsregister.bemiddeling\n  and config.operation == \"bemiddeling\"\n  and common.contains_scope(\"registers/wlzbemiddelingsregister\", global.token.scopes)\n  and (\n    standard_bemiddeling_path\n    or pip_instelling_path\n    or pip_zorgkantoor_path\n  )\n\nstandard_bemiddeling_path if\n  verantwoordelijkzorgkantoor_uzovi_claim_is_required\n  and verantwoordelijkzorgkantoor_is_required\n  and verantwoordelijkzorgkantoor_has_valid_uzovi", "files": {"authz/main.rego": "package authz\n\nimport rego.v1\n\nimport data.authz.global\nimport data.authz.router\nimport data.utils.common\nimport data.utils.security\n\n# METADATA\n# description: This is the entrypoint for the registers bundle.\n# entrypoint: true\ndefault allow := false\n\nallow if {\n\tsecurity.is_token_valid\n\tcount(global.error_messages) == 0\n\trouter.error_messages == {}\n\trouter.allow\n}\n\ndefault result[\"allowed\"] := false\n\nresult[\"allowed\"] if {\n\tallow\n\trouter.error_messages == {}\n}\n\nresult[\"body\"] := value if {\n\tnot security.is_token_valid\n\tvalue := security.error_message\n} else := value if {\n\tcount(global.error_messages) > 0\n\tvalue := json.marshal({\"errors\": global.error_messages})\n} else := value if {\n\trouter.error_messages != {}\n\tvalue := json.marshal({\"errors\": router.error_messages})\n} else := value if {\n\tnot allow\n\n\t# Catch-all error when default allow and no error_messages are found.\n\t# We assume there's no operation found to evaluate.\n\t# Error code should equal the default http_status, which is 400/BAD_REQUEST\n\tvalue := json.marshal({\"errors\": [{\n\t\t\"message\": \"No operation found to evaluate\",\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}]})\n}\n\ndefault result[\"headers\"] := {\"content-type\": \"application/json\"}\n\nresult[\"headers\"] := {\"content-type\": \"text/plain\"} if {\n\tnot security.is_token_valid\n}\n\ndefault result[\"http_status\"] := 400\n\nresult[\"http_status\"] := 401 if {\n\tnot security.is_token_valid\n} else := 200 if {\n\trouter.error_messages == {}\n\tnot result.body\n} else := 500 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.INTERNAL_SERVER_ERROR\n} else := 401 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.UNAUTHORIZED\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.BAD_REQUEST\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.GRAPHQL_VALIDATION_FAILED\n} else := 403 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.FORBIDDEN\n}\n", "authz/router/router.rego": "package authz.router\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister\nimport data.indicatieregister\nimport data.notificaties\n\n### route allowed registers\n\n## notificaties\nallow if notificaties.zendmelding.allow\n\nallow if notificaties.zendnotificatie.allow\n\n## indicatieregister\nallow if indicatieregister.wlzindicatie.allow\n\n## bemiddelingsregister\nallow if bemiddelingsregister.bemiddeling.allow\n\nallow if bemiddelingsregister.bemiddelingspecificatie.allow\n\nallow if bemiddelingsregister.regiehouder.allow\n\nallow if bemiddelingsregister.client.allow\n\nallow if bemiddelingsregister.overdracht.allow\n\n### route error messages\n\ndefault error_messages := {}\n\n## notificaties error messages\nerror_messages := msg if {\n\tcount(notificaties.zendmelding.error_messages) > 0\n\tmsg := notificaties.zendmelding.error_messages\n}\n\nerror_messages := msg if {\n\tcount(notificaties.zendnotificatie.error_messages) > 0\n\tmsg := notificaties.zendnotificatie.error_messages\n}\n\n## indicatie error messages\nerror_messages := msg if {\n\tcount(indicatieregister.wlzindicatie.error_messages) > 0\n\tmsg := indicatieregister.wlzindicatie.error_messages\n}\n\n## bemiddelingsregister error messages\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddeling.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddeling.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddelingspecificatie.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddelingspecificatie.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.client.error_messages) > 0\n\tmsg := bemiddelingsregister.client.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.overdracht.error_messages) > 0\n\tmsg := bemiddelingsregister.overdracht.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.regiehouder.error_messages) > 0\n\tmsg := bemiddelingsregister.regiehouder.error_messages\n}\n", "authz/global/global.rego": "package authz.global\n\nimport rego.v1\n\nimport data.utils.common\n\nquery_ast := graphql.parse_query(input.parsed_body.query)\n\ndefault variables := {}\n\nvariables := value if {\n\t\"variables\" in object.keys(input.parsed_body)\n\tvalue := input.parsed_body.variables\n}\n\ndefault jwt := \"\"\n\njwt := split(input.attributes.request.http.headers.authorization, \" \")[1]\n\ndefault token := {}\n\ntoken := io.jwt.decode(jwt)[1]\n\nerror_messages contains msg if {\n\tnot query_ast\n\tmsg := {\n\t\t\"message\": \"Unable to parse graphql query\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) > 1\n\tmsg := {\n\t\t\"message\": \"Only one operation at the time is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) == 1\n\tcount(query_ast.Operations[_].SelectionSet) > 1\n\tmsg := {\n\t\t\"message\": \"Only one selectionset in an operation is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "utils/security/token_validation.rego": "package utils.security\n\nimport rego.v1\n\nis_token_valid if {\n  input.token.valid == true\n}", "bemiddelingsregister/bemiddeling/config/config.rego": "package bemiddelingsregister.bemiddeling.config\n\nimport rego.v1\n\nimport data.authz.global\nimport data.utils.graphql as _graphql\n\noperation := _graphql.query_operation(global.query_ast, \"bemiddeling\")\n\nquery_selection := value if {\n\toperation\n\tvalue := _graphql.selection(operation, \"bemiddeling\")\n}\n\nscope := `registers/wlzbemiddelingsregister`\n", "bemiddelingsregister/bemiddeling/main.rego": "package bemiddelingsregister.bemiddeling\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister.bemiddeling.config\nimport data.bemiddelingsregister.bemiddeling.rules\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nbase_rules if {\n\t# Base rules for bemiddeling register\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n}\n\nallow if {\n\tbase_rules\n\n\t# POL111 bemiddeling register query of a verantwoordelijk zorgkantoor\n\trules.verantwoordelijkzorgkantoor_uzovi_claim_is_required\n\trules.verantwoordelijkzorgkantoor_is_required\n\trules.verantwoordelijkzorgkantoor_has_valid_uzovi\n}\n\nallow if {\n\tbase_rules\n\n\t# POL104 PIP request for indicatieregister to check if the zorgaanbieder is instelling of bemiddeling\n\t# This POL can only be used as a PIP request from the PDP11\n\trules.wlz_indicatieid_is_instelling\n}\n\nallow if {\n\tbase_rules\n\n\t# POL107/113 PIP request for indicatieregister to check if\n\t# zorgkantoor is uitvoerend or verantwoordelijk zorgkantoor of bemiddeling\n\t# This POL can only be used as a PIP request from the PDP\n\trules.wlz_indicatieid_is_zorgkantoor\n}\n\n# error messages\nerror_messages contains msg if {\n\tconfig.operation\n\tnot common.contains_scope(config.scope, global.token.scopes)\n\tmsg := common.scope_not_allowed_error_msg(config.operation)\n}\n\nerror_messages contains msg if {\n\tsome msg in rules.error_messages\n\tmsg\n}\n", "bemiddelingsregister/bemiddeling/rules/verantwoordelijkzorgkantoor_uzovi_claim_is_required.rego": "package bemiddelingsregister.bemiddeling.rules\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister.bemiddeling.config\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nverantwoordelijkzorgkantoor_uzovi_claim_is_required if {\n\tcommon.claim(global.token, \"uzovi\")\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tnot is_indicatie_id_request_zorgaanbieder\n\tnot is_indicatie_id_request_zorkantoor\n\tnot verantwoordelijkzorgkantoor_uzovi_claim_is_required\n\n\tmsg := {\n\t\t\"message\": common.err(\n\t\t\t\"The 'uzovi' claim is not present in your token but required for the bemiddeling query.\",\n\t\t\tconfig.operation,\n\t\t),\n\t\t\"extensions\": {\"code\": common.errors.UNAUTHORIZED},\n\t}\n}\n", "bemiddelingsregister/bemiddeling/rules/verantwoordelijkzorgkantoor_is_required.rego": "package bemiddelingsregister.bemiddeling.rules\n\nimport data.authz.global\nimport data.bemiddelingsregister.bemiddeling.config\nimport data.bemiddelingsregister.bemiddeling.helpers\nimport data.utils.common\nimport data.utils.graphql as _graphql\nimport rego.v1\n\nverantwoordelijkzorgkantoor_is_required if {\n\t_graphql.where_required_name(config.query_selection, \"verantwoordelijkZorgkantoor\", \"eq\")\n}\n\nverantwoordelijkzorgkantoor_is_required if {\n\thelpers.some_bemiddeling(config.query_selection, global.variables, \"verantwoordelijkZorgkantoor\", \"eq\")\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tnot is_indicatie_id_request_zorgaanbieder\n\tnot is_indicatie_id_request_zorkantoor\n\tnot verantwoordelijkzorgkantoor_is_required\n\n\tmsg := {\n\t\t\"message\": common.err(\"A where 'verantwoordelijkZorgkantoor' equals is required.\", config.operation),\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "bemiddelingsregister/bemiddeling/rules/verantwoordelijkzorgkantoor_has_valid_uzovi.rego": "package bemiddelingsregister.bemiddeling.rules\n\nimport data.authz.global\nimport data.bemiddelingsregister.bemiddeling.config\nimport data.bemiddelingsregister.bemiddeling.helpers\nimport data.utils.common\nimport data.utils.graphql as _graphql\nimport rego.v1\n\n# BRA0010 - Require verantwoordelijkZorgkantoor.\nverantwoordelijkzorgkantoor_has_valid_uzovi if {\n\t_graphql.where_required(\n\t\tconfig.query_selection,\n\t\tglobal.variables,\n\t\t\"verantwoordelijkZorgkantoor\", \"eq\", common.claim(global.token, \"uzovi\"),\n\t)\n}\n\nverantwoordelijkzorgkantoor_has_valid_uzovi if {\n\thelpers.some_bemiddeling_is(\n\t\tconfig.query_selection,\n\t\tglobal.variables,\n\t\t\"verantwoordelijkZorgkantoor\", \"eq\", common.claim(global.token, \"uzovi\"),\n\t)\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tnot is_indicatie_id_request_zorgaanbieder\n\tnot is_indicatie_id_request_zorkantoor\n\n\tverantwoordelijkzorgkantoor_is_required\n\tnot verantwoordelijkzorgkantoor_has_valid_uzovi\n\n\tmsg := {\n\t\t\"message\": common.err(\n\t\t\t\"A where 'verantwoordelijkZorgkantoor' equals is required and must be set to your uzovi.\",\n\t\t\tconfig.operation,\n\t\t),\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n"}, "defaultFile": "bemiddelingsregister/bemiddeling/main.rego"}, "bemiddelingspecificatie": {"register": "bemiddelingsregister", "package": "bemiddelingsregister.bemiddelingspecificatie", "route": ["Incoming GraphQL request", "authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "bemiddelingsregister/bemiddelingspecificatie/config/config.rego", "bemiddelingsregister/bemiddelingspecificatie/main.rego", "bemiddelingsregister/bemiddelingspecificatie/rules/*.rego", "Decision"], "stack": ["authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "bemiddelingsregister/bemiddelingspecificatie/config/config.rego", "bemiddelingsregister/bemiddelingspecificatie/main.rego", "bemiddelingsregister/bemiddelingspecificatie/rules/bemiddelingspecificatie_id_is_required.rego", "bemiddelingsregister/bemiddelingspecificatie/rules/only_own_bemiddeling.rego"], "branches": [{"name": "standard_bemiddelingspecificatie_path", "active": true}], "effectivePolicy": "allow if\n  token_valid\n  and count(global.error_messages) == 0\n  and router selects bemiddelingsregister.bemiddelingspecificatie\n  and config.operation == \"bemiddelingspecificatie\"\n  and rules validate required filters and ownership constraints", "files": {"authz/main.rego": "package authz\n\nimport rego.v1\n\nimport data.authz.global\nimport data.authz.router\nimport data.utils.common\nimport data.utils.security\n\n# METADATA\n# description: This is the entrypoint for the registers bundle.\n# entrypoint: true\ndefault allow := false\n\nallow if {\n\tsecurity.is_token_valid\n\tcount(global.error_messages) == 0\n\trouter.error_messages == {}\n\trouter.allow\n}\n\ndefault result[\"allowed\"] := false\n\nresult[\"allowed\"] if {\n\tallow\n\trouter.error_messages == {}\n}\n\nresult[\"body\"] := value if {\n\tnot security.is_token_valid\n\tvalue := security.error_message\n} else := value if {\n\tcount(global.error_messages) > 0\n\tvalue := json.marshal({\"errors\": global.error_messages})\n} else := value if {\n\trouter.error_messages != {}\n\tvalue := json.marshal({\"errors\": router.error_messages})\n} else := value if {\n\tnot allow\n\n\t# Catch-all error when default allow and no error_messages are found.\n\t# We assume there's no operation found to evaluate.\n\t# Error code should equal the default http_status, which is 400/BAD_REQUEST\n\tvalue := json.marshal({\"errors\": [{\n\t\t\"message\": \"No operation found to evaluate\",\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}]})\n}\n\ndefault result[\"headers\"] := {\"content-type\": \"application/json\"}\n\nresult[\"headers\"] := {\"content-type\": \"text/plain\"} if {\n\tnot security.is_token_valid\n}\n\ndefault result[\"http_status\"] := 400\n\nresult[\"http_status\"] := 401 if {\n\tnot security.is_token_valid\n} else := 200 if {\n\trouter.error_messages == {}\n\tnot result.body\n} else := 500 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.INTERNAL_SERVER_ERROR\n} else := 401 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.UNAUTHORIZED\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.BAD_REQUEST\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.GRAPHQL_VALIDATION_FAILED\n} else := 403 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.FORBIDDEN\n}\n", "authz/router/router.rego": "package authz.router\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister\nimport data.indicatieregister\nimport data.notificaties\n\n### route allowed registers\n\n## notificaties\nallow if notificaties.zendmelding.allow\n\nallow if notificaties.zendnotificatie.allow\n\n## indicatieregister\nallow if indicatieregister.wlzindicatie.allow\n\n## bemiddelingsregister\nallow if bemiddelingsregister.bemiddeling.allow\n\nallow if bemiddelingsregister.bemiddelingspecificatie.allow\n\nallow if bemiddelingsregister.regiehouder.allow\n\nallow if bemiddelingsregister.client.allow\n\nallow if bemiddelingsregister.overdracht.allow\n\n### route error messages\n\ndefault error_messages := {}\n\n## notificaties error messages\nerror_messages := msg if {\n\tcount(notificaties.zendmelding.error_messages) > 0\n\tmsg := notificaties.zendmelding.error_messages\n}\n\nerror_messages := msg if {\n\tcount(notificaties.zendnotificatie.error_messages) > 0\n\tmsg := notificaties.zendnotificatie.error_messages\n}\n\n## indicatie error messages\nerror_messages := msg if {\n\tcount(indicatieregister.wlzindicatie.error_messages) > 0\n\tmsg := indicatieregister.wlzindicatie.error_messages\n}\n\n## bemiddelingsregister error messages\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddeling.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddeling.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddelingspecificatie.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddelingspecificatie.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.client.error_messages) > 0\n\tmsg := bemiddelingsregister.client.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.overdracht.error_messages) > 0\n\tmsg := bemiddelingsregister.overdracht.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.regiehouder.error_messages) > 0\n\tmsg := bemiddelingsregister.regiehouder.error_messages\n}\n", "authz/global/global.rego": "package authz.global\n\nimport rego.v1\n\nimport data.utils.common\n\nquery_ast := graphql.parse_query(input.parsed_body.query)\n\ndefault variables := {}\n\nvariables := value if {\n\t\"variables\" in object.keys(input.parsed_body)\n\tvalue := input.parsed_body.variables\n}\n\ndefault jwt := \"\"\n\njwt := split(input.attributes.request.http.headers.authorization, \" \")[1]\n\ndefault token := {}\n\ntoken := io.jwt.decode(jwt)[1]\n\nerror_messages contains msg if {\n\tnot query_ast\n\tmsg := {\n\t\t\"message\": \"Unable to parse graphql query\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) > 1\n\tmsg := {\n\t\t\"message\": \"Only one operation at the time is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) == 1\n\tcount(query_ast.Operations[_].SelectionSet) > 1\n\tmsg := {\n\t\t\"message\": \"Only one selectionset in an operation is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "utils/security/token_validation.rego": "package utils.security\n\nimport rego.v1\n\nis_token_valid if {\n  input.token.valid == true\n}", "bemiddelingsregister/bemiddelingspecificatie/config/config.rego": "package bemiddelingsregister.bemiddelingspecificatie.config\n\nimport rego.v1\n\nimport data.authz.global\nimport data.utils.graphql as _graphql\n\noperation := _graphql.query_operation(global.query_ast, \"bemiddelingspecificatie\")\n\nquery_selection := value if {\n\toperation\n\tvalue := _graphql.selection(operation, \"bemiddelingspecificatie\")\n}\n\nscope := `registers/wlzbemiddelingsregister`\n", "bemiddelingsregister/bemiddelingspecificatie/main.rego": "package bemiddelingsregister.bemiddelingspecificatie\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister.bemiddelingspecificatie.config\nimport data.bemiddelingsregister.bemiddelingspecificatie.rules\nimport data.utils.common\nimport data.utils.date\nimport data.utils.graphql as _graphql\n\nbase_rules if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n}\n\n# POL105, POL106: BRA0006-BRA0009\nvalid_entity if {\n\trules.uitvoerendzorgkantoor_is_required\n\trules.uitvoerendzorgkantoor_has_valid_uzovi\n}\n\n# POL102, POL103: BRA0001-BRA0005\nvalid_entity if {\n\trules.zorgaanbieder_is_required\n\trules.instelling_has_valid_agb\n}\n\n# POL102, POL103, POL105, POL106: BRA0001-BRA0009\nallow if {\n\tbase_rules\n\tvalid_entity\n\n\trules.bemiddelingspecificatie_id_is_required\n\trules.overdracht_and_overdrachtspecificatie_not_allowed\n\trules.only_own_bemiddeling\n\n\t# Check whether subentities are queried, and if so, if valid toewijzingsdata are given as well\n\trules.toewijzingingangsdatum_is_required\n\trules.vaststellingmoment_is_required\n\n\t# POL103, POL106, subentity datefilter specific rules\n\trules.toewijzingeinddatum_is_required\n\trules.toewijzingsdatum_filter_is_requried\n\trules.query_today_still_allowed\n\n\t# POL103 specific policy\n\trules.pgb_percentage_not_in_bemiddelingen\n}\n\n# error messages\nerror_messages contains msg if {\n\tconfig.operation\n\tnot common.contains_scope(config.scope, global.token.scopes)\n\tmsg := common.scope_not_allowed_error_msg(config.operation)\n}\n\nerror_messages contains msg if {\n\tsome msg in rules.error_messages\n\tmsg\n}\n", "bemiddelingsregister/bemiddelingspecificatie/rules/bemiddelingspecificatie_id_is_required.rego": "package bemiddelingsregister.bemiddelingspecificatie.rules\n\nimport data.authz.global\nimport data.bemiddelingsregister.bemiddelingspecificatie.config\nimport data.utils.common\nimport data.utils.graphql as _graphql\nimport rego.v1\n\n# BRA0001-BRA0009\nbemiddelingspecificatie_id_is_required if {\n\t# Check if instelling is set to the token subject.\n\t_graphql.where_required_name_not_empty(config.query_selection, global.variables, \"bemiddelingspecificatieID\", \"eq\")\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tnot bemiddelingspecificatie_id_is_required\n\n\tmsg := {\n\t\t\"message\": common.err(\"A where 'bemiddelingspecificatieID' equals is required.\", config.operation),\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "bemiddelingsregister/bemiddelingspecificatie/rules/only_own_bemiddeling.rego": "package bemiddelingsregister.bemiddelingspecificatie.rules\n\nimport data.authz.global\nimport data.bemiddelingsregister.bemiddelingspecificatie.config\nimport data.utils.common\nimport data.utils.graphql as _graphql\nimport rego.v1\n\n# Checks that only the root 'bemiddeling' entity is queried, and not any other bemiddelingen via the client.\nonly_own_bemiddeling if {\n\tclient_selection := _graphql.walk_selections(config.query_selection, \"client\")\n\tcount(_graphql.walk_selections(client_selection, \"bemiddeling\")) == 0\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tnot only_own_bemiddeling\n\n\tmsg := {\n\t\t\"message\": common.err(\"You may only query your own 'bemiddeling'.\", config.operation),\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n"}, "defaultFile": "bemiddelingsregister/bemiddelingspecificatie/main.rego"}, "client": {"register": "bemiddelingsregister", "package": "bemiddelingsregister.client", "route": ["Incoming GraphQL request", "authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "bemiddelingsregister/client/config/config.rego", "bemiddelingsregister/client/main.rego", "bemiddelingsregister/client/rules/*.rego", "Decision"], "stack": ["authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "bemiddelingsregister/client/config/config.rego", "bemiddelingsregister/client/main.rego", "bemiddelingsregister/client/rules/verantwoordelijkzorgkantoor_uzovi_claim_is_required.rego", "bemiddelingsregister/client/rules/verantwoordelijkzorgkantoor_is_required.rego", "bemiddelingsregister/client/rules/verantwoordelijkzorgkantoor_has_valid_uzovi.rego"], "branches": [{"name": "standard_client_query_path", "active": true}], "effectivePolicy": "allow if\n  token_valid\n  and no_global_errors\n  and router selects bemiddelingsregister.client\n  and config.operation == \"client\"\n  and verantwoordelijkzorgkantoor checks succeed", "files": {"authz/main.rego": "package authz\n\nimport rego.v1\n\nimport data.authz.global\nimport data.authz.router\nimport data.utils.common\nimport data.utils.security\n\n# METADATA\n# description: This is the entrypoint for the registers bundle.\n# entrypoint: true\ndefault allow := false\n\nallow if {\n\tsecurity.is_token_valid\n\tcount(global.error_messages) == 0\n\trouter.error_messages == {}\n\trouter.allow\n}\n\ndefault result[\"allowed\"] := false\n\nresult[\"allowed\"] if {\n\tallow\n\trouter.error_messages == {}\n}\n\nresult[\"body\"] := value if {\n\tnot security.is_token_valid\n\tvalue := security.error_message\n} else := value if {\n\tcount(global.error_messages) > 0\n\tvalue := json.marshal({\"errors\": global.error_messages})\n} else := value if {\n\trouter.error_messages != {}\n\tvalue := json.marshal({\"errors\": router.error_messages})\n} else := value if {\n\tnot allow\n\n\t# Catch-all error when default allow and no error_messages are found.\n\t# We assume there's no operation found to evaluate.\n\t# Error code should equal the default http_status, which is 400/BAD_REQUEST\n\tvalue := json.marshal({\"errors\": [{\n\t\t\"message\": \"No operation found to evaluate\",\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}]})\n}\n\ndefault result[\"headers\"] := {\"content-type\": \"application/json\"}\n\nresult[\"headers\"] := {\"content-type\": \"text/plain\"} if {\n\tnot security.is_token_valid\n}\n\ndefault result[\"http_status\"] := 400\n\nresult[\"http_status\"] := 401 if {\n\tnot security.is_token_valid\n} else := 200 if {\n\trouter.error_messages == {}\n\tnot result.body\n} else := 500 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.INTERNAL_SERVER_ERROR\n} else := 401 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.UNAUTHORIZED\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.BAD_REQUEST\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.GRAPHQL_VALIDATION_FAILED\n} else := 403 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.FORBIDDEN\n}\n", "authz/router/router.rego": "package authz.router\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister\nimport data.indicatieregister\nimport data.notificaties\n\n### route allowed registers\n\n## notificaties\nallow if notificaties.zendmelding.allow\n\nallow if notificaties.zendnotificatie.allow\n\n## indicatieregister\nallow if indicatieregister.wlzindicatie.allow\n\n## bemiddelingsregister\nallow if bemiddelingsregister.bemiddeling.allow\n\nallow if bemiddelingsregister.bemiddelingspecificatie.allow\n\nallow if bemiddelingsregister.regiehouder.allow\n\nallow if bemiddelingsregister.client.allow\n\nallow if bemiddelingsregister.overdracht.allow\n\n### route error messages\n\ndefault error_messages := {}\n\n## notificaties error messages\nerror_messages := msg if {\n\tcount(notificaties.zendmelding.error_messages) > 0\n\tmsg := notificaties.zendmelding.error_messages\n}\n\nerror_messages := msg if {\n\tcount(notificaties.zendnotificatie.error_messages) > 0\n\tmsg := notificaties.zendnotificatie.error_messages\n}\n\n## indicatie error messages\nerror_messages := msg if {\n\tcount(indicatieregister.wlzindicatie.error_messages) > 0\n\tmsg := indicatieregister.wlzindicatie.error_messages\n}\n\n## bemiddelingsregister error messages\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddeling.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddeling.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddelingspecificatie.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddelingspecificatie.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.client.error_messages) > 0\n\tmsg := bemiddelingsregister.client.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.overdracht.error_messages) > 0\n\tmsg := bemiddelingsregister.overdracht.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.regiehouder.error_messages) > 0\n\tmsg := bemiddelingsregister.regiehouder.error_messages\n}\n", "authz/global/global.rego": "package authz.global\n\nimport rego.v1\n\nimport data.utils.common\n\nquery_ast := graphql.parse_query(input.parsed_body.query)\n\ndefault variables := {}\n\nvariables := value if {\n\t\"variables\" in object.keys(input.parsed_body)\n\tvalue := input.parsed_body.variables\n}\n\ndefault jwt := \"\"\n\njwt := split(input.attributes.request.http.headers.authorization, \" \")[1]\n\ndefault token := {}\n\ntoken := io.jwt.decode(jwt)[1]\n\nerror_messages contains msg if {\n\tnot query_ast\n\tmsg := {\n\t\t\"message\": \"Unable to parse graphql query\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) > 1\n\tmsg := {\n\t\t\"message\": \"Only one operation at the time is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) == 1\n\tcount(query_ast.Operations[_].SelectionSet) > 1\n\tmsg := {\n\t\t\"message\": \"Only one selectionset in an operation is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "utils/security/token_validation.rego": "package utils.security\n\nimport rego.v1\n\nis_token_valid if {\n  input.token.valid == true\n}", "bemiddelingsregister/client/config/config.rego": "package bemiddelingsregister.client.config\n\nimport rego.v1\n\nimport data.authz.global\nimport data.utils.graphql as _graphql\n\noperation := _graphql.query_operation(global.query_ast, \"client\")\n\nquery_selection := value if {\n\toperation\n\tvalue := _graphql.selection(operation, \"client\")\n}\n\nscope := `registers/wlzbemiddelingsregister`\n", "bemiddelingsregister/client/main.rego": "package bemiddelingsregister.client\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister.client.config\nimport data.bemiddelingsregister.client.rules\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nallow if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\trules.verantwoordelijkzorgkantoor_uzovi_claim_is_required\n\trules.verantwoordelijkzorgkantoor_is_required\n\trules.verantwoordelijkzorgkantoor_has_valid_uzovi\n}\n\n# error messages\nerror_messages contains msg if {\n\tconfig.operation\n\tnot common.contains_scope(config.scope, global.token.scopes)\n\tmsg := common.scope_not_allowed_error_msg(config.operation)\n}\n\nerror_messages contains msg if {\n\tsome msg in rules.error_messages\n\tmsg\n}\n", "bemiddelingsregister/client/rules/verantwoordelijkzorgkantoor_uzovi_claim_is_required.rego": "package bemiddelingsregister.client.rules\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister.client.config\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nverantwoordelijkzorgkantoor_uzovi_claim_is_required if {\n\tcommon.claim(global.token, \"uzovi\")\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tnot verantwoordelijkzorgkantoor_uzovi_claim_is_required\n\n\tmsg := {\n\t\t\"message\": common.err(\n\t\t\t\"The 'uzovi' claim is not present in your token but required for the bemiddeling query.\",\n\t\t\tconfig.operation,\n\t\t),\n\t\t\"extensions\": {\"code\": common.errors.UNAUTHORIZED},\n\t}\n}\n", "bemiddelingsregister/client/rules/verantwoordelijkzorgkantoor_is_required.rego": "package bemiddelingsregister.client.rules\n\nimport data.authz.global\nimport data.bemiddelingsregister.client.config\nimport data.bemiddelingsregister.client.helpers\nimport data.utils.common\nimport data.utils.graphql as _graphql\nimport rego.v1\n\nverantwoordelijkzorgkantoor_is_required if {\n\thelpers.some_bemiddeling(config.query_selection, global.variables, \"verantwoordelijkZorgkantoor\", \"eq\")\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tnot verantwoordelijkzorgkantoor_is_required\n\n\tmsg := {\n\t\t\"message\": common.err(\"A where 'verantwoordelijkZorgkantoor' equals is required.\", config.operation),\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "bemiddelingsregister/client/rules/verantwoordelijkzorgkantoor_has_valid_uzovi.rego": "package bemiddelingsregister.client.rules\n\nimport data.authz.global\nimport data.bemiddelingsregister.client.config\nimport data.bemiddelingsregister.client.helpers\nimport data.utils.common\nimport data.utils.graphql as _graphql\nimport rego.v1\n\n# BRA0010 - Require verantwoordelijkZorgkantoor.\nverantwoordelijkzorgkantoor_has_valid_uzovi if {\n\thelpers.some_bemiddeling_is(\n\t\tconfig.query_selection,\n\t\tglobal.variables,\n\t\t\"verantwoordelijkZorgkantoor\", \"eq\", common.claim(global.token, \"uzovi\"),\n\t)\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tverantwoordelijkzorgkantoor_is_required\n\tnot verantwoordelijkzorgkantoor_has_valid_uzovi\n\n\tmsg := {\n\t\t\"message\": common.err(\n\t\t\t\"A where 'verantwoordelijkZorgkantoor' equals is required and must be set to your uzovi.\",\n\t\t\tconfig.operation,\n\t\t),\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n"}, "defaultFile": "bemiddelingsregister/client/main.rego"}, "regiehouder": {"register": "bemiddelingsregister", "package": "bemiddelingsregister.regiehouder", "route": ["Incoming GraphQL request", "authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "bemiddelingsregister/regiehouder/config/config.rego", "bemiddelingsregister/regiehouder/main.rego", "bemiddelingsregister/regiehouder/rules/*.rego", "Decision"], "stack": ["authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "bemiddelingsregister/regiehouder/config/config.rego", "bemiddelingsregister/regiehouder/main.rego", "bemiddelingsregister/regiehouder/rules/regiehouder_is_valid.rego"], "branches": [{"name": "standard_regiehouder_path", "active": true}], "effectivePolicy": "allow if\n  token_valid\n  and no_global_errors\n  and router selects bemiddelingsregister.regiehouder\n  and config.operation == \"regiehouder\"\n  and regiehouder-specific rule set succeeds", "files": {"authz/main.rego": "package authz\n\nimport rego.v1\n\nimport data.authz.global\nimport data.authz.router\nimport data.utils.common\nimport data.utils.security\n\n# METADATA\n# description: This is the entrypoint for the registers bundle.\n# entrypoint: true\ndefault allow := false\n\nallow if {\n\tsecurity.is_token_valid\n\tcount(global.error_messages) == 0\n\trouter.error_messages == {}\n\trouter.allow\n}\n\ndefault result[\"allowed\"] := false\n\nresult[\"allowed\"] if {\n\tallow\n\trouter.error_messages == {}\n}\n\nresult[\"body\"] := value if {\n\tnot security.is_token_valid\n\tvalue := security.error_message\n} else := value if {\n\tcount(global.error_messages) > 0\n\tvalue := json.marshal({\"errors\": global.error_messages})\n} else := value if {\n\trouter.error_messages != {}\n\tvalue := json.marshal({\"errors\": router.error_messages})\n} else := value if {\n\tnot allow\n\n\t# Catch-all error when default allow and no error_messages are found.\n\t# We assume there's no operation found to evaluate.\n\t# Error code should equal the default http_status, which is 400/BAD_REQUEST\n\tvalue := json.marshal({\"errors\": [{\n\t\t\"message\": \"No operation found to evaluate\",\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}]})\n}\n\ndefault result[\"headers\"] := {\"content-type\": \"application/json\"}\n\nresult[\"headers\"] := {\"content-type\": \"text/plain\"} if {\n\tnot security.is_token_valid\n}\n\ndefault result[\"http_status\"] := 400\n\nresult[\"http_status\"] := 401 if {\n\tnot security.is_token_valid\n} else := 200 if {\n\trouter.error_messages == {}\n\tnot result.body\n} else := 500 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.INTERNAL_SERVER_ERROR\n} else := 401 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.UNAUTHORIZED\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.BAD_REQUEST\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.GRAPHQL_VALIDATION_FAILED\n} else := 403 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.FORBIDDEN\n}\n", "authz/router/router.rego": "package authz.router\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister\nimport data.indicatieregister\nimport data.notificaties\n\n### route allowed registers\n\n## notificaties\nallow if notificaties.zendmelding.allow\n\nallow if notificaties.zendnotificatie.allow\n\n## indicatieregister\nallow if indicatieregister.wlzindicatie.allow\n\n## bemiddelingsregister\nallow if bemiddelingsregister.bemiddeling.allow\n\nallow if bemiddelingsregister.bemiddelingspecificatie.allow\n\nallow if bemiddelingsregister.regiehouder.allow\n\nallow if bemiddelingsregister.client.allow\n\nallow if bemiddelingsregister.overdracht.allow\n\n### route error messages\n\ndefault error_messages := {}\n\n## notificaties error messages\nerror_messages := msg if {\n\tcount(notificaties.zendmelding.error_messages) > 0\n\tmsg := notificaties.zendmelding.error_messages\n}\n\nerror_messages := msg if {\n\tcount(notificaties.zendnotificatie.error_messages) > 0\n\tmsg := notificaties.zendnotificatie.error_messages\n}\n\n## indicatie error messages\nerror_messages := msg if {\n\tcount(indicatieregister.wlzindicatie.error_messages) > 0\n\tmsg := indicatieregister.wlzindicatie.error_messages\n}\n\n## bemiddelingsregister error messages\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddeling.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddeling.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddelingspecificatie.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddelingspecificatie.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.client.error_messages) > 0\n\tmsg := bemiddelingsregister.client.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.overdracht.error_messages) > 0\n\tmsg := bemiddelingsregister.overdracht.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.regiehouder.error_messages) > 0\n\tmsg := bemiddelingsregister.regiehouder.error_messages\n}\n", "authz/global/global.rego": "package authz.global\n\nimport rego.v1\n\nimport data.utils.common\n\nquery_ast := graphql.parse_query(input.parsed_body.query)\n\ndefault variables := {}\n\nvariables := value if {\n\t\"variables\" in object.keys(input.parsed_body)\n\tvalue := input.parsed_body.variables\n}\n\ndefault jwt := \"\"\n\njwt := split(input.attributes.request.http.headers.authorization, \" \")[1]\n\ndefault token := {}\n\ntoken := io.jwt.decode(jwt)[1]\n\nerror_messages contains msg if {\n\tnot query_ast\n\tmsg := {\n\t\t\"message\": \"Unable to parse graphql query\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) > 1\n\tmsg := {\n\t\t\"message\": \"Only one operation at the time is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) == 1\n\tcount(query_ast.Operations[_].SelectionSet) > 1\n\tmsg := {\n\t\t\"message\": \"Only one selectionset in an operation is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "utils/security/token_validation.rego": "package utils.security\n\nimport rego.v1\n\nis_token_valid if {\n  input.token.valid == true\n}", "bemiddelingsregister/regiehouder/config/config.rego": "package bemiddelingsregister.regiehouder.config\n\nimport rego.v1\n\nimport data.authz.global\nimport data.utils.graphql as _graphql\n\noperation := _graphql.query_operation(global.query_ast, \"regiehouder\")\n\nquery_selection := value if {\n\toperation\n\tvalue := _graphql.selection(operation, \"regiehouder\")\n}\n\nscope := `registers/wlzbemiddelingsregister`\n", "bemiddelingsregister/regiehouder/main.rego": "package bemiddelingsregister.regiehouder\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister.regiehouder.config\nimport data.bemiddelingsregister.regiehouder.rules\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nbase_rules if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n}\n\nallow if {\n\tbase_rules\n\n\trules.regiehouder_id_is_required\n\trules.instelling_is_required\n\trules.instelling_is_valid\n\trules.overdracht_and_overdrachtspecificatie_not_allowed\n\trules.only_own_bemiddeling\n\trules.bemiddelingspecificatie_query_required\n}\n\n# error messages\nerror_messages contains msg if {\n\tconfig.operation\n\tnot common.contains_scope(config.scope, global.token.scopes)\n\tmsg := common.scope_not_allowed_error_msg(config.operation)\n}\n\nerror_messages contains msg if {\n\tsome msg in rules.error_messages\n\tmsg\n}\n", "bemiddelingsregister/regiehouder/rules/regiehouder_is_valid.rego": "package bemiddelingsregister.regiehouder.rules\n\nimport data.authz.global\nimport data.bemiddelingsregister.regiehouder.config\nimport data.utils.common\nimport data.utils.graphql as _graphql\nimport rego.v1\n\ninstelling_is_valid if {\n\t_graphql.where_required(\n\t\tconfig.query_selection, global.variables, \"instelling\", \"eq\",\n\t\tcommon.claim(global.token, \"agb\"),\n\t)\n\n\t_graphql.where_required_name_not_empty(\n\t\tconfig.query_selection, global.variables,\n\t\t\"instelling\", \"eq\",\n\t)\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tinstelling_is_required\n\tnot instelling_is_valid\n\n\tmsg := {\n\t\t\"message\": common.err(\"A where 'instelling' equals is required and set to your agb.\", config.operation), # regal ignore: line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n"}, "defaultFile": "bemiddelingsregister/regiehouder/main.rego"}, "overdracht": {"register": "bemiddelingsregister", "package": "bemiddelingsregister.overdracht", "route": ["Incoming GraphQL request", "authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "bemiddelingsregister/overdracht/config/config.rego", "bemiddelingsregister/overdracht/main.rego", "bemiddelingsregister/overdracht/rules/*.rego", "Decision"], "stack": ["authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "bemiddelingsregister/overdracht/config/config.rego", "bemiddelingsregister/overdracht/main.rego", "bemiddelingsregister/overdracht/rules/verantwoordelijkzorgkantoor_is_required.rego", "bemiddelingsregister/overdracht/rules/verantwoordelijkzorgkantoor_has_valid_uzovi.rego"], "branches": [{"name": "standard_overdracht_path", "active": true}], "effectivePolicy": "allow if\n  token_valid\n  and no_global_errors\n  and router selects bemiddelingsregister.overdracht\n  and config.operation == \"overdracht\"\n  and required ownership/date filters succeed", "files": {"authz/main.rego": "package authz\n\nimport rego.v1\n\nimport data.authz.global\nimport data.authz.router\nimport data.utils.common\nimport data.utils.security\n\n# METADATA\n# description: This is the entrypoint for the registers bundle.\n# entrypoint: true\ndefault allow := false\n\nallow if {\n\tsecurity.is_token_valid\n\tcount(global.error_messages) == 0\n\trouter.error_messages == {}\n\trouter.allow\n}\n\ndefault result[\"allowed\"] := false\n\nresult[\"allowed\"] if {\n\tallow\n\trouter.error_messages == {}\n}\n\nresult[\"body\"] := value if {\n\tnot security.is_token_valid\n\tvalue := security.error_message\n} else := value if {\n\tcount(global.error_messages) > 0\n\tvalue := json.marshal({\"errors\": global.error_messages})\n} else := value if {\n\trouter.error_messages != {}\n\tvalue := json.marshal({\"errors\": router.error_messages})\n} else := value if {\n\tnot allow\n\n\t# Catch-all error when default allow and no error_messages are found.\n\t# We assume there's no operation found to evaluate.\n\t# Error code should equal the default http_status, which is 400/BAD_REQUEST\n\tvalue := json.marshal({\"errors\": [{\n\t\t\"message\": \"No operation found to evaluate\",\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}]})\n}\n\ndefault result[\"headers\"] := {\"content-type\": \"application/json\"}\n\nresult[\"headers\"] := {\"content-type\": \"text/plain\"} if {\n\tnot security.is_token_valid\n}\n\ndefault result[\"http_status\"] := 400\n\nresult[\"http_status\"] := 401 if {\n\tnot security.is_token_valid\n} else := 200 if {\n\trouter.error_messages == {}\n\tnot result.body\n} else := 500 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.INTERNAL_SERVER_ERROR\n} else := 401 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.UNAUTHORIZED\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.BAD_REQUEST\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.GRAPHQL_VALIDATION_FAILED\n} else := 403 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.FORBIDDEN\n}\n", "authz/router/router.rego": "package authz.router\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister\nimport data.indicatieregister\nimport data.notificaties\n\n### route allowed registers\n\n## notificaties\nallow if notificaties.zendmelding.allow\n\nallow if notificaties.zendnotificatie.allow\n\n## indicatieregister\nallow if indicatieregister.wlzindicatie.allow\n\n## bemiddelingsregister\nallow if bemiddelingsregister.bemiddeling.allow\n\nallow if bemiddelingsregister.bemiddelingspecificatie.allow\n\nallow if bemiddelingsregister.regiehouder.allow\n\nallow if bemiddelingsregister.client.allow\n\nallow if bemiddelingsregister.overdracht.allow\n\n### route error messages\n\ndefault error_messages := {}\n\n## notificaties error messages\nerror_messages := msg if {\n\tcount(notificaties.zendmelding.error_messages) > 0\n\tmsg := notificaties.zendmelding.error_messages\n}\n\nerror_messages := msg if {\n\tcount(notificaties.zendnotificatie.error_messages) > 0\n\tmsg := notificaties.zendnotificatie.error_messages\n}\n\n## indicatie error messages\nerror_messages := msg if {\n\tcount(indicatieregister.wlzindicatie.error_messages) > 0\n\tmsg := indicatieregister.wlzindicatie.error_messages\n}\n\n## bemiddelingsregister error messages\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddeling.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddeling.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddelingspecificatie.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddelingspecificatie.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.client.error_messages) > 0\n\tmsg := bemiddelingsregister.client.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.overdracht.error_messages) > 0\n\tmsg := bemiddelingsregister.overdracht.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.regiehouder.error_messages) > 0\n\tmsg := bemiddelingsregister.regiehouder.error_messages\n}\n", "authz/global/global.rego": "package authz.global\n\nimport rego.v1\n\nimport data.utils.common\n\nquery_ast := graphql.parse_query(input.parsed_body.query)\n\ndefault variables := {}\n\nvariables := value if {\n\t\"variables\" in object.keys(input.parsed_body)\n\tvalue := input.parsed_body.variables\n}\n\ndefault jwt := \"\"\n\njwt := split(input.attributes.request.http.headers.authorization, \" \")[1]\n\ndefault token := {}\n\ntoken := io.jwt.decode(jwt)[1]\n\nerror_messages contains msg if {\n\tnot query_ast\n\tmsg := {\n\t\t\"message\": \"Unable to parse graphql query\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) > 1\n\tmsg := {\n\t\t\"message\": \"Only one operation at the time is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) == 1\n\tcount(query_ast.Operations[_].SelectionSet) > 1\n\tmsg := {\n\t\t\"message\": \"Only one selectionset in an operation is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "utils/security/token_validation.rego": "package utils.security\n\nimport rego.v1\n\nis_token_valid if {\n  input.token.valid == true\n}", "bemiddelingsregister/overdracht/config/config.rego": "package bemiddelingsregister.overdracht.config\n\nimport rego.v1\n\nimport data.authz.global\nimport data.utils.graphql as _graphql\n\noperation := _graphql.query_operation(global.query_ast, \"overdracht\")\n\nquery_selection := value if {\n\toperation\n\tvalue := _graphql.selection(operation, \"overdracht\")\n}\n\nscope := `registers/wlzbemiddelingsregister`\n", "bemiddelingsregister/overdracht/main.rego": "package bemiddelingsregister.overdracht\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister.overdracht.config\nimport data.bemiddelingsregister.overdracht.rules\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nbase_rules if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n}\n\n# POL109, POL114: BRA0010\nallow if {\n\tbase_rules\n\n\trules.verantwoordelijkzorgkantoor_is_required\n\trules.verantwoordelijkzorgkantoor_uzovi_claim_is_required\n\trules.verantwoordelijkzorgkantoor_has_valid_uzovi\n\trules.only_own_bemiddeling\n\n\trules.overdrachtid_is_required\n\trules.overdrachtdatum_is_required\n\trules.overdrachtdatum_filter_is_required\n}\n\n# error messages\nerror_messages contains msg if {\n\tconfig.operation\n\tnot common.contains_scope(config.scope, global.token.scopes)\n\tmsg := common.scope_not_allowed_error_msg(config.operation)\n}\n\nerror_messages contains msg if {\n\tsome msg in rules.error_messages\n\tmsg\n}\n", "bemiddelingsregister/overdracht/rules/verantwoordelijkzorgkantoor_is_required.rego": "package bemiddelingsregister.overdracht.rules\n\nimport data.authz.global\nimport data.bemiddelingsregister.overdracht.config\nimport data.utils.common\nimport data.utils.graphql as _graphql\nimport rego.v1\n\nverantwoordelijkzorgkantoor_is_required if {\n\t_graphql.where_required_name(config.query_selection, \"verantwoordelijkZorgkantoor\", \"eq\")\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tnot verantwoordelijkzorgkantoor_is_required\n\n\tmsg := {\n\t\t\"message\": common.err(\"A where 'verantwoordelijkZorgkantoor' equals is required.\", config.operation),\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "bemiddelingsregister/overdracht/rules/verantwoordelijkzorgkantoor_has_valid_uzovi.rego": "package bemiddelingsregister.overdracht.rules\n\nimport data.authz.global\nimport data.bemiddelingsregister.overdracht.config\nimport data.utils.common\nimport data.utils.graphql as _graphql\nimport rego.v1\n\nverantwoordelijkzorgkantoor_has_valid_uzovi if {\n\t_graphql.where_required(\n\t\tconfig.query_selection,\n\t\tglobal.variables,\n\t\t\"verantwoordelijkZorgkantoor\", \"eq\", common.claim(global.token, \"uzovi\"),\n\t)\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\tverantwoordelijkzorgkantoor_is_required\n\n\tnot verantwoordelijkzorgkantoor_has_valid_uzovi\n\n\tmsg := {\n\t\t\"message\": common.err(\n\t\t\t\"A where 'verantwoordelijkZorgkantoor' equals is required and must be set to your uzovi.\",\n\t\t\tconfig.operation,\n\t\t),\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n"}, "defaultFile": "bemiddelingsregister/overdracht/main.rego"}, "wlzIndicatie": {"register": "indicatieregister", "package": "indicatieregister.wlzindicatie", "route": ["Incoming GraphQL request", "authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "indicatieregister/wlzindicatie/config/config.rego", "indicatieregister/wlzindicatie/main.rego", "indicatieregister/wlzindicatie/rules/*.rego", "Decision"], "stack": ["authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "indicatieregister/wlzindicatie/config/config.rego", "indicatieregister/wlzindicatie/main.rego", "indicatieregister/wlzindicatie/rules/is_instelling_or_zorgkantoor.rego", "indicatieregister/wlzindicatie/rules/id_is_required.rego"], "branches": [{"name": "standard_wlzIndicatie_query_path", "active": true}], "effectivePolicy": "allow if\n  token_valid\n  and count(global.error_messages) == 0\n  and router selects indicatieregister.wlzindicatie\n  and config.operation == \"wlzIndicatie\"\n  and actor/id validation rules succeed", "files": {"authz/main.rego": "package authz\n\nimport rego.v1\n\nimport data.authz.global\nimport data.authz.router\nimport data.utils.common\nimport data.utils.security\n\n# METADATA\n# description: This is the entrypoint for the registers bundle.\n# entrypoint: true\ndefault allow := false\n\nallow if {\n\tsecurity.is_token_valid\n\tcount(global.error_messages) == 0\n\trouter.error_messages == {}\n\trouter.allow\n}\n\ndefault result[\"allowed\"] := false\n\nresult[\"allowed\"] if {\n\tallow\n\trouter.error_messages == {}\n}\n\nresult[\"body\"] := value if {\n\tnot security.is_token_valid\n\tvalue := security.error_message\n} else := value if {\n\tcount(global.error_messages) > 0\n\tvalue := json.marshal({\"errors\": global.error_messages})\n} else := value if {\n\trouter.error_messages != {}\n\tvalue := json.marshal({\"errors\": router.error_messages})\n} else := value if {\n\tnot allow\n\n\t# Catch-all error when default allow and no error_messages are found.\n\t# We assume there's no operation found to evaluate.\n\t# Error code should equal the default http_status, which is 400/BAD_REQUEST\n\tvalue := json.marshal({\"errors\": [{\n\t\t\"message\": \"No operation found to evaluate\",\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}]})\n}\n\ndefault result[\"headers\"] := {\"content-type\": \"application/json\"}\n\nresult[\"headers\"] := {\"content-type\": \"text/plain\"} if {\n\tnot security.is_token_valid\n}\n\ndefault result[\"http_status\"] := 400\n\nresult[\"http_status\"] := 401 if {\n\tnot security.is_token_valid\n} else := 200 if {\n\trouter.error_messages == {}\n\tnot result.body\n} else := 500 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.INTERNAL_SERVER_ERROR\n} else := 401 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.UNAUTHORIZED\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.BAD_REQUEST\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.GRAPHQL_VALIDATION_FAILED\n} else := 403 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.FORBIDDEN\n}\n", "authz/router/router.rego": "package authz.router\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister\nimport data.indicatieregister\nimport data.notificaties\n\n### route allowed registers\n\n## notificaties\nallow if notificaties.zendmelding.allow\n\nallow if notificaties.zendnotificatie.allow\n\n## indicatieregister\nallow if indicatieregister.wlzindicatie.allow\n\n## bemiddelingsregister\nallow if bemiddelingsregister.bemiddeling.allow\n\nallow if bemiddelingsregister.bemiddelingspecificatie.allow\n\nallow if bemiddelingsregister.regiehouder.allow\n\nallow if bemiddelingsregister.client.allow\n\nallow if bemiddelingsregister.overdracht.allow\n\n### route error messages\n\ndefault error_messages := {}\n\n## notificaties error messages\nerror_messages := msg if {\n\tcount(notificaties.zendmelding.error_messages) > 0\n\tmsg := notificaties.zendmelding.error_messages\n}\n\nerror_messages := msg if {\n\tcount(notificaties.zendnotificatie.error_messages) > 0\n\tmsg := notificaties.zendnotificatie.error_messages\n}\n\n## indicatie error messages\nerror_messages := msg if {\n\tcount(indicatieregister.wlzindicatie.error_messages) > 0\n\tmsg := indicatieregister.wlzindicatie.error_messages\n}\n\n## bemiddelingsregister error messages\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddeling.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddeling.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddelingspecificatie.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddelingspecificatie.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.client.error_messages) > 0\n\tmsg := bemiddelingsregister.client.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.overdracht.error_messages) > 0\n\tmsg := bemiddelingsregister.overdracht.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.regiehouder.error_messages) > 0\n\tmsg := bemiddelingsregister.regiehouder.error_messages\n}\n", "authz/global/global.rego": "package authz.global\n\nimport rego.v1\n\nimport data.utils.common\n\nquery_ast := graphql.parse_query(input.parsed_body.query)\n\ndefault variables := {}\n\nvariables := value if {\n\t\"variables\" in object.keys(input.parsed_body)\n\tvalue := input.parsed_body.variables\n}\n\ndefault jwt := \"\"\n\njwt := split(input.attributes.request.http.headers.authorization, \" \")[1]\n\ndefault token := {}\n\ntoken := io.jwt.decode(jwt)[1]\n\nerror_messages contains msg if {\n\tnot query_ast\n\tmsg := {\n\t\t\"message\": \"Unable to parse graphql query\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) > 1\n\tmsg := {\n\t\t\"message\": \"Only one operation at the time is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) == 1\n\tcount(query_ast.Operations[_].SelectionSet) > 1\n\tmsg := {\n\t\t\"message\": \"Only one selectionset in an operation is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "utils/security/token_validation.rego": "package utils.security\n\nimport rego.v1\n\nis_token_valid if {\n  input.token.valid == true\n}", "indicatieregister/wlzindicatie/config/config.rego": "package indicatieregister.wlzindicatie.config\n\nimport rego.v1\n\nimport data.authz.global\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\noperation := _graphql.query_operation(global.query_ast, \"wlzIndicatie\")\n\nquery_selection := value if {\n\toperation\n\tvalue := _graphql.selection(operation, \"wlzIndicatie\")\n}\n\ndeprecated_scope := `registers/wlzindicatieregister/indicaties:read`\n\nscope := `registers/wlzindicatieregister/indicaties/indicatie:read`\n\nscope_allowed if {\n\tcommon.contains_scope(deprecated_scope, global.token.scopes)\n}\n\nscope_allowed if {\n\tcommon.contains_scope(scope, global.token.scopes)\n}\n", "indicatieregister/wlzindicatie/main.rego": "package indicatieregister.wlzindicatie\n\nimport rego.v1\n\nimport data.authz.global\nimport data.indicatieregister.wlzindicatie.config\nimport data.indicatieregister.wlzindicatie.rules\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nallow if {\n\tconfig.operation\n\tconfig.scope_allowed\n\n\trules.is_instelling_or_zorgkantoor\n\trules.id_is_required\n\n\tvalid\n}\n\nvalid if {\n\trules.initieelverantwoordelijkzorgkantoor_is_required\n\trules.initieelverantwoordelijkzorgkantoor_is_valid\n}\n\nvalid if {\n\trules.is_instelling_of_bemiddeling\n}\n\nvalid if {\n\trules.is_uitvoerend_or_verantwoordelijk_zorgkantoor_of_bemiddeling\n}\n\n# error messages\nerror_messages contains msg if {\n\tconfig.operation\n\tnot config.scope_allowed\n\tmsg := common.scope_not_allowed_error_msg(config.operation)\n}\n\nerror_messages contains msg if {\n\tsome msg in rules.error_messages\n\tmsg\n}\n", "indicatieregister/wlzindicatie/rules/is_instelling_or_zorgkantoor.rego": "package indicatieregister.wlzindicatie.rules\n\nimport rego.v1\n\nimport data.authz.global\nimport data.indicatieregister.wlzindicatie.config\nimport data.pip.bemiddelingsregister as bemiddelingsregister_pip\nimport data.utils.common\nimport data.utils.graphql as _graphql\nimport data.utils.graphql.graphql_request\n\nsubject_is_instelling if {\n\tcommon.is_zorgaanbieder(global.token)\n\tcommon.claim(global.token, \"agb\")\n}\n\nsubject_is_zorgkantoor if {\n\tcommon.is_zorgkantoor(global.token)\n\tcommon.claim(global.token, \"uzovi\")\n}\n\nis_instelling_or_zorgkantoor if {\n\tsubject_is_instelling\n}\n\nis_instelling_or_zorgkantoor if {\n\tsubject_is_zorgkantoor\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tconfig.scope_allowed\n\n\tnot is_instelling_or_zorgkantoor\n\n\tmsg := {\n\t\t\"message\": common.err(\"Subject does not have a valid 'uzovi' or 'agb'.\", config.operation), # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.UNAUTHORIZED},\n\t}\n}\n", "indicatieregister/wlzindicatie/rules/id_is_required.rego": "package indicatieregister.wlzindicatie.rules\n\nimport rego.v1\n\nimport data.authz.global\nimport data.indicatieregister.wlzindicatie.config\nimport data.utils.common\nimport data.utils.date\nimport data.utils.graphql as _graphql\n\nid_is_required if {\n\t_graphql.where_required_name_not_empty(\n\t\tconfig.query_selection,\n\t\tglobal.variables,\n\t\t\"wlzindicatieID\", \"eq\",\n\t)\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tconfig.scope_allowed\n\n\tnot id_is_required\n\n\tmsg := {\n\t\t\"message\": common.err(\"A where 'wlzindicatieID' is required.\", config.operation),\n\t\t\"extensions\": {\"code\": common.errors.UNAUTHORIZED},\n\t}\n}\n"}, "defaultFile": "indicatieregister/wlzindicatie/main.rego"}, "zendMelding": {"register": "notificaties", "package": "notificaties.zendmelding", "route": ["Incoming GraphQL mutation", "authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "notificaties/zendmelding/config/config.rego", "notificaties/zendmelding/main.rego", "notificaties/zendmelding/rules/*.rego", "Decision"], "stack": ["authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "notificaties/zendmelding/config/config.rego", "notificaties/zendmelding/main.rego", "notificaties/zendmelding/rules/scope_has_ontvanger_type.rego", "notificaties/zendmelding/rules/event_type_is_valid.rego"], "branches": [{"name": "standard_zendmelding_path", "active": true}], "effectivePolicy": "allow if\n  token_valid\n  and count(global.error_messages) == 0\n  and router selects notificaties.zendmelding\n  and config.operation == \"zendMelding\"\n  and notification validation rules succeed", "files": {"authz/main.rego": "package authz\n\nimport rego.v1\n\nimport data.authz.global\nimport data.authz.router\nimport data.utils.common\nimport data.utils.security\n\n# METADATA\n# description: This is the entrypoint for the registers bundle.\n# entrypoint: true\ndefault allow := false\n\nallow if {\n\tsecurity.is_token_valid\n\tcount(global.error_messages) == 0\n\trouter.error_messages == {}\n\trouter.allow\n}\n\ndefault result[\"allowed\"] := false\n\nresult[\"allowed\"] if {\n\tallow\n\trouter.error_messages == {}\n}\n\nresult[\"body\"] := value if {\n\tnot security.is_token_valid\n\tvalue := security.error_message\n} else := value if {\n\tcount(global.error_messages) > 0\n\tvalue := json.marshal({\"errors\": global.error_messages})\n} else := value if {\n\trouter.error_messages != {}\n\tvalue := json.marshal({\"errors\": router.error_messages})\n} else := value if {\n\tnot allow\n\n\t# Catch-all error when default allow and no error_messages are found.\n\t# We assume there's no operation found to evaluate.\n\t# Error code should equal the default http_status, which is 400/BAD_REQUEST\n\tvalue := json.marshal({\"errors\": [{\n\t\t\"message\": \"No operation found to evaluate\",\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}]})\n}\n\ndefault result[\"headers\"] := {\"content-type\": \"application/json\"}\n\nresult[\"headers\"] := {\"content-type\": \"text/plain\"} if {\n\tnot security.is_token_valid\n}\n\ndefault result[\"http_status\"] := 400\n\nresult[\"http_status\"] := 401 if {\n\tnot security.is_token_valid\n} else := 200 if {\n\trouter.error_messages == {}\n\tnot result.body\n} else := 500 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.INTERNAL_SERVER_ERROR\n} else := 401 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.UNAUTHORIZED\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.BAD_REQUEST\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.GRAPHQL_VALIDATION_FAILED\n} else := 403 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.FORBIDDEN\n}\n", "authz/router/router.rego": "package authz.router\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister\nimport data.indicatieregister\nimport data.notificaties\n\n### route allowed registers\n\n## notificaties\nallow if notificaties.zendmelding.allow\n\nallow if notificaties.zendnotificatie.allow\n\n## indicatieregister\nallow if indicatieregister.wlzindicatie.allow\n\n## bemiddelingsregister\nallow if bemiddelingsregister.bemiddeling.allow\n\nallow if bemiddelingsregister.bemiddelingspecificatie.allow\n\nallow if bemiddelingsregister.regiehouder.allow\n\nallow if bemiddelingsregister.client.allow\n\nallow if bemiddelingsregister.overdracht.allow\n\n### route error messages\n\ndefault error_messages := {}\n\n## notificaties error messages\nerror_messages := msg if {\n\tcount(notificaties.zendmelding.error_messages) > 0\n\tmsg := notificaties.zendmelding.error_messages\n}\n\nerror_messages := msg if {\n\tcount(notificaties.zendnotificatie.error_messages) > 0\n\tmsg := notificaties.zendnotificatie.error_messages\n}\n\n## indicatie error messages\nerror_messages := msg if {\n\tcount(indicatieregister.wlzindicatie.error_messages) > 0\n\tmsg := indicatieregister.wlzindicatie.error_messages\n}\n\n## bemiddelingsregister error messages\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddeling.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddeling.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddelingspecificatie.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddelingspecificatie.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.client.error_messages) > 0\n\tmsg := bemiddelingsregister.client.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.overdracht.error_messages) > 0\n\tmsg := bemiddelingsregister.overdracht.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.regiehouder.error_messages) > 0\n\tmsg := bemiddelingsregister.regiehouder.error_messages\n}\n", "authz/global/global.rego": "package authz.global\n\nimport rego.v1\n\nimport data.utils.common\n\nquery_ast := graphql.parse_query(input.parsed_body.query)\n\ndefault variables := {}\n\nvariables := value if {\n\t\"variables\" in object.keys(input.parsed_body)\n\tvalue := input.parsed_body.variables\n}\n\ndefault jwt := \"\"\n\njwt := split(input.attributes.request.http.headers.authorization, \" \")[1]\n\ndefault token := {}\n\ntoken := io.jwt.decode(jwt)[1]\n\nerror_messages contains msg if {\n\tnot query_ast\n\tmsg := {\n\t\t\"message\": \"Unable to parse graphql query\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) > 1\n\tmsg := {\n\t\t\"message\": \"Only one operation at the time is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) == 1\n\tcount(query_ast.Operations[_].SelectionSet) > 1\n\tmsg := {\n\t\t\"message\": \"Only one selectionset in an operation is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "utils/security/token_validation.rego": "package utils.security\n\nimport rego.v1\n\nis_token_valid if {\n  input.token.valid == true\n}", "notificaties/zendmelding/config/config.rego": "package notificaties.zendmelding.config\n\nimport rego.v1\n\nimport data.authz.global\nimport data.utils.graphql as _graphql\n\noperation := _graphql.mutation_operation(global.query_ast, \"zendMelding\")\n\nquery_selection := value if {\n\toperation\n\tvalue := _graphql.selection(operation, \"zendMelding\")\n}\n\nscope := `organisaties/[^\\\\s/:]+/meldingen/melding:create`\n", "notificaties/zendmelding/main.rego": "package notificaties.zendmelding\n\nimport rego.v1\n\nimport data.authz.global\nimport data.notificaties.zendmelding.config\nimport data.notificaties.zendmelding.rules\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nallow if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\trules.scope_has_ontvanger_type\n\n\trules.instantie_type_claim_found\n\trules.afzender_type_is_valid\n\trules.afzender_type_kvk_is_valid\n\trules.afzender_id_is_valid\n\trules.event_type_is_valid\n\trules.ontvanger_is_valid\n}\n\n# error messages\nerror_messages contains msg if {\n\tconfig.operation\n\tnot common.contains_scope(config.scope, global.token.scopes)\n\tmsg := common.scope_not_allowed_error_msg(config.operation)\n}\n\nerror_messages contains msg if {\n\tsome msg in rules.error_messages\n\tmsg\n}\n", "notificaties/zendmelding/rules/scope_has_ontvanger_type.rego": "package notificaties.zendmelding.rules\n\nimport rego.v1\n\nimport data.notificaties.constants\nimport data.notificaties.zendmelding.config\n\nimport data.authz.global\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nscope_has_ontvanger_type if {\n\tontvanger_id_type = _graphql.mutation_obj_arg(config.query_selection, global.variables, \"meldingInput\", \"ontvangerIDType\") # regal ignore:line-length\n\tafzender_type := constants.instantie_type_map_to_scope[ontvanger_id_type]\n\tafzender_type != null\n\tnew_scope = sprintf(\"organisaties/%s/meldingen/melding:create\", [afzender_type])\n\tnew_scope in global.token.scopes\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tnot scope_has_ontvanger_type\n\n\tmsg := {\n\t\t\"message\": common.err(\"Scope for `ontvangerIDType` not valid.\", config.operation),\n\t\t\"extensions\": {\"code\": common.errors.GRAPHQL_VALIDATION_FAILED},\n\t}\n}\n", "notificaties/zendmelding/rules/event_type_is_valid.rego": "package notificaties.zendmelding.rules\n\nimport rego.v1\n\nimport data.notificaties.constants\nimport data.notificaties.zendmelding.config\nimport data.notificaties.zendmelding.constants as zendmelding_constants\n\nimport data.authz.global\nimport data.notificaties.helpers\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nevent_type_is_valid if {\n\tevent_type_value := _graphql.mutation_obj_arg(config.query_selection, global.variables, \"meldingInput\", \"eventType\")\n\tsome event_type in helpers.all_event_types(zendmelding_constants.event_types)\n\tevent_type == event_type_value\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\tscope_has_ontvanger_type\n\n\tnot event_type_is_valid\n\n\tmsg := {\n\t\t\"message\": common.err(\"event_type is not valid.\", config.operation),\n\t\t\"extensions\": {\"code\": common.errors.GRAPHQL_VALIDATION_FAILED},\n\t}\n}\n"}, "defaultFile": "notificaties/zendmelding/main.rego"}, "zendNotificatie": {"register": "notificaties", "package": "notificaties.zendnotificatie", "route": ["Incoming GraphQL mutation", "authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "notificaties/zendnotificatie/config/config.rego", "notificaties/zendnotificatie/main.rego", "notificaties/zendnotificatie/rules/*.rego", "Decision"], "stack": ["authz/main.rego", "authz/global/global.rego", "utils/security/token_validation.rego", "authz/router/router.rego", "notificaties/zendnotificatie/config/config.rego", "notificaties/zendnotificatie/main.rego", "notificaties/zendnotificatie/rules/scope_has_ontvanger_type.rego", "notificaties/zendnotificatie/rules/event_type_is_valid.rego"], "branches": [{"name": "standard_notification_send_path", "active": true}], "effectivePolicy": "allow if\n  token_valid\n  and count(global.error_messages) == 0\n  and router selects notificaties.zendnotificatie\n  and config.operation == \"zendNotificatie\"\n  and notification validation rules succeed", "files": {"authz/main.rego": "package authz\n\nimport rego.v1\n\nimport data.authz.global\nimport data.authz.router\nimport data.utils.common\nimport data.utils.security\n\n# METADATA\n# description: This is the entrypoint for the registers bundle.\n# entrypoint: true\ndefault allow := false\n\nallow if {\n\tsecurity.is_token_valid\n\tcount(global.error_messages) == 0\n\trouter.error_messages == {}\n\trouter.allow\n}\n\ndefault result[\"allowed\"] := false\n\nresult[\"allowed\"] if {\n\tallow\n\trouter.error_messages == {}\n}\n\nresult[\"body\"] := value if {\n\tnot security.is_token_valid\n\tvalue := security.error_message\n} else := value if {\n\tcount(global.error_messages) > 0\n\tvalue := json.marshal({\"errors\": global.error_messages})\n} else := value if {\n\trouter.error_messages != {}\n\tvalue := json.marshal({\"errors\": router.error_messages})\n} else := value if {\n\tnot allow\n\n\t# Catch-all error when default allow and no error_messages are found.\n\t# We assume there's no operation found to evaluate.\n\t# Error code should equal the default http_status, which is 400/BAD_REQUEST\n\tvalue := json.marshal({\"errors\": [{\n\t\t\"message\": \"No operation found to evaluate\",\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}]})\n}\n\ndefault result[\"headers\"] := {\"content-type\": \"application/json\"}\n\nresult[\"headers\"] := {\"content-type\": \"text/plain\"} if {\n\tnot security.is_token_valid\n}\n\ndefault result[\"http_status\"] := 400\n\nresult[\"http_status\"] := 401 if {\n\tnot security.is_token_valid\n} else := 200 if {\n\trouter.error_messages == {}\n\tnot result.body\n} else := 500 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.INTERNAL_SERVER_ERROR\n} else := 401 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.UNAUTHORIZED\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.BAD_REQUEST\n} else := 400 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.GRAPHQL_VALIDATION_FAILED\n} else := 403 if {\n\tsome error in router.error_messages\n\terror.extensions.code == common.errors.FORBIDDEN\n}\n", "authz/router/router.rego": "package authz.router\n\nimport rego.v1\n\nimport data.authz.global\nimport data.bemiddelingsregister\nimport data.indicatieregister\nimport data.notificaties\n\n### route allowed registers\n\n## notificaties\nallow if notificaties.zendmelding.allow\n\nallow if notificaties.zendnotificatie.allow\n\n## indicatieregister\nallow if indicatieregister.wlzindicatie.allow\n\n## bemiddelingsregister\nallow if bemiddelingsregister.bemiddeling.allow\n\nallow if bemiddelingsregister.bemiddelingspecificatie.allow\n\nallow if bemiddelingsregister.regiehouder.allow\n\nallow if bemiddelingsregister.client.allow\n\nallow if bemiddelingsregister.overdracht.allow\n\n### route error messages\n\ndefault error_messages := {}\n\n## notificaties error messages\nerror_messages := msg if {\n\tcount(notificaties.zendmelding.error_messages) > 0\n\tmsg := notificaties.zendmelding.error_messages\n}\n\nerror_messages := msg if {\n\tcount(notificaties.zendnotificatie.error_messages) > 0\n\tmsg := notificaties.zendnotificatie.error_messages\n}\n\n## indicatie error messages\nerror_messages := msg if {\n\tcount(indicatieregister.wlzindicatie.error_messages) > 0\n\tmsg := indicatieregister.wlzindicatie.error_messages\n}\n\n## bemiddelingsregister error messages\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddeling.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddeling.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.bemiddelingspecificatie.error_messages) > 0\n\tmsg := bemiddelingsregister.bemiddelingspecificatie.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.client.error_messages) > 0\n\tmsg := bemiddelingsregister.client.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.overdracht.error_messages) > 0\n\tmsg := bemiddelingsregister.overdracht.error_messages\n}\n\nerror_messages := msg if {\n\tcount(bemiddelingsregister.regiehouder.error_messages) > 0\n\tmsg := bemiddelingsregister.regiehouder.error_messages\n}\n", "authz/global/global.rego": "package authz.global\n\nimport rego.v1\n\nimport data.utils.common\n\nquery_ast := graphql.parse_query(input.parsed_body.query)\n\ndefault variables := {}\n\nvariables := value if {\n\t\"variables\" in object.keys(input.parsed_body)\n\tvalue := input.parsed_body.variables\n}\n\ndefault jwt := \"\"\n\njwt := split(input.attributes.request.http.headers.authorization, \" \")[1]\n\ndefault token := {}\n\ntoken := io.jwt.decode(jwt)[1]\n\nerror_messages contains msg if {\n\tnot query_ast\n\tmsg := {\n\t\t\"message\": \"Unable to parse graphql query\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) > 1\n\tmsg := {\n\t\t\"message\": \"Only one operation at the time is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n\nerror_messages contains msg if {\n\tcount(query_ast.Operations) == 1\n\tcount(query_ast.Operations[_].SelectionSet) > 1\n\tmsg := {\n\t\t\"message\": \"Only one selectionset in an operation is supported.\", # regal ignore:line-length\n\t\t\"extensions\": {\"code\": common.errors.BAD_REQUEST},\n\t}\n}\n", "utils/security/token_validation.rego": "package utils.security\n\nimport rego.v1\n\nis_token_valid if {\n  input.token.valid == true\n}", "notificaties/zendnotificatie/config/config.rego": "package notificaties.zendnotificatie.config\n\nimport rego.v1\n\nimport data.authz.global\nimport data.utils.graphql as _graphql\n\noperation := _graphql.mutation_operation(global.query_ast, \"zendNotificatie\")\n\nquery_selection := value if {\n\toperation\n\tvalue := _graphql.selection(operation, \"zendNotificatie\")\n}\n\nscope := `organisaties/[^\\\\s/:]+/notificaties/notificatie:create`\n", "notificaties/zendnotificatie/main.rego": "package notificaties.zendnotificatie\n\nimport rego.v1\n\nimport data.notificaties.zendnotificatie.config\nimport data.notificaties.zendnotificatie.rules\n\nimport data.authz.global\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nallow if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\trules.scope_has_ontvanger_type\n\n\trules.instantie_type_claim_found\n\trules.afzender_type_is_valid\n\trules.afzender_type_kvk_is_valid\n\trules.afzender_id_is_valid\n\trules.mutatie_client_afzender_is_valid\n\trules.event_type_is_valid\n\trules.event_type_afzender_ciz_is_valid\n\trules.ontvanger_is_valid\n}\n\n# error messages\nerror_messages contains msg if {\n\tconfig.operation\n\tnot common.contains_scope(config.scope, global.token.scopes)\n\tmsg := common.scope_not_allowed_error_msg(config.operation)\n}\n\nerror_messages contains msg if {\n\tsome msg in rules.error_messages\n\tmsg\n}\n", "notificaties/zendnotificatie/rules/scope_has_ontvanger_type.rego": "package notificaties.zendnotificatie.rules\n\nimport rego.v1\n\nimport data.notificaties.constants\nimport data.notificaties.zendnotificatie.config\n\nimport data.authz.global\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nscope_has_ontvanger_type if {\n\tontvanger_id_type = _graphql.mutation_obj_arg(config.query_selection, global.variables, \"notificatieInput\", \"ontvangerIDType\") # regal ignore:line-length\n\tafzender_type := constants.instantie_type_map_to_scope[ontvanger_id_type]\n\tafzender_type != null\n\tnew_scope = sprintf(\"organisaties/%s/notificaties/notificatie:create\", [afzender_type])\n\tnew_scope in global.token.scopes\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\n\tnot scope_has_ontvanger_type\n\n\tmsg := {\n\t\t\"message\": common.err(\"Scope for `ontvangerIDType` not valid.\", config.operation),\n\t\t\"extensions\": {\"code\": common.errors.GRAPHQL_VALIDATION_FAILED},\n\t}\n}\n", "notificaties/zendnotificatie/rules/event_type_is_valid.rego": "package notificaties.zendnotificatie.rules\n\nimport rego.v1\n\nimport data.notificaties.zendnotificatie.config\nimport data.notificaties.zendnotificatie.constants as zendnotificatie_constants\n\nimport data.authz.global\nimport data.notificaties.helpers\nimport data.utils.common\nimport data.utils.graphql as _graphql\n\nevent_type_is_valid if {\n\tevent_type_value := _graphql.mutation_obj_arg(config.query_selection, global.variables, \"notificatieInput\", \"eventType\") # regal ignore:line-length\n\n\tsome event_type in helpers.all_event_types(zendnotificatie_constants.event_types)\n\tevent_type == event_type_value\n}\n\nerror_messages contains msg if {\n\tconfig.operation\n\tcommon.contains_scope(config.scope, global.token.scopes)\n\tscope_has_ontvanger_type\n\n\tnot event_type_is_valid\n\n\tmsg := {\n\t\t\"message\": common.err(\"event_type is not valid.\", config.operation),\n\t\t\"extensions\": {\"code\": common.errors.GRAPHQL_VALIDATION_FAILED},\n\t}\n}\n"}, "defaultFile": "notificaties/zendnotificatie/main.rego"}};
+
+    let currentOperation = null;
+    let executionSteps = [];
+    let currentStepIndex = -1;
+    let executionTimer = null;
+
+    function setItems(containerId, items, formatter = x => x) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      items.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = formatter(item);
+        container.appendChild(div);
+      });
+    }
+
+    function shorten(file) {
+      const p = file.split("/");
+      return p.length > 2 ? p.slice(-2).join("/") : file;
+    }
+
+    function renderFileTabs(files, defaultFile) {
+      const tabs = document.getElementById("fileTabs");
+      tabs.innerHTML = "";
+      Object.keys(files).forEach(file => {
+        const btn = document.createElement("button");
+        btn.className = "file-tab" + (file === defaultFile ? " active" : "");
+        btn.dataset.file = file;
+        btn.textContent = shorten(file);
+        btn.onclick = () => showFile(file);
+        tabs.appendChild(btn);
+      });
+    }
+
+    function showFile(fileName) {
+      if (!currentOperation) return;
+      const op = operations[currentOperation];
+      document.getElementById("regoViewer").textContent = op.files[fileName] || "// file not found";
+      document.getElementById("viewerBadge").textContent = fileName;
+
+      document.querySelectorAll(".file-tab").forEach(tab => {
+        tab.classList.toggle("active", tab.dataset.file === fileName);
+      });
+
+      document.querySelectorAll("#files .item").forEach(el => {
+        el.classList.toggle("executed", el.dataset.file === fileName || el.classList.contains("executed"));
+      });
+    }
+
+
+    let currentGraphqlRaw = "";
+    let currentGraphqlOp = null;
+    let currentHighlightRule = null;
+
+    const graphqlHighlightMap = {
+      bemiddeling: {
+        "config.operation": ["bemiddeling"],
+        "verantwoordelijkzorgkantoor_is_required": ["verantwoordelijkZorgkantoor"],
+        "verantwoordelijkzorgkantoor_has_valid_uzovi": ["verantwoordelijkZorgkantoor", "5500"],
+        "verantwoordelijkzorgkantoor_uzovi_claim_is_required": ["verantwoordelijkZorgkantoor"]
+      },
+      bemiddelingspecificatie: {
+        "config.operation": ["bemiddelingspecificatie"],
+        "bemiddelingspecificatie_id_is_required": ["bemiddelingspecificatieID", "BemiddelingspecificatieID"],
+        "only_own_bemiddeling": ["instelling", "Instelling", "bemiddelingspecificatie"]
+      },
+      client: {
+        "config.operation": ["client"],
+        "verantwoordelijkzorgkantoor_is_required": ["verantwoordelijkZorgkantoor"],
+        "verantwoordelijkzorgkantoor_has_valid_uzovi": ["verantwoordelijkZorgkantoor", "5500"]
+      },
+      regiehouder: {
+        "config.operation": ["regiehouder"],
+        "regiehouder_is_valid": ["regiehouder", "regiehouderID", "instelling", "Instelling"]
+      },
+      overdracht: {
+        "config.operation": ["overdracht"],
+        "verantwoordelijkzorgkantoor_is_required": ["verantwoordelijkZorgkantoor", "VerantwoordelijkZorgkantoor"],
+        "verantwoordelijkzorgkantoor_has_valid_uzovi": ["verantwoordelijkZorgkantoor", "5500"],
+        "overdrachtid_is_required": ["overdrachtID", "overdrachtId", "OverdrachtID"]
+      },
+      wlzIndicatie: {
+        "config.operation": ["wlzIndicatie"],
+        "id_is_required": ["wlzIndicatieID", "WlzIndicatieID"],
+        "initieelverantwoordelijkzorgkantoor_is_required": ["initieelVerantwoordelijkZorgkantoor"]
+      },
+      zendMelding: {
+        "config.operation": ["zendMelding"],
+        "scope_has_ontvanger_type": ["ontvangerIDType", "UZOVI"],
+        "event_type_is_valid": ["eventType", "subjectList", "afzenderID", "ontvangerID"]
+      },
+      zendNotificatie: {
+        "config.operation": ["zendNotificatie"],
+        "scope_has_ontvanger_type": ["ontvangerIDType", "UZOVI"],
+        "event_type_is_valid": ["eventType", "subjectList", "afzenderID", "ontvangerID"],
+        "mutatie_client_afzender_is_valid": ["eventType", "afzenderID", "subjectList"]
+      }
+    };
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function escapeRegex(value) {
+      return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function renderRuleChips(operationName) {
+      const wrap = document.getElementById("ruleChips");
+      wrap.innerHTML = "";
+      const mapping = graphqlHighlightMap[operationName] || {};
+      const allRules = Object.keys(mapping);
+
+      const makeChip = (label, ruleKey) => {
+        const btn = document.createElement("button");
+        btn.className = "rule-chip" + (currentHighlightRule === ruleKey ? " active" : "");
+        btn.textContent = label;
+        btn.onclick = () => {
+          currentHighlightRule = ruleKey;
+          renderRuleChips(operationName);
+          applyGraphqlHighlight();
+        };
+        wrap.appendChild(btn);
+      };
+
+      makeChip("clear highlight", "__clear__");
+      allRules.forEach(rule => makeChip(rule, rule));
+    }
+
+    function applyGraphqlHighlight() {
+      const target = document.getElementById("graphqlViewer");
+      let out = escapeHtml(currentGraphqlRaw || "// no GraphQL example found");
+
+      if (!currentGraphqlOp || !currentHighlightRule || currentHighlightRule === "__clear__") {
+        target.innerHTML = out;
+        return;
+      }
+
+      const tokens = (graphqlHighlightMap[currentGraphqlOp] || {})[currentHighlightRule] || [];
+      if (!tokens.length) {
+        target.innerHTML = out;
+        return;
+      }
+
+      tokens
+        .sort((a, b) => b.length - a.length)
+        .forEach((token, idx) => {
+          const cls = idx === 0 ? "gql-hit-strong" : "gql-hit";
+          const re = new RegExp(escapeRegex(escapeHtml(token)), "g");
+          out = out.replace(re, `<span class="${cls}">$&</span>`);
+        });
+
+      target.innerHTML = out;
+    }
+
+    function inferRuleKeyFromFile(fileName) {
+      const leaf = fileName.split("/").pop().replace(/\.rego$/, "");
+      if (leaf === "config") return "config.operation";
+      if (leaf === "main") return null;
+      return leaf;
+    }
+
+
+    
+    function extractWhereClause(query) {
+      if (!query) return null;
+      const whereIdx = query.indexOf("where:");
+      if (whereIdx === -1) return null;
+
+      const openIdx = query.indexOf("{", whereIdx);
+      if (openIdx === -1) return null;
+
+      let depth = 0;
+      for (let i = openIdx; i < query.length; i++) {
+        const ch = query[i];
+        if (ch === "{") depth++;
+        if (ch === "}") {
+          depth--;
+          if (depth === 0) {
+            return query.slice(openIdx, i + 1).trim();
+          }
+        }
+      }
+      return null;
+    }
+
+    function authzenExampleFor(name) {
+      const requestedAt = "2026-03-22T10:00:00Z";
+      const example = graphqlExamples[name] || {};
+      const whereClause = extractWhereClause(example.content || "");
+
+      const baseSubject = {
+        "type": "organization",
+        "id": "zorgkantoor2",
+        "properties": {
+          "organization_type": "ZORGKANTOOR",
+          "roles": ["RAADPLEGER"],
+          "identifiers": {
+            "uzovi_code": "5500"
+          },
+          "region": "UTRECHT"
+        }
+      };
+
+      const map = {
+        "bemiddeling": {
+          "action": { "name": "read" },
+          "resource": {
+            "type": "BEMIDDELING",
+            "id": "bemiddeling-123",
+            "properties": {
+              "owner": "zorgkantoor1",
+              "region": "UTRECHT",
+              "sensitivity": "NORMAL",
+              "query_filter": whereClause ? {
+                "graphql_where_clause": whereClause
+              } : undefined
+            }
+          },
+          "context": {
+            "purpose_of_use": "WLZ_UITVOERING",
+            "service": "BEMIDDELINGSREGISTER",
+            "operation": "raadpleegBemiddeling",
+            "relation": "WLZ_EXECUTION",
+            "contract_active": true,
+            "time": requestedAt
+          }
+        },
+        "bemiddelingspecificatie": {
+          "action": { "name": "read" },
+          "resource": {
+            "type": "BEMIDDELING",
+            "id": "bemiddelingspecificatie-123",
+            "properties": {
+              "owner": "zorgkantoor1",
+              "region": "UTRECHT",
+              "sensitivity": "NORMAL",
+              "query_filter": whereClause ? {
+                "graphql_where_clause": whereClause
+              } : undefined
+            }
+          },
+          "context": {
+            "purpose_of_use": "WLZ_UITVOERING",
+            "service": "BEMIDDELINGSREGISTER",
+            "operation": "raadpleegBemiddeling",
+            "relation": "WLZ_EXECUTION",
+            "contract_active": true,
+            "time": requestedAt
+          }
+        },
+        "client": {
+          "action": { "name": "read" },
+          "resource": {
+            "type": "CLIENT",
+            "id": "client-123",
+            "properties": {
+              "owner": "zorgkantoor1",
+              "region": "UTRECHT",
+              "sensitivity": "HIGH",
+              "query_filter": whereClause ? {
+                "graphql_where_clause": whereClause
+              } : undefined
+            }
+          },
+          "context": {
+            "purpose_of_use": "WLZ_UITVOERING",
+            "service": "CLIENTREGISTER",
+            "operation": "raadpleegClient",
+            "relation": "WLZ_EXECUTION",
+            "contract_active": true,
+            "time": requestedAt
+          }
+        },
+        "regiehouder": {
+          "action": { "name": "read" },
+          "resource": {
+            "type": "BEMIDDELING",
+            "id": "regiehouder-123",
+            "properties": {
+              "owner": "zorgkantoor1",
+              "region": "UTRECHT",
+              "sensitivity": "NORMAL",
+              "query_filter": whereClause ? {
+                "graphql_where_clause": whereClause
+              } : undefined
+            }
+          },
+          "context": {
+            "purpose_of_use": "WLZ_UITVOERING",
+            "service": "BEMIDDELINGSREGISTER",
+            "operation": "raadpleegRegiehouder",
+            "relation": "WLZ_EXECUTION",
+            "contract_active": true,
+            "time": requestedAt
+          }
+        },
+        "overdracht": {
+          "action": { "name": "read" },
+          "resource": {
+            "type": "BEMIDDELING",
+            "id": "overdracht-123",
+            "properties": {
+              "owner": "zorgkantoor1",
+              "region": "UTRECHT",
+              "sensitivity": "NORMAL",
+              "query_filter": whereClause ? {
+                "graphql_where_clause": whereClause
+              } : undefined
+            }
+          },
+          "context": {
+            "purpose_of_use": "WLZ_UITVOERING",
+            "service": "BEMIDDELINGSREGISTER",
+            "operation": "raadpleegOverdracht",
+            "relation": "WLZ_EXECUTION",
+            "contract_active": true,
+            "time": requestedAt
+          }
+        },
+        "wlzIndicatie": {
+          "action": { "name": "read" },
+          "resource": {
+            "type": "WLZ_INDICATIE",
+            "id": "indicatie-987654",
+            "properties": {
+              "owner": "CIZ",
+              "region": "UTRECHT",
+              "sensitivity": "HIGH",
+              "query_filter": whereClause ? {
+                "graphql_where_clause": whereClause
+              } : undefined
+            }
+          },
+          "context": {
+            "purpose_of_use": "WLZ_UITVOERING",
+            "service": "INDICATIEREGISTER",
+            "operation": "raadpleegIndicatie",
+            "relation": "WLZ_EXECUTION",
+            "contract_active": true,
+            "time": requestedAt
+          }
+        },
+        "zendMelding": {
+          "action": { "name": "write" },
+          "resource": {
+            "type": "NOTIFICATIE",
+            "id": "melding-123",
+            "properties": {
+              "owner": "zorgkantoor1",
+              "region": "UTRECHT",
+              "sensitivity": "NORMAL"
+            }
+          },
+          "context": {
+            "purpose_of_use": "ADMINISTRATIE",
+            "service": "NOTIFICATIESERVICE",
+            "operation": "zendMelding",
+            "relation": "WLZ_EXECUTION",
+            "contract_active": true,
+            "time": requestedAt
+          }
+        },
+        "zendNotificatie": {
+          "action": { "name": "write" },
+          "resource": {
+            "type": "NOTIFICATIE",
+            "id": "notificatie-123",
+            "properties": {
+              "owner": "zorgkantoor1",
+              "region": "UTRECHT",
+              "sensitivity": "NORMAL"
+            }
+          },
+          "context": {
+            "purpose_of_use": "ADMINISTRATIE",
+            "service": "NOTIFICATIESERVICE",
+            "operation": "zendNotificatie",
+            "relation": "WLZ_EXECUTION",
+            "contract_active": true,
+            "time": requestedAt
+          }
+        }
+      };
+
+      const specific = map[name] || {
+        "action": { "name": "read" },
+        "resource": {
+          "type": "CLIENT",
+          "id": "resource-123",
+          "properties": {
+            "owner": "zorgkantoor1",
+            "region": "UTRECHT",
+            "sensitivity": "NORMAL",
+            "query_filter": whereClause ? {
+              "graphql_where_clause": whereClause
+            } : undefined
+          }
+        },
+        "context": {
+          "purpose_of_use": "WLZ_UITVOERING",
+          "service": "CLIENTREGISTER",
+          "operation": "raadpleegClient",
+          "relation": "WLZ_EXECUTION",
+          "contract_active": true,
+          "time": requestedAt
+        }
+      };
+
+      return {
+        "subject": baseSubject,
+        "action": specific.action,
+        "resource": specific.resource,
+        "context": specific.context
+      };
+    }
+
+    function renderAuthzenExample(name) {
+      const obj = authzenExampleFor(name);
+      document.getElementById("authzenBadge").textContent = "AuthZEN for " + name;
+      document.getElementById("authzenViewer").textContent = JSON.stringify(obj, null, 2);
+      document.getElementById("authzenSource").textContent =
+        "Aligned to the latest iWlz AuthZEN JSON schema: subject.type/id/properties, action.name, resource.properties, context.time, and resource.properties.query_filter for GraphQL filter logic.";
+    }
+
+    function renderGraphqlExample(name) {
+      const example = graphqlExamples[name];
+      currentGraphqlOp = name;
+      currentHighlightRule = "config.operation";
+      if (!example) {
+        currentGraphqlRaw = "// no GraphQL example found";
+        document.getElementById("graphqlBadge").textContent = "No example";
+        document.getElementById("graphqlSource").textContent = "";
+        renderRuleChips(name);
+        applyGraphqlHighlight();
+        return;
+      }
+      currentGraphqlRaw = example.content;
+      document.getElementById("graphqlBadge").textContent = "Example for " + name;
+      document.getElementById("graphqlSource").textContent = "Source: " + example.source;
+      renderRuleChips(name);
+      applyGraphqlHighlight();
+    }
+
+    function highlightSelectedOperation(name) {
+      document.querySelectorAll(".toolbar button").forEach(btn => {
+        const isSelected = (btn.textContent || "").trim() === name;
+        btn.classList.toggle("active-op", isSelected);
+        btn.classList.toggle("dimmed", !isSelected);
+      });
+    }
+
+    function clearExecutionClasses() {
+      document.querySelectorAll(".item").forEach(el => {
+        el.classList.remove("executing", "executed", "dimmed");
+      });
+    }
+
+    function setExecutionStatus(text) {
+      const el = document.getElementById("executionStatus");
+      if (el) el.textContent = text;
+    }
+
+    function dimInactiveBranches() {
+      const branches = document.querySelectorAll("#branches .item");
+      branches.forEach(el => {
+        if (!el.innerHTML.includes("&larr; active")) {
+          el.classList.add("dimmed");
+        }
+      });
+    }
+
+    function buildExecutionSteps(op) {
+      const steps = [];
+
+      op.route.forEach((step, idx) => {
+        steps.push({
+          selector: `#flow .item:nth-child(${idx + 1})`,
+          label: `Flow step ${idx + 1}: ${step}`
+        });
+      });
+
+      op.stack.forEach((step, idx) => {
+        steps.push({
+          selector: `#stack .item:nth-child(${idx + 1})`,
+          label: `Policy stack ${idx + 1}: ${step}`
+        });
+      });
+
+      op.branches.forEach((branch, idx) => {
+        if (branch.active) {
+          steps.push({
+            selector: `#branches .item:nth-child(${idx + 1})`,
+            label: `Active branch: ${branch.name}`
+          });
+        }
+      });
+
+      Object.keys(op.files).forEach((file, idx) => {
+        steps.push({
+          selector: `#files .item:nth-child(${idx + 1})`,
+          label: `Participating file: ${file}`,
+          onEnter: () => showFile(file)
+        });
+      });
+
+      return steps;
+    }
+
+    function markPreviousExecuted() {
+      executionSteps.forEach((step, idx) => {
+        const el = document.querySelector(step.selector);
+        if (!el) return;
+        el.classList.remove("executing");
+        if (idx < currentStepIndex) {
+          el.classList.add("executed");
+        }
+      });
+    }
+
+    function resetExecution() {
+      if (executionTimer) {
+        clearInterval(executionTimer);
+        executionTimer = null;
+      }
+      currentStepIndex = -1;
+      clearExecutionClasses();
+      if (currentOperation) {
+        dimInactiveBranches();
+        setExecutionStatus(`Execution reset for operation: ${currentOperation}`);
+      } else {
+        setExecutionStatus("No operation selected.");
+      }
+    }
+
+    function stepExecution() {
+      if (!currentOperation) {
+        setExecutionStatus("Select an operation first.");
+        return;
+      }
+
+      if (currentStepIndex >= executionSteps.length - 1) {
+        setExecutionStatus(`Execution complete for operation: ${currentOperation}`);
+        return;
+      }
+
+      markPreviousExecuted();
+      currentStepIndex += 1;
+
+      const step = executionSteps[currentStepIndex];
+      const el = document.querySelector(step.selector);
+
+      if (el) {
+        el.classList.remove("dimmed");
+        el.classList.add("executing");
+      }
+
+      if (step.onEnter) {
+        step.onEnter();
+      }
+
+      setExecutionStatus(step.label);
+    }
+
+    function playExecution() {
+      if (!currentOperation) {
+        setExecutionStatus("Select an operation first.");
+        return;
+      }
+
+      if (executionTimer) {
+        clearInterval(executionTimer);
+      }
+
+      resetExecution();
+
+      executionTimer = setInterval(() => {
+        if (currentStepIndex >= executionSteps.length - 1) {
+          clearInterval(executionTimer);
+          executionTimer = null;
+          setExecutionStatus(`Execution complete for operation: ${currentOperation}`);
+          return;
+        }
+        stepExecution();
+      }, 550);
+    }
+
+    function runOperation(name) {
+      currentOperation = name;
+      const op = operations[name];
+
+      highlightSelectedOperation(name);
+
+      if (executionTimer) {
+        clearInterval(executionTimer);
+        executionTimer = null;
+      }
+
+      setItems("flow", op.route, x => x);
+      setItems("stack", op.stack, x => x);
+      setItems("branches", op.branches, x => x.name + (x.active ? " &larr; active" : ""));
+      setItems("files", Object.keys(op.files), x => x);
+
+      Array.from(document.querySelectorAll("#files .item")).forEach((el, idx) => {
+        const fileName = Object.keys(op.files)[idx];
+        el.dataset.file = fileName;
+        el.onclick = () => showFile(fileName);
+      });
+
+      document.getElementById("effectivePolicy").textContent = op.effectivePolicy;
+      document.getElementById("metadata").innerHTML = `
+        <strong>Register:</strong> ${op.register}<br>
+        <strong>Operation:</strong> ${name}<br>
+        <strong>Primary package:</strong> ${op.package}<br>
+        <strong>Rendered mode:</strong> per operation<br>
+        <strong>GraphQL example:</strong> sourced from uploaded queries.tar<br>
+        <strong>Important:</strong> the final decision depends on shared layers, router selection, operation config, main package logic, and rule/helper files.
+      `;
+
+      renderFileTabs(op.files, op.defaultFile);
+      showFile(op.defaultFile);
+      renderGraphqlExample(name);
+      renderAuthzenExample(name);
+
+      executionSteps = buildExecutionSteps(op);
+      currentStepIndex = -1;
+      clearExecutionClasses();
+      dimInactiveBranches();
+      setExecutionStatus(`Loaded operation: ${name}. Click "Play execution" or "Next step".`);
+    }
+  </script>
+</body>
+</html>
