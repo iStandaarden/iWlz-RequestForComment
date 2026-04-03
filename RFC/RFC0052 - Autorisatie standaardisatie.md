@@ -11,42 +11,59 @@ Hiermee wordt autorisatie losgekoppeld van implementatiedetails en gebaseerd op 
 Dit maakt autorisatie stelselbreed normeerbaar, interoperabel en beter toetsbaar.
 
 
-```mermaid
+``` mermaid
 flowchart TD
     A[Doel van de RFC] --> B[Autorisatie standaardiseren]
-    A --> C[Autorisatie-attributen extraheren uit het binnenkomende verzoek]
+    A --> C[Ontkoppelen van technische verzoekstructuur]
 
-    C --> D[PEP Gateway preprocessor]
-    D --> G[Autorisatieverzoek conform NLGov AuthZEN]
+    B --> D[Binnenkomend API-verzoek]
+    C --> D
+
+    D --> E{Bevat verzoek<br/>AuthZEN data<br/>conform RFC0052?}
+
+    E -->|Ja| F[Stuur autorisatieverzoek direct naar PDP]
+
+    E -->|Nee| G[PEP Gateway preprocessor]
+    G --> H[Extractie autorisatierelevante attributen]
+    H --> I[Constructie AuthZEN verzoek conform NLGov profiel]
+    I --> F
+
+    F --> J[PDP evaluatie]
+    J --> K[Autorisatiebeslissing]
 ```
 
-Probleem:
+Probleem
 
-De autorisatiebeslissing wordt momenteel gebaseerd op het volledige inkomende API-request, inclusief GraphQL-querystructuur, variabelen en token. Hierdoor ontstaat een sterke afhankelijkheid tussen de technische representatie van het verzoek en de autorisatielogica.
+De autorisatiebeslissing wordt momenteel gebaseerd op het volledige inkomende API-verzoek, inclusief GraphQL-querystructuur, variabelen en token. Hierdoor ontstaat een sterke afhankelijkheid tussen de technische representatie van het verzoek en de autorisatielogica.
 
-In deze RFC wordt voorgesteld om de PEP Gateway te implementeren conform het bovenstaande schema:
+In deze RFC wordt voorgesteld om de PEP Gateway conform het bovenstaande schema in te richten.
 
-- Controle of binnenkomend request reeds autorisatie data bevat conform dit document 
-- Als dit het geval is, dan kan deze autorisatie data naar de PDP te beoordeling gestuur worden, is dit niet het geval dan geldt het volgende:
-  - Autorisatielogica wordt geëxtraheerd uit het binnenkomende verzoek door middel van een preprocessor in de PEP Gateway;
-  - De preprocessor construeert een gestandaardiseerd autorisatieverzoek conform de NLGov AuthZEN-standaard, zoals in dit document gespecificeerd.
+Bij een binnenkomend verzoek wordt eerst vastgesteld of het verzoek reeds autorisatiegegevens bevat conform RFC0052 (dit document).
+
+- Indien het verzoek reeds een autorisatieverzoek bevat conform RFC0052, dan kan deze autorisatie-informatie ongewijzigd aan de PDP ter beoordeling worden aangeboden.
+- Indien het verzoek niet voldoet aan RFC0052, dan geldt:
+  - de autorisatierelevante informatie wordt uit het binnenkomende verzoek geëxtraheerd door middel van een preprocessor in de PEP Gateway;
+  - de preprocessor construeert op basis hiervan een gestandaardiseerd autorisatieverzoek conform de NLGov AuthZEN-standaard, zoals in dit document gespecificeerd;
+  - dit gestandaardiseerde autorisatieverzoek wordt vervolgens aan de PDP ter beoordeling aangeboden.
 
 Hiermee wordt:
+
 - de afhankelijkheid van technische verzoekstructuren doorbroken;
 - autorisatie gebaseerd op een expliciet en gestandaardiseerd model;
 - interoperabiliteit tussen bronhouders en implementaties vergroot;
 - autorisatiebeleid beter toetsbaar en herbruikbaar gemaakt.
 
 Voor implementerende partijen betekent dit:
-- Implementatie van een preprocessor in de PEP Gateway;
-- Gebruik van het gestandaardiseerde AuthZEN autorisatieverzoek;
-- Inrichting van een mappingmechanisme (service + operation → policy);
-- Aanpassing van bestaande autorisatie-implementaties naar het nieuwe model.
 
-De NLGov AuthZEN-standaard standaardiseert uitsluitend de interface tussen PEP en PDP en vervangt geen IAM-functionaliteit of policy-engines.
+- inrichting van een controlemechanisme om vast te stellen of een verzoek reeds voldoet aan RFC0052;
+- implementatie van een preprocessor in de PEP Gateway voor verzoeken die niet aan RFC0052 voldoen;
+- gebruik van het gestandaardiseerde AuthZEN-autorisatieverzoek;
+- inrichting van een mappingmechanisme (service + operation → policy);
+- aanpassing van bestaande autorisatie-implementaties naar het nieuwe model.
 
-Als voorbeeld is een [demo](./RFC0052-schema.json) beschikbaar gemaakt die demonstreert hoe een Authzen bericht eruit kan zien volgens de [standaarden](./RFC0052-schema.json) van dit document.
+De NLGov AuthZEN-standaard standaardiseert uitsluitend de interface tussen PEP en PDP en vervangt geen IAM-functionaliteit en geen policy-engine.
 
+Ter illustratie is een [demo](./RFC0052-example-updated-query-filter.html) beschikbaar die laat zien hoe een AuthZEN-verzoek eruit kan zien volgens de standaard en profilering uit dit document. Daarnaast is een [JSON Schema](./RFC0052-schema.json) beschikbaar waarmee dit autorisatieverzoek machine-valideerbaar wordt gemaakt.
 
 # 1. Inleiding
 
