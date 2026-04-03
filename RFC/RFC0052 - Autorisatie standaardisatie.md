@@ -221,9 +221,7 @@ Door binnen de context een mapping te maken van service en operation naar Rego p
 Hiermee wordt Autorisatie niet bepaald door het API-request,
 maar door een expliciete mapping van service + operation naar policies
 
-# Hoofdstuk 6 – Autorisatiecontract iWlz AuthZEN-profiel
-
-## 6. Autorisatiecontract
+# 6. Autorisatiecontract iWlz AuthZEN-profiel
 
 Dit hoofdstuk beschrijft hoe een autorisatieverzoek eruit moet zien binnen het iWlz-stelsel.
 
@@ -257,21 +255,46 @@ Een autorisatieverzoek bestaat altijd uit:
 
 ## 6.2 Subject
 
-Het subject beschrijft de actor die de actie uitvoert.
+Het `subject` beschrijft de actor die de actie uitvoert.
+
+De structuur van het subject volgt het AuthZEN-model en bestaat uit:
+
+- `type` → het type actor
+- `id` → de unieke identificatie van de actor
+- `properties` → aanvullende kenmerken van de actor
 
 | Attribuut | Verplicht | Toelichting |
 |---|---|---|
-| type | Ja | organization / user / system |
-| id | Ja | unieke identifier |
-| properties | Nee | domeinspecifieke gegevens |
+| type | Ja | Type actor (bijv. `organization`, `user`, `system`) |
+| id | Ja | Unieke identifier van de actor |
+| properties | Nee | Aanvullende domeinspecifieke gegevens |
 
-Alle extra gegevens (zoals rollen, regio en identifiers) staan onder `properties`.
 
----
+### Toelichting
+
+- Het veld `type` geeft aan wat voor soort actor het betreft (bijvoorbeeld een organisatie of een gebruiker).
+- Het veld `id` identificeert de actor uniek binnen het stelsel. In de praktijk is dit vaak afkomstig uit het access-token.
+- Het veld `properties` bevat aanvullende kenmerken die relevant zijn voor autorisatie, zoals:
+  - rollen (`roles`)
+  - organisatiekenmerken (`organization_type`)
+  - identifiers (bijv. UZOVI- of AGB-code)
+  - regio (`region`)
+
+Deze attributen sluiten aan op de codelijsten in paragraaf 6.6.
+
+
+### Richtlijnen
+
+- Domeinspecifieke attributen worden onder `properties` geplaatst.
+- De betekenis van attributen in `properties` is consistent met de codelijsten.
+- De combinatie van `subject.properties`, `resource` en `context` vormt de basis voor de autorisatiebeslissing.
+- Het moet mogelijk zijn om de waarden van het subject te herleiden naar een betrouwbare bron (bijv. een access-token of een externe bron).
 
 ## 6.3 Action
 
-De action beschrijft wat er gebeurt.
+De `action` beschrijft welke handeling wordt uitgevoerd op de resource.
+
+De structuur van `action` volgt het AuthZEN-model en bestaat uit een object met een `name` veld.
 
 ```json
 {
@@ -281,36 +304,89 @@ De action beschrijft wat er gebeurt.
 }
 ```
 
-Gebruik van `"action": "read"` is niet toegestaan.
+| Attribuut | Verplicht | Toelichting |
+|---|---|---|
+|name|Ja|De uit te voeren handeling(bijv. read/write)|
 
----
+
+### Toelichting
+
+- Het veld name geeft aan wat de actor wil doen met de resource (bijvoorbeeld raadplegen of wijzigen).
+- De waarde van action.name bepaalt samen met resource en context welke autorisatieregels van toepassing zijn.
+- De toegestane waarden zijn vastgelegd in de codelijsten (zie paragraaf 6.6).
+
+### Richtlijnen
+
+- De action wordt conform AuthZEN altijd als object vastgelegd (bijvoorbeeld { "name": "read" }).
+- Het gebruik van een losse string zoals "action": "read" is niet toegestaan.
+- De waarde van `action.name` moet afkomstig zijn uit de vastgestelde codelijst.
+- De betekenis van de gekozen actie moet consistent zijn binnen het stelsel.
+
 
 ## 6.4 Resource
 
-De resource beschrijft waarop de actie wordt uitgevoerd.
+De `resource` beschrijft het object waarop de actie wordt uitgevoerd.
 
-| Attribuut | Verplicht |
-|---|---|
-| type | Ja |
-| id | Ja |
-| properties | Nee |
+De structuur van de resource volgt het AuthZEN-model en bestaat uit:
 
----
+- `type` → het soort resource
+- `id` → de unieke identificatie van de resource
+- `properties` → aanvullende kenmerken
+
+| Attribuut | Verplicht | Toelichting |
+|---|---|---|
+| type | Ja | Type van de resource (bijv. WLZ_INDICATIE, BEMIDDELING) |
+| id | Ja | Unieke identifier van de resource binnen de service |
+| properties | Nee | Aanvullende attributen die relevant zijn voor autorisatie |
+
+
+### Toelichting
+
+- Het veld `type` bepaalt op welk soort object de autorisatie betrekking heeft en moet aansluiten bij de functionele context (bijv. service en operation).
+- Het veld `id` identificeert de specifieke resource waarop de actie wordt uitgevoerd. De herkomst ligt doorgaans in het inkomende API-verzoek.
+- Het veld `properties` bevat aanvullende kenmerken die nodig kunnen zijn voor autorisatiebeslissingen, zoals:
+  - eigenaar (`owner`)
+  - regio (`region`)
+  - gevoeligheid (`sensitivity`)
+
+Deze aanvullende attributen sluiten aan op de codelijsten in paragraaf 6.6.
+
+
+### Richtlijnen
+
+- Domeinspecifieke attributen worden onder `properties` geplaatst.
+- De betekenis van `type` en `properties` moet consistent zijn met de gebruikte codelijsten.
+- De combinatie van `resource.type`, `context.service` en `context.operation` moet logisch op elkaar aansluiten.
 
 ## 6.5 Context
 
-De context bevat aanvullende informatie voor de beslissing.
+De `context` bevat aanvullende informatie die nodig is om een autorisatiebeslissing te kunnen nemen.
 
-| Attribuut | Verplicht |
-|---|---|
-| purpose_of_use | Ja |
-| service | Ja |
-| operation | Ja |
-| relation | Ja |
-| contract_active | Ja |
-| time | Ja |
+De context beschrijft de omstandigheden waaronder de actie plaatsvindt, zoals het doel van gebruik, de functionele dienst en de relatie tussen betrokken partijen.
 
----
+| Attribuut | Verplicht | Toelichting |
+|---|---|---|
+| purpose_of_use | Ja | Doel van de gegevensverwerking |
+| service | Ja | Functionele dienst waarop de actie betrekking heeft |
+| operation | Ja | Specifieke handeling binnen de service |
+| relation | Ja | Relatie tussen subject en resource-eigenaar (bijv. WLZ_EXECUTION) |
+| contract_active | Ja | Of er een geldige relatie bestaat |
+| time | Ja | Tijdstip van het verzoek (ISO 8601) |
+
+### Toelichting
+
+- `purpose_of_use` geeft aan waarom de gegevens worden geraadpleegd en moet te herleiden zijn naar een geldige juridische grondslag (zie paragraaf 6.6.5).
+- `service` en `operation` beschrijven samen de functionele context van het verzoek en bepalen welke autorisatieregels van toepassing zijn.
+- `relation` geeft de aard van de relatie tussen de actor en de resource weer (bijv. binnen het iWlz-domein).
+- `contract_active` geeft aan of er een geldige relatie bestaat die toegang rechtvaardigt.
+- `time` legt het moment van het verzoek vast en wordt gebruikt voor tijdsafhankelijke autorisatie.
+
+### Richtlijnen
+
+- De combinatie van `service` en `operation` moet overeenkomen met de codelijsten in paragraaf 6.6.
+- De waarden in `context` moeten consistent zijn met de betekenis van de bijbehorende codelijsten.
+- Het moet altijd mogelijk zijn om de waarden in de context te herleiden naar een bron (bijv. API-verzoek, token of externe bron).
+- De context vormt samen met `subject` en `resource` de basis voor de autorisatiebeslissing.
 
 ## 6.6 Codelijsten (normatief)
 
@@ -318,8 +394,6 @@ Deze codelijsten zijn onderdeel van de standaard.
 
 - Gebruik is verplicht  
 - Afwijkingen zijn niet toegestaan  
-
----
 
 ### 6.6.1 service
 
@@ -331,7 +405,6 @@ Deze codelijsten zijn onderdeel van de standaard.
 | ZORGTOEWIJZINGSSERVICE |
 | NOTIFICATIESERVICE |
 
----
 
 ### 6.6.2 operation
 
@@ -359,8 +432,6 @@ Deze codelijsten zijn onderdeel van de standaard.
 De combinatie van `service` en `operation` moet logisch kloppen.  
 Een ongeldige combinatie moet worden afgewezen.
 
----
-
 ### 6.6.3 region
 
 Bron: NZa  
@@ -381,7 +452,6 @@ ZEELAND
 BRABANT  
 LIMBURG  
 
----
 
 ### 6.6.4 organization_type
 
@@ -400,25 +470,29 @@ Bronnen:
 - https://www.vecozo.nl/  
 - https://istandaarden.nl/iwlz  
 
----
 
 ### 6.6.5 purpose_of_use
 
-| Waarde | Juridische basis |
-|--------|------------------|
-| WLZ_UITVOERING | Art. 6 lid 1 sub e AVG |
-| TOEZICHT | Art. 6 lid 1 sub e AVG |
-| ONDERZOEK | Art. 6 lid 1 sub e AVG |
-| ADMINISTRATIE | Art. 6 lid 1 sub c AVG |
+Het attribuut `purpose_of_use` beschrijft het doel van de gegevensverwerking.
+
+De opgegeven waarde moet herleidbaar zijn naar een geldige juridische grondslag conform artikel 6 AVG.
+
+De onderstaande tabel geeft een **indicatieve koppeling**. De daadwerkelijke grondslag is afhankelijk van de specifieke verwerking en context.
+
+| Waarde | Typische juridische basis | Toelichting |
+|--------|--------------------------|-------------|
+| WLZ_UITVOERING | Art. 6 lid 1 sub e AVG | Uitvoering van een wettelijke taak |
+| TOEZICHT | Art. 6 lid 1 sub e AVG | Toezichthoudende taak |
+| ONDERZOEK | Art. 6 lid 1 sub e / a AVG | Afhankelijk van context (publiek onderzoek of toestemming) |
+| ADMINISTRATIE | Art. 6 lid 1 sub c / e AVG | Wettelijke verplichting of publieke taak |
 
 Bron:
 
-- https://eur-lex.europa.eu/eli/reg/2016/679/oj  
+- https://eur-lex.europa.eu/eli/reg/2016/679/oj
 
 **Regel:**  
 Elke waarde moet te herleiden zijn naar een juridische grondslag.
 
----
 
 ### 6.6.6 sensitivity
 
@@ -428,7 +502,6 @@ HIGH
 
 Moet aansluiten op bestaande classificaties (bijv. BIO of NEN7510).
 
----
 
 ## 6.7 Herkomst van attributen
 
@@ -439,9 +512,7 @@ Attributen kunnen uit verschillende bronnen komen:
 - externe bron  
 - configuratie  
 
-De herkomst moet altijd herleidbaar zijn.
-
----
+De herkomst moet altijd herleidbaar zijn naar een betrouwbare bron (bijv. access-token, API-verzoek of externe bron).
 
 ## 6.8 contract_active
 
@@ -451,7 +522,6 @@ Geeft aan of er een geldige relatie bestaat tussen subject en resource-eigenaar.
 - false → geen of onbekend  
 
 Indien onbekend → behandelen als false (default deny)
-
 
 
 # 7. Terminologie
@@ -473,7 +543,7 @@ Indien onbekend → behandelen als false (default deny)
 - [GEN_FUNC_AUTORISEREN] Ist en soll - onderzoek voor de generieke functie Autoriseren, Open Overheid: https://open.overheid.nl/documenten/423d14f1-5228-4dd1-b79f-97a78b58eff5/file
 - [TWIIN_VERTRAUWENSMODEL] Twiin Vertrouwensmodel: https://www.twiin.nl/twiin-vertrouwensmodel
 - [TWIIN_BEGRIP_VERTRAUWENSMODEL] Begrip: Twiin Vertrouwensmodel, Twiin Afsprakenstelsel: https://afsprakenstelsel.twiin.nl/normatief/ta140/begrip-twiin-vertrouwensmodel
-- [AUTHZEN_FINAL] OpenID Autorisatie API 1.0 Final Specification: https://openid.net/specs/autorisatie-api-1_0.html
+- [AUTHZEN_FINAL] OpenID Autorisatie API 1.0 Final Specification: https://openid.net/specs/authorization-api-1_0.html
 - [AUTHZEN_FINAL_APPROVAL] OpenID Autorisatie API 1.0 Final Specification Approved: https://openid.net/autorisatie-api-1-0-final-specification-approved/
 - [NLGOV_AUTHZEN] NLGov Profile for OpenID AuthZEN Autorisatie API: https://logius-standaarden.github.io/authzen-nlgov/
 - [OPA] Open Policy Agent: https://www.openpolicyagent.org/
