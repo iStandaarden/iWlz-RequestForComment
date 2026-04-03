@@ -3,18 +3,29 @@
   "$id": "https://iwlz.example.nl/schema/authzen-iwlz-request.schema.json",
   "title": "iWlz AuthZEN Autorisatieverzoek",
   "type": "object",
-  "required": ["subject", "action", "resource", "context"],
+  "required": [
+    "subject",
+    "action",
+    "resource",
+    "context"
+  ],
   "additionalProperties": false,
-
   "properties": {
     "subject": {
       "type": "object",
-      "required": ["type", "id"],
+      "required": [
+        "type",
+        "id"
+      ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["organization", "user", "system"]
+          "enum": [
+            "organization",
+            "user",
+            "system"
+          ]
         },
         "id": {
           "type": "string",
@@ -39,13 +50,20 @@
             },
             "roles": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
             "identifiers": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "uzovi_code": { "type": "string" },
-                "agb_code": { "type": "string" }
+                "uzovi_code": {
+                  "type": "string"
+                },
+                "agb_code": {
+                  "type": "string"
+                }
               }
             },
             "region": {
@@ -71,22 +89,30 @@
         }
       }
     },
-
     "action": {
       "type": "object",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false,
       "properties": {
         "name": {
           "type": "string",
-          "enum": ["read", "write", "execute", "approve"]
+          "enum": [
+            "read",
+            "write",
+            "execute",
+            "approve"
+          ]
         }
       }
     },
-
     "resource": {
       "type": "object",
-      "required": ["type", "id"],
+      "required": [
+        "type",
+        "id"
+      ],
       "additionalProperties": false,
       "properties": {
         "type": {
@@ -107,7 +133,9 @@
           "type": "object",
           "additionalProperties": true,
           "properties": {
-            "owner": { "type": "string" },
+            "owner": {
+              "type": "string"
+            },
             "region": {
               "type": "string",
               "enum": [
@@ -129,13 +157,21 @@
             },
             "sensitivity": {
               "type": "string",
-              "enum": ["LOW", "NORMAL", "HIGH"]
+              "enum": [
+                "LOW",
+                "NORMAL",
+                "HIGH"
+              ]
+            },
+            "query_filter": {
+              "type": "object",
+              "description": "Genormaliseerde representatie van autorisatierelevante filtercriteria uit het inkomende verzoek, bijvoorbeeld de GraphQL where clause.",
+              "additionalProperties": true
             }
           }
         }
       }
     },
-
     "context": {
       "type": "object",
       "required": [
@@ -193,23 +229,38 @@
           "format": "date-time"
         }
       },
-
       "allOf": [
         {
           "if": {
-            "properties": { "service": { "const": "INDICATIEREGISTER" } }
+            "properties": {
+              "service": {
+                "const": "INDICATIEREGISTER"
+              }
+            },
+            "required": [
+              "service"
+            ]
           },
           "then": {
             "properties": {
               "operation": {
-                "enum": ["raadpleegIndicatie"]
+                "enum": [
+                  "raadpleegIndicatie"
+                ]
               }
             }
           }
         },
         {
           "if": {
-            "properties": { "service": { "const": "BEMIDDELINGSREGISTER" } }
+            "properties": {
+              "service": {
+                "const": "BEMIDDELINGSREGISTER"
+              }
+            },
+            "required": [
+              "service"
+            ]
           },
           "then": {
             "properties": {
@@ -218,6 +269,72 @@
                   "raadpleegBemiddeling",
                   "raadpleegRegiehouder",
                   "raadpleegOverdracht"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "service": {
+                "const": "CLIENTREGISTER"
+              }
+            },
+            "required": [
+              "service"
+            ]
+          },
+          "then": {
+            "properties": {
+              "operation": {
+                "enum": [
+                  "raadpleegClient",
+                  "wijzigClient"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "service": {
+                "const": "ZORGTOEWIJZINGSSERVICE"
+              }
+            },
+            "required": [
+              "service"
+            ]
+          },
+          "then": {
+            "properties": {
+              "operation": {
+                "enum": [
+                  "raadpleegToewijzing",
+                  "wijzigToewijzing"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "service": {
+                "const": "NOTIFICATIESERVICE"
+              }
+            },
+            "required": [
+              "service"
+            ]
+          },
+          "then": {
+            "properties": {
+              "operation": {
+                "enum": [
+                  "zendNotificatie",
+                  "zendMelding"
                 ]
               }
             }

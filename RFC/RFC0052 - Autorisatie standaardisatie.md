@@ -331,17 +331,30 @@ De structuur van `action` volgt het AuthZEN-model en bestaat uit een object met 
 
 De `resource` beschrijft het object waarop de actie wordt uitgevoerd.
 
+Binnen het iWlz-stelsel wordt voor gegevensuitwisseling gebruikgemaakt van GraphQL.
+
+In deze context wordt de op te vragen dataset in belangrijke mate bepaald door filtercriteria, zoals vastgelegd in de GraphQL `where` clause.
+
+Een groot deel van de autorisatielogica is gebaseerd op deze filtercriteria. Autorisatie vindt daarmee niet alleen plaats op het niveau van de resource, maar ook op de selectie van gegevens binnen die resource.
+
+Om deze reden wordt binnen het iWlz-profiel de filtercontext expliciet opgenomen in het autorisatieverzoek.
+
+Deze filtercontext wordt gemodelleerd als onderdeel van de `resource`, onder `resource.properties.query_filter`.
+
+De `query_filter` bevat een genormaliseerde representatie van de filtercriteria uit het inkomende verzoek. Voor GraphQL-verzoeken komt deze overeen met de `where` clause.
+
 De structuur van de resource volgt het AuthZEN-model en bestaat uit:
 
 - `type` → het soort resource
 - `id` → de unieke identificatie van de resource
-- `properties` → aanvullende kenmerken
+- `properties` → aanvullende kenmerken, inclusief filtercontext
 
 | Attribuut | Verplicht | Toelichting |
 |---|---|---|
 | type | Ja | Type van de resource (bijv. WLZ_INDICATIE, BEMIDDELING) |
 | id | Ja | Unieke identifier van de resource binnen de service |
-| properties | Nee | Aanvullende attributen die relevant zijn voor autorisatie |
+| properties.query_filter | Ja | Genormaliseerde representatie van de filtercriteria (bijv. GraphQL `where` clause) |
+| properties | Nee | Overige attributen die relevant zijn voor autorisatie |
 
 
 ### Toelichting
@@ -353,14 +366,14 @@ De structuur van de resource volgt het AuthZEN-model en bestaat uit:
   - regio (`region`)
   - gevoeligheid (`sensitivity`)
 
-Deze aanvullende attributen sluiten aan op de codelijsten in paragraaf 6.6.
-
-
 ### Richtlijnen
 
-- Domeinspecifieke attributen worden onder `properties` geplaatst.
-- De betekenis van `type` en `properties` moet consistent zijn met de gebruikte codelijsten.
-- De combinatie van `resource.type`, `context.service` en `context.operation` moet logisch op elkaar aansluiten.
+- De filtercontext wordt opgenomen onder `resource.properties.query_filter`.
+- De inhoud van `query_filter` is herleidbaar naar het inkomende verzoek.
+- Alleen autorisatierelevante filtercriteria worden opgenomen.
+- De combinatie van `resource`, `query_filter` en `context` vormt de basis voor de autorisatiebeslissing.
+
+Deze aanvullende attributen sluiten aan op de codelijsten in paragraaf 6.6.
 
 ## 6.5 Context
 
