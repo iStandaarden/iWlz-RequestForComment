@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iwlz.example.nl/schema/authzen-iwlz-request.schema.json",
+  "title": "iWlz AuthZEN Autorisatieverzoek",
+  "type": "object",
+  "required": ["subject", "action", "resource", "context"],
+  "additionalProperties": false,
+
+  "properties": {
+    "subject": {
+      "type": "object",
+      "required": ["type", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["organization", "user", "system"]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "organization_type": {
+              "type": "string",
+              "enum": [
+                "ZORGKANTOOR",
+                "ZORGAANBIEDER",
+                "CIZ",
+                "VECOZO",
+                "BURGER",
+                "TOEZICHTHOUDER",
+                "KETENPARTNER",
+                "SYSTEEM"
+              ]
+            },
+            "roles": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "identifiers": {
+              "type": "object",
+              "properties": {
+                "uzovi_code": { "type": "string" },
+                "agb_code": { "type": "string" }
+              }
+            },
+            "region": {
+              "type": "string",
+              "enum": [
+                "GRONINGEN",
+                "FRIESLAND",
+                "DRENTHE",
+                "TWENTE",
+                "ACHTERHOEK",
+                "MIDDEN_IJSSEL",
+                "ARNHEM",
+                "NIJMEGEN",
+                "UTRECHT",
+                "NOORD_HOLLAND",
+                "ZUID_HOLLAND",
+                "ZEELAND",
+                "BRABANT",
+                "LIMBURG"
+              ]
+            }
+          }
+        }
+      }
+    },
+
+    "action": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": ["read", "write", "execute", "approve"]
+        }
+      }
+    },
+
+    "resource": {
+      "type": "object",
+      "required": ["type", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "WLZ_INDICATIE",
+            "BEMIDDELING",
+            "CLIENT",
+            "ZORGTOEWIJZING",
+            "NOTIFICATIE"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "owner": { "type": "string" },
+            "region": {
+              "type": "string",
+              "enum": [
+                "GRONINGEN",
+                "FRIESLAND",
+                "DRENTHE",
+                "TWENTE",
+                "ACHTERHOEK",
+                "MIDDEN_IJSSEL",
+                "ARNHEM",
+                "NIJMEGEN",
+                "UTRECHT",
+                "NOORD_HOLLAND",
+                "ZUID_HOLLAND",
+                "ZEELAND",
+                "BRABANT",
+                "LIMBURG"
+              ]
+            },
+            "sensitivity": {
+              "type": "string",
+              "enum": ["LOW", "NORMAL", "HIGH"]
+            }
+          }
+        }
+      }
+    },
+
+    "context": {
+      "type": "object",
+      "required": [
+        "purpose_of_use",
+        "service",
+        "operation",
+        "relation",
+        "contract_active",
+        "time"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "purpose_of_use": {
+          "type": "string",
+          "enum": [
+            "WLZ_UITVOERING",
+            "TOEZICHT",
+            "ONDERZOEK",
+            "ADMINISTRATIE"
+          ]
+        },
+        "service": {
+          "type": "string",
+          "enum": [
+            "INDICATIEREGISTER",
+            "BEMIDDELINGSREGISTER",
+            "CLIENTREGISTER",
+            "ZORGTOEWIJZINGSSERVICE",
+            "NOTIFICATIESERVICE"
+          ]
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "raadpleegIndicatie",
+            "raadpleegBemiddeling",
+            "raadpleegRegiehouder",
+            "raadpleegOverdracht",
+            "raadpleegClient",
+            "wijzigClient",
+            "raadpleegToewijzing",
+            "wijzigToewijzing",
+            "zendNotificatie",
+            "zendMelding"
+          ]
+        },
+        "relation": {
+          "type": "string"
+        },
+        "contract_active": {
+          "type": "boolean"
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+
+      "allOf": [
+        {
+          "if": {
+            "properties": { "service": { "const": "INDICATIEREGISTER" } }
+          },
+          "then": {
+            "properties": {
+              "operation": {
+                "enum": ["raadpleegIndicatie"]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "service": { "const": "BEMIDDELINGSREGISTER" } }
+          },
+          "then": {
+            "properties": {
+              "operation": {
+                "enum": [
+                  "raadpleegBemiddeling",
+                  "raadpleegRegiehouder",
+                  "raadpleegOverdracht"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

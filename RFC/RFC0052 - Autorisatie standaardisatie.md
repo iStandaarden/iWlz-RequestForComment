@@ -44,8 +44,6 @@ Voor implementerende partijen betekent dit:
 
 De NLGov AuthZEN-standaard standaardiseert uitsluitend de interface tussen PEP en PDP en vervangt geen IAM-functionaliteit of policy-engines.
 
----
-
 # 1. Inleiding
 
 Autorisatie is binnen het landelijke zorgstelsel gepositioneerd als een generieke functie. Deze functie dient stelselbreed te functioneren, onafhankelijk te zijn van individuele bronnen (Registers), normeerbaar te zijn en interoperabel toegepast te kunnen worden. Deze uitgangspunten zijn verankerd in beleidskaders rondom generieke functies en worden onder meer bevestigd in het Twiin Vertrouwensmodel.
@@ -240,7 +238,14 @@ Dat betekent:
 
 De technische implementatie van autorisatie (zoals policy-engines of architectuurkeuzes) valt buiten scope.
 
----
+Naast de beschrijving in dit hoofdstuk is een JSON Schema beschikbaar dat het autorisatieverzoek machine-valideerbaar maakt.
+
+Dit schema kan worden gebruikt voor:
+- validatie van autorisatieverzoeken
+- contractafspraken tussen partijen
+- implementatie in gateways en services
+
+U kunt het schema [hier](./RFC0052-schema.json) downloaden.
 
 ## 6.1 Structuur van het autorisatieverzoek
 
@@ -251,7 +256,6 @@ Een autorisatieverzoek bestaat altijd uit:
 - resource
 - context
 
----
 
 ## 6.2 Subject
 
@@ -398,7 +402,7 @@ Deze codelijsten zijn onderdeel van de standaard.
 ### 6.6.1 service
 
 | Waarde |
-|--------|
+|---|
 | INDICATIEREGISTER |
 | BEMIDDELINGSREGISTER |
 | CLIENTREGISTER |
@@ -480,7 +484,7 @@ De opgegeven waarde moet herleidbaar zijn naar een geldige juridische grondslag 
 De onderstaande tabel geeft een **indicatieve koppeling**. De daadwerkelijke grondslag is afhankelijk van de specifieke verwerking en context.
 
 | Waarde | Typische juridische basis | Toelichting |
-|--------|--------------------------|-------------|
+|---|---|---|
 | WLZ_UITVOERING | Art. 6 lid 1 sub e AVG | Uitvoering van een wettelijke taak |
 | TOEZICHT | Art. 6 lid 1 sub e AVG | Toezichthoudende taak |
 | ONDERZOEK | Art. 6 lid 1 sub e / a AVG | Afhankelijk van context (publiek onderzoek of toestemming) |
