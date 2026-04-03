@@ -221,23 +221,32 @@ Door binnen de context een mapping te maken van service en operation naar Rego p
 Hiermee wordt Autorisatie niet bepaald door het API-request,
 maar door een expliciete mapping van service + operation naar policies
 
-# Hoofdstuk 6 – Autorisatiecontract (iWlz AuthZEN-profiel)
+# Hoofdstuk 6 – Autorisatiecontract iWlz AuthZEN-profiel
 
 ## 6. Autorisatiecontract
 
 Dit hoofdstuk beschrijft hoe een autorisatieverzoek eruit moet zien binnen het iWlz-stelsel.
 
 Het model is gebaseerd op:
+
 - OpenID AuthZEN Authorization API 1.0  
 - NLGov AuthZEN profiel  
 
-Dit document vormt een iWlz-profiel op deze standaarden.
+Dit document definieert een iWlz-profiel op deze standaarden.
+
+Dat betekent:
+
+- de structuur volgt AuthZEN;
+- de betekenis van velden en waarden wordt hier vastgelegd;
+- codelijsten onderdeel zijn van de standaard.
+
+De technische implementatie van autorisatie (zoals policy-engines of architectuurkeuzes) valt buiten scope.
 
 ---
 
-## 6.1 Structuur
+## 6.1 Structuur van het autorisatieverzoek
 
-Een autorisatieverzoek bevat altijd:
+Een autorisatieverzoek bestaat altijd uit:
 
 - subject
 - action
@@ -248,25 +257,37 @@ Een autorisatieverzoek bevat altijd:
 
 ## 6.2 Subject
 
-| Attribuut | Verplicht |
-|---|---|
-| type | Ja |
-| id | Ja |
-| properties | Nee |
+Het subject beschrijft de actor die de actie uitvoert.
+
+| Attribuut | Verplicht | Toelichting |
+|---|---|---|
+| type | Ja | organization / user / system |
+| id | Ja | unieke identifier |
+| properties | Nee | domeinspecifieke gegevens |
+
+Alle extra gegevens (zoals rollen, regio en identifiers) staan onder `properties`.
 
 ---
 
 ## 6.3 Action
 
+De action beschrijft wat er gebeurt.
+
 ```json
-{ "action": { "name": "read" } }
+{
+  "action": {
+    "name": "read"
+  }
+}
 ```
 
-Geen string toegestaan.
+Gebruik van `"action": "read"` is niet toegestaan.
 
 ---
 
 ## 6.4 Resource
+
+De resource beschrijft waarop de actie wordt uitgevoerd.
 
 | Attribuut | Verplicht |
 |---|---|
@@ -277,6 +298,8 @@ Geen string toegestaan.
 ---
 
 ## 6.5 Context
+
+De context bevat aanvullende informatie voor de beslissing.
 
 | Attribuut | Verplicht |
 |---|---|
@@ -289,26 +312,60 @@ Geen string toegestaan.
 
 ---
 
-## 6.6 Codelijsten
+## 6.6 Codelijsten (normatief)
 
-### service
-INDICATIEREGISTER  
-BEMIDDELINGSREGISTER  
-CLIENTREGISTER  
-ZORGTOEWIJZINGSSERVICE  
-NOTIFICATIESERVICE  
+Deze codelijsten zijn onderdeel van de standaard.
 
-### operation
-raadpleegIndicatie  
-raadpleegBemiddeling  
-raadpleegRegiehouder  
-raadpleegOverdracht  
-raadpleegClient  
-wijzigClient  
-zendNotificatie  
-zendMelding  
+- Gebruik is verplicht  
+- Afwijkingen zijn niet toegestaan  
 
-### region
+---
+
+### 6.6.1 service
+
+| Waarde |
+|--------|
+| INDICATIEREGISTER |
+| BEMIDDELINGSREGISTER |
+| CLIENTREGISTER |
+| ZORGTOEWIJZINGSSERVICE |
+| NOTIFICATIESERVICE |
+
+---
+
+### 6.6.2 operation
+
+#### INDICATIEREGISTER
+- raadpleegIndicatie
+
+#### BEMIDDELINGSREGISTER
+- raadpleegBemiddeling  
+- raadpleegRegiehouder  
+- raadpleegOverdracht  
+
+#### CLIENTREGISTER
+- raadpleegClient  
+- wijzigClient  
+
+#### ZORGTOEWIJZINGSSERVICE
+- raadpleegToewijzing  
+- wijzigToewijzing  
+
+#### NOTIFICATIESERVICE
+- zendNotificatie  
+- zendMelding  
+
+**Validatieregel:**  
+De combinatie van `service` en `operation` moet logisch kloppen.  
+Een ongeldige combinatie moet worden afgewezen.
+
+---
+
+### 6.6.3 region
+
+Bron: NZa  
+https://www.nza.nl/zorgsectoren/langdurige-zorg/zorgkantoren
+
 GRONINGEN  
 FRIESLAND  
 DRENTHE  
@@ -324,7 +381,10 @@ ZEELAND
 BRABANT  
 LIMBURG  
 
-### organization_type
+---
+
+### 6.6.4 organization_type
+
 ZORGKANTOOR  
 ZORGAANBIEDER  
 CIZ  
@@ -334,23 +394,63 @@ TOEZICHTHOUDER
 KETENPARTNER  
 SYSTEEM  
 
-### purpose_of_use
-WLZ_UITVOERING  
-TOEZICHT  
-ONDERZOEK  
-ADMINISTRATIE  
+Bronnen:
 
-### sensitivity
+- https://www.agbcode.nl/  
+- https://www.vecozo.nl/  
+- https://istandaarden.nl/iwlz  
+
+---
+
+### 6.6.5 purpose_of_use
+
+| Waarde | Juridische basis |
+|--------|------------------|
+| WLZ_UITVOERING | Art. 6 lid 1 sub e AVG |
+| TOEZICHT | Art. 6 lid 1 sub e AVG |
+| ONDERZOEK | Art. 6 lid 1 sub e AVG |
+| ADMINISTRATIE | Art. 6 lid 1 sub c AVG |
+
+Bron:
+
+- https://eur-lex.europa.eu/eli/reg/2016/679/oj  
+
+**Regel:**  
+Elke waarde moet te herleiden zijn naar een juridische grondslag.
+
+---
+
+### 6.6.6 sensitivity
+
 LOW  
 NORMAL  
 HIGH  
 
+Moet aansluiten op bestaande classificaties (bijv. BIO of NEN7510).
+
 ---
 
-## 6.7 contract_active
+## 6.7 Herkomst van attributen
 
-true / false  
-Onbekend = false
+Attributen kunnen uit verschillende bronnen komen:
+
+- token  
+- API-verzoek  
+- externe bron  
+- configuratie  
+
+De herkomst moet altijd herleidbaar zijn.
+
+---
+
+## 6.8 contract_active
+
+Geeft aan of er een geldige relatie bestaat tussen subject en resource-eigenaar.
+
+- true → relatie aanwezig  
+- false → geen of onbekend  
+
+Indien onbekend → behandelen als false (default deny)
 
 
 
