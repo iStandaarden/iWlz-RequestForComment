@@ -2,8 +2,9 @@
 
 # RFC0018 - Melden van fouten in gegevens volgens iStandaard iWlz
 
+> versie 1.0 d.d. 07-04-2026 [aanpassing in voorbeelden](https://github.com/iStandaarden/iWlz-RequestForComment/issues/16#issuecomment-4197177488)
 
-> versie 0.9 d.d. 12-12-2024
+>  ~~versie 0.9 d.d. 12-12-2024~~
  
 
 <font size="4">**SAMENVATTING**</font>
@@ -372,11 +373,11 @@ Voorbeeld Input variabelen afzender in de (fout-)melder zelf:
   "subjectList": [
     {
       "subject": "IRG0012",
-      "recordID": "wlzindicatie/Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+      "recordID": "Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
     },
     {
       "subject": "IRG0028",
-      "recordID": "wlzindicatie/GeindiceerdZorgzwaartepakket/5850ad49-7cf4-4711-8215-e160715900e7"
+      "recordID": "GeindiceerdZorgzwaartepakket/5850ad49-7cf4-4711-8215-e160715900e7"
     }
   ]
 }
@@ -396,11 +397,11 @@ Voorbeeld: Input variabelen als de afzender stuurt namens een melder:
   "subjectList": [
     {
       "subject": "IRG0012",
-      "recordID": "wlzindicatie/Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
+      "recordID": "Stoornis/da8ebd42-d29b-4508-8604-ae7d2c6bbddd"
     },
     {
       "subject": "IRG0028",
-      "recordID": "wlzindicatie/GeindiceerdZorgzwaartepakket/5850ad49-7cf4-4711-8215-e160715900e7"
+      "recordID": "GeindiceerdZorgzwaartepakket/5850ad49-7cf4-4711-8215-e160715900e7"
     }
   ]
 }
