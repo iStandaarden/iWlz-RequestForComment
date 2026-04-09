@@ -195,7 +195,7 @@ flowchart TD
 
     subgraph O[PDP]
     G --> H[policy-engine / OPA]
-    H --> I[Autorisatie rules evaluation]
+    H --> I[Autorisatie rules evaluatie]
     I --> J[Allow / Deny]
     end
 
