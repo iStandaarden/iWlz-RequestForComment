@@ -284,9 +284,9 @@ Deze attributen sluiten aan op de codelijsten in paragraaf 6.6.
 
 ### Richtlijnen
 
+- Het id attribuut is conform de specificaties van [RFC0008](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0008%20-%20Notificaties.md#331-afzender-en-ontvanger-lijst).
 - Domeinspecifieke attributen worden onder `properties` geplaatst.
 - De betekenis van attributen in `properties` is consistent met de codelijsten.
-- De combinatie van `subject.properties`, `resource` en `context` vormt de basis voor de autorisatiebeslissing.
 - Het moet mogelijk zijn om de waarden van het subject te herleiden naar een betrouwbare bron (bijv. een access-token of een externe bron).
 
 ## 6.3 Action
@@ -366,7 +366,6 @@ De structuur van de resource volgt het AuthZEN-model en bestaat uit:
 - De filtercontext wordt opgenomen onder `resource.properties.query_filter`.
 - De inhoud van `query_filter` is herleidbaar naar het inkomende verzoek.
 - Alleen autorisatierelevante filtercriteria worden opgenomen.
-- De combinatie van `resource`, `query_filter` en `context` vormt de basis voor de autorisatiebeslissing.
 
 Deze aanvullende attributen sluiten aan op de codelijsten in paragraaf 6.6.
 
@@ -398,7 +397,6 @@ De context beschrijft de omstandigheden waaronder de actie plaatsvindt, zoals he
 - De combinatie van `service` en `operation` moet overeenkomen met de codelijsten in paragraaf 6.6.
 - De waarden in `context` moeten consistent zijn met de betekenis van de bijbehorende codelijsten.
 - Het moet altijd mogelijk zijn om de waarden in de context te herleiden naar een bron (bijv. API-verzoek, token of externe bron).
-- De context vormt samen met `subject` en `resource` de basis voor de autorisatiebeslissing.
 
 ## 6.6 Codelijsten (normatief)
 
@@ -416,6 +414,7 @@ Deze codelijsten zijn onderdeel van de standaard.
 | CLIENTREGISTER |
 | ZORGTOEWIJZINGSSERVICE |
 | NOTIFICATIESERVICE |
+| MELDINGSERVICE|
 
 
 ### 6.6.2 operation
@@ -427,6 +426,7 @@ Deze codelijsten zijn onderdeel van de standaard.
 - raadpleegBemiddeling  
 - raadpleegRegiehouder  
 - raadpleegOverdracht  
+- raadpleegBemiddelingspecificatie
 
 #### CLIENTREGISTER
 - raadpleegClient  
