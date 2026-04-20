@@ -1,6 +1,11 @@
 ![header](../imagesrc/ZinBanner.png "template_header")
 
 # RFC0022a - Tracelogging - TraceID en SpanID
+
+> versie 1.1 d.d. 20-04-2026 [Aanscherping start en einde van een trace](https://github.com/iStandaarden/iWlz-RequestForComment/issues/37#issuecomment-4284501943)
+
+>  ~~versie 1.0 d.d. 17-12-2025~~
+
 <font size="4">**SAMENVATTING**</font>
 
 **Huidige situatie:**  
@@ -244,10 +249,16 @@ Bij binnenkomst wordt gecontroleerd of een `TraceId` aanwezig is en aan de randv
 ### 3.1.6 Start en einde van een trace
 
 **Start van de trace**
-De keten begint daar waar het eerste verzoek in de keten ontstaat. Degene die het eerste request doet, genereert de TraceId. Waar mogelijk is het wenselijk dat een TraceId door de ontvanger wordt overgenomen in de verwerking, maar het is niet de bedoeling om een TraceId te behandelen als persistente data. Bevragingen die niet direct volgen op een notificatie en daarmee buiten dezelfde ketenverwerking vallen, starten een nieuwe trace en krijgen een eigen TraceId.
+De keten begint daar waar het eerste verzoek in de keten ontstaat. Degene die het eerste request doet, genereert de TraceId. Waar mogelijk is het wenselijk dat een TraceId door de ontvanger wordt overgenomen in de verwerking, maar het is niet de bedoeling om een TraceId te behandelen als persistente data.
+
+> [!NOTE]
+> Voor fase 1 en de ketentest wordt uitgegaan van een nieuwe TraceId per afzonderlijke interactie, zoals een melding, raadpleging of notificatie. Het doorgeven van een bestaande TraceId tussen interacties is daarbij geen vereiste.
 
 **Einde van de trace**
 Deze RFC specificeert geen expliciet eindpunt van een trace. In de praktijk stopt een trace zodra een ketenpartij de TraceId niet (meer) verwerkt of opneemt in de logging.
+
+> [!NOTE]
+> Een uitbreiding waarbij een TraceId over meerdere opeenvolgende interacties wordt doorgezet, wordt in een volgende fase verder uitgewerkt.
 
 ### 3.1.7 Voorbeeldflow (niet-normatief)
 
