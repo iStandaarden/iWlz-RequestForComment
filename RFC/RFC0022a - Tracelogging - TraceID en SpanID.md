@@ -2,7 +2,7 @@
 
 # RFC0022a - Tracelogging - TraceID en SpanID
 
-> versie 1.1 d.d. 20-04-2026 [Aanscherping op start en einde van een trace](https://github.com/iStandaarden/iWlz-RequestForComment/issues/37#issuecomment-4284501943)
+> versie 1.1 d.d. 20-04-2026 [Aanscherping op: H3.16 Start en einde van een trace](https://github.com/iStandaarden/iWlz-RequestForComment/issues/37#issuecomment-4284501943)
 
 >  ~~versie 1.0 d.d. 17-12-2025~~
 
