@@ -12,7 +12,7 @@ This makes authorization standardizable, interoperable, and more testable across
 
 
 ``` mermaid
-flowchart TD
+flowchart TD 
     A[Objective of the RFC] --> B[Standardize authorization]
     A --> C[Decouple from technical request structure]
 

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Authorization Standardization</title>
+
+  <!-- FHIR / VWS styles -->
+  <link href="fhir.css" rel="stylesheet"/>
+  <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+  <link href="assets/css/project.css" rel="stylesheet"/>
+  <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+  <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  <link href="assets/css/prism.css" rel="stylesheet"/>
+  <link href="assets/css/cqf.css" rel="stylesheet"/>
+
+</head>
+
+<body>
+
+<div id="segment-header" class="segment">
+  <div class="container">
+    <h1>Authorization Standardization</h1>
+    <p class="lead">Dutch Healthcare Profile (AuthZEN-based)</p>
+  </div>
+</div>
+
+<div id="segment-content" class="segment">
+  <div class="container">
+
+    <!-- SUMMARY -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Summary</h2>
+
+        <p>
+          Within the Dutch healthcare domain, authorization is positioned as a 
+          <strong>generieke functie</strong> (generic function).
+        </p>
+
+        <ul>
+          <li>operate system-wide across healthcare domains</li>
+          <li>be independent of individual applications</li>
+          <li>be standardizable and normeerbaar</li>
+          <li>support interoperability</li>
+        </ul>
+
+        <p>This RFC defines a standardized authorization contract based on:</p>
+
+        <ul>
+          <li>OpenID AuthZEN Authorization API 1.0</li>
+          <li>NLGov AuthZEN profile</li>
+        </ul>
+
+<p>
+  The contract is <strong>PDP-agnostic</strong>: 
+  it standardizes the PEP–PDP interaction at the protocol level, without prescribing how policies are authored or evaluated.
+  Any engine exposing an AuthZEN-compliant decision endpoint — ABAC, RBAC, ReBAC, or hybrid, built on OPA, Cedar, OpenFGA, XACML, or custom — can be plugged in without changes to consuming applications, allowing organizations to choose their PDP while preserving a uniform authorization interface.
+</p>
+
+      </div>
+    </div>
+
+    <!-- ARCHITECTURE -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Architecture Overview</h2>
+
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200"
+     style="max-width:100%;height:auto;font-family:system-ui,-apple-system,sans-serif;">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <text x="500" y="25" text-anchor="middle" font-size="14"
+        font-weight="600" fill="#1e293b">AuthZEN Authorization Flow</text>
+
+  <!-- Client -->
+  <rect x="20" y="70" width="120" height="50" rx="6"
+        fill="#3b82f6" stroke="#1d4ed8"/>
+  <text x="80" y="100" text-anchor="middle" font-size="13"
+        font-weight="600" fill="white">Client</text>
+  <line x1="140" y1="95" x2="158" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- PEP -->
+  <rect x="160" y="70" width="120" height="50" rx="6"
+        fill="#6366f1" stroke="#4338ca"/>
+  <text x="220" y="93" text-anchor="middle" font-size="13"
+        font-weight="600" fill="white">PEP</text>
+  <text x="220" y="110" text-anchor="middle" font-size="10"
+        fill="#e0e7ff">Enforcement Point</text>
+  <line x1="280" y1="95" x2="298" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Preprocessor -->
+  <rect x="300" y="70" width="120" height="50" rx="6"
+        fill="#8b5cf6" stroke="#6d28d9"/>
+  <text x="360" y="93" text-anchor="middle" font-size="13"
+        font-weight="600" fill="white">Preprocessor</text>
+  <text x="360" y="110" text-anchor="middle" font-size="10"
+        fill="#ede9fe">builds AuthZEN req.</text>
+  <line x1="420" y1="95" x2="438" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- AuthZEN request (message pill) -->
+  <rect x="440" y="70" width="120" height="50" rx="25"
+        fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="500" y="90" text-anchor="middle" font-size="12"
+        font-weight="600" fill="#0c4a6e">AuthZEN request</text>
+  <text x="500" y="105" text-anchor="middle" font-size="10"
+        fill="#0c4a6e" font-style="italic">per RFC spec</text>
+  <line x1="560" y1="95" x2="578" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- PDP -->
+  <rect x="580" y="70" width="120" height="50" rx="6"
+        fill="#6366f1" stroke="#4338ca"/>
+  <text x="640" y="93" text-anchor="middle" font-size="13"
+        font-weight="600" fill="white">PDP</text>
+  <text x="640" y="110" text-anchor="middle" font-size="10"
+        fill="#e0e7ff">Decision Point</text>
+  <line x1="700" y1="95" x2="718" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Decision -->
+  <rect x="720" y="70" width="120" height="50" rx="25"
+        fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="780" y="100" text-anchor="middle" font-size="12"
+        font-weight="600" fill="#0c4a6e">Decision</text>
+  <line x1="840" y1="95" x2="858" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Enforcement -->
+  <rect x="860" y="70" width="120" height="50" rx="6"
+        fill="#10b981" stroke="#047857"/>
+  <text x="920" y="100" text-anchor="middle" font-size="13"
+        font-weight="600" fill="white">Enforcement</text>
+
+  <!-- Legend -->
+  <g font-size="10" fill="#64748b">
+    <rect x="20" y="160" width="14" height="10" rx="2" fill="#3b82f6"/>
+    <text x="40" y="169">Actor</text>
+    <rect x="90" y="160" width="14" height="10" rx="5"
+          fill="#e0f2fe" stroke="#0284c7"/>
+    <text x="110" y="169">Message</text>
+    <rect x="170" y="160" width="14" height="10" rx="2" fill="#10b981"/>
+    <text x="190" y="169">Action</text>
+  </g>
+</svg>
+
+        <p>
+          The <strong>Preprocessor</strong> has no authorization intelligence of its own. Its sole
+          responsibility is to translate an incoming request into a well-formed AuthZEN authorization
+          request — populating the <code>subject</code>, <code>action</code>, <code>resource</code>,
+          and <code>context</code> fields — so that the PDP can interpret and evaluate it. All policy
+          logic resides exclusively in the PDP.
+        </p>
+        <p>
+          The exact content of the AuthZEN request depends on the domain (iWlz, Zvw, Wmo,
+          Jeugdwet — see <a href="#scope">Scope</a>). Each domain-specific RFC defines which
+          attributes must be present and how they are populated. This document establishes the
+          <strong>generic parent contract</strong>; domain RFCs inherit and extend it without
+          deviating from the base structure defined here.
+        </p>
+
+
+      </div>
+    </div>
+
+    <!-- SCOPE -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Scope</h2>
+
+        <p>
+          This RFC defines the <strong>generic authorization contract</strong> for the Dutch
+          healthcare domain. It is the normative parent specification. Domain-specific RFCs
+          (e.g. iWlz, Zvw, Wmo, Jeugdwet) <strong>inherit</strong> this contract and may only
+          extend it — they may not deviate from or replace the base contract defined here.
+        </p>
+
+        <p>The following domains fall within scope:</p>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>Description</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>iWlz</strong></td>
+              <td>
+                Information provision for long-term care (Wlz). Authorization governs which
+                organizations may access or mutate client care records based on their role
+                (zorgkantoor, zorgaanbieder, CIZ, CAK) and regional or contractual relationship.
+              </td>
+              <td><a href="https://github.com/iStandaarden/iWlz-RequestForComment" target="_blank">iWlz RFC repository</a></td>
+            </tr>
+            <tr>
+              <td><strong>Zvw</strong></td>
+              <td>
+                Basic health insurance (Zorgverzekeringswet). Authorization governs access to
+                declaratie, vergoeding, and verzekeringsdata based on the insurer–provider
+                relationship and population ownership.
+              </td>
+              <td><a href="https://www.vektis.nl/standaardisatie" target="_blank">Vektis standaardisatie</a></td>
+            </tr>
+            <tr>
+              <td><strong>Wmo</strong></td>
+              <td>
+                Social support act (Wet maatschappelijke ondersteuning 2015). Authorization governs
+                municipality access to citizen support decisions and provider access to iWmo
+                messages within active municipal contracts.
+              </td>
+              <td><a href="https://istandaarden.nl/ibieb/iwmo" target="_blank">iStandaarden iWmo</a></td>
+            </tr>
+            <tr>
+              <td><strong>Jeugdwet</strong></td>
+              <td>
+                Youth care act. Authorization governs municipality access to youth care decisions
+                and youth care provider access to iJw messages within active assignments.
+              </td>
+              <td><a href="https://istandaarden.nl/ibieb/ijw" target="_blank">iStandaarden iJw</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Out of scope</h3>
+        <ul>
+          <li>Authentication and identity proofing — governed by NLGov OAuth/OIDC profiles.</li>
+          <li>Policy authoring and evaluation logic inside the PDP — only the PEP–PDP interface is standardized here.</li>
+          <li>Patient/citizen consent management — addressed separately under MITZ/NUTS.</li>
+        </ul>
+
+      </div>
+    </div>
+
+    <!-- CORE PRINCIPLES -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Core Principles</h2>
+
+        <h3>Explicit Authorization</h3>
+        <ul>
+          <li>subject</li>
+          <li>action</li>
+          <li>resource</li>
+          <li>context</li>
+        </ul>
+
+        <h3>Separation from Implementation</h3>
+        <ul>
+          <li>NOT dependent on GraphQL</li>
+          <li>NOT dependent on REST</li>
+          <li>NOT protocol-specific</li>
+        </ul>
+
+        <h3>Technology Independence</h3>
+        <p>Authorization is technology agnostic.</p>
+
+        <h3>Consistency & Interoperability</h3>
+        <p>Same request must lead to same decision.</p>
+
+        <h3>Traceability & Governance</h3>
+        <p>All attributes must be traceable and governed.</p>
+
+      </div>
+    </div>
+
+    <!-- AUTHZEN CONTRACT -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Authorization Contract</h2>
+
+        <p>An authorization request consists of:</p>
+
+        <ul>
+          <li>subject</li>
+          <li>action</li>
+          <li>resource</li>
+          <li>context</li>
+        </ul>
+
+      </div>
+    </div>
+
+    <!-- SUBJECT -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Subject</h2>
+
+<pre><code class="language-json">
+{
+  "subject": {
+    "type": "organization",
+    "id": "org-12345",
+    "properties": {
+      "organization_type": "ZORGVERZEKERAAR",
+      "roles": ["REQUESTER"],
+      "identifiers": {
+        "organization_id": "12345"
+      },
+      "region": "NL-MIDDEN"
+    }
+  }
+}
+</code></pre>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="segment-footer" class="segment">
+  <div class="container">
+    <p>Generated for VWS Generieke Functies alignment - contribution Zorginstituut Nederland</p>
+  </div>
+</div>
+
+</body>
+</html>
