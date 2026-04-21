@@ -249,7 +249,7 @@ Bij binnenkomst wordt gecontroleerd of een `TraceId` aanwezig is en aan de randv
 ### 3.1.6 Start en einde van een trace
 
 **Start van de trace**
-De keten begint daar waar het eerste verzoek in de keten ontstaat. Degene die het eerste request doet, genereert de TraceId. Waar mogelijk is het wenselijk dat een TraceId door de ontvanger wordt overgenomen in de verwerking, maar het is niet de bedoeling om een TraceId te behandelen als persistente data.
+De keten begint daar waar het eerste verzoek in de keten ontstaat. Degene die het eerste request doet, genereert de TraceId. De ontvanger neemt deze TraceId over in de directe afhandeling van dat request, zoals in de bijbehorende response of een direct daaropvolgende stap binnen dezelfde interactie. Het is niet de bedoeling om een TraceId te behandelen als persistente data.
 
 > [!NOTE]
 > Voor fase 1 en de ketentest wordt uitgegaan van een nieuwe TraceId per afzonderlijke interactie, zoals een melding, raadpleging of notificatie. Het doorgeven van een bestaande TraceId tussen interacties is daarbij geen vereiste.
