@@ -14,7 +14,7 @@ Deze RFC is bedoeld voor architecten, ontwikkelaars en beleidsmakers die betrokk
 
 ``` mermaid
 flowchart TD
-    A[Doel van de RFC] --> B[Autorisatie standaardiseren]
+    A[Doel van de RFC] --> B[Autorisatieverzoek standaardiseren]
 
     B --> D[Binnenkomend API-verzoek]
     D --> H[Extractie autorisatierelevante attributen]
@@ -79,6 +79,10 @@ Hierdoor ontstaan de volgende knelpunten:
 
 # 3. Architectuurprincipes
 
+```
+NB Dit principes die niet officieel zijn vastgelegd en zijn niet afkomstig van referentiearchitectuur; deze is er namelijk nog niet.
+```
+
 Autorisatie binnen het iWlz-stelsel moet voldoen aan de volgende architectuurprincipes:
 
 - **Scheiding van verantwoordelijkheden**; De verantwoordelijkheid voor policy enforcement, policy decision en policy governance moet expliciet zijn gescheiden. Het Policy Enforcement Point (PEP) is verantwoordelijk voor het afdwingen van autorisatiebesluiten bij de applicatie of gateway. Het Policy Decision Point (PDP) is verantwoordelijk voor het nemen van autorisatiebesluiten. De governance op het autorisatiebeleid is centraal belegd bij ZINL.
@@ -89,7 +93,7 @@ Autorisatie binnen het iWlz-stelsel moet voldoen aan de volgende architectuurpri
 
 # 4. Huidige situatie
 
-De huidige situatie is gebaseerd op één GraphQL-request dat binnenkomt bij de PEP (gateway). De PEP leidt hieruit de input voor de policy-evaluatie af en biedt deze als een JSON-document aan aan de Open Policy Agent (OPA). Dit JSON-document is niet gedefinieerd volgens een open standaard; de structuur en inhoud ervan worden bepaald door de specifieke PEP-implementatie en kunnen daardoor per gateway-leverancier verschillen.
+De huidige situatie is gebaseerd op één GraphQL-request dat binnenkomt bij de PEP (gateway). De PEP leidt hieruit de input voor de policy-evaluatie af en biedt deze als een JSON-document aan aan de Open Policy Agent (OPA). Dit JSON-document is niet gedefinieerd volgens een open standaard; de structuur en inhoud ervan worden bepaald door de specifieke PEP-implementatie en kunnen daardoor verschillen.
 
 OPA evalueert deze input op basis van de in de policy bundle gedefinieerde Rego-policies en de bijbehorende policy-structuur. Hierbij worden zowel verzoekattributen als elementen uit de GraphQL-query, zoals variabelen en filters, betrokken in de autorisatiebeslissing.
 
@@ -118,7 +122,6 @@ H -->|deny| J[10. Weigeren]
 
 I --> L[11. Resource server]
 L --> K[12. Response]
-J --> K
 ```
 
 - (1-2) Het verzoek komt binnen via de GraphQL applicatie / PEP gateway  
@@ -133,7 +136,7 @@ Daartoe wordt voorgesteld dat de implementerende partij binnen de Policy Enforce
 
 De implementerende partij is vrij in de keuze van technologie voor deze functionaliteit, mits wordt voldaan aan de volgende uitgangspunten:
 -	De autorisatievraag wordt opgebouwd conform de specificaties zoals in Hoofdstuk 6 omschreven.
-- De pre processor dient alleen gebruikt te worden voor het aanmaken van het autorisatieverzoek; het mag nooit eigen geimplementeerde logica bevatten
+- De pre processor dient alleen gebruikt te worden voor het aanmaken van het autorisatieverzoek; het mag nooit eigen geimplementeerde businesslogica bevatten
 
 In het kader van stelselbrede interoperabiliteit dient de oplossing niet beperkt te zijn tot één specifieke API-technologie. Naast GraphQL-requests moeten ook andere API-protocollen ondersteund kunnen worden.
 
@@ -143,6 +146,10 @@ Hierbij geldt:
 - De wijze waarop de pre-processing functie deze directives herkent en interpreteert is een implementatiedetail. De standaardisatie richt zich uitsluitend op de autorisatievraag die door de PEP aan de Policy Decision Point (PDP) wordt aangeboden.
 
 Noot: Deze RFC beperkt zich tot GraphQL als protocol binnen het iWlz-stelsel. Voor andere protocollen, zoals CloudEvents, dient in de betreffende RFC rekening te worden gehouden met het autorisatiemodel uit deze RFC.
+
+```
+NB Nog aan werken.....ahv directives verhaal v vandaag
+```
 
 ## 5.1 Doelarchitectuur 
 
@@ -193,6 +200,12 @@ Dit houdt in:
 
 
 # 6. Autorisatiecontract iWlz AuthZEN-profiel
+
+```
+NB Dit is work in progress; wij zijn op zoek naar een werkbare oplossing die wel duidelijkheid en structuur biedt.
+```
+
+
 
 Dit hoofdstuk beschrijft hoe een autorisatieverzoek eruit moet zien binnen het iWlz-stelsel.
 
