@@ -427,38 +427,8 @@ NB De codelijsten zijn nog ter discussie; uiteindelijke doel is duidelijkheid en
 
 NB  dit kan in de toekomst nog uitgebreid worden
 
-### 6.6.3 operation
 
-
-NB dubbelcheck...nl gov authzen...als niet verplicht...dan operation eruit halen
-
-#### INDICATIEREGISTER
-- raadpleegIndicatie
-
-#### BEMIDDELINGSREGISTER
-- raadpleegBemiddeling  
-- raadpleegRegiehouder  
-- raadpleegOverdracht  
-- raadpleegBemiddelingspecificatie
-
-#### CLIENTREGISTER
-- raadpleegClient  
-- wijzigClient  
-
-#### LEVERINGSREGISTER
-- raadpleegToewijzing  
-- wijzigToewijzing  
-
-#### NOTIFICATIESERVICE
-- zendNotificatie  
-- zendMelding  
-
-**Validatieregel:**  
-De combinatie van `service` en `operation` moet logisch kloppen.  
-Een ongeldige combinatie moet worden afgewezen.
-
-
-### 6.6.4 organization_type
+### 6.6.3 organization_type
 
 ZORGKANTOOR  
 ZORGAANBIEDER  
