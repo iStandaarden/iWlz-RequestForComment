@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Authorization Standardization</title>
+
+  <!-- FHIR / VWS styles -->
+  <link href="fhir.css" rel="stylesheet"/>
+  <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+  <link href="assets/css/project.css" rel="stylesheet"/>
+  <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+  <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  <link href="assets/css/prism.css" rel="stylesheet"/>
+  <link href="assets/css/cqf.css" rel="stylesheet"/>
+
+</head>
+
+<body>
+
+<div id="segment-header" class="segment">
+  <div class="container">
+    <h1>Authorization Standardization</h1>
+    <p class="lead">Dutch Healthcare Profile (AuthZEN-based)</p>
+  </div>
+</div>
+
+<div id="segment-content" class="segment">
+  <div class="container">
+
+    <!-- SUMMARY -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Summary</h2>
+
+        <p>
+          Within the Dutch healthcare domain, authorization is positioned as a 
+          <strong>generieke functie</strong> (generic function).
+        </p>
+
+        <ul>
+          <li>operate system-wide across healthcare domains</li>
+          <li>be independent of individual applications</li>
+          <li>be standardizable and normable</li>
+          <li>support interoperability</li>
+        </ul>
+
+        <p>
+          This RFC sits at the third level of a three-tier specification hierarchy.
+          Each level inherits from and extends the level above it — lower levels may only
+          add constraints, not contradict the levels above.
+        </p>
+
+      </div>
+    </div>
+
+    <!-- SPECIFICATION HIERARCHY -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Specification Hierarchy</h2>
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 260"
+             style="max-width:100%;height:auto;font-family:system-ui,-apple-system,sans-serif;">
+
+          <!-- Level 1: AuthZEN (OpenID Foundation) -->
+          <rect x="150" y="10" width="400" height="60" rx="8" fill="#1d4ed8" stroke="#1e3a8a"/>
+          <text x="350" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="white">
+            AuthZEN Authorization API 1.0
+          </text>
+          <text x="350" y="52" text-anchor="middle" font-size="11" fill="#bfdbfe">
+            OpenID Foundation — international standard
+          </text>
+
+          <!-- Arrow 1→2 -->
+          <line x1="350" y1="70" x2="350" y2="98" stroke="#475569" stroke-width="2" marker-end="url(#arrowDown)"/>
+          <text x="370" y="89" font-size="10" fill="#64748b">inherits &amp; extends</text>
+
+          <!-- Level 2: NLGov AuthZEN (Logius) -->
+          <rect x="150" y="100" width="400" height="60" rx="8" fill="#4338ca" stroke="#312e81"/>
+          <text x="350" y="124" text-anchor="middle" font-size="13" font-weight="700" fill="white">
+            NLGov AuthZEN profile
+          </text>
+          <text x="350" y="142" text-anchor="middle" font-size="11" fill="#c7d2fe">
+            Logius — Dutch government profile
+          </text>
+
+          <!-- Arrow 2→3 -->
+          <line x1="350" y1="160" x2="350" y2="188" stroke="#475569" stroke-width="2" marker-end="url(#arrowDown)"/>
+          <text x="370" y="179" font-size="10" fill="#64748b">inherits &amp; extends</text>
+
+          <!-- Level 3: This RFC -->
+          <rect x="150" y="190" width="400" height="60" rx="8" fill="#0f766e" stroke="#134e4a"/>
+          <text x="350" y="214" text-anchor="middle" font-size="13" font-weight="700" fill="white">
+            Dutch Healthcare Authorization Contract
+          </text>
+          <text x="350" y="232" text-anchor="middle" font-size="11" fill="#99f6e4">
+            This RFC — VWS / Informatiestandaarden Zorg
+          </text>
+
+          <defs>
+            <marker id="arrowDown" viewBox="0 0 10 10" refX="5" refY="9"
+                    markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L5,10 L10,0 z" fill="#475569"/>
+            </marker>
+          </defs>
+        </svg>
+
+        <table class="table table-bordered" style="margin-top:1rem;">
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Specification</th>
+              <th>Owner</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><a href="https://openid.net/specs/openid-authzen-1_0.html" target="_blank">AuthZEN Authorization API 1.0</a></td>
+              <td>OpenID Foundation</td>
+              <td>Defines the generic, protocol-neutral PEP–PDP interface and the
+                  <code>subject / action / resource / context</code> request structure.</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><a href="https://www.logius.nl/actueel/openbare-consultatie-nlgov-authzen-authorization-api-v10" target="_blank">NLGov AuthZEN profile</a></td>
+              <td>Logius</td>
+              <td>Applies Dutch government constraints: PKIoverheid identity binding,
+                  NLGov OAuth/OIDC alignment, and governance requirements for Dutch
+                  public-sector deployments.</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><strong>This RFC</strong> — Dutch Healthcare Authorization Contract</td>
+              <td>VWS / Informatiestandaarden Zorg</td>
+              <td>Applies healthcare-domain constraints on top of the NLGov profile:
+                  defines the base AuthZEN request structure for iWlz, Zvw, Wmo, and
+                  Jeugdwet. Domain-specific RFCs inherit from this level.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>What this RFC adds over the NLGov profile</h3>
+
+        <p>
+          The NLGov profile governs all Dutch public-sector AuthZEN deployments. This RFC
+          does <strong>not</strong> replace or relax any NLGov rule — it only adds constraints
+          that are specific to the Dutch healthcare context. The table below shows precisely
+          what this RFC contributes beyond NLGov.
+        </p>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Topic</th>
+              <th>NLGov profile (level 2)</th>
+              <th>This RFC (level 3)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Scope</strong></td>
+              <td>All Dutch public-sector systems</td>
+              <td>Dutch healthcare domains only: iWlz, Zvw, Wmo, Jeugdwet</td>
+            </tr>
+            <tr>
+              <td><strong>Subject identity</strong></td>
+              <td><code>subject.id</code> is REQUIRED; source not prescribed</td>
+              <td><code>subject.id</code> MUST resolve to an entry in the
+                  LRZa Care Services Directory</td>
+            </tr>
+            <tr>
+              <td><strong>Subject type</strong></td>
+              <td>Linked Data URI RECOMMENDED</td>
+              <td>Subject is always an <strong>organization or system</strong>,
+                  never an individual end-user; Linked Data URI REQUIRED</td>
+            </tr>
+            <tr>
+              <td><strong>Action values</strong></td>
+              <td>Not prescribed; <code>action.name</code> is a free string</td>
+              <td>Not prescribed at this level; domain RFCs define allowed values</td>
+            </tr>
+            <tr>
+              <td><strong>Context attributes</strong></td>
+              <td>Standard fields: <code>time</code>, <code>traceparent</code>,
+                  <code>tracestate</code>, <code>mim</code>, <code>ld-context</code></td>
+              <td>Same fields inherited; domain RFCs add healthcare-specific attributes
+                  (e.g. affiliation, contract, consent status)</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <!-- ARCHITECTURE -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Architecture Overview</h2>
+
+        <p>
+          This RFC is <strong>PDP-agnostic</strong>: it standardizes the PEP–PDP interaction at the
+          protocol level, without prescribing how policies are authored or evaluated.
+          Any engine exposing an AuthZEN-compliant decision endpoint — ABAC, RBAC, ReBAC, or hybrid,
+          built on OPA, Cedar, OpenFGA, XACML, or a custom engine — can be plugged in without requiring
+          changes to consuming applications, allowing organizations to choose their PDP
+          while preserving a uniform authorization interface.
+        </p>
+
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200"
+     style="max-width:100%;height:auto;font-family:system-ui,-apple-system,sans-serif;">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <text x="500" y="25" text-anchor="middle" font-size="14"
+        font-weight="600" fill="#1e293b">AuthZEN Authorization Flow</text>
+
+  <!-- Client -->
+  <rect x="20" y="70" width="120" height="50" rx="6"
+        fill="#3b82f6" stroke="#1d4ed8"/>
+  <text x="80" y="100" text-anchor="middle" font-size="13"
+        font-weight="600" fill="white">Client</text>
+  <line x1="140" y1="95" x2="158" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- PEP -->
+  <rect x="160" y="70" width="120" height="50" rx="6"
+        fill="#6366f1" stroke="#4338ca"/>
+  <text x="220" y="93" text-anchor="middle" font-size="13"
+        font-weight="600" fill="white">PEP</text>
+  <text x="220" y="110" text-anchor="middle" font-size="10"
+        fill="#e0e7ff">Enforcement Point</text>
+  <line x1="280" y1="95" x2="298" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Preprocessor -->
+  <rect x="300" y="70" width="120" height="50" rx="6"
+        fill="#8b5cf6" stroke="#6d28d9"/>
+  <text x="360" y="93" text-anchor="middle" font-size="13"
+        font-weight="600" fill="white">Preprocessor</text>
+  <text x="360" y="110" text-anchor="middle" font-size="10"
+        fill="#ede9fe">builds AuthZEN req.</text>
+  <line x1="420" y1="95" x2="438" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- AuthZEN request (message pill) -->
+  <rect x="440" y="70" width="120" height="50" rx="25"
+        fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="500" y="90" text-anchor="middle" font-size="12"
+        font-weight="600" fill="#0c4a6e">AuthZEN request</text>
+  <text x="500" y="105" text-anchor="middle" font-size="10"
+        fill="#0c4a6e" font-style="italic">per RFC spec</text>
+  <line x1="560" y1="95" x2="578" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- PDP -->
+  <rect x="580" y="70" width="120" height="50" rx="6"
+        fill="#6366f1" stroke="#4338ca"/>
+  <text x="640" y="93" text-anchor="middle" font-size="13"
+        font-weight="600" fill="white">PDP</text>
+  <text x="640" y="110" text-anchor="middle" font-size="10"
+        fill="#e0e7ff">Decision Point</text>
+  <line x1="700" y1="95" x2="718" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Decision -->
+  <rect x="720" y="70" width="120" height="50" rx="25"
+        fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="780" y="100" text-anchor="middle" font-size="12"
+        font-weight="600" fill="#0c4a6e">Decision</text>
+  <line x1="840" y1="95" x2="858" y2="95" stroke="#475569"
+        stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Enforcement -->
+  <rect x="860" y="70" width="120" height="50" rx="6"
+        fill="#10b981" stroke="#047857"/>
+  <text x="920" y="100" text-anchor="middle" font-size="13"
+        font-weight="600" fill="white">Enforcement</text>
+
+  <!-- Legend -->
+  <g font-size="10" fill="#64748b">
+    <rect x="20" y="160" width="14" height="10" rx="2" fill="#3b82f6"/>
+    <text x="40" y="169">Actor</text>
+    <rect x="90" y="160" width="14" height="10" rx="5"
+          fill="#e0f2fe" stroke="#0284c7"/>
+    <text x="110" y="169">Message</text>
+    <rect x="170" y="160" width="14" height="10" rx="2" fill="#10b981"/>
+    <text x="190" y="169">Action</text>
+  </g>
+</svg>
+
+        <p>
+          The <strong>Preprocessor</strong> has no authorization intelligence of its own. Its sole
+          responsibility is to translate an incoming request into a well-formed AuthZEN authorization
+          request — populating the <code>subject</code>, <code>action</code>, <code>resource</code>,
+          and <code>context</code> fields — so that the PDP can interpret and evaluate it. All policy
+          logic resides exclusively in the PDP.
+        </p>
+        <p>
+          This RFC serves as the parent contract for authorization standardization within Dutch healthcare
+          (Informatiestandaarden Zorg). It establishes the generic, domain-neutral base structure for 
+          AuthZEN-based authorization decisions — applicable across all healthcare domains including iWlz, 
+          Zvw, Wmo, and Jeugdwet.
+          
+          Domain-specific RFCs inherit from this document and extend it by defining which attributes must be 
+          present in the AuthZEN request and how they are populated within that domain's context. Domain 
+          RFCs must not deviate from the base structure defined here; they may only add domain-specific 
+          constraints or attribute requirements on top of it.
+          
+          For the applicable scope of each domain, refer to the corresponding domain RFC.
+        </p>
+
+
+      </div>
+    </div>
+
+    <!-- SCOPE -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Scope</h2>
+
+        <p>
+          This RFC defines the <strong>generic authorization contract</strong> for the Dutch
+          healthcare domain. It is the normative parent specification. Domain-specific RFCs
+          <strong>inherit</strong> this contract and may only extend it — they may not deviate 
+          from or replace the base contract defined here.
+        </p>
+
+        <p>The following domains fall within scope:</p>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>Description</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>iWlz</strong></td>
+              <td>
+                Information provision for long-term care (Wlz). Authorization governs which
+                organizations may access or mutate client care records based on their role
+                (zorgkantoor, zorgaanbieder, CIZ, CAK) and regional or contractual relationship.
+              </td>
+              <td><a href="https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0052%20-%20Autorisatie%20standaardisatie.md" target="_blank">iWlz RFC repository</a></td>
+            </tr>
+            <tr>
+              <td><strong>Zvw</strong></td>
+              <td>
+                Basic health insurance (Zorgverzekeringswet). Authorization governs access to
+                declaratie, vergoeding, and verzekeringsdata based on the insurer–provider
+                relationship and population ownership.
+              </td>
+              <td><a href="https://www.vektis.nl/standaardisatie" target="_blank">Vektis standaardisatie</a></td>
+            </tr>
+            <tr>
+              <td><strong>Wmo</strong></td>
+              <td>
+                Social support act (Wet maatschappelijke ondersteuning 2015). Authorization governs
+                municipality access to citizen support decisions and provider access to iWmo
+                messages within active municipal contracts.
+              </td>
+              <td><a href="https://istandaarden.nl/ibieb/iwmo" target="_blank">iStandaarden iWmo</a></td>
+            </tr>
+            <tr>
+              <td><strong>Jeugdwet</strong></td>
+              <td>
+                Youth care act. Authorization governs municipality access to youth care decisions
+                and youth care provider access to iJw messages within active assignments.
+              </td>
+              <td><a href="https://istandaarden.nl/ibieb/ijw" target="_blank">iStandaarden iJw</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Out of scope</h3>
+        <ul>
+          <li>Authentication and identity proofing — governed by NLGov OAuth/OIDC profiles.</li>
+          <li>Policy authoring and evaluation logic inside the PDP — only the PEP–PDP interface is standardized here.</li>
+          <li>Patient/citizen consent management — addressed separately under MITZ/NUTS.</li>
+        </ul>
+
+      </div>
+    </div>
+
+    <!-- RELATION TO OTHER GENERIC FUNCTIONS -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Relation to Other Generic Functions</h2>
+
+        <p>
+          Authorization is one of several <strong>generieke functies</strong> (generic functions) defined
+          under the VWS program for Dutch healthcare interoperability. These functions are designed to be
+          composable: each addresses a distinct concern, and together they form the infrastructure layer
+          for trusted data exchange.
+        </p>
+
+        <p>
+          This RFC covers the <strong>authorization</strong> generic function only. The table below
+          positions it relative to the adjacent generic functions it depends on or interacts with.
+        </p>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Generic Function</th>
+              <th>Concern</th>
+              <th>Relation to this RFC</th>
+              <th>Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Care Services Directory (LRZa)</strong></td>
+              <td>
+                Addressing and discovery — publishing, finding, and resolving trusted addressing
+                information for organizations, services, locations, and endpoints.
+              </td>
+              <td>
+                LRZa is the authoritative source for the <code>subject.id</code> (organization
+                identifier) used in AuthZEN requests. The <strong>OrganizationAffiliation</strong>
+                resource in LRZa models inter-organizational relationships (e.g. a zorgaanbieder
+                acting within a zorgkantoor region) that are candidate <code>context</code>
+                attributes for authorization decisions. The PEP resolves subject identity via
+                LRZa before constructing the AuthZEN request.
+              </td>
+              <td>
+                <a href="https://minvws.github.io/generiekefuncties-docs/care-services.html" target="_blank">
+                  Care Services Directory specification
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Authenticatie (NLGov OAuth/OIDC)</strong></td>
+              <td>
+                Identity proofing and authentication — establishing who the calling party is
+                before any authorization decision is made.
+              </td>
+              <td>
+                Authentication is a prerequisite for authorization but is explicitly out of scope
+                for this RFC. The PEP is responsible for authenticating the caller (via NLGov
+                OAuth 2.0 / OIDC and PKIoverheid mTLS) before forwarding an AuthZEN request to
+                the PDP. The authenticated identity is then mapped to the <code>subject</code>
+                field.
+              </td>
+              <td>NLGov OAuth/OIDC profile</td>
+            </tr>
+            <tr>
+              <td><strong>Toestemming / Consent (MITZ/NUTS)</strong></td>
+              <td>
+                Patient and citizen consent management — recording and enforcing explicit consent
+                for data access.
+              </td>
+              <td>
+                Consent outcomes may be surfaced as <code>context</code> attributes in an AuthZEN
+                request, but consent management itself is out of scope for this RFC. Domain-specific
+                RFCs define whether and how consent attributes are included.
+              </td>
+              <td>MITZ / NUTS consent framework</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>End-to-end flow across generic functions</h3>
+
+        <p>
+          A typical cross-domain authorization check proceeds as follows:
+        </p>
+
+        <ol>
+          <li>The calling organization authenticates using PKIoverheid mTLS and NLGov OAuth/OIDC
+              (<em>Authenticatie</em>).</li>
+          <li>The PEP resolves the caller's organization identity and any relevant affiliation or
+              endpoint data from the LRZa Care Services Directory (<em>Adressering</em>).</li>
+          <li>The Preprocessor constructs a well-formed AuthZEN request, populating
+              <code>subject</code>, <code>action</code>, <code>resource</code>, and
+              <code>context</code> from the above sources, following the contract defined in
+              this RFC (<em>Autorisatie</em>).</li>
+          <li>The PDP evaluates the request against domain policy and returns a decision.</li>
+          <li>The PEP enforces the decision.</li>
+        </ol>
+
+      </div>
+    </div>
+
+    <!-- AUTHZEN CONTRACT -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Authorization Contract</h2>
+
+        <p>
+          This contract inherits all normative rules from the
+          <a href="https://logius-standaarden.github.io/Openbare-Consultaties/2025-10-15-Authzen/" target="_blank">NLGov AuthZEN profile</a>
+          and adds Dutch healthcare domain constraints on top. Any rule marked
+          <strong>MUST</strong>, <strong>SHALL</strong>, or <strong>SHOULD</strong> in the NLGov profile
+          applies here without repetition. The sections below document the full inherited field structure
+          and the additional constraints this RFC introduces.
+        </p>
+
+        <p>
+          Every attribute included in an AuthZEN request must be traceable to an authoritative source
+          and governed within a defined trust framework. Domain-specific RFCs specify which attributes
+          are required, where they originate (e.g. LRZa, the calling organization's token, a consent
+          registry), and who is responsible for keeping them accurate.
+        </p>
+
+        <p>A well-formed AuthZEN access evaluation request has the following top-level structure:</p>
+
+<pre><code class="language-json">
+POST /access/v1/evaluation
+Content-Type: application/json
+X-Request-ID: &lt;opaque-id&gt;
+
+{
+  "subject":  { ... },
+  "action":   { ... },
+  "resource": { ... },
+  "context":  { ... }
+}
+</code></pre>
+
+        <p>The endpoint path <strong>SHOULD</strong> include the <code>v1</code> version identifier
+        as shown above, per the NLGov profile.</p>
+
+      </div>
+    </div>
+
+    <!-- SUBJECT -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Subject</h2>
+
+        <p>
+          The <code>subject</code> identifies the party requesting access. In Dutch healthcare
+          this is always an organization or system, not an individual end-user.
+        </p>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr><th>Field</th><th>Required</th><th>Type</th><th>Rule (inherited from NLGov)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>type</code></td><td>REQUIRED</td><td>string</td>
+              <td>Linked Data URI RECOMMENDED (e.g. <code>https://www.w3.org/ns/org#Organization</code>).</td>
+            </tr>
+            <tr>
+              <td><code>id</code></td><td>REQUIRED</td><td>string</td>
+              <td>Unique identifier scoped to <code>type</code>. MUST resolve to an entry in the
+                  LRZa Care Services Directory for Dutch healthcare subjects.</td>
+            </tr>
+            <tr>
+              <td><code>properties</code></td><td>OPTIONAL</td><td>object</td>
+              <td>Additional subject attributes (organization type, roles, region). Domain RFCs
+                  define which properties are required within their scope.</td>
+            </tr>
+          </tbody>
+        </table>
+
+<pre><code class="language-json">
+{
+  "subject": {
+    "type": "https://www.w3.org/ns/org#Organization",
+    "id": "urn:oid:2.16.528.1.1007.3.3.12345",
+    "properties": {
+      "organization_type": "ZORGVERZEKERAAR",
+      "roles": ["REQUESTER"]
+    }
+  }
+}
+</code></pre>
+
+      </div>
+    </div>
+
+    <!-- ACTION -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Action</h2>
+
+        <p>
+          The <code>action</code> describes the operation being requested. The NLGov profile
+          introduces two Dutch-specific optional properties to support GDPR compliance tracing.
+        </p>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr><th>Field</th><th>Required</th><th>Type</th><th>Rule (inherited from NLGov)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>name</code></td><td>REQUIRED</td><td>string</td>
+              <td>Name of the action being requested. Domain RFCs define the allowed values.</td>
+            </tr>
+          </tbody>
+        </table>
+
+<pre><code class="language-json">
+{
+  "action": {
+    "name": "read"
+  }
+}
+</code></pre>
+
+      </div>
+    </div>
+
+    <!-- RESOURCE -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Resource</h2>
+
+        <p>
+          The <code>resource</code> identifies the data or service being accessed.
+        </p>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr><th>Field</th><th>Required</th><th>Type</th><th>Rule (inherited from NLGov)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>type</code></td><td>REQUIRED</td><td>string</td>
+              <td>Linked Data URI RECOMMENDED. Domain RFCs define the type vocabulary for their resources.</td>
+            </tr>
+            <tr>
+              <td><code>id</code></td><td>REQUIRED</td><td>string</td>
+              <td>Unique identifier scoped to <code>type</code>.</td>
+            </tr>
+            <tr>
+              <td><code>properties</code></td><td>OPTIONAL</td><td>object</td>
+              <td>Additional resource attributes and metadata. Domain RFCs define required properties.</td>
+            </tr>
+          </tbody>
+        </table>
+
+<pre><code class="language-json">
+{
+  "resource": {
+    "type": "https://stандарт.iwlz.nl/ns#ClientDossier",
+    "id": "urn:uuid:f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "properties": {
+      "domain": "iWlz"
+    }
+  }
+}
+</code></pre>
+
+      </div>
+    </div>
+
+    <!-- CONTEXT -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Context</h2>
+
+        <p>
+          The <code>context</code> carries additional attributes that inform the authorization
+          decision without being the subject, action, or resource. The NLGov profile defines
+          a set of standard context fields; domain RFCs may add domain-specific attributes.
+        </p>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr><th>Field</th><th>Required</th><th>Type</th><th>Rule (inherited from NLGov)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>time</code></td><td>OPTIONAL</td><td>string</td>
+              <td>RFC 3339 timestamp. Use for temporal authorization queries (e.g. validity at a
+                  specific point in time).</td>
+            </tr>
+            <tr>
+              <td><code>traceparent</code></td><td>OPTIONAL</td><td>string</td>
+              <td>W3C Trace Context <code>traceparent</code> value (spec §3.2.2). RECOMMENDED for
+                  distributed tracing and audit.</td>
+            </tr>
+            <tr>
+              <td><code>tracestate</code></td><td>OPTIONAL</td><td>string</td>
+              <td>W3C Trace Context <code>tracestate</code> value (spec §3.3.1.1).</td>
+            </tr>
+            <tr>
+              <td><code>mim</code></td><td>OPTIONAL</td><td>URL</td>
+              <td>URL to the applicable meta-information model (MIM standard). RECOMMENDED when
+                  the request involves structured information models.</td>
+            </tr>
+            <tr>
+              <td><code>ld-context</code></td><td>OPTIONAL</td><td>URL or object</td>
+              <td>JSON-LD context mapping for semantic integration. RECOMMENDED per the NLGov
+                  profile for interoperable attribute semantics.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Domain RFCs define additional context attributes such as organizational affiliation,
+           contractual region, or consent status.</p>
+
+<pre><code class="language-json">
+{
+  "context": {
+    "time": "2025-11-01T10:00:00Z",
+    "traceparent": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01",
+    "mim": "https://register.geostandaarden.nl/mim/iwlz/v1"
+  }
+}
+</code></pre>
+
+      </div>
+    </div>
+
+    <!-- TRANSPORT AND SECURITY -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Transport and Security</h2>
+
+        <p>
+          The following requirements are inherited directly from the NLGov AuthZEN profile
+          and apply without exception to all implementations conforming to this RFC.
+        </p>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr><th>Requirement</th><th>Level</th><th>Detail</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Transport encryption</td><td>MUST</td>
+              <td>All PEP–PDP communication MUST use TLS. Unencrypted HTTP is not permitted.</td>
+            </tr>
+            <tr>
+              <td>PEP authentication</td><td>SHOULD</td>
+              <td>The PDP SHOULD authenticate the PEP using mutual TLS (mTLS with PKIoverheid
+                  certificates), OAuth 2.0 client credentials, or an API key.</td>
+            </tr>
+            <tr>
+              <td>Content type</td><td>MUST</td>
+              <td>Requests and responses MUST use <code>Content-Type: application/json</code>.</td>
+            </tr>
+            <tr>
+              <td>JSON conformance</td><td>SHOULD</td>
+              <td>JSON payloads SHOULD conform to the I-JSON profile (RFC 7493): UTF-8 encoding,
+                  no duplicate keys, no numeric precision loss.</td>
+            </tr>
+            <tr>
+              <td><code>X-Request-ID</code> header</td><td>RECOMMENDED</td>
+              <td>PEP SHOULD include an opaque <code>X-Request-ID</code> header; the PDP MUST
+                  echo it in the response if present.</td>
+            </tr>
+            <tr>
+              <td>HTTP status codes</td><td>MUST</td>
+              <td>200 for success; 400 for malformed request; 401 for authentication failure
+                  (PDP SHOULD include <code>WWW-Authenticate</code>); 403 for authorisation
+                  failure; 500 for internal errors.</td>
+            </tr>
+            <tr>
+              <td>Rate limiting</td><td>RECOMMENDED</td>
+              <td>PDPs SHOULD implement rate limiting to protect against denial-of-service.</td>
+            </tr>
+            <tr>
+              <td>Discovery endpoint</td><td>SHOULD</td>
+              <td>PDP SHOULD expose metadata at
+                  <code>/.well-known/authzen-configuration</code> including at minimum
+                  <code>policy_decision_point</code> and
+                  <code>access_evaluation_endpoint</code>.</td>
+            </tr>
+            <tr>
+              <td>Response signing</td><td>MAY</td>
+              <td>PDP MAY sign responses as JWS. Null-valued properties SHOULD be omitted.</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="segment-footer" class="segment">
+  <div class="container">
+    <p>Generated for VWS Generieke Functies alignment - contribution Zorginstituut Nederland</p>
+  </div>
+</div>
+
+</body>
+</html>
