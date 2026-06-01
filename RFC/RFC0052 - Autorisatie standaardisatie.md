@@ -231,19 +231,183 @@ Dit schema kan worden gebruikt voor:
 - contractafspraken tussen partijen
 - implementatie in PEP gateway
 
+```
+Graag dit voorlopig negeren; afgesproken is om dit schema pas beschikbaar te stellen als H6 definitief is gereviewed.
 U kunt het schema [hier](./RFC0052-schema.json) downloaden.
+```
 
 ## 6.1 Structuur van het autorisatieverzoek
 
-Een autorisatieverzoek bestaat altijd uit:
+Binnen het iWlz-profiel wordt uitsluitend gebruik gemaakt van het AuthZEN Evaluations Request model.
 
-- subject
-- action
-- resource
-- context
+Het root-object van ieder autorisatieverzoek bevat daarom altijd het attribuut:
+
+```json
+{
+  "evaluations": []
+}
+```
+
+Iedere entry in evaluations bevat:
+
+* subject
+* action
+* resource
+* context
+
+conform de specificaties in dit hoofdstuk.
+
+De PEP MUST alle autorisatievragen aanbieden via het evaluations-attribuut.
+
+De PEP MUST ook gebruik maken van het evaluations-attribuut indien slechts één autorisatievraag aanwezig is.
+
+Het volgende verzoek is daarom geldig:
+
+```json
+{
+  "evaluations": [
+    {
+      "subject": {},
+      "action": {},
+      "resource": {},
+      "context": {}
+    }
+  ]
+}
+```
+
+Ook wanneer een verzoek slechts één autorisatievraag bevat, wordt deze opgenomen als één element in de evaluations array.
 
 
-## 6.2 Subject
+## 6.2 GraphQL autorisatie-extractie
+
+Binnen het iWlz-stelsel wordt GraphQL gebruikt voor gegevensuitwisseling.
+
+Deze RFC standaardiseert niet GraphQL zelf, maar beschrijft hoe een PEP Gateway autorisatie-informatie uit een GraphQL-verzoek afleidt.
+
+De PEP is verantwoordelijk voor het construeren van het AuthZEN autorisatieverzoek.
+
+
+### 6.2.1 Authz directive
+
+Binnen het iWlz-profiel wordt de volgende GraphQL directive gebruikt:
+
+```graphql
+directive @authz(
+  service: String!
+  operation: String!
+  resourceType: String!
+  action: String!
+) repeatable on FIELD_DEFINITION
+```
+
+De directive is uitsluitend bedoeld als metadata in het GraphQL schema.
+
+De directive maakt geen onderdeel uit van client-verzoeken.
+
+
+### 6.2.2 Locatie van directives
+
+Een @authz directive MUST uitsluitend worden toegepast op een GraphQL FIELD_DEFINITION.
+
+Voorbeeld:
+
+```graphql
+type Query {
+  bemiddeling(
+    where: BemiddelingWhereInput
+  ): [Bemiddeling]
+  @authz(
+    service: "BEMIDDELINGSREGISTER"
+    operation: "RAADPLEGEN_BEMIDDELING"
+    resourceType: "BEMIDDELING"
+    action: "READ"
+  )
+}
+```
+Clienten mogen geen autorisatiedirectives meesturen.
+
+### 6.2.3 Mapping naar Evaluations
+
+Iedere aangeroepen GraphQL field definition met een @authz directive MUST resulteren in één Access Evaluation object in evaluations.
+
+Voorbeeld:
+
+```graphql
+type Query {
+  bemiddeling(...)
+  @authz(...)
+}
+```
+leidt tot:
+```json
+{
+  "evaluations": [
+    {
+      "subject": {},
+      "action": {},
+      "resource": {},
+      "context": {}
+    }
+  ]
+}
+```
+### 6.2.4 Meerdere directives
+
+Een field definition MAY meerdere @authz directives bevatten.
+
+Iedere directive MUST resulteren in een afzonderlijk Access Evaluation object.
+
+Voorbeeld:
+
+```graphql
+type Query {
+  bemiddeling(...)
+    @authz(...)
+    @authz(...)
+}
+```
+resulteert in:
+
+```json
+{
+  "evaluations": [
+    {},
+    {}
+  ]
+}
+```
+
+### 6.2.5 Nested fields
+
+Een GraphQL-query kan naast het primaire object ook gerelateerde objecten opvragen.
+
+Deze gerelateerde objecten worden aangeduid als nested fields.
+
+Voorbeeld:
+
+```graphql
+query {
+  bemiddeling(where:{id:{eq:"123"}}) {
+    id
+
+    indicatie {
+      indicatieNummer
+    }
+  }
+}
+```
+In dit voorbeeld wordt naast de resource BEMIDDELING ook de resource WLZ_INDICATIE geraadpleegd.
+
+Indien op een nested field een @authz directive aanwezig is, MUST de PEP hiervoor een afzonderlijke Access Evaluation opnemen in evaluations[].
+
+Er geldt geen impliciete overerving van autorisatie tussen parent- en child-fields.
+
+Autorisatie van een parent resource geeft dus niet automatisch toegang tot nested resources.
+
+
+
+## 6.3 Subject
 
 Het `subject` beschrijft de actor die de actie uitvoert.
 
@@ -262,8 +426,8 @@ De structuur van het subject volgt het AuthZEN-model en bestaat uit:
 
 ### Toelichting
 
-- Het veld `type` geeft aan wat voor soort actor het betreft (bijvoorbeeld een organisatie of een gebruiker).
-- Het veld `id` identificeert de actor uniek binnen het stelsel. In de praktijk is dit vaak afkomstig uit het access-token.
+- Het veld `type` geeft aan wat voor soort actor het betreft
+- Het veld `id`   id identificeert de unieke actor binnen het kader van de eerder vastgestelde type organisatie
 - Het veld `properties` bevat aanvullende kenmerken die relevant zijn voor autorisatie, zoals:
   - rollen (`roles`)
   - organisatiekenmerken (`organization_type`)
@@ -275,12 +439,12 @@ Deze attributen sluiten aan op de codelijsten in paragraaf 6.6.
 
 ### Richtlijnen
 
-- Het id attribuut is conform de specificaties van [RFC0008](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0008%20-%20Notificaties.md#331-afzender-en-ontvanger-lijst).
+- Het type attribuut is conform de specificaties van [RFC0008](https://github.com/iStandaarden/iWlz-RequestForComment/blob/main/RFC/RFC0008%20-%20Notificaties.md#331-afzender-en-ontvanger-lijst).
 - Domeinspecifieke attributen worden onder `properties` geplaatst.
 - De betekenis van attributen in `properties` is consistent met de codelijsten.
 - Het moet mogelijk zijn om de waarden van het subject te herleiden naar een betrouwbare bron (bijv. een access-token of een externe bron).
 
-## 6.3 Action
+## 6.4 Action
 
 De `action` beschrijft welke handeling wordt uitgevoerd op de resource.
 
@@ -289,14 +453,14 @@ De structuur van `action` volgt het AuthZEN-model en bestaat uit een object met 
 ```json
 {
   "action": {
-    "name": "read"
+    "name": "QUERY"
   }
 }
 ```
 
 | Attribuut | Verplicht | Toelichting |
 |---|---|---|
-|name|Ja|De uit te voeren handeling(bijv. query/mutation)|
+|name|Ja|De uit te voeren handeling(bijv. QUERY/MUTATION)|
 
 
 ### Toelichting
@@ -307,8 +471,8 @@ De structuur van `action` volgt het AuthZEN-model en bestaat uit een object met 
 
 ### Richtlijnen
 
-- De action wordt conform AuthZEN altijd als object vastgelegd (bijvoorbeeld { "name": "read" }).
-- Het gebruik van een losse string zoals "action": "read" is niet toegestaan.
+- De action wordt conform AuthZEN altijd als object vastgelegd (bijvoorbeeld { "name": "QUERY" }).
+- Het gebruik van een losse string zoals "action": "QUERY" is niet toegestaan.
 - De waarde van `action.name` moet afkomstig zijn uit de vastgestelde codelijst.
 - De betekenis van de gekozen actie moet consistent zijn binnen het stelsel.
 
@@ -316,7 +480,7 @@ De structuur van `action` volgt het AuthZEN-model en bestaat uit een object met 
 NB dit zou in de toekomst nog verder uitgebreid kunnen worden, dit is afhankelijk van toekomstige ontwikkelingen.
 ```
 
-## 6.4 Resource
+## 6.5 Resource
 
 De `resource` beschrijft het object waarop de actie wordt uitgevoerd.
 
@@ -367,7 +531,7 @@ NB ID nader te bepalen..zou bijv (bijv audienceURL) kunnen worden. Sommige velde
 Deze aanvullende attributen sluiten aan op de codelijsten in paragraaf 6.6.
 
 
-## 6.5 Context
+## 6.6 Context
 
 De `context` bevat aanvullende informatie die nodig is om een autorisatiebeslissing te kunnen nemen.
 
@@ -395,7 +559,7 @@ De context beschrijft de omstandigheden waaronder de actie plaatsvindt, zoals he
 - De waarden in `context` moeten consistent zijn met de betekenis van de bijbehorende codelijsten.
 - Het moet altijd mogelijk zijn om de waarden in de context te herleiden naar een bron (bijv. API-verzoek, token of externe bron).
 
-## 6.6 Codelijsten (normatief)
+## 6.7 Codelijsten (normatief)
 
 Deze codelijsten zijn onderdeel van de standaard.
 
@@ -406,7 +570,7 @@ Deze codelijsten zijn onderdeel van de standaard.
 NB De codelijsten zijn nog ter discussie; uiteindelijke doel is duidelijkheid en niet stricte koppeling waardoor er een onwerkbare situatie ontstaat
 ```
 
-### 6.6.1 action
+### 6.7.1 action
 
 | Waarde |
 |---|
@@ -414,7 +578,7 @@ NB De codelijsten zijn nog ter discussie; uiteindelijke doel is duidelijkheid en
 | MUTATION |
 
 
-### 6.6.2 service
+### 6.7.2 service
 
 | Waarde |
 |---|
@@ -428,7 +592,7 @@ NB De codelijsten zijn nog ter discussie; uiteindelijke doel is duidelijkheid en
 NB  dit kan in de toekomst nog uitgebreid worden
 
 
-### 6.6.3 organization_type
+### 6.7.3 organization_type
 
 ZORGKANTOOR  
 ZORGAANBIEDER  
@@ -443,7 +607,7 @@ Bronnen:
 - https://istandaarden.nl/iwlz  
 
 
-## 6.7 Herkomst van attributen
+## 6.8 Herkomst van attributen
 
 Attributen kunnen uit verschillende bronnen komen:
 
@@ -454,6 +618,66 @@ Attributen kunnen uit verschillende bronnen komen:
 
 De herkomst moet altijd herleidbaar zijn naar een betrouwbare bron (bijv. access-token, API-verzoek of externe bron).
 
+
+## 6.9 Autorisatierespons
+
+De PDP MUST een autorisatierespons retourneren die correspondeert met het ontvangen `evaluations` request.
+
+De response bevat een verplicht attribuut `results`.
+
+Iedere entry in `results` correspondeert positioneel met de entry op dezelfde index in `evaluations`.
+
+De eerste entry in `results` hoort bij de eerste entry in `evaluations`, de tweede entry in `results` hoort bij de tweede entry in `evaluations`, enzovoort.
+
+Dus:
+
+```json
+{
+  "results": [
+    {
+      "decision": true,
+      "context": {}
+    }
+  ]
+}
+```
+
+| Attribuut | Verplicht | Toelichting |
+| results | Ja | Array met autorisatiebesluiten |
+| results[].decision | Ja | Boolean die aangeeft of de evaluation is toegestaan |
+| results[].context | Nee | Aanvullende informatie over het besluit |
+
+### Regels
+
+- De PDP MUST voor iedere ontvangen evaluation exact één result retourneren.
+- Het aantal entries in results MUST gelijk zijn aan het aantal entries in evaluations.
+- De volgorde van results MUST gelijk zijn aan de volgorde van evaluations.
+- decision MUST een boolean zijn.
+- decision: true betekent dat de gevraagde actie is toegestaan.
+- decision: false betekent dat de gevraagde actie niet is toegestaan.
+- De PEP MUST het oorspronkelijke businessverzoek weigeren indien één of meer results een decision: false bevatten.
+- De PEP MUST het oorspronkelijke businessverzoek uitsluitend doorzetten indien alle results een decision: true bevatten.
+
+Voorbeeld reponse:
+```json
+{
+  "results": [
+    {
+      "decision": true,
+      "context": {
+        "policy_id": "iwlz.bemiddeling.read.v1"
+      }
+    },
+    {
+      "decision": false,
+      "context": {
+        "reason": "MISSING_PURPOSE_OF_USE",
+        "policy_id": "iwlz.indicatie.read.v1"
+      }
+    }
+  ]
+}
+```
 
 # 7. Terminologie
 
