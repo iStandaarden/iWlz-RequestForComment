@@ -419,7 +419,7 @@ De structuur van het subject volgt het AuthZEN-model en bestaat uit:
 
 | Attribuut | Verplicht | Toelichting |
 |---|---|---|
-| type | Ja | Type actor (bijv. `organization`, `user`, `system`) |
+| type | Ja |  |
 | id | Ja | Unieke identifier van de actor |
 | properties | Nee | Aanvullende domeinspecifieke gegevens |
 
@@ -430,11 +430,8 @@ De structuur van het subject volgt het AuthZEN-model en bestaat uit:
 - Het veld `id`   id identificeert de unieke actor binnen het kader van de eerder vastgestelde type organisatie
 - Het veld `properties` bevat aanvullende kenmerken die relevant zijn voor autorisatie, zoals:
   - rollen (`roles`)
-  - organisatiekenmerken (`organization_type`)
-  - identifiers (bijv. UZOVI- of AGB-code)
-  - regio (`region`)
 
-Deze attributen sluiten aan op de codelijsten in paragraaf 6.6.
+Deze attributen sluiten aan op de codelijsten in paragraaf 6.7.
 
 
 ### Richtlijnen
@@ -467,7 +464,7 @@ De structuur van `action` volgt het AuthZEN-model en bestaat uit een object met 
 
 - Het veld name geeft aan wat de actor wil doen met de resource (bijvoorbeeld raadplegen of wijzigen).
 - De waarde van action.name bepaalt samen met resource en context welke autorisatieregels van toepassing zijn.
-- De toegestane waarden zijn vastgelegd in de codelijsten (zie paragraaf 6.6).
+- De toegestane waarden zijn vastgelegd in de codelijsten (zie paragraaf 6.7).
 
 ### Richtlijnen
 
@@ -520,7 +517,6 @@ NB ID nader te bepalen..zou bijv (bijv audienceURL) kunnen worden. Sommige velde
 - Het veld `id` identificeert de specifieke resource waarop de actie wordt uitgevoerd. De herkomst ligt doorgaans in het inkomende API-verzoek.
 - Het veld `properties` bevat aanvullende kenmerken die nodig kunnen zijn voor autorisatiebeslissingen, zoals:
   - eigenaar (`owner`)
-  - regio (`region`)
   - gevoeligheid (`sensitivity`)
 
 ### Richtlijnen
@@ -528,7 +524,7 @@ NB ID nader te bepalen..zou bijv (bijv audienceURL) kunnen worden. Sommige velde
 - De filtercontext wordt opgenomen onder `resource.properties.query_filter`.
 - De inhoud van `query_filter` is herleidbaar naar het inkomende verzoek.
 
-Deze aanvullende attributen sluiten aan op de codelijsten in paragraaf 6.6.
+Deze aanvullende attributen sluiten aan op de codelijsten in paragraaf 6.7.
 
 
 ## 6.6 Context
@@ -555,7 +551,7 @@ De context beschrijft de omstandigheden waaronder de actie plaatsvindt, zoals he
 
 ### Richtlijnen
 
-- De combinatie van `service` en `operation` moet overeenkomen met de codelijsten in paragraaf 6.6.
+- De combinatie van `service` en `operation` moet overeenkomen met de codelijsten in paragraaf 6.7.
 - De waarden in `context` moeten consistent zijn met de betekenis van de bijbehorende codelijsten.
 - Het moet altijd mogelijk zijn om de waarden in de context te herleiden naar een bron (bijv. API-verzoek, token of externe bron).
 
